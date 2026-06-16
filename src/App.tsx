@@ -45,7 +45,17 @@ import SEOAnalyzer from './components/SEOAnalyzer';
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState(() => parseRoute());
   const [searchQuery, setSearchQuery] = useState('');
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    try {
+      const saved = localStorage.getItem('tool_brasil_dark_mode_v1');
+      if (saved !== null) {
+        return JSON.parse(saved);
+      }
+      return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    } catch (e) {
+      return false;
+    }
+  });
   const [faqOpen, setFaqOpen] = useState<{ [key: string]: boolean }>({});
 
   // Dynamic tool popularity scoring tracked in LocalStorage
@@ -111,13 +121,18 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  // Update dark class on body
+  // Update dark class on body and persist in local storage
   useEffect(() => {
     const root = window.document.documentElement;
     if (darkMode) {
       root.classList.add('dark');
     } else {
       root.classList.remove('dark');
+    }
+    try {
+      localStorage.setItem('tool_brasil_dark_mode_v1', JSON.stringify(darkMode));
+    } catch (e) {
+      console.error(e);
     }
   }, [darkMode]);
 
@@ -331,7 +346,7 @@ export default function App() {
             
             <a
               href="#sitemap"
-              className="hidden md:flex items-center gap-1 text-xs text-slate-500 hover:text-emerald-600 font-semibold"
+              className="sr-only"
             >
               Map
             </a>
@@ -911,9 +926,12 @@ export default function App() {
               &copy; {new Date().getFullYear()} Tool Brasil. Todos os direitos reservados. "Ferramentas Online Gratuitas para o Dia a Dia".
             </p>
             <div className="flex justify-center gap-4 mt-4 md:mt-0 font-mono">
-              <a href="#sitemap" className="hover:text-emerald-500">Sitemap XML</a>
-              <span className="text-slate-800">|</span>
-              <span className="text-slate-500">V.1.2.0 Production</span>
+              <span className="text-slate-500 select-none">V.1.2.0 Production</span>
+              <div className="sr-only">
+                <a href="#sitemap">Sitemap XML</a>
+                <a href="/sitemap.xml">sitemap.xml</a>
+                <a href="/robots.txt">robots.txt</a>
+              </div>
             </div>
           </div>
 
