@@ -11,7 +11,7 @@ interface SEOAnalyzerProps {
   currentHost?: string;
 }
 
-export default function SEOAnalyzer({ tool, currentHost = 'https://brasilferramentas.com.br' }: SEOAnalyzerProps) {
+export default function SEOAnalyzer({ tool, currentHost = 'https://toolbrasil.com.br' }: SEOAnalyzerProps) {
   const [activeTab, setActiveTab] = useState<'serp' | 'schema' | 'metadata'>('serp');
   
   const canonicalUrl = `${currentHost}/${tool.categoryId}/${tool.slug}`;
@@ -92,7 +92,7 @@ export default function SEOAnalyzer({ tool, currentHost = 'https://brasilferrame
             
             {/* Live Google Search snippet simulator */}
             <div className="text-blue-400 text-lg md:text-xl font-medium leading-snug hover:underline cursor-pointer truncate">
-              {tool.title} | {CATEGORIES_MAP[tool.categoryId] || 'Brasil Ferramentas'}
+              {tool.title} | {CATEGORIES_MAP[tool.categoryId] || 'Tool Brasil'}
             </div>
             
             <div className="text-emerald-500 text-xs truncate mt-0.5" id="serp-canonical-url">
@@ -135,7 +135,7 @@ export default function SEOAnalyzer({ tool, currentHost = 'https://brasilferrame
               <span className="text-emerald-400">og:type:</span> website
             </div>
             <div>
-              <span className="text-emerald-400">og:site_name:</span> Brasil Ferramentas
+              <span className="text-emerald-400">og:site_name:</span> Tool Brasil
             </div>
             <div className="col-span-1 md:col-span-2">
               <span className="text-emerald-400">og:image:</span> {currentHost}/assets/images/og-{tool.id}.png

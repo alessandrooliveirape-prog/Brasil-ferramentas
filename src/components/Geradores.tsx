@@ -335,7 +335,7 @@ function SenhaGerador() {
 
 // 4. QR CODE
 function QrCodeGerador() {
-  const [texto, setTexto] = useState<string>('https://brasilferramentas.com.br');
+  const [texto, setTexto] = useState<string>('https://toolbrasil.com.br');
   const [qrUrl, setQrUrl] = useState<string>('');
 
   useEffect(() => {
@@ -468,7 +468,7 @@ function customMD5Simulation(str: string): string {
 
 // 7. MD5 HASH
 function HashMd5Gerador() {
-  const [inputVal, setInputVal] = useState<string>('Brasil Ferramentas');
+  const [inputVal, setInputVal] = useState<string>('Tool Brasil');
   const [md5Value, setMd5Value] = useState<string>('');
 
   useEffect(() => {
@@ -496,7 +496,7 @@ function HashMd5Gerador() {
 
 // 8. SHA-256 HASH
 function HashSha256Gerador() {
-  const [inputVal, setInputVal] = useState<string>('Brasil Ferramentas');
+  const [inputVal, setInputVal] = useState<string>('Tool Brasil');
   const [sha256Value, setSha256Value] = useState<string>('');
 
   const computeSHA256 = async (source: string) => {

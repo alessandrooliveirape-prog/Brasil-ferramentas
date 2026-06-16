@@ -174,11 +174,11 @@ function LocalizarIP() {
 
 // 3. WHOIS TESTER
 function WhoisTester() {
-  const [domain, setDomain] = useState<string>('brasilferramentas.com.br');
+  const [domain, setDomain] = useState<string>('toolbrasil.com.br');
   const [output, setOutput] = useState<string>('');
 
   const runWhois = () => {
-    setOutput(`% WHOIS BrasilFerramentas\n% Consultando registro oficial local...\n\ndomain:       ${domain}\nowner:        Brasil Ferramentas LTDA\ncountry:      BR\nownerid:      12.345.678/0001-90\nresponsible:  Equipe Técnica Brasil Ferramentas\nstatus:       published\ncreated:      2026-06-16 #2549281\nchanged:      2026-06-16\nexpires:      2036-06-16\n\nnic-hdl-br:   BFADM\nperson:       Administração de Rede Brasil Ferramentas\ne-mail:       contato@brasilferramentas.com.br\n\nnserver:      ns1.cloudflare.com\nnserver:      ns2.cloudflare.com\n\n% Conclusão de pesquisa segura.`);
+    setOutput(`% WHOIS ToolBrasil\n% Consultando registro oficial local...\n\ndomain:       ${domain}\nowner:        Tool Brasil Serviços Digitais\ncountry:      BR\nownerid:      12.345.678/0001-90\nresponsible:  Equipe Técnica Tool Brasil\nstatus:       published\ncreated:      2026-06-16 #2549281\nchanged:      2026-06-16\nexpires:      2036-06-16\n\nnic-hdl-br:   TBADM\nperson:       Administração de Rede Tool Brasil\ne-mail:       contato@toolbrasil.com.br\n\nnserver:      ns1.cloudflare.com\nnserver:      ns2.cloudflare.com\n\n% Conclusão de pesquisa segura.`);
   };
 
   useEffect(() => { runWhois(); }, [domain]);
@@ -250,7 +250,7 @@ function DnsLookupTester() {
 
 // 5. SSL CHECKER
 function SslCheckerTester() {
-  const [domain, setDomain] = useState<string>('brasilferramentas.com.br');
+  const [domain, setDomain] = useState<string>('toolbrasil.com.br');
   const [sslInfo, setSslInfo] = useState<any>(null);
 
   const checkSsl = () => {
@@ -402,7 +402,7 @@ function TracerouteTester() {
 
 // 9. HTTP HEADERS TESTER
 function HttpHeadersTester() {
-  const [url, setUrl] = useState<string>('https://brasilferramentas.com.br');
+  const [url, setUrl] = useState<string>('https://toolbrasil.com.br');
   const [headers, setHeaders] = useState<any[]>([]);
 
   const loadHeaders = () => {

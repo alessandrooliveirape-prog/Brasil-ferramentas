@@ -26,9 +26,9 @@ export default function Institucional({ pageId }: InstitucionalProps) {
 function SobreNos() {
   return (
     <div className="space-y-6" id="inst-sobre">
-      <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Sobre o Brasil Ferramentas</h2>
+      <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Sobre a Tool Brasil</h2>
       <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-        O <strong>Brasil Ferramentas</strong> nasceu com o propósito de ser o maior e mais eficiente ecossistema de utilitários online gratuitos da internet brasileira. Nós acreditamos que ferramentas úteis devem ser acessíveis, rápidas e descomplicadas, sem a necessidade de cadastros, instalações ou pagamentos ocultos.
+        A <strong>Tool Brasil</strong> nasceu com o propósito de ser o maior e mais eficiente ecossistema de utilitários online gratuitos da internet brasileira. Nós acreditamos que ferramentas úteis devem ser acessíveis, rápidas e descomplicadas, sem a necessidade de cadastros, instalações ou pagamentos ocultos.
       </p>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 py-3">
         <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-lg text-center">
@@ -74,7 +74,7 @@ function ContatoForm() {
 
       {status === 'enviado' && (
         <div className="p-4 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-lg border border-emerald-100">
-          ✓ Sua mensagem foi registrada! Agradecemos pelo feedback útil para o crescimento do Brasil Ferramentas.
+          ✓ Sua mensagem foi registrada! Agradecemos pelo feedback útil para o crescimento da Tool Brasil.
         </div>
       )}
 
@@ -110,7 +110,7 @@ function PoliticaPrivacidade() {
       <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Política de Privacidade</h2>
       <p className="text-xs text-slate-400">Última atualização: Junho de 2026</p>
       <div className="space-y-4 text-xs text-slate-600 dark:text-slate-350 leading-relaxed">
-        <p>No <strong>Brasil Ferramentas</strong>, a sua privacidade é de extrema importância para nós. Elaboramos esta política regulatória respaldada pela LGPD (Lei Geral de Proteção de Dados - Brasil) para detalhar quais dados são lidos e tratados durante sua permanência em nosso domínio.</p>
+        <p>No <strong>Tool Brasil</strong>, a sua privacidade é de extrema importância para nós. Elaboramos esta política regulatória respaldada pela LGPD (Lei Geral de Proteção de Dados - Brasil) para detalhar quais dados são lidos e tratados durante sua permanência em nosso domínio.</p>
         
         <h3 className="font-bold text-slate-800 dark:text-slate-200">1. Coleta de Dados Locais e Processamento Client-side</h3>
         <p>A maioria das nossas ferramentas executa operações matematicas e transformações textuais diretamente no seu navegador, via JavaScript off-line. Isso significa que dados confidenciais do gerador de CPF, CNPJ, ou senhas nunca são transmitidos para bancos de dados externos sob nossa tutela direta.</p>
@@ -128,10 +128,10 @@ function TermosDeUso() {
     <div className="space-y-6" id="inst-termos">
       <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Termos de Uso</h2>
       <div className="space-y-4 text-xs text-slate-600 dark:text-slate-350 leading-relaxed">
-        <p>Seja bem-vindo ao portal Brasil Ferramentas. Ao acessar ou usar nossos serviços, você concorda em se submeter às regras estipuladas abaixo:</p>
+        <p>Seja bem-vindo ao portal Tool Brasil. Ao acessar ou usar nossos serviços, você concorda em se submeter às regras estipuladas abaixo:</p>
         
         <h3 className="font-bold text-slate-800 dark:text-slate-200">1. Licença de Uso Sem Custos</h3>
-        <p>Nossos utilitários são distribuídos de modo 100% gratuito e irrestrito. É vedada a venda, cópia comercial ou comercialização fraudulenta de nossos algoritmos sem atribuição expressa e prévia ao projeto Brasil Ferramentas.</p>
+        <p>Nossos utilitários são distribuídos de modo 100% gratuito e irrestrito. É vedada a venda, cópia comercial ou comercialização fraudulenta de nossos algoritmos sem atribuição expressa e prévia ao projeto Tool Brasil.</p>
 
         <h3 className="font-bold text-slate-800 dark:text-slate-200">2. Exclusão de Garantias Legais</h3>
         <p>Embora nos empenhemos em entregar fórmulas exatas para rescisão, férias e impostos, declinamos de garantias contábeis finais de direito formal. Sugerimos sempre dupla checagem oficial junto à Receita Federal ou ministérios reguladores antes de transações financeiras formais.</p>
@@ -148,7 +148,7 @@ function GestaodeCookies() {
   return (
     <div className="space-y-6" id="inst-cookies">
       <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Preferência de Cookies</h2>
-      <p className="text-xs text-slate-500">Ajuste os parâmetros de armazenamento abaixo para moldar sua privacidade no Brasil Ferramentas:</p>
+      <p className="text-xs text-slate-500">Ajuste os parâmetros de armazenamento abaixo para moldar sua privacidade na Tool Brasil:</p>
 
       <div className="space-y-4 max-w-md">
         <div className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-850 rounded-lg border">
@@ -179,7 +179,7 @@ function TransparenciaAdsense() {
     <div className="space-y-6" id="inst-ads">
       <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Transparência Google AdSense</h2>
       <div className="space-y-4 text-xs text-slate-600 dark:text-slate-350 leading-relaxed">
-        <p>O <strong>Brasil Ferramentas</strong> é mantido e financiado primordialmente através de receitas obtidas via anúncios programáticos do <strong>Google AdSense</strong>. Isso nos concede fundos para manter a infraestrutura de servidores rápidos e pagar os programadores envolvidos.</p>
+        <p>A <strong>Tool Brasil</strong> é mantida e financiada primordialmente através de receitas obtidas via anúncios programáticos do <strong>Google AdSense</strong>. Isso nos concede fundos para manter a infraestrutura de servidores rápidos e pagar os programadores envolvidos.</p>
 
         <h3 className="font-bold text-slate-800 dark:text-slate-200">Como os Anúncios Funcionam?</h3>
         <p>O Google utiliza cookies DoubleClick Dart para segmentação inteligente de anúncios com base nos hábitos de buscas do usuário na web comum. Os dados são anonimizados e nenhuma informação confidencial (como nome ou senhas) é repassada para nossa central ou terceiros.</p>

@@ -8,7 +8,7 @@ import { TOOLS, PROGRAMMATIC_PAGES } from '../toolsData';
 
 export default function Sitemap() {
   const [downloaded, setDownloaded] = useState<boolean>(false);
-  const host = 'https://brasilferramentas.com.br';
+  const host = 'https://toolbrasil.com.br';
 
   const generateSitemapXml = (): string => {
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;

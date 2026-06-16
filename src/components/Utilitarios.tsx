@@ -25,7 +25,7 @@ export default function Utilitarios({ toolId }: UtilitariosProps) {
 
 // 1. CONTADOR DE CARACTERES E PALAVRAS (WITH WORD DENSITY!)
 function ContadorTexto() {
-  const [texto, setTexto] = useState<string>('O Brasil Ferramentas oferece as melhores soluções de SEO programático gratuitas.');
+  const [texto, setTexto] = useState<string>('A Tool Brasil oferece as melhores soluções de SEO programático gratuitas.');
   const [stats, setStats] = useState<any>(null);
 
   useEffect(() => {
@@ -168,7 +168,7 @@ function RemovedorEspacos() {
 
 // 3. JSON FORMATTER / BEAUTIFIER
 function JsonFormatter() {
-  const [jsonStr, setJsonStr] = useState<string>('{"nome":"Brasil Ferramentas","segmento":"SEO","funcionando":true,"ferramentas":["Calculadoras","Geradores"]}');
+  const [jsonStr, setJsonStr] = useState<string>('{"nome":"Tool Brasil","segmento":"SEO","funcionando":true,"ferramentas":["Calculadoras","Geradores"]}');
   const [formatted, setFormatted] = useState<string>('');
   const [errorLog, setErrorLog] = useState<string>('');
 

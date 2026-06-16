@@ -1,6 +1,6 @@
 {
-  "name": "Brasil Ferramentas",
-  "description": "Ferramentas Online Gratuitas para o Dia a Dia. Calculadoras, Conversores, Geradores e Utilitários Web otimizados para SEO e de alta performance.",
+  "name": "Tool Brasil",
+  "description": "Tool Brasil - Ferramentas Online Gratuitas para o Dia a Dia. Calculadoras, Conversores, Geradores e Utilitários Web otimizados para SEO e de alta performance.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

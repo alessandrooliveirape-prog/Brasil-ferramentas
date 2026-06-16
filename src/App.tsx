@@ -127,6 +127,22 @@ export default function App() {
     activeTool = TOOLS.find(t => t.slug === currentRoute.slug) || null;
   }
 
+  // Set browser title dynamically
+  useEffect(() => {
+    if (currentRoute.view === 'tool' && activeTool) {
+      document.title = `${activeTool.title} | Tool Brasil`;
+    } else if (currentRoute.view === 'category' && currentRoute.categoryId) {
+      const cat = CATEGORIES.find(c => c.id === currentRoute.categoryId);
+      if (cat) {
+        document.title = `${cat.name} | Tool Brasil`;
+      } else {
+        document.title = "Tool Brasil | Ferramentas Online Gratuitas";
+      }
+    } else {
+      document.title = "Tool Brasil | Ferramentas Online Gratuitas";
+    }
+  }, [currentRoute, activeTool]);
+
   // Log and persist tool visits
   useEffect(() => {
     if (activeTool && activeTool.id) {
@@ -294,10 +310,10 @@ export default function App() {
               </div>
               <div>
                 <span className="text-lg font-extrabold tracking-tight bg-gradient-to-r from-emerald-600 to-indigo-600 bg-clip-text text-transparent">
-                  Brasil Ferramentas
+                  Tool Brasil
                 </span>
                 <span className="hidden sm:block text-[9px] text-slate-400 font-medium font-mono uppercase tracking-wider">
-                  BrasilFerramentas.com
+                  ToolBrasil.com
                 </span>
               </div>
             </a>
@@ -892,7 +908,7 @@ export default function App() {
 
           <div className="pt-8 border-t border-slate-800 text-center md:flex md:items-center md:justify-between text-xs text-slate-500">
             <p>
-              &copy; {new Date().getFullYear()} Brasil Ferramentas. Todos os direitos reservados. "Ferramentas Online Gratuitas para o Dia a Dia".
+              &copy; {new Date().getFullYear()} Tool Brasil. Todos os direitos reservados. "Ferramentas Online Gratuitas para o Dia a Dia".
             </p>
             <div className="flex justify-center gap-4 mt-4 md:mt-0 font-mono">
               <a href="#sitemap" className="hover:text-emerald-500">Sitemap XML</a>

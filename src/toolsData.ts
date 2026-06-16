@@ -617,7 +617,7 @@ export const TOOLS: ToolMetadata[] = [
       }
     ],
     tips: [
-      'Configure seu gerador no Brasil Ferramentas para iniciar com o clássico termo inicial "Lorem ipsum dolor sit amet..." de transição.'
+      'Configure seu gerador no Tool Brasil para iniciar com o clássico termo inicial "Lorem ipsum dolor sit amet..." de transição.'
     ],
     relatedToolIds: ['senha', 'contador-caracteres', 'removedor-espacos'],
     slug: 'gerador-de-lorem-ipsum'
@@ -992,7 +992,7 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'utilitarios',
     title: 'Decode URL - Decodificação de URLs',
     shortDescription: 'Decodifique links e query strings e traduza-os em palavras de linguagem humana legíveis comuns.',
-    longIntro: 'O reverso da conversão de URLs do portal Brasil Ferramentas. Ele limpa caracteres especiais, pontuações, recuperando os termos originais de campanhas que foram empacotados anteriormente.',
+    longIntro: 'O reverso da conversão de URLs do portal Tool Brasil. Ele limpa caracteres especiais, pontuações, recuperando os termos originais de campanhas que foram empacotados anteriormente.',
     howItWorks: 'Vaze a string mascarada de entrada e a rotina resgata as palavras acentuadas e espaços em milissegundos.',
     faqs: [
       {
