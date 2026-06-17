@@ -26,6 +26,9 @@ export default function Calculadoras({ toolId }: CalculadorasProps) {
       {toolId === 'porcentagem' && <Porcentagem />}
       {toolId === 'idade' && <IdadeExata />}
       {toolId === 'dias-entre-datas' && <DiasEntreDatas />}
+      {toolId === 'hora-extra' && <HoraExtra />}
+      {toolId === 'seguro-desemprego' && <SeguroDesemprego />}
+      {toolId === 'salario-liquido' && <SalarioLiquido />}
     </div>
   );
 }
@@ -1149,3 +1152,452 @@ function DiasEntreDatas() {
     </div>
   );
 }
+
+// 15. HORA EXTRA
+function HoraExtra() {
+  const [salario, setSalario] = useState<number>(3000);
+  const [jornada, setJornada] = useState<number>(220);
+  const [horas50, setHoras50] = useState<number>(10);
+  const [horas100, setHoras100] = useState<number>(5);
+  const [horasNoturnas, setHorasNoturnas] = useState<number>(0);
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    const valorHoraComum = salario / (jornada || 220);
+    const valorExtra50 = valorHoraComum * 1.5;
+    const valorExtra100 = valorHoraComum * 2.0;
+    const valorNoturno = valorHoraComum * 0.2; // Adicional de 20%
+
+    const total50 = horas50 * valorExtra50;
+    const total100 = horas100 * valorExtra100;
+    const totalNoturno = horasNoturnas * valorNoturno;
+    const totalExtras = total50 + total100 + totalNoturno;
+
+    // Descanso Semanal Remunerado (DSR) aproximado: (total extras / 26 dias úteis) * 4 domingos/feriados
+    const dsr = (totalExtras / 26) * 4;
+    const brutoFinal = totalExtras + dsr;
+
+    setResultado({
+      valorHora: valorHoraComum,
+      valor50: valorExtra50,
+      valor100: valorExtra100,
+      valorNoturno: valorNoturno,
+      sub50: total50,
+      sub100: total100,
+      subNoturno: totalNoturno,
+      totalExtras: totalExtras,
+      dsr: dsr,
+      totalGeral: brutoFinal
+    });
+  }, [salario, jornada, horas50, horas100, horasNoturnas]);
+
+  return (
+    <div className="space-y-6" id="calc-hora-extra">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Cálculo de Horas Extras (CLT)</h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Salário Bruto Mensal (R$)</label>
+          <input type="number" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm focus:outline-emerald-500 font-mono" value={salario} onChange={(e) => setSalario(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Jornada Mensal (Horas)</label>
+          <select className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm focus:outline-emerald-500" value={jornada} onChange={(e) => setJornada(Number(e.target.value))}>
+            <option value="220">220h (44h semanais)</option>
+            <option value="200">200h (40h semanais)</option>
+            <option value="180">180h (36h semanais)</option>
+            <option value="150">150h (30h semanais)</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Qtd Horas Extras 50%</label>
+          <input type="number" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm focus:outline-emerald-500 font-mono" value={horas50} onChange={(e) => setHoras50(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Qtd Horas Extras 100%</label>
+          <input type="number" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm focus:outline-emerald-500 font-mono" value={horas100} onChange={(e) => setHoras100(Number(e.target.value))} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Horas sob Adicional Noturno</label>
+          <input type="number" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm focus:outline-emerald-500 font-mono" value={horasNoturnas} onChange={(e) => setHorasNoturnas(Number(e.target.value))} placeholder="Ex: Horas entre 22h e 5h" />
+          <p className="text-[10px] text-slate-400 mt-1">Usa alíquota oficial urbana de 20% sobre o valor da hora base.</p>
+        </div>
+      </div>
+
+      {resultado && (
+        <div className="space-y-4 pt-2">
+          <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100 dark:border-emerald-950/50">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+              <div className="p-2 border-r border-emerald-100/30">
+                <span className="block text-xs text-slate-500">Salário-Hora Base</span>
+                <span className="text-base font-bold text-slate-800 dark:text-slate-200 font-mono">
+                  R$ {resultado.valorHour !== undefined ? resultado.valorHour.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : resultado.valorHora.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </span>
+              </div>
+              <div className="p-2 border-r border-emerald-100/30">
+                <span className="block text-xs text-slate-500">Total Líquido de Horas Extras</span>
+                <span className="text-base font-bold text-slate-800 dark:text-slate-200 font-mono">
+                  R$ {resultado.totalExtras.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </span>
+              </div>
+              <div className="p-2">
+                <span className="block text-xs text-slate-500">Valor Bruto Total a Receber</span>
+                <span className="text-xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">
+                  R$ {resultado.totalGeral.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto text-xs bg-slate-50 dark:bg-slate-850 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+            <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-3 uppercase tracking-wider text-[10px]">Detalhamento das Operações:</h4>
+            <div className="space-y-2">
+              <div className="flex justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-2">
+                <span className="text-slate-500">Hora Extra 50% ({horas50}h @ R$ {resultado.valor50.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}/h)</span>
+                <span className="font-mono font-bold text-slate-800 dark:text-slate-200">R$ {resultado.sub50.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="flex justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-2">
+                <span className="text-slate-500">Hora Extra 100% ({horas100}h @ R$ {resultado.valor100.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}/h)</span>
+                <span className="font-mono font-bold text-slate-800 dark:text-slate-200">R$ {resultado.sub100.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="flex justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-2">
+                <span className="text-slate-500">Adicional Noturno ({horasNoturnas}h @ R$ {resultado.valorNoturno.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}/h)</span>
+                <span className="font-mono font-bold text-slate-800 dark:text-slate-200">R$ {resultado.subNoturno.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="flex justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-2">
+                <span className="text-slate-500 font-semibold text-emerald-600">Reflexo sobre Descanso Semanal Remunerado (DSR)</span>
+                <span className="font-mono font-bold text-emerald-600">R$ {resultado.dsr.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 16. SEGURO DESEMPREGO
+function SeguroDesemprego() {
+  const [salarioMedio, setSalarioMedio] = useState<number>(3000);
+  const [solicitacoes, setSolicitacoes] = useState<string>('1');
+  const [mesesTrabalhados, setMesesTrabalhados] = useState<number>(12);
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    const solicInt = parseInt(solicitacoes, 10);
+    let elegivel = false;
+    let motivoMsg = '';
+
+    // Regras de Elegibilidade Brasileiras
+    if (solicInt === 1) {
+      if (mesesTrabalhados >= 12) {
+        elegivel = true;
+      } else {
+        motivoMsg = 'Para a primeira solicitação, é exigido um mínimo de 12 meses de vínculo nos últimos 18 anteriores à dispensa.';
+      }
+    } else if (solicInt === 2) {
+      if (mesesTrabalhados >= 9) {
+        elegivel = true;
+      } else {
+        motivoMsg = 'Para a segunda solicitação, é exigido um mínimo de 9 meses de vínculo nos últimos 12 anteriores à dispensa.';
+      }
+    } else {
+      if (mesesTrabalhados >= 6) {
+        elegivel = true;
+      } else {
+        motivoMsg = 'Para a terceira solicitação em diante, é exigido um mínimo de 6 meses de vínculo direto antes da dispensa.';
+      }
+    }
+
+    // Cálculo das Parcelas
+    let numParcelas = 0;
+    if (elegivel) {
+      if (mesesTrabalhados >= 6 && mesesTrabalhados <= 11) {
+        numParcelas = 3;
+      } else if (mesesTrabalhados >= 12 && mesesTrabalhados <= 23) {
+        numParcelas = 4;
+      } else if (mesesTrabalhados >= 24) {
+        numParcelas = 5;
+      }
+    }
+
+    // Cálculo do valor da parcela
+    let valorParcela = 0;
+    if (elegivel) {
+      if (salarioMedio <= 2230.97) {
+        valorParcela = salarioMedio * 0.8;
+      } else if (salarioMedio <= 3719.00) {
+        const excedente = salarioMedio - 2230.97;
+        valorParcela = 1784.78 + (excedente * 0.5);
+      } else {
+        valorParcela = 2528.79; // Teto Máximo oficial aproximado de 2026
+      }
+
+      // Piso é o salário mínimo nacional (R$ 1.412,00)
+      if (valorParcela < 1412.00) {
+        valorParcela = 1412.00;
+      }
+    }
+
+    setResultado({
+      elegivel,
+      motivoMsg,
+      numParcelas,
+      valorParcela,
+      totalBeneficio: numParcelas * valorParcela
+    });
+  }, [salarioMedio, solicitacoes, mesesTrabalhados]);
+
+  return (
+    <div className="space-y-6" id="calc-seguro-desemprego">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Simulação do Seguro-Desemprego</h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Média dos Últimos 3 Salários (R$)</label>
+          <input type="number" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm focus:outline-emerald-500 font-mono" value={salarioMedio} onChange={(e) => setSalarioMedio(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Qual solicitação do benefício?</label>
+          <select className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm focus:outline-emerald-500" value={solicitacoes} onChange={(e) => setSolicitacoes(e.target.value)}>
+            <option value="1">1ª Solicitação</option>
+            <option value="2">2ª Solicitação</option>
+            <option value="3">3ª Solicitação ou Superior</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Meses Trabalhados (Último Emprego)</label>
+          <input type="number" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm focus:outline-emerald-500 font-mono" value={mesesTrabalhados} onChange={(e) => setMesesTrabalhados(Number(e.target.value))} />
+        </div>
+      </div>
+
+      {resultado && (
+        <div className="space-y-4 pt-2">
+          {!resultado.elegivel ? (
+            <div className="bg-rose-50 dark:bg-rose-950/20 p-4 rounded-xl border border-rose-100 dark:border-rose-950/50 text-rose-800 dark:text-rose-450 text-xs">
+              <strong>⚠ Não Elegível ao Benefício:</strong> {resultado.motivoMsg}
+            </div>
+          ) : (
+            <>
+              <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100 dark:border-emerald-950/50">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                  <div className="p-2 border-r border-emerald-100/30">
+                    <span className="block text-xs text-slate-500">Parcelas Devidas</span>
+                    <span className="text-xl font-bold text-slate-800 dark:text-slate-200 font-mono">
+                      {resultado.numParcelas} Parcelas
+                    </span>
+                  </div>
+                  <div className="p-2 border-r border-emerald-100/30">
+                    <span className="block text-xs text-slate-500">Valor Unitário por Parcela</span>
+                    <span className="text-xl font-bold text-slate-800 dark:text-slate-200 font-mono">
+                      R$ {resultado.valorParcela.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                  <div className="p-2">
+                    <span className="block text-xs text-slate-500">Apoio Financeiro Total Recebido</span>
+                    <span className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">
+                      R$ {resultado.totalBeneficio.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-xs bg-slate-50 dark:bg-slate-850 p-4 rounded-xl border border-slate-100 dark:border-slate-800 space-y-1 text-slate-500 dark:text-slate-400">
+                <p>💡 <strong>Informações do Ministério do Trabalho:</strong></p>
+                <ul className="list-disc pl-4 space-y-1">
+                  <li>O valor oficial da parcela não pode ser menor que o salário mínimo federal (atualmente regulamentado em R$ 1.412,00).</li>
+                  <li>A liberação ocorre exatamente 30 dias após dar entrada no benefício no portal Gov.br ou agência conveniada.</li>
+                </ul>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 17. SALÁRIO LÍQUIDO
+function SalarioLiquido() {
+  const [salarioBruto, setSalarioBruto] = useState<number>(3500);
+  const [dependentes, setDependentes] = useState<number>(0);
+  const [outrasDeducoes, setOutrasDeducoes] = useState<number>(0);
+  const [valeTransporte, setValeTransporte] = useState<boolean>(false);
+  const [vrCopart, setVrCopart] = useState<number>(0);
+  const [planoSaude, setPlanoSaude] = useState<number>(0);
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    // 1. INSS PROGRESSIVO 2026/VIGENTE
+    const faixasINSS = [
+      { limite: 1412, aliquota: 0.075 },
+      { limite: 2666.68, aliquota: 0.09 },
+      { limite: 4000.03, aliquota: 0.12 },
+      { limite: 7786.02, aliquota: 0.14 }
+    ];
+
+    let valorINSS = 0;
+    let baseRestante = salarioBruto;
+    let anteriorLimite = 0;
+
+    for (let f of faixasINSS) {
+      if (salarioBruto > anteriorLimite) {
+        const baseDeCalculo = Math.min(salarioBruto, f.limite) - anteriorLimite;
+        valorINSS += baseDeCalculo * f.aliquota;
+        anteriorLimite = f.limite;
+        if (salarioBruto <= f.limite) break;
+      }
+    }
+
+    // Limitador ao teto do INSS (Máximo de R$ 908.85 para fins ilustrativos)
+    const tetoINSS = 908.85;
+    if (valorINSS > tetoINSS) {
+      valorINSS = tetoINSS;
+    }
+
+    // 2. IRRF PROGRESSIVO 2026
+    // Base de cálculo do IRRF = Salário Bruto - INSS - (Dependentes * 189,59) - Outras deduções
+    const descontoDependentes = dependentes * 189.59;
+    const baseIRRF = Math.max(0, salarioBruto - valorINSS - descontoDependentes - outrasDeducoes);
+
+    // Alíquotas e Deduções IRRF
+    let valorIRRF = 0;
+    if (baseIRRF <= 2259.20) {
+      valorIRRF = 0;
+    } else if (baseIRRF <= 2826.65) {
+      valorIRRF = (baseIRRF * 0.075) - 169.44;
+    } else if (baseIRRF <= 3751.05) {
+      valorIRRF = (baseIRRF * 0.15) - 381.44;
+    } else if (baseIRRF <= 4664.68) {
+      valorIRRF = (baseIRRF * 0.225) - 662.77;
+    } else {
+      valorIRRF = (baseIRRF * 0.275) - 896.00;
+    }
+
+    if (valorIRRF < 0) {
+      valorIRRF = 0;
+    }
+
+    // 3. OUTROS DESCONTOS
+    const descontoVT = valeTransporte ? salarioBruto * 0.06 : 0;
+    const totalDescontos = valorINSS + valorIRRF + descontoVT + vrCopart + planoSaude;
+    const liquido = salarioBruto - totalDescontos;
+    const porcenDescontos = (totalDescontos / (salarioBruto || 1)) * 100;
+    const porcenLiquido = (liquido / (salarioBruto || 1)) * 100;
+
+    setResultado({
+      inss: valorINSS,
+      irrf: valorIRRF,
+      vt: descontoVT,
+      totalDescontos: totalDescontos,
+      liquido: liquido,
+      pctDescontos: porcenDescontos,
+      pctLiquido: porcenLiquido
+    });
+  }, [salarioBruto, dependentes, outrasDeducoes, valeTransporte, vrCopart, planoSaude]);
+
+  return (
+    <div className="space-y-6" id="calc-salario-liquido">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Salário Líquido (CLT)</h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Salário Bruto Inicial (R$)</label>
+          <input type="number" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm focus:outline-emerald-500 font-mono" value={salarioBruto} onChange={(e) => setSalarioBruto(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Dependentes Legais (Quantidade)</label>
+          <input type="number" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm focus:outline-emerald-500 font-mono" value={dependentes} onChange={(e) => setDependentes(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Deduções Previdenciárias Extra (ex: Pensão)</label>
+          <input type="number" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm focus:outline-emerald-500 font-mono" value={outrasDeducoes} onChange={(e) => setOutrasDeducoes(Number(e.target.value))} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-slate-50 pt-3">
+        <div className="flex items-center gap-2 py-2">
+          <input type="checkbox" id="check-vt" className="rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4" checked={valeTransporte} onChange={(e) => setValeTransporte(e.target.checked)} />
+          <label htmlFor="check-vt" className="text-xs font-semibold text-slate-600 dark:text-slate-350 hover:cursor-pointer select-none">Descontar Vale Transporte (6%)</label>
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Refeição Coparticipação (VR - R$)</label>
+          <input type="number" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm focus:outline-emerald-500 font-mono" value={vrCopart} onChange={(e) => setVrCopart(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Plano de Saúde Familiar (Desconto - R$)</label>
+          <input type="number" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm focus:outline-emerald-500 font-mono" value={planoSaude} onChange={(e) => setPlanoSaude(Number(e.target.value))} />
+        </div>
+      </div>
+
+      {resultado && (
+        <div className="space-y-4 pt-2">
+          <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100 dark:border-emerald-950/50">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+              <div className="p-2 border-r border-emerald-100/30">
+                <span className="block text-xs text-slate-500">Salário Bruto Inicial</span>
+                <span className="text-base font-bold text-slate-800 dark:text-slate-200 font-mono">
+                  R$ {salarioBruto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </span>
+              </div>
+              <div className="p-2 border-r border-emerald-100/30">
+                <span className="block text-xs text-slate-500">Total de Impostos e Descontos</span>
+                <span className="text-base font-bold text-red-500 dark:text-red-400 font-mono">
+                  R$ {resultado.totalDescontos.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} ({resultado.pctDescontos.toFixed(1)}%)
+                </span>
+              </div>
+              <div className="p-2">
+                <span className="block text-xs text-slate-500">Salário Líquido Final na Conta</span>
+                <span className="text-xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono font-mono">
+                  R$ {resultado.liquido.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} ({resultado.pctLiquido.toFixed(1)}%)
+                </span>
+              </div>
+            </div>
+            
+            {/* Visual Progress Ratio */}
+            <div className="w-full bg-red-100 dark:bg-red-950/40 rounded-full h-2.5 mt-4 overflow-hidden flex">
+              <div className="bg-emerald-600 h-full" style={{ width: `${resultado.pctLiquido}%` }}></div>
+              <div className="bg-rose-500 h-full" style={{ width: `${resultado.pctDescontos}%` }}></div>
+            </div>
+          </div>
+
+          <div className="overflow-x-auto text-xs bg-slate-50 dark:bg-slate-850 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
+            <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-3 uppercase tracking-wider text-[10px]">Quadro de Descontos e Impostos do Contra-Cheque:</h4>
+            <div className="space-y-2">
+              <div className="flex justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-2">
+                <span className="text-slate-500">Previdência Obrigatória (INSS Progressivo)</span>
+                <span className="font-mono font-bold text-red-500">- R$ {resultado.inss.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="flex justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-2">
+                <span className="text-slate-500">Imposto de Renda Retido na Fonte (IRRF)</span>
+                <span className="font-mono font-bold text-red-500">- R$ {resultado.irrf.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+              {valeTransporte && (
+                <div className="flex justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-2">
+                  <span className="text-slate-500">Vale Transporte (Dedução de 6% do Empregado)</span>
+                  <span className="font-mono font-bold text-red-500">- R$ {resultado.vt.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                </div>
+              )}
+              {vrCopart > 0 && (
+                <div className="flex justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-2">
+                  <span className="text-slate-500">Vale Refeição / Alimentação (Preço Coparticipado)</span>
+                  <span className="font-mono font-bold text-red-500">- R$ {vrCopart.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                </div>
+              )}
+              {planoSaude > 0 && (
+                <div className="flex justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-2">
+                  <span className="text-slate-500">Dedução Plano de Saúde Coletivo Empresarial</span>
+                  <span className="font-mono font-bold text-red-500">- R$ {planoSaude.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+

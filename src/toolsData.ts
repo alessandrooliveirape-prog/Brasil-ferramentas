@@ -346,6 +346,90 @@ export const TOOLS: ToolMetadata[] = [
     relatedToolIds: ['idade', 'regra-de-tre', 'horas-para-minutos'],
     slug: 'calculadora-dias-entre-datas'
   },
+  {
+    id: 'hora-extra',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Hora Extra',
+    shortDescription: 'Calcule o valor das suas horas extras de trabalho CLT, incluindo adicionais de 50%, 100% e Adicional Noturno.',
+    longIntro: 'Esta calculadora ajuda a estimar a remuneração devida pelas horas extras trabalhadas sob o regime CLT. Ela calcula o valor do seu salário-hora base, o acréscimo proporcional para horas extras comuns (50%) ou em domingos e feriados (100%), além de possibilitar o cálculo do Adicional Noturno e do DSR (Descanso Semanal Remunerado).',
+    howItWorks: 'Informe o seu salário bruto, a jornada de trabalho mensal contratual (habitualmente 220 horas para 44 horas semanais), e o número de horas extras trabalhadas com acréscimo de 50% ou 100%. A calculadora retornará o valor detalhado de cada hora, o total ganho e o reflexo de DSR no mês corrente.',
+    faqs: [
+      {
+        question: 'Qual o valor do acréscimo da hora extra comum?',
+        answer: 'De acordo com a CLT, a hora extra comum em dias de semana ou sábados deve ser paga com acréscimo mínimo de 50% sobre o valor da hora de trabalho comum.'
+      },
+      {
+        question: 'Como funciona o acréscimo de 100% sobre horas extras?',
+        answer: 'As horas extras executadas em domingos oficiais ou em feriados declarados devem ser remuneradas com o acréscimo integral de 100% (o dobro do valor da hora de trabalho base).'
+      },
+      {
+        question: 'O que é o DSR sobre hora extra?',
+        answer: 'O Descanso Semanal Remunerado (DSR) é uma verba adicional devida sobre as horas extras. Significa que as horas extras feitas também incidem sobre o seu repouso semanal pago, e o cálculo é feito dividindo as horas extras do mês pelos dias úteis e multiplicando pelos domingos e feriados.'
+      }
+    ],
+    tips: [
+      'A jornada de trabalho padrão no Brasil é de 44 horas semanais, totalizando 220 horas de cálculo mensal de divisores.',
+      'O Adicional Noturno incide sobre horas trabalhadas das 22h às 5h do dia seguinte com um acréscimo mínimo de 20% no meio urbano.'
+    ],
+    relatedToolIds: ['inss', 'decimo-terceiro', 'ferias', 'salario-liquido'],
+    slug: 'calculadora-de-hora-extra'
+  },
+  {
+    id: 'seguro-desemprego',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Seguro-Desemprego',
+    shortDescription: 'Verifique se você tem direito ao benefício, simule o número de parcelas e o valor que irá receber.',
+    longIntro: 'A calculadora de Seguro-Desemprego simula se o trabalhador demitido sem justa causa tem direito a receber o benefício assistencial temporário, estimando o valor de cada parcela mensal e a quantidade total de parcelas com base no histórico de trabalho CLT e solicitações anteriores.',
+    howItWorks: 'Insira a média salarial dos últimos 3 meses trabalhados, informe quantas vezes você já solicitou o seguro-desemprego anteriormente, e selecione a quantidade total de meses trabalhados de carteira assinada no último emprego.',
+    faqs: [
+      {
+        question: 'Quem tem direito ao seguro-desemprego?',
+        answer: 'Trabalhadores em regime CLT dispensados sem justa causa, que não possuam renda própria para sustento familiar e que tenham cumprido os critérios de carência de meses trabalhados.'
+      },
+      {
+        question: 'Qual o número mínimo de meses para solicitar a primeira vez?',
+        answer: 'Na primeira solicitação do benefício, o trabalhador precisa ter atuado sob regime CLT por pelo menos 12 meses nos últimos 18 meses anteriores à demissão.'
+      },
+      {
+        question: 'O empregado em acordo do artigo 484-A da CLT pode receber o seguro?',
+        answer: 'Não. Em casos de rescisão por acordo mútuo (acordo bilateral comum), o trabalhador tem direito à metade do aviso prévio e multa de 20% do FGTS, mas NÃO dá direito ao recebimento de parcelas do seguro-desemprego.'
+      }
+    ],
+    tips: [
+      'O prazo para requerer o Seguro-Desemprego vai de 7 a 120 dias após a data da demissão do empregado.',
+      'O pagamento é suspenso caso o trabalhador consiga um novo emprego de carteira assinada.'
+    ],
+    relatedToolIds: ['rescisao', 'fgts', 'inss', 'salario-liquido'],
+    slug: 'calculadora-de-seguro-desemprego'
+  },
+  {
+    id: 'salario-liquido',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Salário Líquido',
+    shortDescription: 'Preveja seu salário líquido CLT deduzindo INSS, Imposto de Renda (IRRF), vale-transporte e outros descontos.',
+    longIntro: 'Configure seu salário bruto mensal, dependentes familiares e deduções extras para descobrir exatamente quanto cairá na sua conta bancária todo mês como Salário Líquido CLT, visualizando o detalhamento completo de todos os descontos aplicados.',
+    howItWorks: 'Forneça o valor do seu salário bruto mensal, a quantidade de dependentes legais e configure todos os descontos adicionais que ocorrem em sua folha de pagamento (como Vale Transporte, plano de saúde ou coparticipações).',
+    faqs: [
+      {
+        question: 'O que é deduzido primeiro: o INSS ou o IRRF?',
+        answer: 'O INSS é calculado e deduzido primeiro. A base de cálculo do Imposto de Renda (IRRF) é o salário bruto menos o desconto do INSS e as deduções por dependentes legais.'
+      },
+      {
+        question: 'Como funciona o desconto de dependentes?',
+        answer: 'Cada dependente declarado na folha de pagamento abate legalmente o valor de R$ 189,59 da base de cálculo em que se aplica o Imposto de Renda Mensal.'
+      },
+      {
+        question: 'Qual o percentual limite de dedução de Vale Transporte?',
+        answer: 'O empregador pode descontar no máximo 6% do salário básico do empregado para o Vale Transporte. Se o custo total do transporte for menor que 6%, o desconto será apenas do valor real do custo.'
+      }
+    ],
+    tips: [
+      'Sempre preencha dependentes legais de forma fidedigna para obter um salário líquido exato do Imposto de Renda na fonte.',
+      'Deduções como pensão alimentícia oficial por decisão judicial também abatem da base de cálculo do IRRF.'
+    ],
+    relatedToolIds: ['inss', 'decimo-terceiro', 'ferias', 'hora-extra'],
+    slug: 'calculadora-de-salario-liquido'
+  },
 
   // CONVERSORES
   {
