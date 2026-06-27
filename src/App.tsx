@@ -31,6 +31,10 @@ import {
 
 // Core data and sub-components
 import { CATEGORIES, TOOLS, PROGRAMMATIC_PAGES } from './toolsData';
+import { EXTRA_PROGRAMMATIC_PAGES } from './programmaticExtra';
+
+// Merge base programmatic pages with extra long-tail SEO pages
+const ALL_PROGRAMMATIC_PAGES = { ...PROGRAMMATIC_PAGES, ...EXTRA_PROGRAMMATIC_PAGES };
 import Calculadoras from './components/Calculadoras';
 import Conversores from './components/Conversores';
 import Geradores from './components/Geradores';
@@ -261,7 +265,7 @@ export default function App() {
     if (activeTool) {
       crumbs.push({ name: activeTool.title, hash: `#${activeTool.categoryId}/${activeTool.slug}` });
     } else if (currentRoute.view === 'programatico' && currentRoute.id) {
-      const prog = PROGRAMMATIC_PAGES[currentRoute.id];
+      const prog = ALL_PROGRAMMATIC_PAGES[currentRoute.id];
       if (prog) {
         crumbs.push({ name: 'SEO Programático', hash: '#programatico/ddd-brasil' });
         crumbs.push({ name: prog.title, hash: `#programatico/${currentRoute.id}` });
@@ -283,6 +287,52 @@ export default function App() {
 
   const crumbs = buildBreadcrumbs();
 
+  // Schema.org JSON-LD Structured Data
+  const getBreadcrumbSchema = () => {
+    const items = crumbs.map((c, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: c.name,
+      item: `https://toolbrasil.com.br${c.hash === '#' ? '' : c.hash}`
+    }));
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: items
+    };
+  };
+
+  const getWebAppSchema = () => {
+    if (activeTool) {
+      return {
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'WebApplication',
+            name: activeTool.title,
+            url: `https://toolbrasil.com.br/#${activeTool.categoryId}/${activeTool.slug}`,
+            description: activeTool.shortDescription,
+            applicationCategory: 'BusinessApplication',
+            operatingSystem: 'All',
+            offers: { '@type': 'Offer', price: '0.00', priceCurrency: 'BRL' }
+          },
+          {
+            '@type': 'FAQPage',
+            mainEntity: activeTool.faqs.map(faq => ({
+              '@type': 'Question',
+              name: faq.question,
+              acceptedAnswer: { '@type': 'Answer', text: faq.answer }
+            }))
+          }
+        ]
+      };
+    }
+    return null;
+  };
+
+  const breadcrumbSchema = getBreadcrumbSchema();
+  const webAppSchema = getWebAppSchema();
+
   // Filter tools based on search input
   const getFilteredTools = () => {
     if (!searchQuery.trim()) return [];
@@ -295,7 +345,7 @@ export default function App() {
     ).map(t => ({ ...t, type: 'tool' }));
 
     // Programmatic Pages
-    const progMatching = Object.entries(PROGRAMMATIC_PAGES).filter(([key, value]) => 
+    const progMatching = Object.entries(ALL_PROGRAMMATIC_PAGES).filter(([key, value]) => 
       value.title.toLowerCase().includes(query) ||
       value.description.toLowerCase().includes(query)
     ).map(([key, value]) => ({
@@ -485,12 +535,20 @@ export default function App() {
 
           {/* DYNAMIC METRIC DISPATCHER */}
           <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 text-xs">
-            <span className="text-[10px] font-bold text-slate-400 uppercase">Acesso Programático</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
+              <FileSearch className="w-3 h-3" /> Conteúdo Programático
+            </span>
             <div className="grid grid-cols-1 gap-1">
               <a href="#programatico/ddd-brasil" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 font-mono">▸ DDD Brasil</a>
               <a href="#programatico/cep-brasil" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 font-mono">▸ CEP Correios</a>
               <a href="#programatico/bancos-brasil" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 font-mono">▸ Bancos & ISPB</a>
+              <a href="#programatico/salario-minimo-historico" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 font-mono">▸ Salário Mínimo Histórico</a>
+              <a href="#programatico/feriados-nacionais" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 font-mono">▸ Feriados Nacionais</a>
+              <a href="#programatico/selic-historica" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 font-mono">▸ Taxa SELIC Histórica</a>
             </div>
+            <a href="#sitemap" className="text-[10px] text-emerald-600 font-bold block pt-1 hover:underline">
+              Ver todas as páginas →
+            </a>
           </div>
 
           <AdSensePlaceholder slotId="slot-3" position="sidebar" />
@@ -669,16 +727,28 @@ export default function App() {
                 ))}
               </div>
 
-              {/* SEARCH SUGGESTIONS */}
+              {/* SEARCH SUGGESTIONS - LONG TAIL KEYWORDS */}
               <div className="bg-emerald-900/5 dark:bg-emerald-950/10 border border-emerald-100 dark:border-emerald-950 p-5 rounded-xl space-y-3">
                 <h3 className="text-sm font-bold text-emerald-800 dark:text-emerald-400 flex items-center gap-1.5">
-                  <BookOpen className="w-4 h-4" /> Principais Consultas do Google
+                  <BookOpen className="w-4 h-4" /> 🔍 Principais Consultas do Google
                 </h3>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">As ferramentas mais buscadas pelos brasileiros — todas gratuitas e sem necessidade de cadastro.</p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                  <a href="#calculadoras/calculadora-de-juros-compostos" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium">Juros Compostos</a>
-                  <a href="#geradores/gerador-de-cpf" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium">Gerador CPF</a>
-                  <a href="#conversores/converter-real-para-dolar" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium">Real para Dólar</a>
-                  <a href="#programatico/ddd-brasil" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium">Lista de DDDs</a>
+                  <a href="#calculadoras/calculadora-de-juros-compostos" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Calcular Juros Compostos</a>
+                  <a href="#geradores/gerador-de-cpf" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Gerar CPF Válido</a>
+                  <a href="#conversores/converter-real-para-dolar" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Real para Dólar Hoje</a>
+                  <a href="#programatico/ddd-brasil" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Lista de DDDs Brasil</a>
+                  <a href="#calculadoras/calculadora-de-inss" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Calcular INSS 2025</a>
+                  <a href="#calculadoras/simulador-de-financiamento" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Simular Financiamento Casa</a>
+                  <a href="#geradores/gerador-de-senha-segura" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Gerar Senha Segura</a>
+                  <a href="#conversores/converter-real-para-euro" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Real para Euro Hoje</a>
+                  <a href="#utilitarios/meu-ip" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Qual é o Meu IP?</a>
+                  <a href="#programatico/cep-brasil" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Buscar CEP Online</a>
+                  <a href="#calculadoras/calcular-imc" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Calcular IMC Grátis</a>
+                  <a href="#programatico/salario-minimo-historico" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Salário Mínimo Histórico</a>
+                  <a href="#conversores/converter-mb-para-gb" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">MB para GB Conversor</a>
+                  <a href="#geradores/gerador-de-qr-code" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Gerar QR Code</a>
+                  <a href="#utilitarios/validador-de-cartao-de-credito" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Validar Cartão Crédito</a>
                 </div>
               </div>
             </div>
@@ -830,6 +900,78 @@ export default function App() {
 
               </article>
 
+              {/* COMPARTILHAMENTO SOCIAL VIRAL */}
+              <div className="bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-xl p-6 shadow-sm" id="share-tool-section">
+                <div className="flex items-center gap-2 mb-4">
+                  <Sparkles className="w-4 h-4 text-amber-500" />
+                  <h3 className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Compartilhe esta Ferramenta</h3>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={() => {
+                      const url = encodeURIComponent(`https://toolbrasil.com.br/#${activeTool.categoryId}/${activeTool.slug}`);
+                      const text = encodeURIComponent(`${activeTool.title} - Tool Brasil`);
+                      window.open(`https://wa.me/?text=${text}%20${url}`, '_blank', 'noopener,noreferrer');
+                    }}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm"
+                    title="Compartilhar no WhatsApp"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    WhatsApp
+                  </button>
+                  <button
+                    onClick={() => {
+                      const url = encodeURIComponent(`https://toolbrasil.com.br/#${activeTool.categoryId}/${activeTool.slug}`);
+                      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'noopener,noreferrer');
+                    }}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm"
+                    title="Compartilhar no Facebook"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 011-1h3v-4h-3a5 5 0 00-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>
+                    Facebook
+                  </button>
+                  <button
+                    onClick={() => {
+                      const url = encodeURIComponent(`https://toolbrasil.com.br/#${activeTool.categoryId}/${activeTool.slug}`);
+                      const text = encodeURIComponent(`${activeTool.title} - Tool Brasil`);
+                      window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'noopener,noreferrer');
+                    }}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm"
+                    title="Compartilhar no X (Twitter)"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    X (Twitter)
+                  </button>
+                  <button
+                    onClick={() => {
+                      const url = encodeURIComponent(`https://toolbrasil.com.br/#${activeTool.categoryId}/${activeTool.slug}`);
+                      window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${url}`, '_blank', 'noopener,noreferrer');
+                    }}
+                    className="flex items-center gap-2 px-4 py-2.5 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm"
+                    title="Compartilhar no LinkedIn"
+                  >
+                    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    LinkedIn
+                  </button>
+                  <button
+                    onClick={() => {
+                      const url = `https://toolbrasil.com.br/#${activeTool.categoryId}/${activeTool.slug}`;
+                      navigator.clipboard.writeText(url);
+                      const btn = document.getElementById('copy-link-btn');
+                      if (btn) { btn.textContent = '✅ Copiado!'; setTimeout(() => { if (btn) btn.textContent = '📋 Copiar Link'; }, 2000); }
+                    }}
+                    id="copy-link-btn"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm border border-slate-200 dark:border-slate-700"
+                    title="Copiar link"
+                  >
+                    📋 Copiar Link
+                  </button>
+                </div>
+                <p className="text-[10px] text-slate-400 mt-3 text-center">
+                  Ajude outras pessoas a descobrirem esta ferramenta! Compartilhe nas suas redes sociais. 💚
+                </p>
+              </div>
+
               {/* LIVE SCHEMA OR OPEN GRAPH DIAGNOSTIC PREVIEW PANEL FOR CODERS */}
               <div id="seo-analytical-preview">
                 <SEOAnalyzer tool={activeTool} />
@@ -877,14 +1019,15 @@ export default function App() {
       <footer className="bg-slate-900 border-t border-slate-850 py-12 text-slate-400 mt-12 text-sm" id="app-footer">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             <div>
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Calculadoras Populares</h4>
               <ul className="space-y-1.5 text-xs">
                 <li><a href="#calculadoras/calculadora-de-juros-compostos" className="hover:text-emerald-400">Juros Compostos</a></li>
                 <li><a href="#calculadoras/simulador-de-financiamento" className="hover:text-emerald-400">Financiamento SAC/Price</a></li>
-                <li><a href="#calculadoras/calculadora-de-ferias-trabalhista" className="hover:text-emerald-400 font-mono">Férias CLT</a></li>
-                <li><a href="#calculadoras/calculadora-de-rescisao-trabalhista" className="hover:text-emerald-400 font-mono">Rescisões</a></li>
+                <li><a href="#calculadoras/calculadora-de-ferias-trabalhista" className="hover:text-emerald-400">Férias CLT</a></li>
+                <li><a href="#calculadoras/calculadora-de-rescisao-trabalhista" className="hover:text-emerald-400">Rescisão Trabalhista</a></li>
+                <li><a href="#calculadoras/calculadora-de-inss" className="hover:text-emerald-400">Calcular INSS 2025</a></li>
               </ul>
             </div>
             
@@ -892,52 +1035,81 @@ export default function App() {
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Conversores & Dados</h4>
               <ul className="space-y-1.5 text-xs">
                 <li><a href="#conversores/converter-real-para-dolar" className="hover:text-emerald-400">Real para Dólar</a></li>
+                <li><a href="#conversores/converter-real-para-euro" className="hover:text-emerald-400">Real para Euro</a></li>
                 <li><a href="#conversores/converter-mb-para-gb" className="hover:text-emerald-400">MB para GB</a></li>
                 <li><a href="#conversores/converter-metros-para-pes" className="hover:text-emerald-400">Metros para Pés</a></li>
-                <li><a href="#programatico/cep-brasil" className="hover:text-emerald-400">CEP Correios</a></li>
+                <li><a href="#conversores/libra-real" className="hover:text-emerald-400">Libra para Real</a></li>
+                <li><a href="#conversores/peso-argentino-real" className="hover:text-emerald-400">Peso Argentino</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Geradores Seguros</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Geradores & Utilitários</h4>
               <ul className="space-y-1.5 text-xs">
                 <li><a href="#geradores/gerador-de-cpf" className="hover:text-emerald-400">Gerador CPF</a></li>
                 <li><a href="#geradores/gerador-de-cnpj" className="hover:text-emerald-400">Gerador CNPJ</a></li>
-                <li><a href="#geradores/gerador-de-senha-segura" className="hover:text-emerald-400 font-mono">Passwords</a></li>
-                <li><a href="#geradores/gerador-de-qr-code" className="hover:text-emerald-400">QR Codes</a></li>
+                <li><a href="#geradores/gerador-de-senha-segura" className="hover:text-emerald-400">Gerar Senha Forte</a></li>
+                <li><a href="#geradores/gerador-de-qr-code" className="hover:text-emerald-400">QR Code Grátis</a></li>
+                <li><a href="#utilitarios/validador-de-cartao-de-credito" className="hover:text-emerald-400">Validar Cartão</a></li>
+                <li><a href="#geradores/gerador-rg" className="hover:text-emerald-400">Gerador RG</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Governança</h4>
-              <ul className="space-y-1.5 text-xs shadow-sm">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">📊 Conteúdo Programático</h4>
+              <ul className="space-y-1.5 text-xs">
+                <li><a href="#programatico/ddd-brasil" className="hover:text-emerald-400">Códigos DDD Brasil</a></li>
+                <li><a href="#programatico/cep-brasil" className="hover:text-emerald-400">Buscar CEP Correios</a></li>
+                <li><a href="#programatico/bancos-brasil" className="hover:text-emerald-400">Bancos & ISPB</a></li>
+                <li><a href="#programatico/salario-minimo-historico" className="hover:text-emerald-400">Salário Mínimo Histórico</a></li>
+                <li><a href="#programatico/selic-historica" className="hover:text-emerald-400">Taxa SELIC Histórica</a></li>
+                <li><a href="#programatico/feriados-nacionais" className="hover:text-emerald-400">Feriados Nacionais</a></li>
+                <li><a href="#sitemap" className="text-emerald-500 font-bold hover:underline">📄 Ver Todas as Páginas →</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Institucional</h4>
+              <ul className="space-y-1.5 text-xs">
                 <li><a href="#institucional/sobre" className="hover:text-emerald-400">Sobre Nós</a></li>
-                <li><a href="#institucional/contato" className="hover:text-emerald-400">Contato</a></li>
-                <li><a href="#institucional/privacidade" className="hover:text-emerald-400 text-slate-450">Política de Privacidade</a></li>
-                <li><a href="#institucional/termos" className="hover:text-emerald-400 text-slate-450">Termos de Uso</a></li>
-                <li><a href="#institucional/cookies" className="hover:text-emerald-400 text-slate-450">Cookies Consent</a></li>
-                <li><a href="#institucional/transparencia-adsense" className="hover:text-emerald-400 text-slate-450">Transparência AdSense</a></li>
+                <li><a href="#institucional/contato" className="hover:text-emerald-400">Contato / Fale Conosco</a></li>
+                <li><a href="#institucional/privacidade" className="hover:text-emerald-400">Política de Privacidade</a></li>
+                <li><a href="#institucional/termos" className="hover:text-emerald-400">Termos de Uso</a></li>
+                <li><a href="#institucional/cookies" className="hover:text-emerald-400">Política de Cookies</a></li>
+                <li><a href="#institucional/anunciantes" className="hover:text-emerald-400">Anunciar / AdSense</a></li>
+                <li><a href="#sitemap" className="hover:text-emerald-400">Mapa do Site</a></li>
               </ul>
             </div>
           </div>
 
           <div className="pt-8 border-t border-slate-800 text-center md:flex md:items-center md:justify-between text-xs text-slate-500">
             <p>
-              &copy; {new Date().getFullYear()} Tool Brasil. Todos os direitos reservados. "Ferramentas Online Gratuitas para o Dia a Dia".
+              &copy; {new Date().getFullYear()} <strong className="text-slate-300">Tool Brasil</strong>. Todos os direitos reservados. Ferramentas 100% gratuitas — sem cadastro, sem limites.
             </p>
-            <div className="flex justify-center gap-4 mt-4 md:mt-0 font-mono">
-              <span className="text-slate-500 select-none">V.1.2.0 Production</span>
-              <div className="sr-only">
-                <a href="#sitemap">Sitemap XML</a>
-                <a href="/sitemap.xml">sitemap.xml</a>
-                <a href="/robots.txt">robots.txt</a>
-              </div>
+            <div className="flex items-center justify-center gap-3 mt-4 md:mt-0 flex-wrap">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-900/30 text-emerald-400 rounded text-[10px] font-mono border border-emerald-800/50">
+                ✅ 100% Grátis
+              </span>
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-indigo-900/30 text-indigo-400 rounded text-[10px] font-mono border border-indigo-800/50">
+                🔒 Sem Cadastro
+              </span>
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-900/30 text-amber-400 rounded text-[10px] font-mono border border-amber-800/50">
+                🇧🇷 Feito no Brasil
+              </span>
+              <span className="text-slate-600 select-none font-mono">v1.3.0</span>
+              <a href="/sitemap.xml" className="hover:text-emerald-400 underline underline-offset-2">sitemap.xml</a>
+              <a href="/robots.txt" className="hover:text-emerald-400 underline underline-offset-2">robots.txt</a>
             </div>
           </div>
 
         </div>
       </footer>
 
+      {/* SCHEMA.ORG STRUCTURED DATA - using dangerouslySetInnerHTML to prevent React escaping */}
+      <script type="application/ld+json" id="schema-breadcrumb" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {webAppSchema && (
+        <script type="application/ld+json" id="schema-webapp" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }} />
+      )}
     </div>
   );
 }

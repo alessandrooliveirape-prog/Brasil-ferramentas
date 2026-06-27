@@ -19,6 +19,12 @@ export default function Utilitarios({ toolId }: UtilitariosProps) {
       {toolId === 'minificador-js' && <MinificadorJs />}
       {toolId === 'encode-url' && <EncodeUrlSelector />}
       {toolId === 'decode-url' && <DecodeUrlSelector />}
+      {toolId === 'cronometro' && <Cronometro />}
+      {toolId === 'separador-silabas' && <SeparadorSilabas />}
+      {toolId === 'maiusculas-minusculas' && <MaiusculasMinusculas />}
+      {toolId === 'extrator-email' && <ExtratorEmail />}
+      {toolId === 'comparador-textos' && <ComparadorTextos />}
+      {toolId === 'validador-cartao' && <ValidadorCartao />}
     </div>
   );
 }
@@ -307,6 +313,323 @@ function EncodeUrlSelector() {
       <div className="space-y-2">
         <span className="block text-xs font-mono text-slate-400">String Codificada (Pronta para query param)</span>
         <div className="bg-slate-950 p-3 rounded font-mono text-xs text-amber-400 select-all border border-slate-850 truncate">{encoded}</div>
+      </div>
+    </div>
+  );
+}
+
+// 8. CRONÔMETRO ONLINE
+function Cronometro() {
+  const [tempo, setTempo] = useState<number>(0);
+  const [ativo, setAtivo] = useState<boolean>(false);
+  const [voltas, setVoltas] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (!ativo) return;
+    const interval = setInterval(() => setTempo(t => t + 10), 10);
+    return () => clearInterval(interval);
+  }, [ativo]);
+
+  const formatar = (ms: number) => {
+    const h = Math.floor(ms / 3600000);
+    const m = Math.floor((ms % 3600000) / 60000);
+    const s = Math.floor((ms % 60000) / 1000);
+    const cs = Math.floor((ms % 1000) / 10);
+    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}.${cs.toString().padStart(2, '0')}`;
+  };
+
+  const registrarVolta = () => setVoltas(v => [formatar(tempo), ...v]);
+  const resetar = () => { setTempo(0); setAtivo(false); setVoltas([]); };
+
+  return (
+    <div className="space-y-6" id="util-crono">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Cronômetro Online</h2>
+      <div className="text-center space-y-4">
+        <div className="text-5xl md:text-7xl font-mono font-extrabold text-emerald-600 dark:text-emerald-400 tracking-widest bg-slate-50 dark:bg-slate-850 p-6 rounded-xl border">
+          {formatar(tempo)}
+        </div>
+        <div className="flex gap-2 justify-center">
+          <button onClick={() => setAtivo(!ativo)} className={`px-6 py-2 rounded-lg font-bold text-sm ${ativo ? 'bg-red-500 hover:bg-red-600' : 'bg-emerald-600 hover:bg-emerald-700'} text-white transition hover:cursor-pointer`}>
+            {ativo ? '⏹ Pausar' : '▶ Iniciar'}
+          </button>
+          <button onClick={registrarVolta} disabled={!ativo} className="px-4 py-2 bg-slate-200 dark:bg-slate-800 rounded-lg font-bold text-sm disabled:opacity-50 hover:cursor-pointer">⏱ Volta</button>
+          <button onClick={resetar} className="px-4 py-2 bg-slate-200 dark:bg-slate-800 rounded-lg font-bold text-sm hover:cursor-pointer">🔄 Resetar</button>
+        </div>
+        {voltas.length > 0 && (
+          <div className="max-h-40 overflow-y-auto space-y-1">
+            {voltas.map((v, i) => (
+              <div key={i} className="font-mono text-xs text-slate-400 bg-slate-50 dark:bg-slate-850 px-3 py-1 rounded border">
+                Volta {voltas.length - i}: {v}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// 9. SEPARADOR DE SÍLABAS
+function SeparadorSilabas() {
+  const [palavra, setPalavra] = useState<string>('ferramenta');
+  const [separado, setSeparado] = useState<string>('');
+
+  useEffect(() => {
+    const vogais = 'aeiouáéíóúâêîôûãõà';
+    const consoantes = 'bcdfghjklmnpqrstvwxyzç';
+    let resultado = '';
+    for (let i = 0; i < palavra.length; i++) {
+      resultado += palavra[i];
+      const atual = palavra[i].toLowerCase();
+      const prox = (palavra[i + 1] || '').toLowerCase();
+      const prox2 = (palavra[i + 2] || '').toLowerCase();
+      
+      if (vogais.includes(atual) && consoantes.includes(prox) && !consoantes.includes(prox2)) {
+        resultado += '-';
+      } else if (consoantes.includes(atual) && vogais.includes(prox) && i > 0) {
+        if (i < palavra.length - 2 && !vogais.includes(prox2)) {
+        } else if (i < palavra.length - 1) {
+          resultado = resultado.slice(0, -1) + '-' + palavra[i];
+        }
+      }
+    }
+    if (resultado.endsWith('-')) resultado = resultado.slice(0, -1);
+    if (!resultado.includes('-') && palavra.length > 2) {
+      resultado = '';
+      for (let i = 0; i < palavra.length; i++) {
+        resultado += palavra[i];
+        if (vogais.includes(palavra[i].toLowerCase()) && i < palavra.length - 1) {
+          resultado += '-';
+        }
+      }
+      if (resultado.endsWith('-')) resultado = resultado.slice(0, -1);
+    }
+    setSeparado(resultado);
+  }, [palavra]);
+
+  return (
+    <div className="space-y-6" id="util-silabas">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Separador de Sílabas</h2>
+      <div>
+        <label className="block text-xs font-semibold text-slate-500 mb-1">Digite uma palavra</label>
+        <input type="text" className="w-full md:w-1/2 border rounded-lg p-2.5 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={palavra} onChange={e => setPalavra(e.target.value.toLowerCase().normalize('NFD'))} />
+      </div>
+      {separado && (
+        <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-4 rounded-xl border border-emerald-100 text-center">
+          <span className="text-2xl font-bold text-emerald-700 dark:text-emerald-300 tracking-wider">{separado}</span>
+        </div>
+      )}
+      <p className="text-[10px] text-slate-400 italic">* Separação simplificada para palavras comuns. Palavras com hiatos, tritongos ou encontros consonantais complexos podem ter variações.</p>
+    </div>
+  );
+}
+
+// 10. CONVERSOR MAIÚSCULAS/MINÚSCULAS
+function MaiusculasMinusculas() {
+  const [texto, setTexto] = useState<string>('tool brasil ferramentas online gratuitas');
+  const [modo, setModo] = useState<string>('maiusculas');
+  const [resultado, setResultado] = useState<string>('');
+
+  useEffect(() => {
+    switch (modo) {
+      case 'maiusculas': setResultado(texto.toUpperCase()); break;
+      case 'minusculas': setResultado(texto.toLowerCase()); break;
+      case 'capitalizado': setResultado(texto.replace(/\w\S*/g, w => w[0].toUpperCase() + w.slice(1).toLowerCase())); break;
+      case 'alternado': setResultado(texto.split('').map((c, i) => i % 2 === 0 ? c.toUpperCase() : c.toLowerCase()).join('')); break;
+      default: setResultado(texto);
+    }
+  }, [texto, modo]);
+
+  return (
+    <div className="space-y-6" id="util-case">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Conversor de Maiúsculas/Minúsculas</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Texto Original</label>
+          <textarea className="w-full border rounded-lg p-2.5 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-xs" rows={4} value={texto} onChange={e => setTexto(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Resultado</label>
+          <textarea readOnly className="w-full border rounded-lg p-2.5 bg-emerald-950/10 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-300 text-xs font-medium" rows={4} value={resultado} />
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {['maiusculas', 'minusculas', 'capitalizado', 'alternado'].map(m => (
+          <button key={m} onClick={() => setModo(m)} className={`px-4 py-1.5 rounded text-xs font-bold hover:cursor-pointer ${modo === m ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'}`}>
+            {m === 'maiusculas' ? 'MAIÚSCULAS' : m === 'minusculas' ? 'minúsculas' : m === 'capitalizado' ? 'Capitalizado' : 'aLtErNaDo'}
+          </button>
+        ))}
+        <button onClick={() => navigator.clipboard.writeText(resultado)} className="px-4 py-1.5 rounded text-xs font-bold bg-slate-800 text-white hover:cursor-pointer">Copiar</button>
+      </div>
+    </div>
+  );
+}
+
+// 11. EXTRATOR DE E-MAILS
+function ExtratorEmail() {
+  const [texto, setTexto] = useState<string>('Entre em contato: contato@toolbrasil.com.br ou suporte@empresa.com.br');
+  const [emails, setEmails] = useState<string[]>([]);
+
+  useEffect(() => {
+    const regex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+    const encontrados = texto.match(regex) || [];
+    setEmails([...new Set(encontrados)]);
+  }, [texto]);
+
+  return (
+    <div className="space-y-6" id="util-email">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Extrator de E-mails</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Texto ou HTML</label>
+          <textarea className="w-full border rounded-lg p-2.5 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-xs font-mono" rows={6} value={texto} onChange={e => setTexto(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">E-mails Encontrados ({emails.length})</label>
+          <div className="border rounded-lg p-2.5 bg-slate-950 text-emerald-400 text-xs font-mono min-h-[140px] space-y-1">
+            {emails.length > 0 ? emails.map((e, i) => <div key={i}>📧 {e}</div>) : <div className="text-slate-500">Nenhum e-mail encontrado</div>}
+          </div>
+          {emails.length > 0 && (
+            <button onClick={() => navigator.clipboard.writeText(emails.join('\n'))} className="mt-2 px-3 py-1.5 bg-emerald-600 text-white text-xs rounded hover:cursor-pointer">
+              Copiar Todos
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 12. COMPARADOR DE TEXTOS
+function ComparadorTextos() {
+  const [textoA, setTextoA] = useState<string>('Este é o texto original da versão A.');
+  const [textoB, setTextoB] = useState<string>('Este é o texto modificado da versão B.');
+  const [diffLinhas, setDiffLinhas] = useState<any[]>([]);
+
+  useEffect(() => {
+    const linhasA = textoA.split('\n');
+    const linhasB = textoB.split('\n');
+    const maxLen = Math.max(linhasA.length, linhasB.length);
+    const resultado: any[] = [];
+    for (let i = 0; i < maxLen; i++) {
+      if (linhasA[i] === linhasB[i]) {
+        resultado.push({ tipo: 'igual', texto: linhasA[i] || '' });
+      } else {
+        if (linhasA[i] !== undefined) resultado.push({ tipo: 'removido', texto: linhasA[i] });
+        if (linhasB[i] !== undefined) resultado.push({ tipo: 'adicionado', texto: linhasB[i] });
+      }
+    }
+    setDiffLinhas(resultado);
+  }, [textoA, textoB]);
+
+  return (
+    <div className="space-y-6" id="util-diff">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Comparador de Textos (Diff)</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Versão A (Original)</label>
+          <textarea className="w-full border rounded-lg p-2.5 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-xs font-mono" rows={6} value={textoA} onChange={e => setTextoA(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Versão B (Modificada)</label>
+          <textarea className="w-full border rounded-lg p-2.5 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-xs font-mono" rows={6} value={textoB} onChange={e => setTextoB(e.target.value)} />
+        </div>
+      </div>
+      <div className="border rounded-lg p-3 bg-slate-950 min-h-[100px]">
+        {diffLinhas.length === 0 ? (
+          <div className="text-xs text-slate-500 text-center">Textos idênticos. Faça alterações para ver as diferenças.</div>
+        ) : (
+          <div className="space-y-0.5">
+            {diffLinhas.map((l, i) => (
+              <div key={i} className={`text-xs font-mono px-2 py-1 rounded ${l.tipo === 'igual' ? 'text-slate-400' : l.tipo === 'adicionado' ? 'bg-emerald-950/40 text-emerald-400' : 'bg-red-950/40 text-red-400'}`}>
+                {l.tipo === 'adicionado' ? '+ ' : l.tipo === 'removido' ? '- ' : '  '}{l.texto || '(linha vazia)'}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ===== VALIDADOR DE CARTÃO DE CRÉDITO =====
+function ValidadorCartao() {
+  const [numero, setNumero] = useState<string>('4532 1234 5678 9012');
+  const [resultado, setResultado] = useState<any>(null);
+
+  const validarLuhn = (num: string): boolean => {
+    const digits = num.replace(/\D/g, '').split('').map(Number);
+    let sum = 0;
+    let alternar = false;
+    for (let i = digits.length - 1; i >= 0; i--) {
+      let d = digits[i];
+      if (alternar) { d *= 2; if (d > 9) d -= 9; }
+      sum += d;
+      alternar = !alternar;
+    }
+    return sum % 10 === 0;
+  };
+
+  const identificarBandeira = (num: string): string => {
+    const clean = num.replace(/\D/g, '');
+    if (/^4/.test(clean)) return 'Visa';
+    if (/^5[1-5]/.test(clean)) return 'Mastercard';
+    if (/^3[47]/.test(clean)) return 'American Express';
+    if (/^6(?:011|5)/.test(clean)) return 'Discover';
+    if (/^3(?:0[0-5]|[68])/.test(clean)) return 'Diners Club';
+    if (/^(?:2131|1800|35)/.test(clean)) return 'JCB';
+    if (/^606282|^3841/.test(clean)) return 'Hipercard';
+    if (/^50|^60|^65/.test(clean)) return 'Elo';
+    return 'Desconhecida';
+  };
+
+  useEffect(() => {
+    const clean = numero.replace(/\D/g, '');
+    if (clean.length < 13) { setResultado(null); return; }
+    const valido = validarLuhn(clean);
+    const bandeira = identificarBandeira(clean);
+    setResultado({ valido, bandeira, digito: clean.slice(-4) });
+  }, [numero]);
+
+  const formatarNumero = (val: string) => {
+    const cleaned = val.replace(/\D/g, '').slice(0, 19);
+    const groups = cleaned.match(/.{1,4}/g);
+    setNumero(groups ? groups.join(' ') : cleaned);
+  };
+
+  return (
+    <div className="space-y-6" id="util-cartao">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Validador de Cartão de Crédito</h2>
+      <div>
+        <label className="block text-xs font-semibold text-slate-500 mb-1">Número do Cartão</label>
+        <input type="text" className="w-full md:w-1/2 border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-lg tracking-widest" value={numero} onChange={e => formatarNumero(e.target.value)} placeholder="0000 0000 0000 0000" />
+      </div>
+      {resultado && (
+        <div className={`p-5 rounded-xl border text-center ${resultado.valido ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}`}>
+          <span className={`text-2xl font-extrabold block ${resultado.valido ? 'text-emerald-600' : 'text-red-600'}`}>
+            {resultado.valido ? '✅ Cartão Válido' : '❌ Cartão Inválido'}
+          </span>
+          <div className="grid grid-cols-2 gap-3 mt-3 text-xs max-w-xs mx-auto">
+            <div className="p-2 bg-white dark:bg-slate-800 rounded">Bandeira: <strong>{resultado.bandeira}</strong></div>
+            <div className="p-2 bg-white dark:bg-slate-800 rounded">Final: <strong className="font-mono">{resultado.digito}</strong></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// PLACEHOLDER PARA NOVOS UTILITÁRIOS
+function PlaceholderUtilitario({ id }: { id: string }) {
+  const nomes: {[key: string]: string} = {
+    'validador-cartao': 'Validador de Cartão de Crédito',
+  };
+  return (
+    <div className="space-y-6 text-center py-8" id={`placeholder-${id}`}>
+      <div className="p-4 bg-amber-50/50 dark:bg-amber-950/20 rounded-xl border border-amber-100">
+        <span className="text-3xl block mb-3">🛠️</span>
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">{nomes[id] || id}</h3>
+        <p className="text-xs text-slate-500 mt-2 max-w-md mx-auto">Ferramenta em desenvolvimento.</p>
       </div>
     </div>
   );

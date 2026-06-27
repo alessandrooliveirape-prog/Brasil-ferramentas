@@ -29,6 +29,25 @@ export default function Calculadoras({ toolId }: CalculadorasProps) {
       {toolId === 'hora-extra' && <HoraExtra />}
       {toolId === 'seguro-desemprego' && <SeguroDesemprego />}
       {toolId === 'salario-liquido' && <SalarioLiquido />}
+      {toolId === 'ipva' && <CalculadoraIPVA />}
+      {toolId === 'imposto-renda' && <CalculadoraIRPF />}
+      {toolId === 'multa-transito' && <CalculadoraMultaTransito />}
+      {toolId === 'preco-por-km' && <CalculadoraPrecoPorKm />}
+      {toolId === 'gestacao' && <CalculadoraGestacao />}
+      {toolId === 'tmb' && <CalculadoraTMB />}
+      {toolId === 'margem-lucro' && <CalculadoraMargemLucro />}
+      {toolId === 'gorjeta' && <CalculadoraGorjeta />}
+      {toolId === 'aposentadoria-inss' && <CalculadoraAposentadoria />}
+      {toolId === 'pis-pasep' && <CalculadoraPisPasep />}
+      {toolId === 'icms' && <CalculadoraICMS />}
+      {toolId === 'itbi' && <CalculadoraITBI />}
+      {toolId === 'itcmd' && <CalculadoraITCMD />}
+      {toolId === 'preco-venda' && <CalculadoraPrecoVenda />}
+      {toolId === 'periculosidade' && <CalculadoraPericulosidade />}
+      {toolId === 'insalubridade' && <CalculadoraInsalubridade />}
+      {toolId === 'idade-canina' && <CalculadoraIdadeCanina />}
+      {toolId === 'calorias-diarias' && <CalculadoraCaloriasDiarias />}
+      {toolId === 'nota-enem' && <CalculadoraNotaEnem />}
     </div>
   );
 }
@@ -832,6 +851,918 @@ function Imc() {
           <div className={`text-base font-bold uppercase tracking-wider ${resultado.style}`}>{resultado.class}</div>
         </div>
       )}
+    </div>
+  );
+}
+
+// 18. CALCULADORA IPVA
+function CalculadoraIPVA() {
+  const [valorVenal, setValorVenal] = useState<number>(50000);
+  const [estado, setEstado] = useState<string>('SP');
+  const [tipoVeiculo, setTipoVeiculo] = useState<string>('passeio');
+  const [resultado, setResultado] = useState<any>(null);
+
+  const aliquotaPorEstado: {[key: string]: {passeio: number, moto: number, caminhao: number}} = {
+    'SP': {passeio: 4, moto: 2, caminhao: 1.5},
+    'RJ': {passeio: 4, moto: 2, caminhao: 1},
+    'MG': {passeio: 3, moto: 2, caminhao: 1},
+    'PR': {passeio: 3.5, moto: 2, caminhao: 1},
+    'SC': {passeio: 2, moto: 2, caminhao: 1},
+    'RS': {passeio: 3, moto: 2, caminhao: 1},
+    'BA': {passeio: 2.5, moto: 2, caminhao: 1},
+    'DF': {passeio: 3, moto: 2, caminhao: 1},
+    'GO': {passeio: 3, moto: 2, caminhao: 1},
+    'PE': {passeio: 2.4, moto: 1, caminhao: 1},
+    'CE': {passeio: 3, moto: 2, caminhao: 1},
+    'ES': {passeio: 2, moto: 1, caminhao: 1},
+  };
+
+  useEffect(() => {
+    const ali = aliquotaPorEstado[estado] || aliquotaPorEstado['SP'];
+    const aliquota = ali[tipoVeiculo as keyof typeof ali] || 3;
+    const valorIPVA = valorVenal * (aliquota / 100);
+    const parcela = valorIPVA / 3;
+    setResultado({ valorIPVA, aliquota, parcela });
+  }, [valorVenal, estado, tipoVeiculo]);
+
+  return (
+    <div className="space-y-6" id="calc-ipva">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de IPVA</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Valor Venal (Tabela FIPE) R$</label>
+          <input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={valorVenal} onChange={e => setValorVenal(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Estado de Registro</label>
+          <select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={estado} onChange={e => setEstado(e.target.value)}>
+            {Object.keys(aliquotaPorEstado).map(uf => <option key={uf} value={uf}>{uf}</option>)}
+          </select>
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Tipo de Veículo</label>
+          <select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={tipoVeiculo} onChange={e => setTipoVeiculo(e.target.value)}>
+            <option value="passeio">Automóvel de Passeio</option>
+            <option value="moto">Motocicleta</option>
+            <option value="caminhao">Caminhão / Utilitário</option>
+          </select>
+        </div>
+      </div>
+      {resultado && (
+        <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div><span className="block text-xs text-slate-500">Alíquota Aplicada</span><span className="text-lg font-bold text-slate-800 dark:text-slate-200 font-mono">{resultado.aliquota}%</span></div>
+            <div><span className="block text-xs text-slate-500">Valor do IPVA</span><span className="text-lg font-bold text-emerald-600 dark:text-emerald-400 font-mono">R$ {resultado.valorIPVA.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span></div>
+            <div><span className="block text-xs text-slate-500">Parcelas (3x)</span><span className="text-lg font-bold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.parcela.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 19. CALCULADORA IRPF
+function CalculadoraIRPF() {
+  const [rendimento, setRendimento] = useState<number>(60000);
+  const [dependentes, setDependentes] = useState<number>(0);
+  const [despesasDedutiveis, setDespesasDedutiveis] = useState<number>(10000);
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    const descontoDep = dependentes * 2275.08;
+    const baseCalculo = Math.max(0, rendimento - descontoDep - despesasDedutiveis);
+    
+    let imposto = 0;
+    if (baseCalculo <= 22847.76) imposto = 0;
+    else if (baseCalculo <= 33919.80) imposto = baseCalculo * 0.075 - 1713.58;
+    else if (baseCalculo <= 45012.60) imposto = baseCalculo * 0.15 - 4257.57;
+    else if (baseCalculo <= 55976.16) imposto = baseCalculo * 0.225 - 7633.51;
+    else imposto = baseCalculo * 0.275 - 10432.32;
+
+    const aliquotaEfetiva = (imposto / rendimento) * 100;
+    setResultado({ baseCalculo, imposto, aliquotaEfetiva, rendimento });
+  }, [rendimento, dependentes, despesasDedutiveis]);
+
+  return (
+    <div className="space-y-6" id="calc-irpf">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Imposto de Renda (IRPF)</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Rendimento Anual (R$)</label>
+          <input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={rendimento} onChange={e => setRendimento(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Dependentes</label>
+          <input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={dependentes} onChange={e => setDependentes(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Despesas Dedutíveis (R$)</label>
+          <input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={despesasDedutiveis} onChange={e => setDespesasDedutiveis(Number(e.target.value))} />
+        </div>
+      </div>
+      {resultado && (
+        <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div><span className="block text-xs text-slate-500">Base de Cálculo</span><span className="text-lg font-bold text-slate-800 dark:text-slate-200 font-mono">R$ {resultado.baseCalculo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span></div>
+            <div><span className="block text-xs text-slate-500">Imposto Devido</span><span className={`text-lg font-bold font-mono ${resultado.imposto > 0 ? 'text-red-500' : 'text-emerald-600'}`}>R$ {resultado.imposto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span></div>
+            <div><span className="block text-xs text-slate-500">Alíquota Efetiva</span><span className="text-lg font-bold text-emerald-700 dark:text-emerald-300 font-mono">{resultado.aliquotaEfetiva.toFixed(2)}%</span></div>
+          </div>
+          {resultado.imposto === 0 && <p className="text-xs text-emerald-600 text-center font-semibold">Você está isento de declarar IRPF! 🎉</p>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 20. CALCULADORA DE MULTA DE TRÂNSITO
+function CalculadoraMultaTransito() {
+  const [gravidade, setGravidade] = useState<string>('grave');
+  const [fatorMultiplicador, setFatorMultiplicador] = useState<number>(1);
+  const [comDesconto, setComDesconto] = useState<boolean>(true);
+  const [resultado, setResultado] = useState<any>(null);
+
+  const valoresBase: {[key: string]: number} = {
+    'leve': 88.38,
+    'media': 130.16,
+    'grave': 195.23,
+    'gravissima': 293.47,
+  };
+
+  useEffect(() => {
+    const valorBase = valoresBase[gravidade] || 0;
+    const valorComFator = valorBase * fatorMultiplicador;
+    const valorComDesconto = valorComFator * 0.8;
+    const valorFinal = comDesconto ? valorComDesconto : valorComFator;
+    const economia = valorComFator - valorComDesconto;
+    setResultado({ valorBase, valorComFator, valorFinal, economia, comDesconto });
+  }, [gravidade, fatorMultiplicador, comDesconto]);
+
+  return (
+    <div className="space-y-6" id="calc-multa">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Multa de Trânsito</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Gravidade da Infração</label>
+          <select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={gravidade} onChange={e => setGravidade(e.target.value)}>
+            <option value="leve">Leve - R$ 88,38</option>
+            <option value="media">Média - R$ 130,16</option>
+            <option value="grave">Grave - R$ 195,23</option>
+            <option value="gravissima">Gravíssima - R$ 293,47</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Fator Multiplicador</label>
+          <select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={fatorMultiplicador} onChange={e => setFatorMultiplicador(Number(e.target.value))}>
+            <option value="1">1x (padrão)</option>
+            <option value="3">3x (gravíssima)</option>
+            <option value="5">5x (gravíssima)</option>
+            <option value="10">10x (gravíssima)</option>
+            <option value="20">20x (gravíssima)</option>
+          </select>
+        </div>
+        <div className="flex items-center gap-2 pt-6">
+          <input type="checkbox" id="desc-multa" className="rounded text-emerald-500" checked={comDesconto} onChange={e => setComDesconto(e.target.checked)} />
+          <label htmlFor="desc-multa" className="text-xs text-slate-600 dark:text-slate-400 select-none">Pagamento com 20% de desconto</label>
+        </div>
+      </div>
+      {resultado && (
+        <div className="bg-amber-50/50 dark:bg-amber-950/20 p-5 rounded-xl border border-amber-100 dark:border-amber-950 space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+            <div><span className="block text-xs text-slate-500">Valor Base</span><span className="text-base font-bold font-mono">R$ {resultado.valorBase.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Com Fator {fatorMultiplicador}x</span><span className="text-base font-bold font-mono text-red-500">R$ {resultado.valorComFator.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-emerald-600">Valor com Desconto</span><span className="text-lg font-bold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.valorFinal.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Economia</span><span className="text-base font-bold text-emerald-600 font-mono">R$ {resultado.economia.toFixed(2)}</span></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 21. CALCULADORA DE PREÇO POR KM
+function CalculadoraPrecoPorKm() {
+  const [valorRecebido, setValorRecebido] = useState<number>(25);
+  const [distancia, setDistancia] = useState<number>(10);
+  const [consumo, setConsumo] = useState<number>(12);
+  const [precoCombustivel, setPrecoCombustivel] = useState<number>(5.8);
+  const [comissao, setComissao] = useState<number>(25);
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    const comissaoValor = valorRecebido * (comissao / 100);
+    const valorLiquidoApp = valorRecebido - comissaoValor;
+    const litrosGastos = distancia / consumo;
+    const custoCombustivel = litrosGastos * precoCombustivel;
+    const lucroLiquido = valorLiquidoApp - custoCombustivel;
+    const lucroPorKm = lucroLiquido / distancia;
+    const margem = (lucroLiquido / valorRecebido) * 100;
+    
+    setResultado({ comissaoValor, valorLiquidoApp, litrosGastos, custoCombustivel, lucroLiquido, lucroPorKm, margem });
+  }, [valorRecebido, distancia, consumo, precoCombustivel, comissao]);
+
+  return (
+    <div className="space-y-6" id="calc-preco-km">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Preço por Km - Motoristas de App</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Valor Recebido (R$)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={valorRecebido} onChange={e => setValorRecebido(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Distância (km)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={distancia} onChange={e => setDistancia(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Consumo (km/L)</label><input type="number" step="0.1" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={consumo} onChange={e => setConsumo(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Preço Combustível (R$/L)</label><input type="number" step="0.01" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={precoCombustivel} onChange={e => setPrecoCombustivel(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Comissão do App (%)</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={comissao} onChange={e => setComissao(Number(e.target.value))}><option value="15">15%</option><option value="20">20%</option><option value="25">25%</option><option value="30">30%</option></select></div>
+      </div>
+      {resultado && (
+        <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100 space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+            <div><span className="block text-xs text-slate-500">Comissão</span><span className="text-base font-bold text-red-500 font-mono">-R$ {resultado.comissaoValor.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Combustível</span><span className="text-base font-bold text-amber-600 font-mono">-R$ {resultado.custoCombustivel.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Lucro Líquido</span><span className="text-lg font-bold text-emerald-600 font-mono">R$ {resultado.lucroLiquido.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-emerald-600">💰 Lucro por km</span><span className="text-xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.lucroPorKm.toFixed(2)}</span></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 22. CALCULADORA DE GESTAÇÃO
+function CalculadoraGestacao() {
+  const [dum, setDum] = useState<string>(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 120);
+    return d.toISOString().split('T')[0];
+  });
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    if (!dum) return;
+    const dataDUM = new Date(dum);
+    const hoje = new Date();
+    const diffMs = hoje.getTime() - dataDUM.getTime();
+    const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    
+    const semanas = Math.floor(diffDias / 7);
+    const diasResto = diffDias % 7;
+    
+    const dpp = new Date(dataDUM);
+    dpp.setDate(dpp.getDate() + 280);
+    
+    let trimestre = '';
+    let trimestreCor = '';
+    if (semanas <= 13) { trimestre = '1º Trimestre'; trimestreCor = 'text-emerald-600'; }
+    else if (semanas <= 27) { trimestre = '2º Trimestre'; trimestreCor = 'text-blue-600'; }
+    else { trimestre = '3º Trimestre'; trimestreCor = 'text-amber-600'; }
+
+    setResultado({ semanas, diasResto, dpp: dpp.toLocaleDateString('pt-BR'), trimestre, trimestreCor });
+  }, [dum]);
+
+  return (
+    <div className="space-y-6" id="calc-gestacao">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Gestação</h2>
+      <div>
+        <label className="block text-xs font-semibold text-slate-500 mb-1">Data da Última Menstruação (DUM)</label>
+        <input type="date" className="w-full md:w-1/3 border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={dum} onChange={e => setDum(e.target.value)} />
+      </div>
+      {resultado && (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+          <div className="bg-pink-50 dark:bg-pink-950/20 p-4 rounded-xl border border-pink-100"><span className="block text-xs text-slate-500">Semanas</span><span className="text-2xl font-bold text-slate-800 dark:text-slate-200 font-mono">{resultado.semanas}</span></div>
+          <div className="bg-pink-50 dark:bg-pink-950/20 p-4 rounded-xl border border-pink-100"><span className="block text-xs text-slate-500">Dias</span><span className="text-2xl font-bold text-slate-800 dark:text-slate-200 font-mono">{resultado.diasResto}</span></div>
+          <div className={`${resultado.trimestreCor === 'text-emerald-600' ? 'bg-emerald-50' : resultado.trimestreCor === 'text-blue-600' ? 'bg-blue-50' : 'bg-amber-50'} dark:bg-opacity-10 p-4 rounded-xl border`}>
+            <span className="block text-xs text-slate-500">Trimestre</span>
+            <span className={`text-xl font-extrabold font-mono ${resultado.trimestreCor}`}>{resultado.trimestre}</span>
+          </div>
+          <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-4 rounded-xl border border-emerald-100">
+            <span className="block text-xs text-slate-500">Data Provável do Parto</span>
+            <span className="text-lg font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">{resultado.dpp}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 23. CALCULADORA TMB
+function CalculadoraTMB() {
+  const [peso, setPeso] = useState<number>(70);
+  const [altura, setAltura] = useState<number>(170);
+  const [idade, setIdade] = useState<number>(30);
+  const [sexo, setSexo] = useState<string>('masculino');
+  const [nivelAtividade, setNivelAtividade] = useState<string>('sedentario');
+  const [resultado, setResultado] = useState<any>(null);
+
+  const fatoresAtividade: {[key: string]: number} = {
+    'sedentario': 1.2,
+    'leve': 1.375,
+    'moderado': 1.55,
+    'intenso': 1.725,
+    'atleta': 1.9,
+  };
+
+  useEffect(() => {
+    let tmb = 0;
+    if (sexo === 'masculino') {
+      tmb = 88.36 + (13.4 * peso) + (4.8 * altura) - (5.7 * idade);
+    } else {
+      tmb = 447.6 + (9.2 * peso) + (3.1 * altura) - (4.3 * idade);
+    }
+    const fator = fatoresAtividade[nivelAtividade] || 1.2;
+    const get = tmb * fator;
+    const emagrecer = get - 500;
+    const ganhar = get + 300;
+    
+    setResultado({ tmb, get, emagrecer, ganhar });
+  }, [peso, altura, idade, sexo, nivelAtividade]);
+
+  return (
+    <div className="space-y-6" id="calc-tmb">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de TMB - Taxa Metabólica Basal</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Peso (kg)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={peso} onChange={e => setPeso(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Altura (cm)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={altura} onChange={e => setAltura(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Idade</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={idade} onChange={e => setIdade(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Sexo</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={sexo} onChange={e => setSexo(e.target.value)}><option value="masculino">Masculino</option><option value="feminino">Feminino</option></select></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Nível de Atividade</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={nivelAtividade} onChange={e => setNivelAtividade(e.target.value)}>
+          <option value="sedentario">Sedentário (pouco ou nenhum exercício)</option>
+          <option value="leve">Leve (1-3 dias/semana)</option>
+          <option value="moderado">Moderado (3-5 dias/semana)</option>
+          <option value="intenso">Intenso (6-7 dias/semana)</option>
+          <option value="atleta">Atleta (2x ao dia)</option>
+        </select></div>
+      </div>
+      {resultado && (
+        <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+            <div className="p-3 bg-white dark:bg-slate-800 rounded-lg border"><span className="block text-xs text-slate-500">TMB (Calorias em Repouso)</span><span className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">{Math.round(resultado.tmb)} kcal/dia</span></div>
+            <div className="p-3 bg-white dark:bg-slate-800 rounded-lg border"><span className="block text-xs text-slate-500">GET (Gasto Total)</span><span className="text-2xl font-extrabold text-blue-700 dark:text-blue-300 font-mono">{Math.round(resultado.get)} kcal/dia</span></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+            <div className="p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-100"><span className="block text-xs text-amber-600">Para Emagrecer (-500kcal)</span><span className="text-lg font-bold text-amber-700 dark:text-amber-300 font-mono">{Math.round(resultado.emagrecer)} kcal/dia</span></div>
+            <div className="p-3 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-100"><span className="block text-xs text-green-600">Para Ganhar Massa (+300kcal)</span><span className="text-lg font-bold text-green-700 dark:text-green-300 font-mono">{Math.round(resultado.ganhar)} kcal/dia</span></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 24. CALCULADORA DE MARGEM DE LUCRO
+function CalculadoraMargemLucro() {
+  const [custo, setCusto] = useState<number>(50);
+  const [despesasVariaveis, setDespesasVariaveis] = useState<number>(10);
+  const [margemDesejada, setMargemDesejada] = useState<number>(30);
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    const custoTotal = custo + despesasVariaveis;
+    const markup = 100 / (100 - margemDesejada);
+    const precoVenda = custoTotal * markup;
+    const lucroBruto = precoVenda - custoTotal;
+    const margemReal = (lucroBruto / precoVenda) * 100;
+    
+    setResultado({ custoTotal, precoVenda, lucroBruto, margemReal, markup });
+  }, [custo, despesasVariaveis, margemDesejada]);
+
+  return (
+    <div className="space-y-6" id="calc-margem">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Margem de Lucro</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Custo do Produto (R$)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={custo} onChange={e => setCusto(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Despesas Variáveis (R$)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={despesasVariaveis} onChange={e => setDespesasVariaveis(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Margem Desejada (%)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={margemDesejada} onChange={e => setMargemDesejada(Number(e.target.value))} /></div>
+      </div>
+      {resultado && (
+        <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+            <div><span className="block text-xs text-slate-500">Custo Total</span><span className="text-base font-bold font-mono">R$ {resultado.custoTotal.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Preço de Venda</span><span className="text-lg font-bold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.precoVenda.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Lucro Bruto</span><span className="text-base font-bold text-emerald-600 font-mono">R$ {resultado.lucroBruto.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-emerald-600">Margem Real</span><span className="text-xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">{resultado.margemReal.toFixed(1)}%</span></div>
+          </div>
+          <div className="mt-3 text-xs text-center text-slate-400">Markup: {resultado.markup.toFixed(2)}x</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 25. CALCULADORA DE GORJETA
+function CalculadoraGorjeta() {
+  const [valorConta, setValorConta] = useState<number>(150);
+  const [percentual, setPercentual] = useState<number>(10);
+  const [pessoas, setPessoas] = useState<number>(1);
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    const valorGorjeta = valorConta * (percentual / 100);
+    const totalComGorjeta = valorConta + valorGorjeta;
+    const porPessoa = totalComGorjeta / pessoas;
+    setResultado({ valorGorjeta, totalComGorjeta, porPessoa });
+  }, [valorConta, percentual, pessoas]);
+
+  return (
+    <div className="space-y-6" id="calc-gorjeta">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Gorjeta</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Valor da Conta (R$)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={valorConta} onChange={e => setValorConta(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Percentual (%)</label>
+          <div className="flex gap-1">
+            {[10, 15, 20].map(p => (
+              <button key={p} onClick={() => setPercentual(p)} className={`px-3 py-2 rounded text-xs font-bold ${percentual === p ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'} hover:cursor-pointer`}>{p}%</button>
+            ))}
+          </div>
+        </div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Dividir para</label>
+          <div className="flex gap-1 items-center">
+            <button onClick={() => setPessoas(Math.max(1, pessoas - 1))} className="px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded text-sm font-bold hover:cursor-pointer">-</button>
+            <span className="mx-2 font-bold font-mono text-lg">{pessoas}</span>
+            <button onClick={() => setPessoas(pessoas + 1)} className="px-3 py-2 bg-slate-100 dark:bg-slate-800 rounded text-sm font-bold hover:cursor-pointer">+</button>
+            <span className="ml-1 text-xs text-slate-500">pessoas</span>
+          </div>
+        </div>
+      </div>
+      {resultado && (
+        <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div><span className="block text-xs text-slate-500">Valor da Gorjeta</span><span className="text-lg font-bold text-emerald-600 font-mono">R$ {resultado.valorGorjeta.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Total com Gorjeta</span><span className="text-lg font-bold text-slate-800 dark:text-slate-200 font-mono">R$ {resultado.totalComGorjeta.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-emerald-600">💰 Por Pessoa</span><span className="text-xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.porPessoa.toFixed(2)}</span></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ===== CALCULADORA DE APOSENTADORIA INSS =====
+function CalculadoraAposentadoria() {
+  const [idade, setIdade] = useState<number>(35);
+  const [tempoContrib, setTempoContrib] = useState<number>(15);
+  const [sexo, setSexo] = useState<string>('masculino');
+  const [salarioMedio, setSalarioMedio] = useState<number>(3000);
+  const [regra, setRegra] = useState<string>('pontos');
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    const pontos = idade + tempoContrib;
+    const idadeMinimaHomem = 65;
+    const idadeMinimaMulher = 62;
+    const idadeMinima = sexo === 'masculino' ? idadeMinimaHomem : idadeMinimaMulher;
+    const tempoMinimo = sexo === 'masculino' ? 35 : 30;
+    const pontosMinimoHomem = 96; // 2026
+    const pontosMinimoMulher = 91; // 2026
+    const pontosMinimo = sexo === 'masculino' ? pontosMinimoHomem : pontosMinimoMulher;
+    
+    let podeAposentar = false;
+    let motivo = '';
+    let idadeApos = 0;
+    let tempoFaltante = 0;
+
+    if (regra === 'pontos') {
+      podeAposentar = pontos >= pontosMinimo && tempoContrib >= tempoMinimo;
+      motivo = `Regra de Pontos: precisa de ${pontosMinimo} pontos e ${tempoMinimo} anos. Você tem ${pontos} pontos e ${tempoContrib} anos.`;
+      if (!podeAposentar) {
+        const pontosFaltantes = Math.max(0, pontosMinimo - pontos);
+        tempoFaltante = Math.ceil(pontosFaltantes / 2);
+      }
+    } else if (regra === 'idade-minima') {
+      podeAposentar = idade >= idadeMinima && tempoContrib >= tempoMinimo;
+      motivo = `Regra de Idade Mínima: precisa de ${idadeMinima} anos de idade e ${tempoMinimo} de contribuição.`;
+      if (!podeAposentar) {
+        tempoFaltante = Math.max(0, idadeMinima - idade, tempoMinimo - tempoContrib);
+      }
+    } else {
+      // Aposentadoria por idade (sem tempo mínimo, apenas idade)
+      podeAposentar = idade >= idadeMinima;
+      motivo = `Aposentadoria por Idade: precisa de ${idadeMinima} anos.`;
+      if (!podeAposentar) tempoFaltante = idadeMinima - idade;
+    }
+
+    // Fator Previdenciário simplificado
+    const expectativaVida = 78; // IBGE
+    const fatorPrev = sexo === 'masculino' 
+      ? ((tempoContrib * 0.31) / expectativaVida) * (1 + (idade + tempoContrib * 0.31) / 100)
+      : ((tempoContrib * 0.31) / (expectativaVida + 3)) * (1 + (idade + tempoContrib * 0.31) / 100);
+    
+    const valorBeneficio = salarioMedio * Math.min(Math.max(fatorPrev, 0.6), 1.0);
+
+    setResultado({ podeAposentar, motivo, pontos, idadeMinima, tempoMinimo, tempoFaltante, valorBeneficio, fatorPrev });
+  }, [idade, tempoContrib, sexo, salarioMedio, regra]);
+
+  return (
+    <div className="space-y-6" id="calc-aposent">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Aposentadoria INSS</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Idade</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={idade} onChange={e => setIdade(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Tempo de Contribuição (anos)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={tempoContrib} onChange={e => setTempoContrib(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Sexo</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={sexo} onChange={e => setSexo(e.target.value)}><option value="masculino">Masculino</option><option value="feminino">Feminino</option></select></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Salário Médio (R$)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={salarioMedio} onChange={e => setSalarioMedio(Number(e.target.value))} /></div>
+        <div className="md:col-span-2"><label className="block text-xs font-semibold text-slate-500 mb-1">Regra</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={regra} onChange={e => setRegra(e.target.value)}><option value="pontos">Regra de Pontos</option><option value="idade-minima">Idade Mínima Progressiva</option><option value="por-idade">Aposentadoria por Idade</option></select></div>
+      </div>
+      {resultado && (
+        <div className={`p-5 rounded-xl border ${resultado.podeAposentar ? 'bg-emerald-50 border-emerald-200' : 'bg-amber-50 border-amber-200'}`}>
+          <div className="text-center mb-3">
+            <span className={`text-2xl font-extrabold ${resultado.podeAposentar ? 'text-emerald-600' : 'text-amber-600'}`}>
+              {resultado.podeAposentar ? '✅ Você já pode se aposentar!' : '⏳ Ainda faltam alguns anos'}
+            </span>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+            <div className="p-2 bg-white dark:bg-slate-800 rounded">Pontos: <strong>{resultado.pontos}</strong></div>
+            <div className="p-2 bg-white dark:bg-slate-800 rounded">Valor Estimado: <strong className="text-emerald-600">R$ {resultado.valorBeneficio.toFixed(2)}</strong></div>
+            <div className="p-2 bg-white dark:bg-slate-800 rounded">Faltam: <strong>{resultado.tempoFaltante} anos</strong></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ===== CALCULADORA DE PIS/PASEP =====
+function CalculadoraPisPasep() {
+  const [salarioMedio, setSalarioMedio] = useState<number>(1800);
+  const [mesesTrabalhados, setMesesTrabalhados] = useState<number>(6);
+  const [salarioMinimo, setSalarioMinimo] = useState<number>(1518);
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    const salarioMedioAnual = salarioMedio * 12;
+    const temDireito = mesesTrabalhados >= 1 && salarioMedioAnual / 12 <= 2 * salarioMinimo;
+    const valorAbono = temDireito ? (salarioMinimo / 12) * mesesTrabalhados : 0;
+    setResultado({ temDireito, valorAbono, salarioMedioAnual });
+  }, [salarioMedio, mesesTrabalhados, salarioMinimo]);
+
+  return (
+    <div className="space-y-6" id="calc-pis">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de PIS/PASEP</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Salário Médio (R$)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={salarioMedio} onChange={e => setSalarioMedio(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Meses Trabalhados</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={mesesTrabalhados} onChange={e => setMesesTrabalhados(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Salário Mínimo (R$)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={salarioMinimo} onChange={e => setSalarioMinimo(Number(e.target.value))} /></div>
+      </div>
+      {resultado && (
+        <div className={`p-5 rounded-xl border ${resultado.temDireito ? 'bg-emerald-50 border-emerald-200' : 'bg-amber-50 border-amber-200'}`}>
+          <p className={`text-center font-bold ${resultado.temDireito ? 'text-emerald-600' : 'text-amber-600'}`}>
+            {resultado.temDireito ? '✅ Você tem direito ao PIS/PASEP!' : '❌ Você não atende os requisitos'}
+          </p>
+          {resultado.temDireito && (
+            <p className="text-center text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono mt-2">
+              R$ {resultado.valorAbono.toFixed(2)}
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ===== CALCULADORA DE ICMS =====
+function CalculadoraICMS() {
+  const [valorProduto, setValorProduto] = useState<number>(1000);
+  const [estado, setEstado] = useState<string>('SP');
+  const [resultado, setResultado] = useState<any>(null);
+
+  const aliquotaICMS: {[key: string]: number} = {
+    'SP': 18, 'RJ': 20, 'MG': 18, 'PR': 18, 'RS': 17, 'SC': 17,
+    'BA': 18, 'CE': 18, 'PE': 18, 'GO': 17, 'DF': 18, 'ES': 17,
+    'MS': 17, 'MT': 17, 'AM': 18, 'PA': 17, 'MA': 18, 'PB': 18,
+    'RN': 18, 'PI': 18, 'AL': 17, 'SE': 18, 'RO': 17.5, 'AC': 17,
+    'AP': 18, 'RR': 17, 'TO': 18
+  };
+
+  useEffect(() => {
+    const ali = (aliquotaICMS[estado] || 18) / 100;
+    const valorICMS = valorProduto * ali;
+    const precoFinal = valorProduto + valorICMS;
+    setResultado({ aliquota: ali * 100, valorICMS, precoFinal });
+  }, [valorProduto, estado]);
+
+  return (
+    <div className="space-y-6" id="calc-icms">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de ICMS</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Valor do Produto (R$)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={valorProduto} onChange={e => setValorProduto(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Estado de Destino</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={estado} onChange={e => setEstado(e.target.value)}>
+          {Object.keys(aliquotaICMS).sort().map(uf => <option key={uf} value={uf}>{uf} - {aliquotaICMS[uf]}%</option>)}
+        </select></div>
+      </div>
+      {resultado && (
+        <div className="bg-indigo-50/50 dark:bg-indigo-950/20 p-5 rounded-xl border border-indigo-100">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div><span className="block text-xs text-slate-500">Alíquota ICMS</span><span className="text-lg font-bold font-mono">{resultado.aliquota.toFixed(1)}%</span></div>
+            <div><span className="block text-xs text-slate-500">Valor do ICMS</span><span className="text-lg font-bold text-red-500 font-mono">R$ {resultado.valorICMS.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Preço Final</span><span className="text-lg font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.precoFinal.toFixed(2)}</span></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ===== CALCULADORA DE ITBI =====
+function CalculadoraITBI() {
+  const [valorImovel, setValorImovel] = useState<number>(300000);
+  const [municipio, setMunicipio] = useState<string>('SP');
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    const aliquotas: {[key: string]: number} = { 'SP': 3, 'RJ': 3, 'MG': 3, 'PR': 2.5, 'RS': 3, 'SC': 2, 'BA': 3, 'DF': 3, 'PE': 2 };
+    const ali = (aliquotas[municipio] || 3) / 100;
+    const valorITBI = valorImovel * ali;
+    setResultado({ aliquota: ali * 100, valorITBI });
+  }, [valorImovel, municipio]);
+
+  return (
+    <div className="space-y-6" id="calc-itbi">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de ITBI</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Valor do Imóvel (R$)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={valorImovel} onChange={e => setValorImovel(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Município</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={municipio} onChange={e => setMunicipio(e.target.value)}><option value="SP">São Paulo (3%)</option><option value="RJ">Rio de Janeiro (3%)</option><option value="MG">Belo Horizonte (3%)</option><option value="PR">Curitiba (2,5%)</option><option value="RS">Porto Alegre (3%)</option><option value="DF">Brasília (3%)</option></select></div>
+      </div>
+      {resultado && (
+        <div className="bg-blue-50/50 dark:bg-blue-950/20 p-5 rounded-xl border border-blue-100">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+            <div><span className="block text-xs text-slate-500">Alíquota ITBI</span><span className="text-lg font-bold font-mono">{resultado.aliquota.toFixed(1)}%</span></div>
+            <div><span className="block text-xs text-slate-500">Valor do ITBI</span><span className="text-lg font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.valorITBI.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ===== CALCULADORA DE ITCMD =====
+function CalculadoraITCMD() {
+  const [valorHeranca, setValorHeranca] = useState<number>(500000);
+  const [estado, setEstado] = useState<string>('SP');
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    const aliquotas: {[key: string]: number} = { 'SP': 4, 'RJ': 5, 'MG': 5, 'PR': 4, 'RS': 4, 'SC': 4, 'BA': 5, 'DF': 4 };
+    const ali = (aliquotas[estado] || 4) / 100;
+    const valorITCMD = valorHeranca * ali;
+    setResultado({ aliquota: ali * 100, valorITCMD });
+  }, [valorHeranca, estado]);
+
+  return (
+    <div className="space-y-6" id="calc-itcmd">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de ITCMD</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Valor da Herança (R$)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={valorHeranca} onChange={e => setValorHeranca(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Estado</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={estado} onChange={e => setEstado(e.target.value)}><option value="SP">SP (4%)</option><option value="RJ">RJ (5%)</option><option value="MG">MG (5%)</option><option value="PR">PR (4%)</option></select></div>
+      </div>
+      {resultado && (
+        <div className="bg-purple-50/50 dark:bg-purple-950/20 p-5 rounded-xl border border-purple-100 text-center">
+          <span className="block text-xs text-slate-500">Alíquota: {resultado.aliquota.toFixed(0)}%</span>
+          <span className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.valorITCMD.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ===== CALCULADORA DE PREÇO DE VENDA =====
+function CalculadoraPrecoVenda() {
+  const [custo, setCusto] = useState<number>(100);
+  const [margem, setMargem] = useState<number>(30);
+  const [impostos, setImpostos] = useState<number>(15);
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    const markup = 100 / (100 - margem - impostos);
+    const precoVenda = custo * markup;
+    const lucroBruto = precoVenda - custo;
+    const margemReal = (lucroBruto / precoVenda) * 100;
+    setResultado({ precoVenda, lucroBruto, margemReal, markup });
+  }, [custo, margem, impostos]);
+
+  return (
+    <div className="space-y-6" id="calc-preco-venda">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Preço de Venda</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Custo (R$)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={custo} onChange={e => setCusto(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Margem Desejada (%)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={margem} onChange={e => setMargem(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Impostos (%)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={impostos} onChange={e => setImpostos(Number(e.target.value))} /></div>
+      </div>
+      {resultado && (
+        <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div><span className="block text-xs text-slate-500">Preço de Venda</span><span className="text-2xl font-extrabold text-emerald-700 font-mono">R$ {resultado.precoVenda.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Lucro Bruto</span><span className="text-lg font-bold text-emerald-600 font-mono">R$ {resultado.lucroBruto.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Margem Real</span><span className="text-lg font-bold font-mono">{resultado.margemReal.toFixed(1)}%</span></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ===== CALCULADORA DE PERICULOSIDADE =====
+function CalculadoraPericulosidade() {
+  const [salario, setSalario] = useState<number>(2500);
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    const adicional = salario * 0.30;
+    const total = salario + adicional;
+    setResultado({ adicional, total });
+  }, [salario]);
+
+  return (
+    <div className="space-y-6" id="calc-peric">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Adicional de Periculosidade</h2>
+      <div><label className="block text-xs font-semibold text-slate-500 mb-1">Salário Base (R$)</label><input type="number" className="w-full md:w-1/2 border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={salario} onChange={e => setSalario(Number(e.target.value))} /></div>
+      {resultado && (
+        <div className="bg-amber-50/50 dark:bg-amber-950/20 p-5 rounded-xl border border-amber-100">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+            <div><span className="block text-xs text-slate-500">Adicional (30%)</span><span className="text-lg font-bold text-amber-600 font-mono">R$ {resultado.adicional.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Salário Total</span><span className="text-2xl font-extrabold text-emerald-700 font-mono">R$ {resultado.total.toFixed(2)}</span></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ===== CALCULADORA DE INSALUBRIDADE =====
+function CalculadoraInsalubridade() {
+  const [salarioMinimo, setSalarioMinimo] = useState<number>(1518);
+  const [grau, setGrau] = useState<string>('medio');
+  const [resultado, setResultado] = useState<any>(null);
+
+  const percentuais: {[key: string]: number} = { 'minimo': 10, 'medio': 20, 'maximo': 40 };
+
+  useEffect(() => {
+    const perc = (percentuais[grau] || 20) / 100;
+    const adicional = salarioMinimo * perc;
+    setResultado({ perc: perc * 100, adicional });
+  }, [salarioMinimo, grau]);
+
+  return (
+    <div className="space-y-6" id="calc-insal">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Adicional de Insalubridade</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Salário Mínimo (R$)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={salarioMinimo} onChange={e => setSalarioMinimo(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Grau de Insalubridade</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={grau} onChange={e => setGrau(e.target.value)}><option value="minimo">Mínimo (10%)</option><option value="medio">Médio (20%)</option><option value="maximo">Máximo (40%)</option></select></div>
+      </div>
+      {resultado && (
+        <div className="bg-orange-50/50 p-5 rounded-xl border border-orange-100 text-center">
+          <span className="block text-xs text-slate-500">Adicional ({resultado.perc.toFixed(0)}%)</span>
+          <span className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.adicional.toFixed(2)}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ===== CALCULADORA DE IDADE CANINA =====
+function CalculadoraIdadeCanina() {
+  const [idadeHumana, setIdadeHumana] = useState<number>(5);
+  const [porte, setPorte] = useState<string>('medio');
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    let idadeCanina = 0;
+    if (idadeHumana <= 2) {
+      idadeCanina = idadeHumana * 12.5; // 1 ano = ~12.5 anos caninos
+    } else {
+      idadeCanina = 25 + (idadeHumana - 2) * (porte === 'pequeno' ? 4.5 : porte === 'medio' ? 5 : 6.5);
+    }
+    setResultado({ idadeCanina: Math.round(idadeCanina) });
+  }, [idadeHumana, porte]);
+
+  return (
+    <div className="space-y-6" id="calc-idade-canina">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Idade Canina</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Idade do Cachorro (anos humanos)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={idadeHumana} onChange={e => setIdadeHumana(Number(e.target.value))} /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 mb-1">Porte</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={porte} onChange={e => setPorte(e.target.value)}><option value="pequeno">Pequeno</option><option value="medio">Médio</option><option value="grande">Grande</option></select></div>
+      </div>
+      {resultado && (
+        <div className="bg-amber-50/50 dark:bg-amber-950/20 p-5 rounded-xl border border-amber-100 text-center">
+          <span className="block text-xs text-slate-500">Idade em Anos Caninos 🐕</span>
+          <span className="text-3xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">{resultado.idadeCanina} anos</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ===== CALCULADORA DE CALORIAS DIÁRIAS =====
+function CalculadoraCaloriasDiarias() {
+  const [peso, setPeso] = useState<number>(70);
+  const [altura, setAltura] = useState<number>(170);
+  const [idade, setIdadeC] = useState<number>(30);
+  const [sexo, setSexoC] = useState<string>('masculino');
+  const [atividade, setAtividade] = useState<string>('moderado');
+  const [objetivo, setObjetivo] = useState<string>('manter');
+  const [resultado, setResultado] = useState<any>(null);
+
+  const fatoresAtv: {[key: string]: number} = { 'sedentario': 1.2, 'leve': 1.375, 'moderado': 1.55, 'intenso': 1.725 };
+
+  useEffect(() => {
+    let tmb = sexoC === 'masculino' 
+      ? 88.36 + (13.4 * peso) + (4.8 * altura) - (5.7 * idade)
+      : 447.6 + (9.2 * peso) + (3.1 * altura) - (4.3 * idade);
+    const get = tmb * (fatoresAtv[atividade] || 1.55);
+    const calorias = objetivo === 'perder' ? get - 500 : objetivo === 'ganhar' ? get + 300 : get;
+    setResultado({ tmb: Math.round(tmb), get: Math.round(get), calorias: Math.round(calorias) });
+  }, [peso, altura, idade, sexo, atividade, objetivo]);
+
+  return (
+    <div className="space-y-6" id="calc-calorias">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Calorias Diárias</h2>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <div><label className="block text-xs">Peso (kg)</label><input type="number" className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={peso} onChange={e => setPeso(Number(e.target.value))} /></div>
+        <div><label className="block text-xs">Altura (cm)</label><input type="number" className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={altura} onChange={e => setAltura(Number(e.target.value))} /></div>
+        <div><label className="block text-xs">Idade</label><input type="number" className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={idadeC} onChange={e => setIdadeC(Number(e.target.value))} /></div>
+        <div><label className="block text-xs">Sexo</label><select className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={sexoC} onChange={e => setSexoC(e.target.value)}><option value="masculino">Masc</option><option value="feminino">Fem</option></select></div>
+        <div><label className="block text-xs">Atividade</label><select className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={atividade} onChange={e => setAtividade(e.target.value)}><option value="sedentario">Sedentário</option><option value="leve">Leve</option><option value="moderado">Moderado</option><option value="intenso">Intenso</option></select></div>
+        <div><label className="block text-xs">Objetivo</label><select className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={objetivo} onChange={e => setObjetivo(e.target.value)}><option value="perder">Perder Peso</option><option value="manter">Manter</option><option value="ganhar">Ganhar Massa</option></select></div>
+      </div>
+      {resultado && (
+        <div className="bg-emerald-50/50 p-5 rounded-xl border border-emerald-100 text-center">
+          <span className="block text-xs text-slate-500">Calorias Recomendadas por Dia</span>
+          <span className="text-3xl font-extrabold text-emerald-700 font-mono">{resultado.calorias} kcal</span>
+          <div className="grid grid-cols-2 gap-3 mt-3 text-xs">
+            <div className="p-2 bg-white dark:bg-slate-800 rounded">TMB: {resultado.tmb} kcal</div>
+            <div className="p-2 bg-white dark:bg-slate-800 rounded">GET: {resultado.get} kcal</div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ===== CALCULADORA DE NOTA DO ENEM =====
+function CalculadoraNotaEnem() {
+  const [linguagens, setLinguagens] = useState<number>(600);
+  const [humanas, setHumanas] = useState<number>(650);
+  const [natureza, setNatureza] = useState<number>(550);
+  const [matematica, setMatematica] = useState<number>(700);
+  const [redacao, setRedacao] = useState<number>(800);
+  const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    const notas = [linguagens, humanas, natureza, matematica, redacao];
+    const mediaSimples = notas.reduce((a, b) => a + b, 0) / 5;
+    const mediaPonderada = (linguagens * 1 + humanas * 1 + natureza * 2 + matematica * 3 + redacao * 3) / 10;
+    setResultado({ mediaSimples, mediaPonderada, notas });
+  }, [linguagens, humanas, natureza, matematica, redacao]);
+
+  const cursosPorPeso: {[key: string]: string} = {
+    'Medicina': 'Redação + Natureza + Matemática (peso maior)',
+    'Engenharia': 'Matemática + Natureza (peso maior)',
+    'Direito': 'Redação + Humanas (peso maior)',
+    'Psicologia': 'Linguagens + Redação (peso maior)',
+  };
+
+  return (
+    <div className="space-y-6" id="calc-enem">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Nota do ENEM</h2>
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+        <div><label className="block text-xs">Linguagens</label><input type="number" step="10" className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={linguagens} onChange={e => setLinguagens(Number(e.target.value))} /></div>
+        <div><label className="block text-xs">Humanas</label><input type="number" step="10" className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={humanas} onChange={e => setHumanas(Number(e.target.value))} /></div>
+        <div><label className="block text-xs">Natureza</label><input type="number" step="10" className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={natureza} onChange={e => setNatureza(Number(e.target.value))} /></div>
+        <div><label className="block text-xs">Matemática</label><input type="number" step="10" className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={matematica} onChange={e => setMatematica(Number(e.target.value))} /></div>
+        <div><label className="block text-xs">Redação</label><input type="number" step="10" className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={redacao} onChange={e => setRedacao(Number(e.target.value))} /></div>
+      </div>
+      {resultado && (
+        <div className="bg-indigo-50/50 dark:bg-indigo-950/20 p-5 rounded-xl border border-indigo-100 space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+            <div className="p-3 bg-white dark:bg-slate-800 rounded-lg"><span className="block text-xs text-slate-500">Média Simples</span><span className="text-2xl font-bold font-mono">{resultado.mediaSimples.toFixed(1)}</span></div>
+            <div className="p-3 bg-white dark:bg-slate-800 rounded-lg"><span className="block text-xs text-slate-500">Média Ponderada (Mat + Redação)</span><span className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">{resultado.mediaPonderada.toFixed(1)}</span></div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ===== PLACEHOLDER PARA NOVAS CALCULADORAS =====
+function PlaceholderCalculadora({ id }: { id: string }) {
+  const nomes: {[key: string]: string} = {
+    'aposentadoria-inss': 'Calculadora de Aposentadoria INSS',
+    'pis-pasep': 'Calculadora de PIS/PASEP',
+    'icms': 'Calculadora de ICMS',
+    'itbi': 'Calculadora de ITBI',
+    'itcmd': 'Calculadora de ITCMD',
+    'preco-venda': 'Calculadora de Preço de Venda',
+    'periculosidade': 'Calculadora de Adicional de Periculosidade',
+    'insalubridade': 'Calculadora de Adicional de Insalubridade',
+    'idade-canina': 'Calculadora de Idade Canina',
+    'calorias-diarias': 'Calculadora de Calorias Diárias',
+    'nota-enem': 'Calculadora de Nota do ENEM',
+  };
+  return (
+    <div className="space-y-6 text-center py-8" id={`placeholder-${id}`}>
+      <div className="p-4 bg-emerald-50/50 dark:bg-emerald-950/20 rounded-xl border border-emerald-100 dark:border-emerald-950">
+        <span className="text-3xl block mb-3">🔧</span>
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">{nomes[id] || id}</h3>
+        <p className="text-xs text-slate-500 mt-2 max-w-md mx-auto">
+          Ferramenta em desenvolvimento. Enquanto isso, confira o conteúdo editorial abaixo com informações completas sobre {nomes[id]?.toLowerCase() || 'esta ferramenta'}.
+        </p>
+        <div className="mt-4 flex gap-2 justify-center text-xs">
+          <a href="#" className="px-3 py-1.5 bg-emerald-600 text-white rounded font-bold">Ver Ferramentas Relacionadas</a>
+        </div>
+      </div>
     </div>
   );
 }

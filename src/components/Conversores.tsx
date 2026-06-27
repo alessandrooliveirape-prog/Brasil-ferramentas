@@ -20,6 +20,14 @@ export default function Conversores({ toolId }: ConversoresProps) {
       {toolId === 'kb-para-mb' && <KbMb />}
       {toolId === 'horas-para-minutos' && <HorasMinutos />}
       {toolId === 'dias-para-horas' && <DiasHoras />}
+      {toolId === 'polegadas-para-centimetros' && <PolegadasCm />}
+      {toolId === 'milhas-para-quilometros' && <MilhasKm />}
+      {toolId === 'kmh-para-mph' && <KmhMph />}
+      {toolId === 'euro-para-real' && <EuroReal />}
+      {toolId === 'bitcoin-para-real' && <BitcoinReal />}
+      {toolId === 'libra-para-real' && <LibraReal />}
+      {toolId === 'numeros-romanos' && <NumerosRomanos />}
+      {toolId === 'peso-argentino-para-real' && <PesoArgentinoReal />}
     </div>
   );
 }
@@ -342,6 +350,233 @@ function HorasMinutos() {
           <input type="number" step="any" className="w-full border border-slate-200 dark:border-slate-700 rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-base" value={minutos} onChange={(e) => updateMinutos(e.target.value)} />
           <span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">min</span>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// 9. POLEGADAS PARA CENTÍMETROS
+function PolegadasCm() {
+  const [pol, setPol] = useState<string>('1');
+  const [cm, setCm] = useState<string>('2.54');
+  const updatePol = (val: string) => { setPol(val); const n = parseFloat(val); if (!isNaN(n)) setCm((n * 2.54).toFixed(2)); else setCm(''); };
+  const updateCm = (val: string) => { setCm(val); const n = parseFloat(val); if (!isNaN(n)) setPol((n / 2.54).toFixed(4)); else setPol(''); };
+  return (
+    <div className="space-y-6" id="conv-pc">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Conversor de Polegadas para Centímetros</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div className="relative"><label className="block text-xs font-semibold text-slate-500 mb-1">Polegadas (in)</label><input type="number" step="any" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-base" value={pol} onChange={(e) => updatePol(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">in</span></div>
+        <div className="relative"><label className="block text-xs font-semibold text-slate-500 mb-1">Centímetros (cm)</label><input type="number" step="any" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-base" value={cm} onChange={(e) => updateCm(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">cm</span></div>
+      </div>
+    </div>
+  );
+}
+
+// 10. MILHAS PARA QUILÔMETROS
+function MilhasKm() {
+  const [milhas, setMilhas] = useState<string>('1');
+  const [km, setKm] = useState<string>('1.6093');
+  const updateMilhas = (val: string) => { setMilhas(val); const n = parseFloat(val); if (!isNaN(n)) setKm((n * 1.60934).toFixed(4)); else setKm(''); };
+  const updateKm = (val: string) => { setKm(val); const n = parseFloat(val); if (!isNaN(n)) setMilhas((n / 1.60934).toFixed(4)); else setMilhas(''); };
+  return (
+    <div className="space-y-6" id="conv-mk">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Conversor de Milhas para Quilômetros</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div className="relative"><label className="block text-xs font-semibold text-slate-500 mb-1">Milhas (mi)</label><input type="number" step="any" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-base" value={milhas} onChange={(e) => updateMilhas(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">mi</span></div>
+        <div className="relative"><label className="block text-xs font-semibold text-slate-500 mb-1">Quilômetros (km)</label><input type="number" step="any" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-base" value={km} onChange={(e) => updateKm(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">km</span></div>
+      </div>
+    </div>
+  );
+}
+
+// 11. KM/H PARA MPH
+function KmhMph() {
+  const [kmh, setKmh] = useState<string>('100');
+  const [mph, setMph] = useState<string>('62.14');
+  const updateKmh = (val: string) => { setKmh(val); const n = parseFloat(val); if (!isNaN(n)) setMph((n * 0.62137).toFixed(2)); else setMph(''); };
+  const updateMph = (val: string) => { setMph(val); const n = parseFloat(val); if (!isNaN(n)) setKmh((n / 0.62137).toFixed(2)); else setKmh(''); };
+  return (
+    <div className="space-y-6" id="conv-kmph">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Conversor de Km/h para mph</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div className="relative"><label className="block text-xs font-semibold text-slate-500 mb-1">Km/h</label><input type="number" step="any" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-base" value={kmh} onChange={(e) => updateKmh(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">km/h</span></div>
+        <div className="relative"><label className="block text-xs font-semibold text-slate-500 mb-1">mph</label><input type="number" step="any" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-base" value={mph} onChange={(e) => updateMph(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">mph</span></div>
+      </div>
+    </div>
+  );
+}
+
+// 12. EURO PARA REAL
+function EuroReal() {
+  const [eur, setEur] = useState<string>('50');
+  const [brl, setBrl] = useState<string>('280');
+  const [cotacao, setCotacao] = useState<number>(5.6);
+  const updateEur = (val: string, cot: number = cotacao) => { setEur(val); const n = parseFloat(val); if (!isNaN(n) && cot > 0) setBrl((n * cot).toFixed(2)); else setBrl(''); };
+  const updateBrl = (val: string, cot: number = cotacao) => { setBrl(val); const n = parseFloat(val); if (!isNaN(n)) setEur((n / cot).toFixed(2)); else setEur(''); };
+  const changeCotacao = (newCot: number) => { setCotacao(newCot); updateEur(eur, newCot); };
+  return (
+    <div className="space-y-6" id="conv-er">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Conversor Euro ⇄ Real</h2>
+      <div className="w-full md:w-1/3 bg-slate-50 dark:bg-slate-850 p-2.5 rounded-lg border flex items-center justify-between mb-4">
+        <span className="text-xs font-semibold text-slate-500">Cotação 1 EUR =</span>
+        <div className="flex items-center gap-1"><span className="text-xs text-slate-400">R$</span><input type="number" step="0.01" className="w-20 text-center border p-1 rounded font-mono text-xs bg-white dark:bg-slate-800 dark:text-slate-100" value={cotacao} onChange={(e) => changeCotacao(Number(e.target.value))} /></div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div className="relative"><label className="block text-xs font-semibold text-slate-500 mb-1">Euro (€)</label><input type="number" step="any" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-base" value={eur} onChange={(e) => updateEur(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">EUR</span></div>
+        <div className="relative"><label className="block text-xs font-semibold text-slate-500 mb-1">Real (R$)</label><input type="number" step="any" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-base" value={brl} onChange={(e) => updateBrl(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">BRL</span></div>
+      </div>
+    </div>
+  );
+}
+
+// 13. BITCOIN PARA REAL
+function BitcoinReal() {
+  const [btc, setBtc] = useState<string>('0.01');
+  const [brl, setBrl] = useState<string>('2500');
+  const [cotacao, setCotacao] = useState<number>(250000);
+  const updateBtc = (val: string, cot: number = cotacao) => { setBtc(val); const n = parseFloat(val); if (!isNaN(n) && cot > 0) setBrl((n * cot).toFixed(2)); else setBrl(''); };
+  const updateBrl = (val: string, cot: number = cotacao) => { setBrl(val); const n = parseFloat(val); if (!isNaN(n)) setBtc((n / cot).toFixed(8)); else setBtc(''); };
+  const changeCotacao = (newCot: number) => { setCotacao(newCot); updateBtc(btc, newCot); };
+  return (
+    <div className="space-y-6" id="conv-br">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Conversor Bitcoin ⇄ Real</h2>
+      <div className="w-full md:w-1/3 bg-slate-50 dark:bg-slate-850 p-2.5 rounded-lg border flex items-center justify-between mb-4">
+        <span className="text-xs font-semibold text-slate-500">Cotação 1 BTC =</span>
+        <div className="flex items-center gap-1"><span className="text-xs text-slate-400">R$</span><input type="number" step="1" className="w-28 text-center border p-1 rounded font-mono text-xs bg-white dark:bg-slate-800 dark:text-slate-100" value={cotacao} onChange={(e) => changeCotacao(Number(e.target.value))} /></div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div className="relative"><label className="block text-xs font-semibold text-slate-500 mb-1">Bitcoin (BTC)</label><input type="number" step="any" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-base" value={btc} onChange={(e) => updateBtc(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">BTC</span></div>
+        <div className="relative"><label className="block text-xs font-semibold text-slate-500 mb-1">Real (R$)</label><input type="number" step="any" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-base" value={brl} onChange={(e) => updateBrl(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">BRL</span></div>
+      </div>
+    </div>
+  );
+}
+
+// ===== CONVERSOR DE LIBRA PARA REAL =====
+function LibraReal() {
+  const [gbp, setGbp] = useState<string>('10');
+  const [brl, setBrl] = useState<string>('68');
+  const [cotacao, setCotacao] = useState<number>(6.8);
+  const updateGbp = (val: string, cot: number = cotacao) => { setGbp(val); const n = parseFloat(val); if (!isNaN(n) && cot > 0) setBrl((n * cot).toFixed(2)); else setBrl(''); };
+  const updateBrl = (val: string, cot: number = cotacao) => { setBrl(val); const n = parseFloat(val); if (!isNaN(n)) setGbp((n / cot).toFixed(2)); else setGbp(''); };
+  const changeCotacao = (newCot: number) => { setCotacao(newCot); updateGbp(gbp, newCot); };
+  return (
+    <div className="space-y-6" id="conv-gbp">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Conversor Libra Esterlina ⇄ Real</h2>
+      <div className="w-full md:w-1/3 bg-slate-50 p-2.5 rounded-lg border flex items-center justify-between mb-4">
+        <span className="text-xs font-semibold text-slate-500">Cotação 1 GBP =</span>
+        <div className="flex items-center gap-1"><span className="text-xs text-slate-400">R$</span><input type="number" step="0.01" className="w-20 text-center border p-1 rounded font-mono text-xs bg-white dark:bg-slate-800" value={cotacao} onChange={(e) => changeCotacao(Number(e.target.value))} /></div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div className="relative"><label className="block text-xs font-semibold text-slate-500 mb-1">Libra (£)</label><input type="number" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono" value={gbp} onChange={(e) => updateGbp(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">GBP</span></div>
+        <div className="relative"><label className="block text-xs font-semibold text-slate-500 mb-1">Real (R$)</label><input type="number" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono" value={brl} onChange={(e) => updateBrl(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">BRL</span></div>
+      </div>
+    </div>
+  );
+}
+
+// ===== CONVERSOR DE NÚMEROS ROMANOS =====
+function NumerosRomanos() {
+  const [numero, setNumero] = useState<number>(2024);
+  const [romano, setRomano] = useState<string>('MMXXIV');
+  const [inputRomano, setInputRomano] = useState<string>('MMXXIV');
+  const [resultadoRomano, setResultadoRomano] = useState<string>('2024');
+
+  const paraRomano = (n: number): string => {
+    const vals = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+    const roms = ['M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I'];
+    let result = '';
+    let num = n;
+    for (let i = 0; i < vals.length; i++) {
+      while (num >= vals[i]) { result += roms[i]; num -= vals[i]; }
+    }
+    return result;
+  };
+
+  const deRomano = (r: string): number => {
+    const map: {[key: string]: number} = { 'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000 };
+    let total = 0;
+    for (let i = 0; i < r.length; i++) {
+      const atual = map[r[i]] || 0;
+      const prox = map[r[i+1]] || 0;
+      if (atual < prox) { total -= atual; } else { total += atual; }
+    }
+    return total;
+  };
+
+  useEffect(() => {
+    if (numero > 0 && numero < 4000) {
+      setRomano(paraRomano(numero));
+    }
+  }, [numero]);
+
+  const converterRomanoParaNumero = () => {
+    const val = deRomano(inputRomano.toUpperCase());
+    setResultadoRomano(val > 0 ? String(val) : 'Inválido');
+  };
+
+  return (
+    <div className="space-y-6" id="conv-romano">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Conversor de Números Romanos</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-3">
+          <label className="block text-xs font-semibold text-slate-500">Número → Romano</label>
+          <input type="number" min="1" max="3999" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-sm" value={numero} onChange={e => setNumero(Number(e.target.value))} />
+          <div className="bg-emerald-50/50 p-4 rounded-xl border border-emerald-100 text-center">
+            <span className="text-2xl font-bold text-emerald-700 dark:text-emerald-300 font-mono tracking-wider">{romano}</span>
+          </div>
+        </div>
+        <div className="space-y-3">
+          <label className="block text-xs font-semibold text-slate-500">Romano → Número</label>
+          <div className="flex gap-2">
+            <input type="text" className="flex-1 border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-sm uppercase" value={inputRomano} onChange={e => setInputRomano(e.target.value)} placeholder="Ex: MMXXIV" />
+            <button onClick={converterRomanoParaNumero} className="bg-emerald-600 text-white px-4 rounded-lg text-sm font-bold hover:cursor-pointer">↻</button>
+          </div>
+          <div className="bg-indigo-50/50 p-4 rounded-xl border border-indigo-100 text-center">
+            <span className="text-2xl font-bold text-indigo-700 dark:text-indigo-300 font-mono">{resultadoRomano === 'Inválido' ? '❌ Inválido' : resultadoRomano}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ===== CONVERSOR DE PESO ARGENTINO PARA REAL =====
+function PesoArgentinoReal() {
+  const [ars, setArs] = useState<string>('1000');
+  const [brl, setBrl] = useState<string>('5.95');
+  const [cotacao, setCotacao] = useState<number>(0.00595);
+  const updateArs = (val: string, cot: number = cotacao) => { setArs(val); const n = parseFloat(val); if (!isNaN(n) && cot > 0) setBrl((n * cot).toFixed(2)); else setBrl(''); };
+  const updateBrl = (val: string, cot: number = cotacao) => { setBrl(val); const n = parseFloat(val); if (!isNaN(n)) setArs((n / cot).toFixed(2)); else setArs(''); };
+  const changeCotacao = (newCot: number) => { setCotacao(newCot); updateArs(ars, newCot); };
+  return (
+    <div className="space-y-6" id="conv-ars">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Conversor Peso Argentino ⇄ Real</h2>
+      <div className="w-full md:w-1/3 bg-slate-50 p-2.5 rounded-lg border flex items-center justify-between mb-4">
+        <span className="text-xs font-semibold text-slate-500">Cotação 1 ARS =</span>
+        <div className="flex items-center gap-1"><span className="text-xs text-slate-400">R$</span><input type="number" step="0.00001" className="w-28 text-center border p-1 rounded font-mono text-xs bg-white dark:bg-slate-800" value={cotacao} onChange={(e) => changeCotacao(Number(e.target.value))} /></div>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div className="relative"><label className="block text-xs font-semibold text-slate-500 mb-1">Peso Argentino ($)</label><input type="number" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono" value={ars} onChange={(e) => updateArs(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">ARS</span></div>
+        <div className="relative"><label className="block text-xs font-semibold text-slate-500 mb-1">Real (R$)</label><input type="number" className="w-full border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono" value={brl} onChange={(e) => updateBrl(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-400 font-bold">BRL</span></div>
+      </div>
+    </div>
+  );
+}
+
+// PLACEHOLDER PARA NOVOS CONVERSORES
+function PlaceholderConversor({ id }: { id: string }) {
+  const nomes: {[key: string]: string} = {
+    'libra-para-real': 'Conversor de Libra Esterlina para Real',
+    'numeros-romanos': 'Conversor de Números Romanos',
+    'peso-argentino-para-real': 'Conversor de Peso Argentino para Real',
+  };
+  return (
+    <div className="space-y-6 text-center py-8" id={`placeholder-${id}`}>
+      <div className="p-4 bg-blue-50/50 dark:bg-blue-950/20 rounded-xl border border-blue-100">
+        <span className="text-3xl block mb-3">🔄</span>
+        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">{nomes[id] || id}</h3>
+        <p className="text-xs text-slate-500 mt-2 max-w-md mx-auto">Ferramenta em desenvolvimento. Confira abaixo as informações de conversão e cotação.</p>
       </div>
     </div>
   );

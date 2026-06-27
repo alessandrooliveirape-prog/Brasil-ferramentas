@@ -1,7 +1,30 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /src/
 
+# Allow Google AdSense crawler full access
 User-agent: Mediapartners-Google
 Allow: /
+
+# Allow Google Adsense for search crawler
+User-agent: AdsBot-Google
+Allow: /
+
+# Allow Google mobile ads crawler
+User-agent: AdsBot-Google-Mobile
+Allow: /
+
+# Allow mobile apps crawler
+User-agent: Googlebot-Image
+Allow: /
+
+# Recommended by Google for AdSense
+User-agent: Googlebot
+Allow: /
+Disallow: /api/
+
+# Crawl delay to reduce server load
+Crawl-delay: 1
 
 Sitemap: https://toolbrasil.com.br/sitemap.xml

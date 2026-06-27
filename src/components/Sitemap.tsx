@@ -5,6 +5,9 @@
 
 import React, { useState } from 'react';
 import { TOOLS, PROGRAMMATIC_PAGES } from '../toolsData';
+import { EXTRA_PROGRAMMATIC_PAGES } from '../programmaticExtra';
+
+const ALL_PROGRAMMATIC_PAGES = { ...PROGRAMMATIC_PAGES, ...EXTRA_PROGRAMMATIC_PAGES };
 
 export default function Sitemap() {
   const [downloaded, setDownloaded] = useState<boolean>(false);
@@ -29,7 +32,7 @@ export default function Sitemap() {
     });
 
     // Programmatic
-    Object.keys(PROGRAMMATIC_PAGES).forEach(key => {
+    Object.keys(ALL_PROGRAMMATIC_PAGES).forEach(key => {
       xml += `  <url>\n    <loc>${host}/programatico/${key}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>0.6</priority>\n  </url>\n`;
     });
 

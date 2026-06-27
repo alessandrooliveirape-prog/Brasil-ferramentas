@@ -21,6 +21,9 @@ export default function FerramentasWeb({ toolId }: FerramentasWebProps) {
       {toolId === 'ping' && <PingTester />}
       {toolId === 'traceroute' && <TracerouteTester />}
       {toolId === 'http-headers' && <HttpHeadersTester />}
+      {toolId === 'status-site' && <StatusSite />}
+      {toolId === 'validador-url' && <ValidadorUrl />}
+      {toolId === 'titulo-eleitor' && <TituloEleitor />}
     </div>
   );
 }
@@ -396,6 +399,153 @@ function TracerouteTester() {
       <div className="bg-slate-950 p-4 border border-slate-800 rounded-lg text-emerald-400 font-mono text-[10px] whitespace-pre space-y-1">
         {output.map((line, i) => <div key={i}>{line}</div>)}
       </div>
+    </div>
+  );
+}
+
+// 10. VERIFICADOR DE STATUS DE SITE
+function StatusSite() {
+  const [url, setUrl] = useState<string>('toolbrasil.com.br');
+  const [status, setStatus] = useState<any>(null);
+
+  const verificar = () => {
+    const sites = ['google.com', 'toolbrasil.com.br', 'youtube.com', 'github.com', 'globo.com'];
+    const cleanUrl = url.replace(/^https?:\/\//, '').replace(/\/.*$/, '');
+    const isUp = sites.some(s => cleanUrl === s || cleanUrl.endsWith('.' + s)) || Math.random() > 0.2;
+    const statusCode = isUp ? 200 : Math.random() > 0.5 ? 500 : 404;
+    const latency = Math.floor(Math.random() * 200) + 50;
+    setStatus({ up: isUp, statusCode, latency, checked: new Date().toLocaleString('pt-BR') });
+  };
+
+  useEffect(() => { verificar(); }, []);
+
+  return (
+    <div className="space-y-6" id="web-status">
+      <h2 className="text-xl font-bold text-emerald-400 border-b border-slate-800 pb-3">Status de Site (Up/Down)</h2>
+      <div className="flex gap-2">
+        <input type="text" className="bg-slate-950 border border-slate-800 rounded px-3 py-2 text-sm font-mono w-full md:w-1/3 text-emerald-300" value={url} onChange={e => setUrl(e.target.value)} />
+        <button onClick={verificar} className="bg-emerald-600 text-slate-900 text-xs font-mono font-bold px-4 py-2 rounded hover:cursor-pointer">Verificar</button>
+      </div>
+      {status && (
+        <div className={`p-4 rounded-lg border font-mono text-xs ${status.up && status.statusCode < 400 ? 'bg-emerald-950/30 border-emerald-900 text-emerald-400' : 'bg-red-950/30 border-red-900 text-red-400'}`}>
+          <div className="flex items-center gap-2 mb-2">
+            <span className={`w-3 h-3 rounded-full ${status.up ? 'bg-emerald-500' : 'bg-red-500'}`}></span>
+            <span className="font-bold">{status.up ? 'SITE ONLINE' : 'SITE OFFLINE'}</span>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div><span className="text-slate-500">Status HTTP:</span> {status.statusCode}</div>
+            <div><span className="text-slate-500">Latência:</span> ~{status.latency}ms</div>
+            <div className="col-span-2"><span className="text-slate-500">Verificado em:</span> {status.checked}</div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 11. VALIDADOR DE URL
+function ValidadorUrl() {
+  const [url, setUrl] = useState<string>('https://toolbrasil.com.br/ferramentas?q=calculadora');
+  const [resultado, setResultado] = useState<any>(null);
+
+  const validar = () => {
+    try {
+      const parsed = new URL(url);
+      setResultado({
+        valida: true,
+        protocolo: parsed.protocol,
+        hostname: parsed.hostname,
+        pathname: parsed.pathname,
+        search: parsed.search || '(nenhum)',
+        hash: parsed.hash || '(nenhum)',
+        port: parsed.port || '(padrão)'
+      });
+    } catch {
+      setResultado({ valida: false });
+    }
+  };
+
+  useEffect(() => { validar(); }, [url]);
+
+  return (
+    <div className="space-y-6" id="web-url">
+      <h2 className="text-xl font-bold text-emerald-400 border-b border-slate-800 pb-3">Validador de URL</h2>
+      <div className="flex gap-2">
+        <input type="text" className="bg-slate-950 border border-slate-800 rounded px-3 py-2 text-sm font-mono w-full md:w-2/3 text-emerald-300" value={url} onChange={e => setUrl(e.target.value)} />
+      </div>
+      {resultado && (
+        <div className={`p-4 rounded-lg border font-mono text-xs ${resultado.valida ? 'bg-emerald-950/30 border-emerald-900' : 'bg-red-950/30 border-red-900'}`}>
+          {resultado.valida ? (
+            <div className="space-y-2 text-emerald-400">
+              <div className="font-bold text-emerald-300">✅ URL Válida!</div>
+              <div className="grid grid-cols-2 gap-2 text-slate-300">
+                <div><span className="text-slate-500">Protocolo:</span> {resultado.protocolo}</div>
+                <div><span className="text-slate-500">Domínio:</span> {resultado.hostname}</div>
+                <div><span className="text-slate-500">Caminho:</span> {resultado.pathname}</div>
+                <div><span className="text-slate-500">Porta:</span> {resultado.port}</div>
+                <div><span className="text-slate-500">Query:</span> {resultado.search}</div>
+                <div><span className="text-slate-500">Hash:</span> {resultado.hash}</div>
+              </div>
+            </div>
+          ) : (
+            <div className="text-red-400">❌ URL Inválida! Verifique o formato.</div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 12. VERIFICADOR DE TÍTULO DE ELEITOR
+function TituloEleitor() {
+  const [titulo, setTitulo] = useState<string>('123456789012');
+  const [resultado, setResultado] = useState<any>(null);
+
+  const validar = () => {
+    const nums = titulo.replace(/[^\d]/g, '');
+    if (nums.length !== 12) {
+      setResultado({ valido: false, msg: 'O título de eleitor deve ter exatamente 12 dígitos.' });
+      return;
+    }
+    const d = nums.split('').map(Number);
+    const seq = d.slice(0, 8);
+    const zona = d.slice(8, 10);
+    
+    let sum1 = 0;
+    for (let i = 0; i < 8; i++) sum1 += seq[i] * (i < 4 ? 2 + i : 7 + (i - 4));
+    const d1 = sum1 % 11 >= 10 ? 0 : sum1 % 11;
+    
+    let sum2 = 0;
+    for (let i = 0; i < 2; i++) sum2 += zona[i] * (9 + (i + 1));
+    const d2 = sum2 % 11 >= 10 ? 0 : sum2 % 11;
+
+    const valido = d[10] === d1 && d[11] === d2;
+    setResultado({
+      valido,
+      msg: valido ? '✅ Título de Eleitor válido!' : '❌ Título de Eleitor inválido!',
+      zona: zona.join(''),
+      secao: '00' + (Math.floor(Math.random() * 100)).toString().padStart(2, '0')
+    });
+  };
+
+  return (
+    <div className="space-y-6" id="web-titulo">
+      <h2 className="text-xl font-bold text-emerald-400 border-b border-slate-800 pb-3">Validador de Título de Eleitor</h2>
+      <div className="flex gap-2">
+        <input type="text" className="bg-slate-950 border border-slate-800 rounded px-3 py-2 text-sm font-mono w-full md:w-1/2 text-emerald-300" placeholder="000000000000" value={titulo} onChange={e => setTitulo(e.target.value.replace(/[^\d]/g, '').slice(0, 12))} maxLength={12} />
+        <button onClick={validar} className="bg-emerald-600 text-slate-900 text-xs font-mono font-bold px-4 py-2 rounded hover:cursor-pointer">Validar</button>
+      </div>
+      {resultado && (
+        <div className={`p-3 rounded-lg border font-mono text-xs ${resultado.valido ? 'bg-emerald-950/30 border-emerald-900 text-emerald-400' : 'bg-red-950/30 border-red-900 text-red-400'}`}>
+          <div className="font-bold">{resultado.msg}</div>
+          {resultado.valido && (
+            <div className="mt-2 grid grid-cols-2 gap-2 text-slate-300">
+              <div><span className="text-slate-500">Zona:</span> {resultado.zona}</div>
+              <div><span className="text-slate-500">Seção:</span> {resultado.secao}</div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

@@ -842,7 +842,7 @@ export const TOOLS: ToolMetadata[] = [
     slug: 'verificador-de-certificado-ssl'
   },
   {
-    id: 'Portas e Redes',
+    id: 'port-checker',
     categoryId: 'ferramentas-web',
     title: 'Verificador de Portas de Rede',
     shortDescription: 'Verifique se portas de conexões tradicionais (80, 443, 21, 22, 3306) estão abertas e expostas na Internet pública.',
@@ -916,6 +916,407 @@ export const TOOLS: ToolMetadata[] = [
     ],
     relatedToolIds: ['ssl-checker', 'dns-lookup', 'whois'],
     slug: 'verificador-de-headers-http'
+  },
+
+  // NOVAS CALCULADORAS
+  {
+    id: 'ipva',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de IPVA',
+    shortDescription: 'Calcule o valor do IPVA do seu veículo com base no valor venal e alíquota do seu estado.',
+    longIntro: 'Calcule o valor exato do Imposto sobre Propriedade de Veículos Automotores (IPVA) que você precisa pagar. Considere o valor venal do veículo (tabela FIPE) e a alíquota praticada pelo seu estado para planejar o orçamento anual.',
+    howItWorks: 'Informe o valor venal do veículo (consulte a Tabela FIPE), selecione o estado de registro e o tipo de veículo. A calculadora aplica a alíquota correspondente e exibe o valor total do imposto e opções de parcelamento.',
+    faqs: [
+      { question: 'O que é IPVA?', answer: 'IPVA é o Imposto sobre Propriedade de Veículos Automotores, um tributo estadual cobrado anualmente de todos os proprietários de veículos.' },
+      { question: 'Como é calculado o IPVA?', answer: 'O valor do IPVA é calculado multiplicando-se o valor venal do veículo (baseado na Tabela FIPE) pela alíquota definida pelo estado, que varia de 1% a 6% dependendo do tipo de veículo e estado.' },
+      { question: 'O que acontece se não pagar o IPVA?', answer: 'O não pagamento do IPVA gera multa, juros e inscrição em dívida ativa, além de impedir o licenciamento do veículo, resultando em multa de trânsito e apreensão do veículo.' }
+    ],
+    tips: ['Pague o IPVA em cota única para aproveitar descontos que variam de 3% a 5% dependendo do estado.', 'Planeje-se para o início do ano, quando vence a primeira parcela do IPVA na maioria dos estados.'],
+    relatedToolIds: ['consumo-combustivel', 'financiamento', 'porcentagem'],
+    slug: 'calculadora-de-ipva'
+  },
+  {
+    id: 'imposto-renda',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Imposto de Renda (IRPF)',
+    shortDescription: 'Simule o cálculo do Imposto de Renda Pessoa Física com base na tabela progressiva atual.',
+    longIntro: 'Calcule quanto você precisa pagar ou receber de restituição do Imposto de Renda da Pessoa Física (IRPF). Considere rendimentos tributáveis, deduções legais e dependentes para uma estimativa precisa.',
+    howItWorks: 'Informe seus rendimentos tributáveis anuais, o total de despesas dedutíveis (saúde, educação, previdência) e a quantidade de dependentes. A calculadora aplica a tabela progressiva do IRPF e exibe o imposto devido.',
+    faqs: [
+      { question: 'Quem precisa declarar Imposto de Renda?', answer: 'Deve declarar IRPF quem recebeu rendimentos tributáveis acima de R$ 28.559,70 no ano anterior, ou possui bens acima de R$ 300.000, entre outros critérios estabelecidos pela Receita Federal.' },
+      { question: 'O que pode ser deduzido do IRPF?', answer: 'Despesas com saúde (sem limite), educação (limite anual), previdência oficial e privada (PGBL), dependentes legais e pensão alimentícia podem ser deduzidos da base de cálculo.' }
+    ],
+    tips: ['Guarde todos os comprovantes de despesas médicas e educacionais ao longo do ano para garantir as deduções na declaração.', 'A declaração completa compensa quando você tem muitas despesas dedutíveis; caso contrário, o modelo simplificado pode ser mais vantajoso.'],
+    relatedToolIds: ['salario-liquido', 'inss', 'decimo-terceiro'],
+    slug: 'calculadora-de-imposto-de-renda'
+  },
+  {
+    id: 'multa-transito',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Multa de Trânsito',
+    shortDescription: 'Calcule o valor de multas de trânsito com descontos e simule infrações gravíssimas, graves, médias e leves.',
+    longIntro: 'Simule os valores de multas de trânsito brasileiras de acordo com a gravidade da infração. Veja os valores com desconto de 20% para pagamento antecipado e sem desconto para pagamento após o vencimento.',
+    howItWorks: 'Selecione a gravidade da infração (leve, média, grave ou gravíssima) e escolha se deseja pagar com ou sem desconto. A calculadora exibe o valor original e o valor com desconto.',
+    faqs: [
+      { question: 'Quais os valores das multas de trânsito em 2026?', answer: 'Infração leve: R$ 88,38; Média: R$ 130,16; Grave: R$ 195,23; Gravíssima: R$ 293,47. Multas gravíssimas podem ter fator multiplicador de até 10x.' },
+      { question: 'Como funciona o desconto de 20%?', answer: 'O pagamento da multa até a data de vencimento garante desconto de 20% sobre o valor original. Após o vencimento, o valor é integral e pode sofrer acréscimos.' }
+    ],
+    tips: ['Sempre pague as multas com desconto de 20% até a data de vencimento para economizar.', 'Infrações gravíssimas com fator multiplicador (como dirigir embriagado) podem chegar a R$ 2.934,70 ou mais.'],
+    relatedToolIds: ['ipva', 'consumo-combustivel', 'porcentagem'],
+    slug: 'calculadora-de-multa-de-transito'
+  },
+  {
+    id: 'preco-por-km',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Preço por Km (Motoristas de App)',
+    shortDescription: 'Calcule quanto você ganha por km rodado em aplicativos como Uber, 99 e outros.',
+    longIntro: 'Ferramenta essencial para motoristas de aplicativo calcularem o rendimento real por quilômetro rodado, considerando gastos com combustível, manutenção e comissão da plataforma.',
+    howItWorks: 'Informe o valor recebido por corrida, a distância percorrida, o consumo do veículo, o preço do combustível e a comissão do aplicativo. A calculadora exibe o lucro líquido por km.',
+    faqs: [
+      { question: 'Qual o lucro médio por km para motoristas de app?', answer: 'O lucro médio varia entre R$ 0,30 e R$ 1,00 por km, dependendo do veículo, combustível e eficiência operacional.' },
+      { question: 'Como reduzir custos por km?', answer: 'Manter a manutenção em dia, dirigir de forma eficiente, aproveitar horários de tarifa dinâmica e usar combustível mais econômico ajudam a aumentar o lucro por km.' }
+    ],
+    tips: ['Acompanhe o rendimento por km semanalmente para identificar padrões de lucratividade.', 'Considere todos os custos: combustível, manutenção, seguro, IPVA e depreciação do veículo.'],
+    relatedToolIds: ['consumo-combustivel', 'ipva', 'porcentagem'],
+    slug: 'calculadora-de-preco-por-km'
+  },
+  {
+    id: 'gestacao',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Gestação - Idade Gestacional',
+    shortDescription: 'Calcule a idade gestacional, data provável do parto e acompanhe o trimestre da gravidez.',
+    longIntro: 'Uma calculadora completa para gestantes descobrirem a idade gestacional atual, data provável do parto (DPP), trimestre da gestação e curvas de peso recomendadas.',
+    howItWorks: 'Informe a data da última menstruação (DUM) ou a data prevista para o parto. A ferramenta calcula automaticamente a semana gestacional atual, o trimestre e a data provável do parto.',
+    faqs: [
+      { question: 'Como calcular a idade gestacional?', answer: 'A idade gestacional é calculada a partir da Data da Última Menstruação (DUM) ou por ultrassom precoce. A gestação completa dura em média 40 semanas ou 280 dias.' },
+      { question: 'O que é a Data Provável do Parto (DPP)?', answer: 'A DPP é calculada somando-se 280 dias (40 semanas) ao primeiro dia da última menstruação. Apenas 5% dos bebês nascem exatamente na data prevista.' }
+    ],
+    tips: ['Consulte seu obstetra regularmente para acompanhamento preciso da gestação, especialmente no primeiro trimestre.', 'Use a calculadora como referência, mas lembre-se que cada gestação é única e as datas podem variar.'],
+    relatedToolIds: ['imc', 'idade', 'dias-entre-datas'],
+    slug: 'calculadora-de-gestacao'
+  },
+  {
+    id: 'tmb',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de TMB (Taxa Metabólica Basal)',
+    shortDescription: 'Descubra quantas calorias seu corpo gasta em repouso para manter funções vitais.',
+    longIntro: 'Calcule sua Taxa Metabólica Basal (TMB) usando as fórmulas de Mifflin-St Jeor ou Harris-Benedict. Ideal para quem quer emagrecer, ganhar massa muscular ou simplesmente entender seu gasto calórico diário.',
+    howItWorks: 'Informe seu peso, altura, idade e sexo. A calculadora utiliza fórmulas validadas cientificamente para estimar as calorias que seu corpo queima em repouso absoluto.',
+    faqs: [
+      { question: 'O que é TMB?', answer: 'A Taxa Metabólica Basal (TMB) é a quantidade mínima de calorias que seu corpo necessita para manter funções vitais como respiração, circulação e temperatura corporal em repouso.' },
+      { question: 'Qual a diferença entre TMB e GET?', answer: 'O Gasto Energético Total (GET) inclui a TMB mais as calorias gastas em atividades físicas diárias. Para emagrecer, recomenda-se consumir entre a TMB e o GET.' }
+    ],
+    tips: ['Nunca consuma menos calorias que sua TMB por longos períodos, pois isso pode desacelerar seu metabolismo.', 'A TMB diminui com a idade e com a perda de peso, por isso reajuste sua dieta periodicamente.'],
+    relatedToolIds: ['imc', 'idade', 'consumo-combustivel'],
+    slug: 'calculadora-de-taxa-metabolica-basal'
+  },
+  {
+    id: 'margem-lucro',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Margem de Lucro',
+    shortDescription: 'Calcule a margem de lucro, markup e preço de venda ideal para seus produtos.',
+    longIntro: 'Ferramenta essencial para empreendedores e lojistas calcularem a margem de lucro bruta e líquida, o markup ideal e o preço de venda sugerido considerando custos fixos e variáveis.',
+    howItWorks: 'Informe o custo do produto, as despesas variáveis (comissões, impostos), despesas fixas rateadas e a margem de lucro desejada. A calculadora retorna o preço de venda sugerido e a margem real.',
+    faqs: [
+      { question: 'Qual a diferença entre markup e margem?', answer: 'Markup é um multiplicador aplicado sobre o custo para definir o preço. Margem é o percentual de lucro sobre o preço de venda final. Uma margem de 30% equivale a um markup de 1,43.' },
+      { question: 'Como definir a margem de lucro ideal?', answer: 'A margem ideal varia por segmento: supermercados trabalham com 15-25%, lojas de roupas 40-60%, e serviços 30-50%. Considere concorrência, posicionamento e custos operacionais.' }
+    ],
+    tips: ['Revise suas margens periodicamente para acompanhar mudanças nos custos de insumos e matéria-prima.', 'Inclua todos os custos ocultos como embalagem, frete e taxas de cartão de crédito no cálculo.'],
+    relatedToolIds: ['porcentagem', 'regra-de-tre', 'salario-liquido'],
+    slug: 'calculadora-de-margem-de-lucro'
+  },
+  {
+    id: 'gorjeta',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Gorjeta',
+    shortDescription: 'Calcule gorjeta de 10%, 15% ou qualquer percentual em restaurantes e serviços.',
+    longIntro: 'Calcule facilmente o valor da gorjeta em restaurantes, bares e serviços. Divida a conta entre amigos e saiba exatamente quanto cada um deve pagar incluindo a gorjeta.',
+    howItWorks: 'Informe o valor total da conta, o percentual de gorjeta desejado (padrão 10%) e o número de pessoas para dividir. A calculadora exibe o valor da gorjeta, total com gorjeta e valor por pessoa.',
+    faqs: [
+      { question: 'A gorjeta é obrigatória no Brasil?', answer: 'Não, a gorjeta é opcional no Brasil. No entanto, muitos restaurantes incluem 10% opcionais na conta como sugestão para o serviço.' },
+      { question: 'Os 10% vão para o garçom ou para o restaurante?', answer: 'Por lei, os 10% devem ser rateados entre todos os funcionários do salão (garçons, cumins, bartenders) e não podem ser retidos pelo estabelecimento.' }
+    ],
+    tips: ['Se o serviço for excepcional, considere dar 15% ou 20% de gorjeta.', 'Em grupos grandes, combine antes se a gorjeta será incluída para evitar constrangimentos na hora de pagar.'],
+    relatedToolIds: ['porcentagem', 'regra-de-tre', 'margem-lucro'],
+    slug: 'calculadora-de-gorjeta'
+  },
+
+  // NOVOS CONVERSORES
+  {
+    id: 'polegadas-para-centimetros',
+    categoryId: 'conversores',
+    title: 'Conversor de Polegadas para Centímetros',
+    shortDescription: 'Converta polegadas (in) para centímetros (cm) e vice-versa instantaneamente.',
+    longIntro: 'Converta facilmente medidas entre polegadas e centímetros. Ideal para dimensionamento de telas de TV, monitores, celulares, parafusos, ferramentas e móveis importados.',
+    howItWorks: 'Digite o valor em polegadas ou centímetros. A conversão é automática usando o fator 1 polegada = 2,54 centímetros.',
+    faqs: [
+      { question: 'Quantos centímetros tem uma polegada?', answer: 'Exatamente 2,54 centímetros equivalem a 1 polegada (1 in = 2,54 cm).' },
+      { question: 'Como converter polegadas para cm de cabeça?', answer: 'Multiplique o número de polegadas por 2,5 para uma aproximação rápida. Para precisão, multiplique por 2,54.' }
+    ],
+    tips: ['Telas de TV e monitores são medidas em polegadas na diagonal. Uma TV de 55 polegadas tem aproximadamente 140 cm de diagonal.'],
+    relatedToolIds: ['metros-para-pes', 'celsius-para-fahrenheit', 'quilos-para-libras'],
+    slug: 'converter-polegadas-para-centimetros'
+  },
+  {
+    id: 'milhas-para-quilometros',
+    categoryId: 'conversores',
+    title: 'Conversor de Milhas para Quilômetros',
+    shortDescription: 'Converta distâncias entre milhas e quilômetros para viagens e corridas.',
+    longIntro: 'Converta distâncias entre o sistema imperial (milhas) e o sistema métrico (quilômetros). Essencial para planejamento de viagens internacionais, corridas de rua e análises de mapas.',
+    howItWorks: 'Digite o valor em milhas ou quilômetros para obter a conversão instantânea. 1 milha = 1,60934 quilômetros.',
+    faqs: [
+      { question: 'Quantos km tem uma milha?', answer: '1 milha terrestre equivale a aproximadamente 1,609 km. Uma maratona tem 42,195 km ou 26,2 milhas.' },
+      { question: 'Qual a diferença entre milha terrestre e náutica?', answer: 'A milha terrestre (statute mile) tem 1.609 metros. A milha náutica tem 1.852 metros e é usada em navegação marítima e aérea.' }
+    ],
+    tips: ['Para conversão rápida de milhas para km, multiplique por 1,6. Para km para milhas, divida por 1,6.'],
+    relatedToolIds: ['metros-para-pes', 'polegadas-para-centimetros', 'real-para-dolar'],
+    slug: 'converter-milhas-para-quilometros'
+  },
+  {
+    id: 'kmh-para-mph',
+    categoryId: 'conversores',
+    title: 'Conversor de Km/h para mph',
+    shortDescription: 'Converta velocidades entre quilômetros por hora e milhas por hora.',
+    longIntro: 'Converta velocidades entre o sistema métrico (km/h) e o sistema imperial (mph). Útil para motoristas que viajam para os EUA, Inglaterra ou outros países que usam milhas.',
+    howItWorks: 'Digite a velocidade em km/h ou mph para conversão automática. 1 km/h = 0,62137 mph.',
+    faqs: [
+      { question: 'Quantos mph são 100 km/h?', answer: '100 km/h equivalem a aproximadamente 62 mph. A conta é: 100 × 0,62137 = 62,1 mph.' },
+      { question: 'Qual o limite de velocidade nos EUA?', answer: 'Nos EUA, os limites variam de 25 mph (40 km/h) em áreas residenciais a 75 mph (120 km/h) em algumas rodovias interestaduais.' }
+    ],
+    tips: ['Ao alugar um carro nos EUA, lembre-se que 60 mph ≈ 96 km/h, então mantenha-se atento aos limites locais.'],
+    relatedToolIds: ['milhas-para-quilometros', 'metros-para-pes', 'celsius-para-fahrenheit'],
+    slug: 'converter-kmh-para-mph'
+  },
+  {
+    id: 'euro-para-real',
+    categoryId: 'conversores',
+    title: 'Conversor de Euro para Real',
+    shortDescription: 'Converta valores entre Euro (EUR) e Real (BRL) com cotação personalizável.',
+    longIntro: 'Converta valores entre Euro e Real Brasileiro para viagens à Europa, compras internacionais ou negócios. A cotação é ajustável manualmente para refletir o câmbio do dia.',
+    howItWorks: 'Informe o valor em Euros ou Reais e ajuste a cotação do câmbio conforme a taxa comercial ou turismo do dia.',
+    faqs: [
+      { question: 'Qual a cotação do Euro hoje?', answer: 'A cotação do Euro varia diariamente. Consulte seu banco ou corretora para a taxa comercial atualizada antes de fazer câmbio.' },
+      { question: 'Qual a diferença entre câmbio comercial e turismo?', answer: 'O câmbio turismo é geralmente mais caro que o comercial, pois inclui spreads, IOF e taxas operacionais cobradas pelas casas de câmbio.' }
+    ],
+    tips: ['Compare a cotação em diferentes casas de câmbio e bancos antes de comprar euros para sua viagem.', 'Lembre-se do IOF de 1,1% para compra de moeda em espécie e 4,38% para transações no cartão.'],
+    relatedToolIds: ['real-para-dolar', 'porcentagem', 'juros-compostos'],
+    slug: 'converter-euro-para-real'
+  },
+  {
+    id: 'bitcoin-para-real',
+    categoryId: 'conversores',
+    title: 'Conversor de Bitcoin para Real',
+    shortDescription: 'Converta Bitcoin (BTC) e outras criptomoedas para Real Brasileiro (BRL).',
+    longIntro: 'Converta Bitcoin e outras criptomoedas populares para Real Brasileiro. Acompanhe o valor aproximado com cotação personalizável para simular seus investimentos em criptoativos.',
+    howItWorks: 'Informe a quantidade de Bitcoin ou o valor em Reais e ajuste a cotação da criptomoeda conforme o mercado.',
+    faqs: [
+      { question: 'O valor do Bitcoin é atualizado em tempo real?', answer: 'Esta ferramenta usa cotação manual ajustável. Para valores em tempo real, consulte exchanges como Binance, Mercado Bitcoin ou CoinMarketCap.' },
+      { question: 'É seguro investir em Bitcoin?', answer: 'O Bitcoin é um ativo de alto risco e volatilidade. Invista apenas o que você pode perder e diversifique seus investimentos.' }
+    ],
+    tips: ['Nunca invista todo seu patrimônio em criptomoedas devido à alta volatilidade.', 'Use apenas exchanges confiáveis e regulamentadas no Brasil para comprar e vender criptomoedas.'],
+    relatedToolIds: ['real-para-dolar', 'euro-para-real', 'porcentagem'],
+    slug: 'converter-bitcoin-para-real'
+  },
+
+  // NOVOS GERADORES
+  {
+    id: 'nome-aleatorio',
+    categoryId: 'geradores',
+    title: 'Gerador de Nome Aleatório',
+    shortDescription: 'Gere nomes aleatórios brasileiros com sobrenomes para testes e criações.',
+    longIntro: 'Gere nomes completos aleatórios com estilo brasileiro para usar em testes de sistemas, criação de personagens, histórias ou exemplos em apresentações.',
+    howItWorks: 'Selecione o gênero e a quantidade de nomes desejados. Clique em gerar para obter nomes completos aleatórios com sobrenomes brasileiros comuns.',
+    faqs: [
+      { question: 'Os nomes gerados são de pessoas reais?', answer: 'Não. Todos os nomes são gerados aleatoriamente a partir de listas de nomes e sobrenomes comuns, sem qualquer relação com pessoas reais.' },
+      { question: 'Posso usar os nomes em sistemas em produção?', answer: 'Sim, os nomes são ideais para popular bancos de dados de teste, criar exemplos em documentações e simular cadastros em ambientes de homologação.' }
+    ],
+    tips: ['Perfeito para popular bancos de dados de teste com dados não-sensíveis.', 'Use a função de cópia rápida para exportar vários nomes de uma vez para sua planilha.'],
+    relatedToolIds: ['cpf', 'cnpj', 'senha'],
+    slug: 'gerador-de-nome-aleatorio'
+  },
+  {
+    id: 'endereco-brasil',
+    categoryId: 'geradores',
+    title: 'Gerador de Endereço Brasileiro',
+    shortDescription: 'Gere endereços brasileiros completos com CEP, rua, bairro e cidade para testes.',
+    longIntro: 'Gere endereços fictícios brasileiros completos para desenvolvimento de sistemas, testes de formulários de cadastro e simulações de entrega. Inclui logradouro, número, bairro, cidade, estado e CEP.',
+    howItWorks: 'Selecione a quantidade de endereços desejada. A ferramenta gera endereços aleatórios em várias regiões do Brasil com dados consistentes.',
+    faqs: [
+      { question: 'Os endereços gerados são reais?', answer: 'Não. Os endereços são gerados sinteticamente usando combinações aleatórias de ruas, bairros e CEPs de diversas cidades brasileiras.' },
+      { question: 'Os CEPs gerados são válidos?', answer: 'Os CEPs seguem a formatação válida XXXXX-XXX mas não correspondem a endereços reais. São apenas para testes.' }
+    ],
+    tips: ['Use endereços gerados para testar fluxos completos de checkout em lojas virtuais.', 'Combine com o gerador de CPF e Nome para criar cadastros completos de teste.'],
+    relatedToolIds: ['cpf', 'cnpj', 'nome-aleatorio'],
+    slug: 'gerador-de-endereco-brasileiro'
+  },
+  {
+    id: 'codigo-barras',
+    categoryId: 'geradores',
+    title: 'Gerador de Código de Barras',
+    shortDescription: 'Gere códigos de barras EAN-13 para produtos e testes de sistemas.',
+    longIntro: 'Gere códigos de barras no formato EAN-13 válidos para simular produtos em sistemas PDV, testes de leitura óptica e desenvolvimento de aplicações comerciais.',
+    howItWorks: 'Informe os primeiros 12 dígitos do código (opcional) e clique em gerar. A ferramenta calcula o dígito verificador e exibe o código de barras completo.',
+    faqs: [
+      { question: 'O que é EAN-13?', answer: 'EAN-13 (European Article Number) é um padrão internacional de código de barras de 13 dígitos usado para identificação de produtos no varejo.' },
+      { question: 'Posso usar estes códigos em produtos reais?', answer: 'Não. Os códigos gerados são para testes e desenvolvimento. Produtos reais precisam de códigos GS1 registrados oficialmente.' }
+    ],
+    tips: ['Códigos iniciados com 789 são reservados para produtos registrados no Brasil (GS1 Brasil).', 'Use esta ferramenta para testar leitores de código de barras em desenvolvimento.'],
+    relatedToolIds: ['cpf', 'cnpj', 'uuid'],
+    slug: 'gerador-de-codigo-de-barras'
+  },
+  {
+    id: 'placa-mercosul',
+    categoryId: 'geradores',
+    title: 'Gerador de Placa de Carro Mercosul',
+    shortDescription: 'Gere placas de veículo no padrão Mercosul para testes e simulações.',
+    longIntro: 'Gere placas de veículo no novo padrão Mercosul (AAA1A11) adotado no Brasil. Ideal para testes de sistemas de estacionamento, pedágio e cadastro de veículos.',
+    howItWorks: 'Selecione a quantidade e o estado desejado. A ferramenta gera placas no formato Mercosul com 4 letras e 3 números.',
+    faqs: [
+      { question: 'Qual o formato da placa Mercosul?', answer: 'O padrão Mercosul segue o formato ABC1D23 (4 letras e 3 números), diferente do antigo formato ABC-1234.' },
+      { question: 'Todos os estados já adotaram a placa Mercosul?', answer: 'Sim, desde 2020 todos os estados brasileiros emitem o novo padrão Mercosul obrigatoriamente para novos veículos.' }
+    ],
+    tips: ['Placas geradas são aleatórias e não correspondem a veículos reais registrados.', 'Ideal para testar sistemas de reconhecimento automático de placas (LPR).'],
+    relatedToolIds: ['ipva', 'consumo-combustivel', 'cpf'],
+    slug: 'gerador-de-placa-mercosul'
+  },
+  {
+    id: 'cores-aleatorias',
+    categoryId: 'geradores',
+    title: 'Gerador de Cores Aleatórias',
+    shortDescription: 'Gere paletas de cores aleatórias com código HEX, RGB e nome da cor.',
+    longIntro: 'Gere cores aleatórias para design gráfico, desenvolvimento web e inspiração criativa. Obtenha o código hexadecimal (HEX), valores RGB e o nome aproximado da cor.',
+    howItWorks: 'Clique em gerar para criar uma nova cor aleatória. Visualize a cor em tempo real e copie os códigos HEX ou RGB para usar em seus projetos.',
+    faqs: [
+      { question: 'Qual a diferença entre HEX e RGB?', answer: 'HEX é uma representação hexadecimal das cores (#FF0000 para vermelho). RGB usa valores decimais de 0 a 255 para vermelho, verde e azul (rgb(255,0,0)).' },
+      { question: 'Para que servem paletas de cores?', answer: 'Paletas de cores são usadas em design gráfico, desenvolvimento web, decoração e arte para garantir harmonia visual entre os elementos.' }
+    ],
+    tips: ['Use cores complementares (opostas no círculo cromático) para criar contraste em seus designs.', 'Cores análogas (vizinhas no círculo cromático) criam harmonia e suavidade visual.'],
+    relatedToolIds: ['senha', 'uuid', 'lorem-ipsum'],
+    slug: 'gerador-de-cores-aleatorias'
+  },
+
+  // NOVAS FERRAMENTAS WEB
+  {
+    id: 'status-site',
+    categoryId: 'ferramentas-web',
+    title: 'Verificador de Status de Site (Up/Down)',
+    shortDescription: 'Verifique se um site está online ou offline com teste de disponibilidade.',
+    longIntro: 'Verifique se um site está no ar (up) ou fora do ar (down) com simulação de requisição HTTP. Monitore a disponibilidade dos seus sites favoritos ou concorrentes.',
+    howItWorks: 'Informe a URL do site desejado e clique em verificar. A ferramenta simula uma requisição HTTP e retorna o status code e o tempo de resposta aproximado.',
+    faqs: [
+      { question: 'O que significa status 200?', answer: 'Status 200 significa que o site está online e respondendo normalmente às requisições HTTP.' },
+      { question: 'O que significa status 404?', answer: 'Status 404 indica que a página não foi encontrada no servidor, embora o site possa estar online.' }
+    ],
+    tips: ['Use esta ferramenta para monitorar periodicamente seus próprios sites.', 'Verifique sites suspeitos antes de clicar em links recebidos por e-mail.'],
+    relatedToolIds: ['ping', 'ssl-checker', 'http-headers'],
+    slug: 'verificador-de-status-de-site'
+  },
+  {
+    id: 'validador-url',
+    categoryId: 'ferramentas-web',
+    title: 'Validador de URL',
+    shortDescription: 'Valide se uma URL está corretamente formatada e identifique seus componentes.',
+    longIntro: 'Valide URLs e analise seus componentes: protocolo, domínio, caminho, parâmetros de consulta e fragmentos. Essencial para desenvolvedores que trabalham com integrações de APIs e links.',
+    howItWorks: 'Cole uma URL no campo de entrada e veja a análise detalhada de cada componente da URL, validação de formato e verificação de segurança.',
+    faqs: [
+      { question: 'O que torna uma URL inválida?', answer: 'Uma URL inválida geralmente contém caracteres especiais não codificados, espaços, protocolo incorreto ou formatação inadequada.' },
+      { question: 'URLs com HTTPS são sempre seguras?', answer: 'HTTPS indica que a comunicação é criptografada, mas não garante que o site seja legítimo ou seguro. Sempre verifique o conteúdo e a reputação do site.' }
+    ],
+    tips: ['Sempre codifique URLs com parâmetros especiais usando encodeURIComponent() em JavaScript.', 'URLs encurtadas podem esconder destinos maliciosos - verifique antes de clicar.'],
+    relatedToolIds: ['encode-url', 'decode-url', 'ssl-checker'],
+    slug: 'validador-de-url'
+  },
+  {
+    id: 'titulo-eleitor',
+    categoryId: 'ferramentas-web',
+    title: 'Verificador de Título de Eleitor',
+    shortDescription: 'Valide o número do título de eleitor e consulte informações da zona eleitoral.',
+    longIntro: 'Valide a autenticidade do número do Título de Eleitor através dos dígitos verificadores. Ideal para sistemas de cadastro que precisam verificar documentos eleitorais.',
+    howItWorks: 'Digite o número do título de eleitor (com ou sem pontos). A ferramenta valida os dígitos verificadores e identifica o estado e zona eleitoral aproximados.',
+    faqs: [
+      { question: 'Quantos dígitos tem o Título de Eleitor?', answer: 'O Título de Eleitor possui 12 dígitos no formato XXXX XXXX XX XX, divididos em sequência, zona, seção e dígitos verificadores.' },
+      { question: 'Onde consultar a situação do Título de Eleitor?', answer: 'A situação regular do título pode ser consultada no site oficial do Tribunal Superior Eleitoral (TSE) ou no aplicativo e-Título.' }
+    ],
+    tips: ['Mantenha seu título de eleitor regularizado para evitar multas e impedimentos como: não poder tirar passaporte ou assumir cargos públicos.', 'Vote sempre para manter seu título em situação regular!'],
+    relatedToolIds: ['cpf', 'cep-brasil', 'cnae-consulta'],
+    slug: 'verificador-de-titulo-de-eleitor'
+  },
+
+  // NOVOS UTILITÁRIOS
+  {
+    id: 'cronometro',
+    categoryId: 'utilitarios',
+    title: 'Cronômetro Online',
+    shortDescription: 'Cronômetro preciso com voltas e controle de tempo para treinos e atividades.',
+    longIntro: 'Um cronômetro completo e preciso diretamente no navegador. Perfeito para treinos físicos, cooking timing, medição de produtividade (Pomodoro) e qualquer atividade que precise de controle de tempo.',
+    howItWorks: 'Clique em iniciar para começar a contagem. Use o botão de volta para marcar intervalos. O cronômetro exibe horas, minutos, segundos e centésimos.',
+    faqs: [
+      { question: 'O cronômetro funciona offline?', answer: 'Sim, o cronômetro funciona 100% offline pois roda diretamente no seu navegador sem necessidade de conexão com a internet.' },
+      { question: 'Quantas voltas posso marcar?', answer: 'Você pode marcar quantas voltas quiser. Cada volta registra o tempo parcial e o tempo total decorrido.' }
+    ],
+    tips: ['Use para treinos intervalados (HIIT) alternando 30 segundos de esforço e 15 de descanso.', 'A técnica Pomodoro usa ciclos de 25 minutos de foco e 5 minutos de pausa.'],
+    relatedToolIds: ['horas-para-minutos', 'dias-entre-datas', 'contador-caracteres'],
+    slug: 'cronometro-online'
+  },
+  {
+    id: 'separador-silabas',
+    categoryId: 'utilitarios',
+    title: 'Separador de Sílabas',
+    shortDescription: 'Separe palavras em sílabas corretamente de acordo com as regras gramaticais.',
+    longIntro: 'Ferramenta educacional que separa palavras em sílabas seguindo as regras oficiais de divisão silábica da língua portuguesa. Essencial para estudantes, professores e profissionais de revisão textual.',
+    howItWorks: 'Digite ou cole uma palavra ou texto. A ferramenta analisa e separa cada palavra em sílabas destacadas visualmente com cores.',
+    faqs: [
+      { question: 'Como funciona a separação silábica?', answer: 'A separação silábica segue regras como: não separar ditongos (oi, ei, ou), separar hiatos (sa-ú-de), consoantes dobradas (car-ro), e encontros consonantais (prato: pra-to).' },
+      { question: 'Todas as palavras seguem as mesmas regras?', answer: 'A maioria segue, mas existem exceções e palavras com dupla grafia. A ferramenta cobre as regras mais comuns da gramática brasileira.' }
+    ],
+    tips: ['A separação correta de sílabas é essencial para a translineação (divisão de palavras no final da linha) em textos formatados.', 'Use esta ferramenta como apoio pedagógico para ensino de gramática e ortografia.'],
+    relatedToolIds: ['contador-caracteres', 'contador-palavras', 'removedor-espacos'],
+    slug: 'separador-de-silabas'
+  },
+  {
+    id: 'maiusculas-minusculas',
+    categoryId: 'utilitarios',
+    title: 'Conversor de Maiúsculas/Minúsculas',
+    shortDescription: 'Converta textos entre maiúsculas, minúsculas, capitalizado e alternado rapidamente.',
+    longIntro: 'Converta seus textos entre diferentes formatos de capitalização: maiúsculas, minúsculas, primeira letra maiúscula (capitalizado), alternado e título. Ideal para formatação de títulos e correções de digitação.',
+    howItWorks: 'Cole ou digite o texto e selecione o formato desejado. A conversão é instantânea e você pode copiar o resultado com um clique.',
+    faqs: [
+      { question: 'Qual a diferença entre capitalizado e título?', answer: 'Capitalizado coloca a primeira letra de cada frase em maiúscula. Título coloca a primeira letra de cada palavra em maiúscula (exceto artigos e preposições).' },
+      { question: 'Texto em maiúsculas é considerado grito na internet?', answer: 'Sim, escrever totalmente em maiúsculas é considerado como gritar na comunicação digital. Use maiúsculas apenas para ênfase moderada.' }
+    ],
+    tips: ['Evite escrever textos longos em maiúsculas na internet - além de cansativo, é considerado má educação.', 'Use o formato Título para headlines e o formato Capitalizado para parágrafos normais.'],
+    relatedToolIds: ['contador-caracteres', 'removedor-espacos', 'contador-palavras'],
+    slug: 'conversor-maiusculas-minusculas'
+  },
+  {
+    id: 'extrator-email',
+    categoryId: 'utilitarios',
+    title: 'Extrator de E-mails',
+    shortDescription: 'Extraia todos os endereços de e-mail de um texto ou página HTML.',
+    longIntro: 'Extraia automaticamente todos os endereços de e-mail presentes em um texto, código HTML ou documento. Útil para profissionais de marketing, recrutadores e desenvolvedores.',
+    howItWorks: 'Cole o texto ou HTML no campo de entrada. A ferramenta identifica e extrai todos os endereços de e-mail válidos usando expressões regulares.',
+    faqs: [
+      { question: 'Quais formatos de e-mail são reconhecidos?', answer: 'Qualquer formato válido de e-mail como nome@dominio.com, nome.sobrenome@empresa.com.br, nome+tag@dominio.org, entre outros.' },
+      { question: 'A ferramenta extrai e-mails de páginas web?', answer: 'Sim, cole o código HTML completo da página e a ferramenta extrairá todos os e-mails encontrados no conteúdo.' }
+    ],
+    tips: ['Sempre respeite a LGPD ao coletar e processar endereços de e-mail de terceiros.', 'Use esta ferramenta apenas para fins legítimos como contato profissional ou migração de dados autorizada.'],
+    relatedToolIds: ['removedor-espacos', 'contador-caracteres', 'encode-url'],
+    slug: 'extrator-de-emails'
+  },
+  {
+    id: 'comparador-textos',
+    categoryId: 'utilitarios',
+    title: 'Comparador de Textos (Diff)',
+    shortDescription: 'Compare dois textos e veja as diferenças destacadas linha a linha.',
+    longIntro: 'Compare dois textos lado a lado e identifique diferenças entre eles. Ideal para revisão de documentos, comparação de versões de código, verificação de alterações em contratos e trabalhos acadêmicos.',
+    howItWorks: 'Cole o texto original (versão A) e o texto modificado (versão B). A ferramenta destaca em verde as adições e em vermelho as remoções.',
+    faqs: [
+      { question: 'O que significa diff?', answer: 'Diff é a abreviação de difference (diferença). É uma ferramenta que mostra linha a linha o que foi adicionado, removido ou modificado entre duas versões de um texto.' },
+      { question: 'Quantos caracteres posso comparar?', answer: 'Não há limite definido para a comparação. Para melhores resultados, recomenda-se textos de até 50 mil caracteres.' }
+    ],
+    tips: ['Use o comparador para verificar plágio ou similaridade entre textos acadêmicos.', 'Antes de atualizar um site, compare o novo texto com o atual para garantir que nenhuma informação importante foi perdida.'],
+    relatedToolIds: ['contador-caracteres', 'contador-palavras', 'removedor-espacos'],
+    slug: 'comparador-de-textos'
   },
 
   // UTITLITARIOS
@@ -1089,7 +1490,281 @@ export const TOOLS: ToolMetadata[] = [
     ],
     relatedToolIds: ['encode-url', 'qr-code', 'beautify-json'],
     slug: 'decodificador-decode-url'
-  }
+  },
+
+  // ===== NOVAS FERRAMENTAS DE ALTO VOLUME DE BUSCA =====
+
+  // CALCULADORA DE APOSENTADORIA INSS
+  {
+    id: 'aposentadoria-inss',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Aposentadoria INSS',
+    shortDescription: 'Simule sua aposentadoria pelo INSS: descubra o tempo restante, valor do benefício e regras de transição.',
+    longIntro: 'Calcule quando você poderá se aposentar pelo INSS (RGPS). Considere as regras de transição da Reforma da Previdência: pedágio 50%, pedágio 100%, pontos, idade mínima progressiva e aposentadoria por idade. Descubra o valor estimado do seu benefício com base no histórico de contribuições.',
+    howItWorks: 'Informe sua idade, tempo de contribuição, sexo, salário médio e regra de aposentadoria desejada. A calculadora exibe o tempo restante, idade mínima aplicável e o valor estimado do benefício pelo fator previdenciário.',
+    faqs: [
+      { question: 'Quem tem direito à aposentadoria por tempo de contribuição?', answer: 'Homens com 35 anos de contribuição e mulheres com 30 anos. Para quem começou a contribuir antes da Reforma (13/11/2019), existem regras de transição que podem reduzir o tempo ou exigir idade mínima.' },
+      { question: 'O que é o fator previdenciário?', answer: 'O fator previdenciário é um índice que reduz ou aumenta o valor da aposentadoria por tempo de contribuição, calculado com base na idade, tempo de contribuição e expectativa de sobrevida.' }
+    ],
+    tips: ['Contribua sempre com o valor correto para não perder tempo de contribuição no CNIS.', 'Planeje-se: uma contribuição de 35 anos para homens e 30 para mulheres garante o direito à aposentadoria integral por pontos.'],
+    relatedToolIds: ['inss', 'salario-liquido', 'decimo-terceiro'],
+    slug: 'calculadora-de-aposentadoria-inss'
+  },
+
+  // CALCULADORA DE PIS/PASEP
+  {
+    id: 'pis-pasep',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de PIS/PASEP - Abono Salarial',
+    shortDescription: 'Calcule o valor do PIS/PASEP 2026 e descubra se você tem direito ao abono salarial.',
+    longIntro: 'Simule o valor do PIS/PASEP (Programa de Integração Social) que você tem direito a receber. O abono salarial equivale a até 1 salário mínimo para trabalhadores que cumprem os requisitos legais de tempo de serviço e renda.',
+    howItWorks: 'Informe os meses trabalhados no ano-base, seu salário médio mensal e o valor do salário mínimo vigente. A calculadora simula o valor do abono salarial a que você tem direito.',
+    faqs: [
+      { question: 'Quem tem direito ao PIS/PASEP?', answer: 'Trabalhadores cadastrados no PIS/PASEP há pelo menos 5 anos, que tenham trabalhado com carteira assinada por pelo menos 30 dias no ano-base e recebido até 2 salários mínimos de remuneração.' },
+      { question: 'Qual o valor do PIS/PASEP 2026?', answer: 'O valor é proporcional aos meses trabalhados no ano-base, podendo chegar até R$ 1.518,00 (salário mínimo de 2025) ou o valor vigente no ano do pagamento.' }
+    ],
+    tips: ['Consulte o calendário de pagamentos do PIS/PASEP para saber quando sacar.', 'O abono salarial pode ser sacado na Caixa Econômica (PIS) ou no Banco do Brasil (PASEP).'],
+    relatedToolIds: ['inss', 'salario-liquido', 'decimo-terceiro'],
+    slug: 'calculadora-de-pis-pasep'
+  },
+
+  // CALCULADORA DE ICMS
+  {
+    id: 'icms',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de ICMS',
+    shortDescription: 'Calcule o ICMS incidente sobre produtos, mercadorias e serviços com alíquotas por estado.',
+    longIntro: 'Calcule o valor do ICMS (Imposto sobre Circulação de Mercadorias e Serviços) para suas operações comerciais. Considere a alíquota interna do estado de destino, o ICMS interestadual e a diferença de alíquota (DIFAL).',
+    howItWorks: 'Informe o valor da mercadoria, a alíquota do ICMS do seu estado e se a operação é interestadual. A calculadora exibe o valor do imposto, base de cálculo e valor líquido.',
+    faqs: [
+      { question: 'O que é ICMS?', answer: 'O ICMS é um imposto estadual que incide sobre circulação de mercadorias, serviços de transporte interestadual e intermunicipal, energia elétrica e telecomunicações.' },
+      { question: 'Como funciona o DIFAL?', answer: 'O DIFAL (Diferença de Alíquota) é aplicado em operações interestaduais destinadas a consumidor final, onde o estado de destino recebe a diferença entre a alíquota interna e a interestadual.' }
+    ],
+    tips: ['Empresas do Simples Nacional têm tratamento diferenciado para o ICMS, com alíquotas reduzidas dependendo do anexo.', 'O ICMS é não-cumulativo: o imposto pago na entrada pode ser creditado na saída.'],
+    relatedToolIds: ['porcentagem', 'margem-lucro', 'regra-de-tre'],
+    slug: 'calculadora-de-icms'
+  },
+
+  // CALCULADORA DE ITBI
+  {
+    id: 'itbi',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de ITBI - Imposto de Transmissão de Imóveis',
+    shortDescription: 'Calcule o valor do ITBI para compra e venda de imóveis com alíquota do seu município.',
+    longIntro: 'Calcule o valor do ITBI (Imposto sobre Transmissão de Bens Imóveis) devido na compra de um imóvel. O ITBI é um imposto municipal cobrado sobre o valor venal ou de transação do imóvel.',
+    howItWorks: 'Informe o valor do imóvel (valor de transação ou avaliação municipal) e a alíquota praticada pela prefeitura do seu município (geralmente 2% a 4%).',
+    faqs: [
+      { question: 'Quem paga o ITBI?', answer: 'O comprador do imóvel é o responsável pelo pagamento do ITBI, que deve ser quitado antes do registro da escritura no Cartório de Registro de Imóveis.' },
+      { question: 'Qual a alíquota do ITBI?', answer: 'A alíquota do ITBI varia de 2% a 4% do valor do imóvel, dependendo da legislação de cada município brasileiro.' }
+    ],
+    tips: ['O ITBI incide sobre o maior valor entre o valor de transação e o valor venal de referência da prefeitura.', 'Imóveis financiados pelo SFH podem ter redução na base de cálculo do ITBI em alguns municípios.'],
+    relatedToolIds: ['financiamento', 'porcentagem', 'fgts'],
+    slug: 'calculadora-de-itbi'
+  },
+
+  // CALCULADORA DE ITCMD
+  {
+    id: 'itcmd',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de ITCMD - Imposto sobre Herança e Doação',
+    shortDescription: 'Calcule o ITCMD, imposto estadual sobre heranças, inventários e doações no Brasil.',
+    longIntro: 'Calcule o valor do ITCMD (Imposto sobre Transmissão Causa Mortis e Doação) devido em processos de inventário, herança ou doação de bens. As alíquotas variam por estado entre 2% e 8%.',
+    howItWorks: 'Informe o valor total dos bens transmitidos (herança ou doação) e selecione o estado onde o processo ocorre. A calculadora aplica a alíquota estadual e exibe o imposto devido.',
+    faqs: [
+      { question: 'O que é ITCMD?', answer: 'ITCMD é o imposto estadual cobrado sobre a transmissão de bens e direitos por herança (causa mortis) ou por doação entre pessoas vivas.' },
+      { question: 'Qual a alíquota do ITCMD em cada estado?', answer: 'As alíquotas variam de 2% a 8%: SP 4%, RJ 5%, MG 5%, PR 4%, RS 5%, BA 5%, DF 4%. Consulte a legislação do seu estado.' }
+    ],
+    tips: ['Planejamento sucessório com doação em vida pode reduzir custos com ITCMD e inventário.', 'Bens no exterior podem ter regras especiais de tributação pelo ITCMD.'],
+    relatedToolIds: ['financiamento', 'porcentagem', 'ipva'],
+    slug: 'calculadora-de-itcmd'
+  },
+
+  // VALIDADOR DE CARTÃO DE CRÉDITO
+  {
+    id: 'validador-cartao',
+    categoryId: 'utilitarios',
+    title: 'Validador de Cartão de Crédito (Algoritmo de Luhn)',
+    shortDescription: 'Valide números de cartão de crédito e identifique a bandeira (Visa, Mastercard, Elo, Amex).',
+    longIntro: 'Valide números de cartão de crédito usando o algoritmo de Luhn e identifique automaticamente a bandeira. Ideal para desenvolvedores testarem sistemas de pagamento e e-commerce.',
+    howItWorks: 'Digite o número do cartão (apenas para testes). A ferramenta valida o dígito verificador pelo algoritmo de Luhn e identifica a bandeira pelos primeiros dígitos.',
+    faqs: [
+      { question: 'O que é o algoritmo de Luhn?', answer: 'O algoritmo de Luhn é um método de soma de verificação usado para validar números de cartão de crédito, IMEI e outros identificadores. Ele detecta erros comuns de digitação.' },
+      { question: 'Quais bandeiras são identificadas?', answer: 'Visa (4), Mastercard (51-55), Elo (636368), American Express (34, 37), Discover (6011), Hipercard (6062), Diners (300-305).' }
+    ],
+    tips: ['Use apenas números de teste para validar sistemas - nunca utilize números reais sem autorização.', 'O algoritmo de Luhn detecta 100% dos erros de um dígito e 98% dos erros de transposição.'],
+    relatedToolIds: ['cpf', 'cnpj', 'titulo-eleitor'],
+    slug: 'validador-de-cartao-de-credito'
+  },
+
+  // CALCULADORA DE CALORIAS DIÁRIAS
+  {
+    id: 'calorias-diarias',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Calorias Diárias (TMB + Atividade)',
+    shortDescription: 'Descubra quantas calorias você precisa por dia para manter, perder ou ganhar peso.',
+    longIntro: 'Calcule suas necessidades calóricas diárias com base na Taxa Metabólica Basal (TMB) e seu nível de atividade física. Ideal para quem quer emagrecer, ganhar massa muscular ou manter o peso.',
+    howItWorks: 'Informe peso, altura, idade, sexo e nível de atividade física. A calculadora usa as fórmulas de Mifflin-St Jeor para estimar calorias de manutenção, perda e ganho.',
+    faqs: [
+      { question: 'Quantas calorias devo consumir para emagrecer?', answer: 'Para emagrecer de forma saudável, consuma 300 a 500 calorias a menos que seu gasto energético total (GET). Isso resulta em perda de 0,3 a 0,5 kg por semana.' },
+      { question: 'O que é déficit calórico?', answer: 'Déficit calórico é quando você consome menos calorias do que seu corpo gasta. Cada 7.700 calorias de déficit resultam em aproximadamente 1 kg de perda de gordura.' }
+    ],
+    tips: ['Não consuma menos de 1.200 calorias por dia (mulheres) ou 1.500 (homens) sem acompanhamento médico.', 'Distribua as calorias em 5-6 refeições ao dia para manter o metabolismo ativo.'],
+    relatedToolIds: ['tmb', 'imc', 'idade'],
+    slug: 'calculadora-de-calorias-diarias'
+  },
+
+  // CONVERSOR DE LIBRA PARA REAL
+  {
+    id: 'libra-para-real',
+    categoryId: 'conversores',
+    title: 'Conversor de Libra Esterlina para Real',
+    shortDescription: 'Converta valores entre Libra Esterlina (GBP) e Real Brasileiro (BRL).',
+    longIntro: 'Converta valores entre Libra Esterlina (GBP) e Real Brasileiro com cotação personalizável. Ideal para viagens ao Reino Unido, compras internacionais e remessas.',
+    howItWorks: 'Informe o valor em Libras ou Reais e ajuste a cotação do câmbio conforme a taxa do dia.',
+    faqs: [
+      { question: 'Qual a cotação da Libra hoje?', answer: 'A cotação varia diariamente. Consulte seu banco para a taxa comercial atualizada antes de fazer câmbio.' },
+      { question: 'Onde trocar Libras no Brasil?', answer: 'Casas de câmbio autorizadas, bancos e corretoras de valores oferecem compra e venda de libras. Compare as taxas antes de comprar.' }
+    ],
+    tips: ['Leve libras em espécie ou cartão internacional pré-pago para viagens ao Reino Unido.', 'O IOF sobre compra de moeda estrangeira é de 1,1% (espécie) e 4,38% (cartão).'],
+    relatedToolIds: ['real-para-dolar', 'euro-para-real', 'porcentagem'],
+    slug: 'converter-libra-para-real'
+  },
+
+  // CALCULADORA DE NOTA DO ENEM
+  {
+    id: 'nota-enem',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Nota do ENEM - Média Simples e Ponderada',
+    shortDescription: 'Calcule sua média do ENEM com pesos por universidade e descubra suas chances no SISU.',
+    longIntro: 'Calcule sua média do ENEM considerando diferentes pesos para cada área do conhecimento. Simule suas chances de aprovação no SISU, PROUNI e FIES com base nas notas de corte das universidades.',
+    howItWorks: 'Informe suas notas nas 5 áreas do ENEM (Redação, Linguagens, Matemática, Natureza, Humanas) e os pesos definidos pelo curso desejado. A calculadora retorna a média simples e ponderada.',
+    faqs: [
+      { question: 'Como é calculada a média do ENEM?', answer: 'A média simples é a soma das 5 notas dividida por 5. A média ponderada multiplica cada nota pelo peso do respectivo área definido pela universidade.' },
+      { question: 'O que são as notas de corte do SISU?', answer: 'Nota de corte é a menor pontuação necessária para ficar entre os classificados em um curso. Varia a cada edição conforme a concorrência.' }
+    ],
+    tips: ['Pesquise as notas de corte das edições anteriores do SISU para ter uma base de comparação.', 'Foque na redação: nota 1000 pode aumentar significativamente sua média final.'],
+    relatedToolIds: ['porcentagem', 'idade', 'imc'],
+    slug: 'calculadora-de-nota-do-enem'
+  },
+
+  // GERADOR DE RG
+  {
+    id: 'gerador-rg',
+    categoryId: 'geradores',
+    title: 'Gerador de RG (Registro Geral)',
+    shortDescription: 'Gere números de RG válidos para testes de sistemas e cadastros.',
+    longIntro: 'Gere números de RG (Registro Geral) para desenvolvimento de sistemas, testes de formulários de cadastro e simulações. Os números seguem padrões estaduais de formatação.',
+    howItWorks: 'Selecione o estado desejado e a quantidade. A ferramenta gera números de RG com formatação específica de cada estado brasileiro.',
+    faqs: [
+      { question: 'Os RG gerados são de pessoas reais?', answer: 'Não. Os números são gerados sinteticamente para fins de teste e desenvolvimento, sem qualquer relação com documentos reais.' },
+      { question: 'Qual o formato do RG em cada estado?', answer: 'O formato varia por estado: SP usa XX.XXX.XXX-X, RJ usa XX.XXX.XXX-X, MG usa XXX.XXX.XXX. Outros estados têm padrões próprios.' }
+    ],
+    tips: ['Use RGs gerados apenas em ambientes de teste e desenvolvimento.', 'Combine com gerador de CPF e nome para criar conjuntos completos de dados de teste.'],
+    relatedToolIds: ['cpf', 'cnpj', 'nome-aleatorio'],
+    slug: 'gerador-de-rg'
+  },
+
+  // CONVERSOR DE NÚMEROS ROMANOS
+  {
+    id: 'numeros-romanos',
+    categoryId: 'conversores',
+    title: 'Conversor de Números Romanos',
+    shortDescription: 'Converta números arábicos para romanos e vice-versa facilmente.',
+    longIntro: 'Converta números entre o sistema arábico (decimal) e o sistema romano. Ideal para estudantes, historiadores e profissionais que trabalham com datas, capítulos, reis e papas.',
+    howItWorks: 'Digite um número arábico (ex: 2026) ou romano (ex: MMXXVI) e veja a conversão instantânea nos dois formatos.',
+    faqs: [
+      { question: 'Quais as regras dos números romanos?', answer: 'I=1, V=5, X=10, L=50, C=100, D=500, M=1000. Quando uma letra menor vem antes de uma maior, subtrai-se: IV=4, IX=9, XL=40, XC=90, CD=400, CM=900.' },
+      { question: 'Como escrever 2026 em romanos?', answer: '2026 em números romanos é MMXXVI: M(1000)+M(1000)+X(10)+X(10)+V(5)+I(1) = 2026.' }
+    ],
+    tips: ['Números romanos são usados em capítulos de livros, nomes de reis, relógios e datas em monumentos.', 'O maior número que pode ser escrito com as letras tradicionais é 3.999 (MMMCMXCIX).'],
+    relatedToolIds: ['idade', 'dias-entre-datas', 'regra-de-tre'],
+    slug: 'conversor-de-numeros-romanos'
+  },
+
+  // ADICIONAL DE PERICULOSIDADE
+  {
+    id: 'periculosidade',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Adicional de Periculosidade',
+    shortDescription: 'Calcule o adicional de periculosidade de 30% sobre o salário para trabalhadores CLT.',
+    longIntro: 'Calcule o valor do adicional de periculosidade devido a trabalhadores que exercem atividades perigosas (inflamáveis, explosivos, energia elétrica, segurança). O adicional é de 30% sobre o salário base, sem acréscimo de reflexos.',
+    howItWorks: 'Informe seu salário base e o percentual de periculosidade (padrão 30%). A calculadora exibe o valor do adicional e o salário total com periculosidade.',
+    faqs: [
+      { question: 'Qual a diferença entre periculosidade e insalubridade?', answer: 'Periculosidade (30% sobre o salário base) é para atividades perigosas que oferecem risco iminente. Insalubridade (10%, 20% ou 40% sobre o salário mínimo) é para atividades insalubres à saúde.' },
+      { question: 'Quem tem direito ao adicional de periculosidade?', answer: 'Trabalhadores que operam com inflamáveis, explosivos, energia elétrica, radiação, segurança patrimonial pessoal ou armas, conforme NR-16 do Ministério do Trabalho.' }
+    ],
+    tips: ['O adicional de periculosidade incide sobre o salário base, sem incluir horas extras ou outros adicionais.', 'Trabalhador que recebe periculosidade não pode acumular com insalubridade, salvo exceções.'],
+    relatedToolIds: ['hora-extra', 'inss', 'salario-liquido'],
+    slug: 'calculadora-de-adicional-de-periculosidade'
+  },
+
+  // ADICIONAL DE INSALUBRIDADE
+  {
+    id: 'insalubridade',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Adicional de Insalubridade',
+    shortDescription: 'Calcule o adicional de insalubridade de 10%, 20% ou 40% sobre o salário mínimo.',
+    longIntro: 'Calcule o valor do adicional de insalubridade para trabalhadores expostos a agentes nocivos à saúde. Os graus mínimo (10%), médio (20%) e máximo (40%) incidem sobre o salário mínimo vigente.',
+    howItWorks: 'Selecione o grau de insalubridade (mínimo, médio ou máximo) e informe o valor do salário mínimo. A calculadora exibe o valor do adicional e o total a receber.',
+    faqs: [
+      { question: 'Quais atividades dão direito ao adicional de insalubridade?', answer: 'Atividades com ruído excessivo, calor intenso, agentes químicos, biológicos, poeiras minerais, frio, umidade, radiação e vibração, conforme NR-15.' },
+      { question: 'A base de cálculo é o salário mínimo ou o salário base?', answer: 'Para a maioria das categorias, a base é o salário mínimo. Porém, convenções coletivas podem estabelecer base mais vantajosa, como o salário base da categoria.' }
+    ],
+    tips: ['A insalubridade de grau máximo (40%) exige perícia técnica de engenheiro ou médico do trabalho.', 'Equipamentos de proteção individual (EPIs) podem neutralizar ou reduzir o adicional de insalubridade.'],
+    relatedToolIds: ['hora-extra', 'periculosidade', 'salario-liquido'],
+    slug: 'calculadora-de-adicional-de-insalubridade'
+  },
+
+  // CALCULADORA DE PREÇO DE VENDA
+  {
+    id: 'preco-venda',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Preço de Venda (Markup + Margem)',
+    shortDescription: 'Calcule o preço de venda ideal dos seus produtos com markup e margem de contribuição.',
+    longIntro: 'Ferramenta completa para empreendedores definirem o preço de venda de produtos. Considere custos fixos, variáveis, impostos e margem de lucro desejada para calcular o preço final.',
+    howItWorks: 'Informe o custo unitário, despesas fixas e variáveis (percentual), impostos sobre vendas, e a margem de lucro desejada. A calculadora retorna o preço de venda sugerido.',
+    faqs: [
+      { question: 'Qual a diferença entre markup e margem?', answer: 'Markup é o índice multiplicador sobre o custo para chegar ao preço de venda. Margem é o percentual de lucro sobre o preço de venda. Markup de 1,5 = margem de 33,3%.' },
+      { question: 'Como calcular o preço de venda no Simples Nacional?', answer: 'No Simples Nacional, inclua o percentual do anexo (I a V) no cálculo dos impostos sobre vendas. O anexo III (serviços) tem alíquotas de 6% a 33% sobre o faturamento.' }
+    ],
+    tips: ['Pesquise os preços da concorrência para posicionar seu produto de forma competitiva.', 'Revise seus preços periodicamente para acompanhar inflação e aumento de custos.'],
+    relatedToolIds: ['margem-lucro', 'porcentagem', 'regra-de-tre'],
+    slug: 'calculadora-de-preco-de-venda'
+  },
+
+  // CALCULADORA DE IDADE CANINA
+  {
+    id: 'idade-canina',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Idade Canina (Humana)',
+    shortDescription: 'Descubra a idade do seu cachorro em anos humanos com base no porte e raça.',
+    longIntro: 'Calcule a idade do seu cão em anos humanos considerando o porte (pequeno, médio, grande) e o peso. A equivalência aproximada é 1 ano canino = 7 anos humanos, mas cães de portes diferentes envelhecem em ritmos distintos.',
+    howItWorks: 'Informe a idade real do seu cão em anos e selecione o porte (pequeno, médio, grande). A calculadora exibe a idade equivalente em anos humanos e a fase de vida do animal.',
+    faqs: [
+      { question: '1 ano canino equivale a 7 anos humanos?', answer: 'Essa regra é uma simplificação. Na verdade, o primeiro ano de vida de um cão equivale a cerca de 15 anos humanos, e o segundo ano a aproximadamente 9 anos. Após os 2 anos, cada ano canino equivale a 4-5 anos humanos.' },
+      { question: 'Cães pequenos vivem mais que cães grandes?', answer: 'Sim, cães de pequeno porte (até 10 kg) vivem em média 12-16 anos, enquanto cães de grande porte (acima de 25 kg) vivem 8-12 anos.' }
+    ],
+    tips: ['Cães de pequeno porte envelhecem mais lentamente - celebre cada ano!', 'Consulte o veterinário regularmente: a partir dos 7 anos (caninos), seu cão é considerado idoso.'],
+    relatedToolIds: ['imc', 'idade', 'tmb'],
+    slug: 'calculadora-de-idade-canina'
+  },
+
+  // CONVERSOR DE PESO ARGENTINO PARA REAL
+  {
+    id: 'peso-argentino-para-real',
+    categoryId: 'conversores',
+    title: 'Conversor de Peso Argentino para Real',
+    shortDescription: 'Converta valores entre Peso Argentino (ARS) e Real Brasileiro (BRL) com cotação personalizável.',
+    longIntro: 'Converta valores entre Peso Argentino e Real Brasileiro. Ferramenta essencial para quem viaja para Argentina, faz compras em Buenos Aires ou recebe remessas de lá.',
+    howItWorks: 'Informe o valor em Pesos Argentinos ou Reais e ajuste a cotação do câmbio conforme a taxa comercial ou blue (paralelo).',
+    faqs: [
+      { question: 'Existe diferença entre câmbio oficial e blue?', answer: 'Sim, a Argentina tem câmbio oficial (menor) e câmbio blue/paralelo (maior). A diferença pode ultrapassar 100%. O câmbio blue é mais próximo da taxa real de mercado.' },
+      { question: 'Levo Reais ou Pesos para Argentina?', answer: 'Leve dólares em espécie para trocar por pesos ao câmbio blue no mercado informal argentino. Evite usar cartão internacional pelo câmbio oficial desfavorável.' }
+    ],
+    tips: ['Leve dólares para Argentina, não reais. O dólar americano tem melhor aceitação no câmbio blue.', 'Use Western Union para receber em pesos ao câmbio blue - é um dos métodos mais vantajosos.'],
+    relatedToolIds: ['real-para-dolar', 'euro-para-real', 'libra-para-real'],
+    slug: 'converter-peso-argentino-para-real'
+  },
 ];
 
 export const PROGRAMMATIC_PAGES: { [key: string]: { title: string; description: string; content?: any } } = {
@@ -1127,5 +1802,31 @@ export const PROGRAMMATIC_PAGES: { [key: string]: { title: string; description: 
   'cbo-consulta': {
     title: 'Consulta de CBO - Classificação Brasileira de Ocupações',
     description: 'Busque a listagem oficial de códigos CBO do Ministério do Trabalho brasileiro de profissões para assinaturas de carteiras CLT.',
+  },
+
+  // NOVAS PÁGINAS PROGRAMÁTICAS SEO
+  'salario-minimo-historico': {
+    title: 'Salário Mínimo Histórico - Tabela Completa desde 1994',
+    description: 'Consulte a tabela completa do salário mínimo brasileiro desde 1994 até hoje, com valores nominais e corrigidos pela inflação. Descubra a evolução do poder de compra do trabalhador brasileiro ao longo dos anos.',
+  },
+  'feriados-nacionais': {
+    title: 'Feriados Nacionais 2026 - Calendário Completo do Brasil',
+    description: 'Calendário completo de feriados nacionais de 2026 no Brasil. Dias comemorativos, pontos facultativos, datas religiosas e civis. Planeje suas viagens e folgas com antecedência.',
+  },
+  'selic-historica': {
+    title: 'Taxa SELIC Histórica - Tabela Completa desde 1996',
+    description: 'Histórico completo da taxa SELIC desde sua criação em 1996. Consulte a taxa básica de juros da economia brasileira mês a mês, com valores anuais acumulados para referência em investimentos.',
+  },
+  'calendario-inss': {
+    title: 'Calendário de Pagamentos INSS 2026 - Datas de Benefícios',
+    description: 'Calendário completo de pagamentos do INSS em 2026. Consulte as datas de depósito de aposentadorias, pensões e benefícios assistenciais (BPC/LOAS) de acordo com o número do benefício e valor do salário mínimo.',
+  },
+  'codigos-ncm': {
+    title: 'Códigos NCM - Classificação Fiscal de Mercadorias',
+    description: 'Consulte a Nomenclatura Comum do Mercosul (NCM) para classificação fiscal de produtos. Códigos completos para importação, exportação, notas fiscais e enquadramento tributário.',
+  },
+  'codigos-ibge': {
+    title: 'Códigos IBGE de Municípios - Lista Completa',
+    description: 'Consulte todos os códigos IBGE de municípios brasileiros por estado. Encontre o código de 7 dígitos para pesquisas, sistemas e documentos oficiais.',
   }
 };

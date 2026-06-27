@@ -8,11 +8,26 @@
     <title>Tool Brasil | Ferramentas Online Gratuitas</title>
     <meta name="title" content="Tool Brasil | Ferramentas Online Gratuitas para o seu Dia a Dia" />
     <meta name="description" content="Tool Brasil é o melhor portal de utilitários online gratuitos. Acesse calculadoras financeiras, geradores de CPF/CNPJ, conversores de moedas e unidades, e testadores web rápidos." />
-    <meta name="keywords" content="tool brasil, ferramentas online, utilitarios web, calcular juros compostos, gerador de cpf, gerador de cnpj, conversor de moedas, calcular inss, meu ip" />
+    <meta name="keywords" content="tool brasil, ferramentas online, utilitarios web, calcular juros compostos, gerador de cpf, gerador de cnpj, conversor de moedas, calcular inss, meu ip, simulador financiamento, calcular imc, gerar senha segura" />
     <meta name="author" content="Tool Brasil" />
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
     <meta name="google-site-verification" content="google870f594dd5a2528d" />
+    <meta name="google-adsense-account" content="ca-pub-xxxxxxxxxxxxxx" />
     <link rel="canonical" href="https://toolbrasil.com.br/" />
+
+    <!-- Performance & Security Meta Tags -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="geo.region" content="BR" />
+    <meta name="geo.placename" content="Brasil" />
+
+    <!-- Preconnect / DNS-Prefetch para performance e anúncios -->
+    <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+    <link rel="preconnect" href="https://fundingchoicesmessages.google.com" />
+    <link rel="dns-prefetch" href="https://pagead2.googlesyndication.com" />
+    <link rel="dns-prefetch" href="https://googleads.g.doubleclick.net" />
+    <link rel="dns-prefetch" href="https://tpc.googlesyndication.com" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -21,6 +36,7 @@
     <meta property="og:description" content="Acesse dezenas de utilitários de alta performance gratuitamente. Livre de cadastros, rápido e otimizado para celulares e computadores." />
     <meta property="og:site_name" content="Tool Brasil" />
     <meta property="og:image" content="https://toolbrasil.com.br/assets/og-image.jpg" />
+    <meta property="og:locale" content="pt_BR" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
@@ -28,13 +44,26 @@
     <meta property="twitter:title" content="Tool Brasil | Ferramentas Online Gratuitas" />
     <meta property="twitter:description" content="Sua central preferida de calculadoras, conversores, geradores e ferramentas web rápidas." />
     <meta property="twitter:image" content="https://toolbrasil.com.br/assets/og-image.jpg" />
+    <meta property="twitter:site" content="@toolbrasil" />
 
-    <!-- Meta Tags para mobile -->
+    <!-- Meta Tags para mobile e PWA -->
     <meta name="theme-color" content="#059669" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="Tool Brasil" />
 
     <!-- Dados Estruturados Schema.org JSON-LD para Google Search Console -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Tool Brasil",
+        "alternateName": "ToolBrasil",
+        "url": "https://toolbrasil.com.br/",
+        "logo": "https://toolbrasil.com.br/assets/og-image.jpg"
+      }
+    </script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -45,7 +74,10 @@
         "description": "Ferramentas Online Gratuitas para o Dia a Dia. Calculadoras, Conversores, Geradores e Utilitários Web.",
         "potentialAction": {
           "@type": "SearchAction",
-          "target": "https://toolbrasil.com.br/?q={search_term_string}",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://toolbrasil.com.br/?q={search_term_string}"
+          },
           "query-input": "required name=search_term_string"
         }
       }
@@ -55,6 +87,7 @@
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "Tool Brasil Engine",
+        "url": "https://toolbrasil.com.br/",
         "operatingSystem": "All",
         "applicationCategory": "UtilityApplication",
         "offers": {

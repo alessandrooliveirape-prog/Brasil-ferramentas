@@ -18,6 +18,7 @@ export default function Institucional({ pageId }: InstitucionalProps) {
       {pageId === 'termos' && <TermosDeUso />}
       {pageId === 'cookies' && <GestaodeCookies />}
       {pageId === 'transparencia-adsense' && <TransparenciaAdsense />}
+      {pageId === 'anunciantes' && <Anunciantes />}
     </div>
   );
 }
@@ -173,7 +174,44 @@ function GestaodeCookies() {
   );
 }
 
-// 6. AD_SENSE TRANSPARENCY
+// 6. ANUNCIANTES / AD_SENSE INFO
+function Anunciantes() {
+  return (
+    <div className="space-y-6" id="inst-anunciantes">
+      <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Anuncie na Tool Brasil</h2>
+      <div className="space-y-4 text-xs text-slate-600 dark:text-slate-350 leading-relaxed">
+        <p>
+          A <strong>Tool Brasil</strong> é um portal de utilidades online que recebe milhares de visitantes todos os meses em busca de calculadoras, conversores, geradores e ferramentas web gratuitas. Nosso tráfego é qualificado e orgânico, vindo majoritariamente de buscadores como Google e Bing.
+        </p>
+
+        <h3 className="font-bold text-slate-800 dark:text-slate-200">Por que anunciar conosco?</h3>
+        <ul className="list-disc pl-5 space-y-1">
+          <li><strong>Público segmentado</strong> — Usuários brasileiros buscando ativamente por soluções financeiras, fiscais e utilitárias.</li>
+          <li><strong>Tráfego orgânico</strong> — Visitantes qualificados vindos de pesquisas orgânicas no Google.</li>
+          <li><strong>Conteúdo relevante</strong> — Páginas ricas em SEO com alta taxa de retenção e baixa taxa de rejeição.</li>
+          <li><strong>100% compatível</strong> — Anúncios Google AdSense, banners diretos e parcerias de conteúdo.</li>
+        </ul>
+
+        <h3 className="font-bold text-slate-800 dark:text-slate-200">Google AdSense</h3>
+        <p>
+          Atualmente trabalhamos com o programa <strong>Google AdSense</strong> para veicular anúncios contextuais. Os anúncios são selecionados automaticamente pelo Google com base no conteúdo da página e no perfil de navegação do usuário, respeitando todas as diretrizes de privacidade da LGPD.
+        </p>
+
+        <h3 className="font-bold text-slate-800 dark:text-slate-200">Parcerias Diretas</h3>
+        <p>
+          Interessado em parcerias de conteúdo, posts patrocinados ou banners diretos? Entre em contato através da nossa <a href="#institucional/contato" className="text-emerald-600 font-bold hover:underline">página de contato</a> para discutirmos oportunidades personalizadas.
+        </p>
+
+        <div className="p-4 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100 dark:border-emerald-900 rounded-lg mt-4">
+          <p className="font-bold text-emerald-800 dark:text-emerald-400">📧 E-mail para parcerias:</p>
+          <p className="mt-1">contato@toolbrasil.com.br</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 7. AD_SENSE TRANSPARENCY
 function TransparenciaAdsense() {
   return (
     <div className="space-y-6" id="inst-ads">
