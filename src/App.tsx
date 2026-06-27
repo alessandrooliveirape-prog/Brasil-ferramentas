@@ -44,7 +44,7 @@ import ProgrammaticPage from './components/ProgrammaticPage';
 import Sitemap from './components/Sitemap';
 import Institucional from './components/Institucional';
 import AdSensePlaceholder from './components/AdSensePlaceholder';
-
+import AffiliateSection from './components/AffiliateSection';
 
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState(() => parseRoute());
@@ -900,6 +900,9 @@ export default function App() {
 
               </article>
 
+              {/* PRODUTOS RECOMENDADOS (AFILIADOS) */}
+              <AffiliateSection toolId={activeTool.id} />
+
               {/* COMPARTILHAMENTO SOCIAL VIRAL */}
               <div className="bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-xl p-6 shadow-sm" id="share-tool-section">
                 <div className="flex items-center gap-2 mb-4">
@@ -1098,6 +1101,16 @@ export default function App() {
               <a href="/sitemap.xml" className="hover:text-emerald-400 underline underline-offset-2">sitemap.xml</a>
               <a href="/robots.txt" className="hover:text-emerald-400 underline underline-offset-2">robots.txt</a>
             </div>
+          </div>
+
+          {/* DISCLOSURE DE AFILIADOS (conforme política Amazon Associates) */}
+          <div className="text-center text-[10px] text-slate-600 leading-relaxed max-w-3xl mx-auto">
+            <p className="font-semibold text-slate-400">
+              Como Associado da Amazon, ganho com compras qualificadas. 
+              O Tool Brasil também participa do Programa de Afiliados da Shopee, 
+              recebendo comissões por vendas realizadas através dos links de 
+              produtos recomendados. Isso não altera o preço final para você.
+            </p>
           </div>
 
         </div>
