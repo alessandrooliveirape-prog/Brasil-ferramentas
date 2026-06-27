@@ -93,17 +93,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'calculadoras',
     title: 'Calculadora de Juros Simples',
     shortDescription: 'Cálculo fácil de juros lineares sobre capitais tomados ou investidos de forma direta.',
-    longIntro: 'Uma calculadora limpa para compreender estimativas de parcelas antigas, títulos simples ou transações comerciais de curto prazo baseadas em regime de juros lineares.',
+    longIntro: 'Os juros simples são um regime de capitalização linear onde a taxa de juros incide apenas sobre o capital inicial, sem acumular sobre os juros de períodos anteriores. Diferente dos juros compostos (exponenciais), os juros simples crescem de forma linear e previsível, sendo amplamente utilizados em transações de curto prazo, descontos de títulos, compras parceladas sem juros embutidos e contratos civis entre pessoas físicas. A fórmula básica é J = C × i × t, onde J são os juros, C é o capital, i é a taxa e t é o tempo. É fundamental para entender conceitos financeiros básicos e serve como base para cálculos mais complexos no mercado financeiro.',
     howItWorks: 'Insira o capital inicial, a taxa cobrada e o período. A ferramenta determina o valor dos juros acumulados e o montante final obtido.',
     faqs: [
       {
         question: 'Quando os Juros Simples são usados no mercado?',
-        answer: 'São comumente aplicados em compras parceladas sem juros embutidos complexos, descontos de duplicatas e transações comerciais de curto prazo.'
-      }
+        answer: 'São comumente aplicados em compras parceladas sem juros embutidos complexos, descontos de duplicatas, títulos de curto prazo (como CDBs com vencimento em 30 dias), contratos civis e empréstimos informais entre pessoas físicas.'
+      },
+      {
+        question: 'Qual a diferença prática entre juros simples e compostos?',
+        answer: 'Nos juros simples, o rendimento é constante a cada período (cresce em linha reta). Nos compostos, os rendimentos se acumulam e crescem exponencialmente. Em prazos curtos (até 1 mês), a diferença é pequena. Em prazos longos (acima de 1 ano), a diferença se torna gigantesca.'
+      },
+      {
+        question: 'Como calcular juros simples no dia a dia?',
+        answer: 'Para calcular juros simples de um empréstimo, multiplique o valor principal pela taxa de juros (em decimal) e pelo tempo. Exemplo: R$ 1.000,00 a 2% ao mês por 3 meses = 1000 × 0,02 × 3 = R$ 60,00 de juros. Montante final: R$ 1.060,00.'
+      },
     ],
     tips: [
       'Geralmente, empréstimos informais ou contratos civis de curto prazo utilizam juros simples para simplificar o cálculo.',
-      'Fique atento se a taxa descrita é mensal ou anual e certifique-se de preencher o período correspondente.'
+      'Fique atento se a taxa descrita é mensal ou anual e certifique-se de preencher o período correspondente.',
+      'Para investimentos de longo prazo, prefira produtos que usam juros compostos (CDB, LCI, LCA, Tesouro Direto) para maximizar seus rendimentos.',
     ],
     relatedToolIds: ['juros-compostos', 'porcentagem', 'regra-de-tre'],
     slug: 'calculadora-de-juros-simples'
@@ -137,17 +146,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'calculadoras',
     title: 'Calculadora de FGTS',
     shortDescription: 'Estime o saldo acumulado do FGTS ao longo do tempo e projete cenários de saques obrigatórios ou aniversário.',
-    longIntro: 'Projete o montante retido na sua conta vinculada ao Fundo de Garantia do Tempo de Serviço, simulando os depósitos de 8% feitos pela empresa e rendimentos de TR + 3% ao ano.',
+    longIntro: 'O FGTS (Fundo de Garantia do Tempo de Serviço) é um direito dos trabalhadores brasileiros com carteira assinada (CLT), criado pela Lei 5.107/1966 e atualmente regido pela Lei 8.036/1990. O empregador deposita mensalmente 8% do salário bruto do funcionário em uma conta vinculada à Caixa Econômica Federal, que rende TR (Taxa Referencial) + 3% ao ano. Além dos depósitos mensais, o FGTS pode ser sacado em situações específicas como demissão sem justa causa, aposentadoria, compra da casa própria, doenças graves (como câncer ou HIV), e no sistema de saque-aniversário. O FGTS também serve como garantia para financiamentos habitacionais do SFH (Sistema Financeiro de Habitação), permitindo que trabalhadores usem o saldo para amortizar ou quitar imóveis financiados.',
     howItWorks: 'Disponibilize seu salário mensal bruto, o saldo de partida e os meses trabalhados sob o regime CLT para desenhar a linha histórica de depósitos.',
     faqs: [
       {
         question: 'Quanto é depositado mensalmente no FGTS?',
-        answer: 'Para trabalhadores com contrato CLT, o empregador deve depositar mensalmente 8% do salário bruto. Jovens aprendizes têm direito à alíquota reduzida de 2%.'
-      }
+        answer: 'Para trabalhadores com contrato CLT, o empregador deve depositar mensalmente 8% do salário bruto em conta vinculada ao FGTS. Jovens aprendizes têm direito à alíquota reduzida de 2%. O depósito deve ser feito até o dia 7 de cada mês.'
+      },
+      {
+        question: 'Como funciona o Saque-Aniversário?',
+        answer: 'O Saque-Aniversário permite retirar anualmente, no mês de aniversário, um percentual do saldo do FGTS que varia de 5% a 50% mais uma parcela adicional fixa (ex: saldo até R$ 500: 50%; acima de R$ 20.000: 5% + R$ 2.900). Quem adere PERDE o direito ao saque total em caso de demissão sem justa causa, mantendo apenas a multa rescisória de 40%.'
+      },
+      {
+        question: 'Como usar o FGTS para financiar a casa própria?',
+        answer: 'O FGTS pode ser usado para: amortizar parcelas de financiamento imobiliário pelo SFH (Sistema Financeiro da Habitação), reduzir o saldo devedor a cada 2 anos, dar entrada na compra de imóvel, ou quitar totalmente o financiamento. É necessário cumprir carência de 3 anos de trabalho sob o regime do FGTS.'
+      },
     ],
     tips: [
-      'Utilize o FGTS para amortizar parcelas de financiamento imobiliário e reduzir os juros pagos nos bancos.',
-      'Fique atento ao calendário do Saque-Aniversário para verificar se a liberação compensa a perda do direito ao saque-rescisão.'
+      'Utilize o FGTS para amortizar parcelas de financiamento imobiliário e reduzir significativamente os juros pagos ao banco.',
+      'Fique atento ao calendário do Saque-Aniversário para verificar se a liberação compensa a perda do direito ao saque total na demissão.',
+      'Consulte periodicamente seu saldo do FGTS no aplicativo FGTS (Caixa) para identificar depósitos em atraso pela empresa.',
     ],
     relatedToolIds: ['rescisao', 'inss', 'decimo-terceiro'],
     slug: 'calculadora-de-fgts'
@@ -177,17 +195,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'calculadoras',
     title: 'Calculadora de Férias CLT',
     shortDescription: 'Estime o salário bruto e líquido de férias trabalhistas acrescido do terço constitucional e abonos.',
-    longIntro: 'Simulador ideal para profissionais em regime CLT descobrirem com exatidão o saldo a receber ao tirar períodos de repouso, considerando as deduções oficiais de previdência e IRRF.',
+    longIntro: 'As férias trabalhistas são um direito constitucional garantido a todos os trabalhadores brasileiros com carteira assinada (CLT), conforme previsto no artigo 7º da Constituição Federal e regulamentado pelos artigos 129 a 153 da CLT. Após cada período de 12 meses de trabalho (período aquisitivo), o empregado tem direito a 30 dias corridos de férias remuneradas, que devem ser concedidas nos 12 meses seguintes (período concessivo). O valor das férias corresponde ao salário normal acrescido de 1/3 constitucional, podendo incluir abono pecuniário (venda de até 10 dias de férias), horas extras habituais e adicionais noturnos incorporados à remuneração. As férias podem ser parceladas em até 3 períodos, sendo que ao menos um deles deve ter 14 dias corridos, conforme a Reforma Trabalhista de 2017.',
     howItWorks: 'Forneça o salário base, número de dias de férias desejados, dependentes, média de proventos variáveis (horas extras) e opte por vender 10 dias (abono pecuniário presencial).',
     faqs: [
       {
         question: 'Como funciona o cálculo do terço constitucional?',
-        answer: 'Todo trabalhador tem direito a um acréscimo de 1/3 (um terço) sobre o valor total do salário no período em que estiver gozando de férias remuneradas.'
-      }
+        answer: 'Todo trabalhador tem direito a um acréscimo de 1/3 (um terço) sobre o valor total do salário no período em que estiver gozando de férias remuneradas. Exemplo: salário de R$ 3.000,00 → férias = R$ 3.000,00 + R$ 1.000,00 (1/3) = R$ 4.000,00 brutos, antes dos descontos de INSS e IRRF.'
+      },
+      {
+        question: 'Como funciona a venda de férias (abono pecuniário)?',
+        answer: 'O abono pecuniário permite que o trabalhador venda até 10 dias de suas férias (1/3 dos 30 dias). Ele recebe o valor desses dias trabalhados mais o terço constitucional sobre o abono. Importante: o abono é isento de Imposto de Renda na fonte e não sofre desconto de INSS.'
+      },
+      {
+        question: 'As férias podem ser parceladas?',
+        answer: 'Sim, desde a Reforma Trabalhista (Lei 13.467/2017), as férias podem ser divididas em até 3 períodos, sendo que um deles deve ter no mínimo 14 dias corridos e os demais não podem ser inferiores a 5 dias cada. O parcelamento deve ser acordado entre empregado e empregador.'
+      },
     ],
     tips: [
       'Lembre-se que o pagamento de férias é efetuado até dois dias antes do início do descanso, porém no mês seguinte o seu contracheque regular virá proporcionalmente menor ou zerado.',
-      'O abono pecuniário (vender 10 dias) é isento de Imposto de Renda na fonte.'
+      'O abono pecuniário (vender 10 dias) é isento de Imposto de Renda na fonte e não há incidência de INSS sobre ele.',
+      'Programe suas férias com antecedência e comunique o RH com pelo menos 30 dias de antecedência para garantir o planejamento.',
     ],
     relatedToolIds: ['rescisao', 'decimo-terceiro', 'inss'],
     slug: 'calculadora-de-ferias-trabalhista'
@@ -217,16 +244,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'calculadoras',
     title: 'Calculadora de 13º Salário',
     shortDescription: 'Calcule as parcelas brutas e líquidas da gratificação de fim de ano de acordo com os meses trabalhados.',
-    longIntro: 'Seja CLT, funcionário público ou aposentado, preveja com detalhamento a distribuição da sua gratificação natalina obrigatória nas duas parcelas usuais de pagamento oficial.',
+    longIntro: 'O décimo terceiro salário, também conhecido como gratificação natalina, é um direito garantido a todos os trabalhadores brasileiros pela Lei 4.090/1962. Equivale a 1/12 avos da remuneração devida em dezembro por mês trabalhado no ano, sendo pago em duas parcelas. A primeira parcela, paga entre fevereiro e novembro (muitas empresas pagam junto com as férias, se solicitado), corresponde a 50% do salário bruto sem descontos. A segunda parcela, paga até 20 de dezembro, inclui todos os descontos legais como INSS (tabela progressiva), Imposto de Renda Retido na Fonte (IRRF) e pensão alimentícia, se houver. Cada mês trabalhado por pelo menos 15 dias dá direito a 1/12 do valor. O 13º salário também é devido sobre horas extras habituais, comissões, adicionais noturnos e outros proventos variáveis integrados à remuneração mensal.',
     howItWorks: 'Insira o salário bruto de base, a quantidade de meses trabalhados e deduções adicionais para obter o calendário simulado das parcelas brutas e líquidas.',
     faqs: [
       {
         question: 'Como as parcelas do 13º salário são divididas?',
-        answer: 'A primeira parcela (paga entre fevereiro e novembro) corresponde a 50% do salário bruto atual sem descontos. A segunda parcela (paga até 20 de dezembro) retém a totalidade do INSS e do Imposto de Renda relativo ao 13º completo.'
-      }
+        answer: 'A primeira parcela (paga entre fevereiro e novembro) corresponde a 50% do salário bruto atual sem descontos. A segunda parcela (paga até 20 de dezembro) retém a totalidade do INSS e do Imposto de Renda relativo ao 13º completo. Muitos trabalhadores podem solicitar a primeira parcela junto com as férias.'
+      },
+      {
+        question: 'Como calcular o 13º proporcional?',
+        answer: 'Divida o salário bruto por 12 e multiplique pelos meses trabalhados no ano (considera-se mês trabalhado quando há 15 ou mais dias de atividade). Exemplo: salário de R$ 3.600,00 com 8 meses trabalhados = (3.600 ÷ 12) × 8 = R$ 2.400,00 de 13º proporcional.'
+      },
+      {
+        question: 'Quem tem direito ao 13º salário?',
+        answer: 'Todos os trabalhadores com carteira assinada (CLT), servidores públicos, aposentados e pensionistas do INSS, trabalhadores rurais, domésticos e avulsos. O trabalhador demitido por justa causa perde o direito ao 13º proporcional.'
+      },
     ],
     tips: [
-      'Trabalhadores podem solicitar o recebimento adiantado da primeira parcela nas férias conjuntas ao requerer por escrito no início do ano.'
+      'Trabalhadores podem solicitar o recebimento adiantado da primeira parcela nas férias conjuntas ao requerer por escrito no início do ano.',
+      'Planeje o uso do 13º salário para quitar dívidas ou fazer investimentos no início do ano seguinte.',
+      'O 13º salário também incide sobre horas extras, comissões e adicionais habituais integrados ao salário mensal.',
     ],
     relatedToolIds: ['inss', 'ferias', 'rescisao'],
     slug: 'calculadora-de-decimo-terceiro'
@@ -256,17 +293,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'calculadoras',
     title: 'Calculadora de Consumo de Combustível',
     shortDescription: 'Descubra a autonomia, consumo médio por quilômetro e despesas financeiras estimadas para sua rota programada.',
-    longIntro: 'Minimize surpresas de transporte calculando o impacto de combustível do seu veículo particular. Faça contas de trajetos rápidos, viagens de férias ou deslocamento diário.',
+    longIntro: 'Calcular o consumo de combustível é essencial para motoristas que querem planejar gastos com viagens, deslocamentos diários e entender a eficiência do veículo. O consumo médio é medido em km/l (quilômetros por litro) e varia conforme o tipo de combustível (gasolina, etanol, diesel, GNV), condições de direção (cidade vs estrada), manutenção do veículo, peso da carga e estilo de condução. Para motoristas de aplicativo e entregadores, o controle do consumo é ainda mais crítico pois impacta diretamente na lucratividade. A regra dos 70% para o etanol é uma dica clássica: se o litro do etanol custar menos de 70% do litro da gasolina, compensa abastecer com etanol. Esta calculadora ajuda a estimar o custo total de combustível para qualquer trajeto e descobrir a autonomia do seu veículo.',
     howItWorks: 'Preencha a distância do seu trecho planejado, o rendimento médio do automóvel (km por litro) e o preço atual por litro encontrado no posto.',
     faqs: [
       {
         question: 'O álcool (etanol) rende menos que a gasolina?',
-        answer: 'Sim, o etanol contém densidade energética menor e rende cerca de 70% da autonomia da gasolina. Se o litro do etanol estiver abaixo de 70% do preço da gasolina, ele torna-se economicamente competitivo.'
-      }
+        answer: 'Sim, o etanol contém densidade energética menor que a gasolina. Em média, o etanol rende cerca de 70% a 75% da autonomia da gasolina. Se o litro do etanol estiver abaixo de 70% do preço da gasolina, ele torna-se economicamente mais vantajoso.'
+      },
+      {
+        question: 'Como calcular o consumo do meu carro?',
+        answer: 'Encha o tanque, anote a quilometragem, rode normalmente até precisar abastecer novamente. Na segunda visita ao posto, encha o tanque novamente e anote a quilometragem e os litros abastecidos. Divida a distância percorrida pelos litros abastecidos: km ÷ litros = km/l.'
+      },
+      {
+        question: 'O que mais afeta o consumo de combustível?',
+        answer: 'Ar condicionado ligado (aumenta em até 20% na cidade), pneus descalibrados, excesso de peso, janelas abertas em alta velocidade, motor desregulado, trânsito intenso (para e anda), e uso de combustível adulterado são os principais fatores que reduzem a eficiência.'
+      },
     ],
     tips: [
       'Calibrar regularmente os pneus e desonerar sacolas de bagagens pesadas diminui expressivamente o gasto de combustível na estrada.',
-      'Acelerações suaves e frenagens programadas reduzem o desgaste e desperdício térmico.'
+      'Acelerações suaves e frenagens programadas reduzem o desgaste e desperdício térmico, aumentando a média em até 15%.',
+      'Em viagens longas, manter velocidade constante entre 80-100 km/h na estrada otimiza o consumo da maioria dos veículos.',
     ],
     relatedToolIds: ['regra-de-tre', 'porcentagem', 'juros-simples'],
     slug: 'calculadora-de-consumo-combustivel'
@@ -276,16 +322,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'calculadoras',
     title: 'Calculadora de Regra de Três',
     shortDescription: 'Resolva proporções matemáticas diretas e inversas de maneira amigável em instantes.',
-    longIntro: 'Esqueça os rascunhos em papel para descobrir incógnitas. Encontre o quarto valor numa relação de proporcionalidade direta (onde um cresce e o outro segue) ou inversa (onde um cresce e o outro cai).',
+    longIntro: 'A regra de três é um dos conceitos matemáticos mais úteis e versáteis do dia a dia. Ela permite resolver problemas de proporcionalidade entre duas grandezas relacionadas, sejam elas diretas (quando uma grandeza aumenta, a outra também aumenta na mesma proporção) ou inversas (quando uma aumenta e a outra diminui na mesma proporção). A regra de três é amplamente utilizada em receitas culinárias (ajustar porções), cálculos de medicamentos (dosagem por peso), engenharia (escalas de plantas), economia (câmbio de moedas), estatística, e até mesmo em vestibulares e concursos públicos. Dominar este cálculo simples pode facilitar inúmeras situações profissionais e pessoais.',
     howItWorks: 'Preencha os valores conhecidos A, B e C. O sistema resolverá e exibirá o valor correspondente de X fundamentado na equivalência clássica.',
     faqs: [
       {
-        question: 'O que é proporção direita vs inversa?',
-        answer: 'Direta ocorre se duplicando um lado o outro também duplica (ex: mais horas extras geram mais salário). Inversa ocorre se dobrando um lado o outro se reduz pela metade (ex: o dobro da velocidade reduz o tempo de viagem pela metade).'
-      }
+        question: 'O que é proporção direta vs inversa?',
+        answer: 'Direta ocorre quando duas grandezas se comportam na mesma direção: se uma dobra, a outra também dobra (ex: mais horas trabalhadas geram mais salário). Inversa ocorre quando as grandezas se comportam em direções opostas: se uma dobra, a outra reduz pela metade (ex: maior velocidade reduz o tempo de viagem pela metade).'
+      },
+      {
+        question: 'Como resolver regra de três simples?',
+        answer: '1) Organize os valores em duas colunas, cada grandeza em uma coluna. 2) Verifique se a proporção é direta ou inversa. 3) Multiplique cruzado (proporção direta) ou multiplique em linha (proporção inversa). 4) Isole a incógnita X.'
+      },
+      {
+        question: 'Onde usamos regra de três no cotidiano?',
+        answer: 'Receitas culinárias (ajustar ingredientes para mais pessoas), cálculo de combustível (quanto gastar em uma viagem), escalas de mapas, câmbio de moedas, dosagem de medicamentos veterinários, porcentagens e descontos em compras.'
+      },
     ],
     tips: [
-      'Muito útil para receitas culinárias, escalas fotográficas, proporção de tintas ou despesas grupais proporcionais.'
+      'Muito útil para receitas culinárias, escalas fotográficas, proporção de tintas ou despesas grupais proporcionais.',
+      'Sempre verifique se a relação entre as grandezas é direta ou inversa antes de aplicar o cálculo — errar isso é o erro mais comum.',
+      'Em provas de concurso, a regra de três composta (3 ou mais grandezas) pode ser resolvida isolando cada par de grandezas uma de cada vez.',
     ],
     relatedToolIds: ['porcentagem', 'metros-para-pes', 'quilos-para-libras'],
     slug: 'calculadora-regra-de-tres'
@@ -295,16 +351,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'calculadoras',
     title: 'Calculadora de Porcentagem',
     shortDescription: 'Efetue aumentos, descontos, percentuais de proporção e variações em segundos.',
-    longIntro: 'Encontre respostas rápidas para operações essenciais de frações centesimais. Ideal para comércio, tributos, cálculos de markup e análise de variações financeiras diárias.',
+    longIntro: 'A porcentagem é uma das operações matemáticas mais presentes no cotidiano dos brasileiros. Representada pelo símbolo %, significa "por cento" ou "a cada cem". O cálculo de porcentagem é essencial para entender descontos em compras, promoções de liquidação, taxas de juros, comissões de vendas, impostos (INSS, IRRF, ICMS), variações de preços, rendimentos de investimentos, e indicadores econômicos como inflação (IPCA) e taxa SELIC. Dominar o cálculo de porcentagem é fundamental para a saúde financeira pessoal e profissional. Nossa calculadora oferece três modalidades principais: calcular X% de um valor, descobrir qual porcentagem um valor representa de outro, e calcular a variação percentual entre dois valores.',
     howItWorks: 'Selecione uma das três modalidades comuns: descobrir parcelas de um valor, percentual correspondente de uma quantia sobre outra, ou inflação/queda de valor.',
     faqs: [
       {
         question: 'O que significa calcular variação percentual?',
-        answer: 'É a mensuração da alteração proporcional de uma quantia para outra. Mostra se um ativo ou preço valorizou ou caiu expressivamente diante de sua base histórica.'
-      }
+        answer: 'É a mensuração da alteração proporcional de uma quantia para outra. Mostra se um ativo ou preço valorizou ou caiu expressivamente diante de sua base histórica. Fórmula: ((valor final - valor inicial) / valor inicial) × 100. Exemplo: de R$ 100 para R$ 125 = aumento de 25%.'
+      },
+      {
+        question: 'Como calcular desconto de X%?',
+        answer: 'Multiplique o valor original pelo percentual de desconto (em decimal) e subtraia do valor original. Exemplo: produto de R$ 200 com 15% de desconto = 200 × 0,15 = R$ 30 de desconto. Preço final: R$ 200 - R$ 30 = R$ 170.'
+      },
+      {
+        question: 'Qual a diferença entre aumento e acréscimo percentual?',
+        answer: 'Aumento percentual é o mesmo que acréscimo: valor original × (1 + percentual/100). Exemplo: R$ 1.000 com acréscimo de 10% = 1000 × 1,10 = R$ 1.100. Desconto: valor original × (1 - percentual/100).'
+      },
     ],
     tips: [
-      'Em liquidações, compare descontos reais com promoções superficiais avaliando a variação direta do preço à vista comercializado anteriormente.'
+      'Em liquidações, compare descontos reais com promoções superficiais avaliando a variação direta do preço à vista comercializado anteriormente.',
+      'Para calcular 10% de qualquer valor rapidamente, basta deslocar a vírgula uma casa decimal para a esquerda (ex: 10% de 350 = 35,0).',
+      'Em compras parceladas, calcule sempre o valor total a prazo versus o valor à vista para saber o real custo do parcelamento.',
     ],
     relatedToolIds: ['regra-de-tre', 'juros-simples', 'juros-compostos'],
     slug: 'calculadora-de-porcentagem'
@@ -314,16 +380,25 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'calculadoras',
     title: 'Calculadora de Idade Exata',
     shortDescription: 'Saiba sua idade exata em anos, meses, dias, horas e até os minutos totais de vida.',
-    longIntro: 'Descubra curiosidades incríveis das suas datas marcantes de aniversário. Calcule o tempo total transcorrido no globo detalhadamente.',
+    longIntro: 'Calcular a idade exata é mais complexo do que simplesmente subtrair anos. Uma calculadora de idade precisa levar em conta anos bissextos, meses com diferentes quantidades de dias, e calcular não apenas anos completos mas também meses e dias. Esta ferramenta é útil para conferir a idade para matrículas escolares, processos seletivos, aposentadoria, planos de saúde, concursos públicos, cálculo de tempo de contribuição (INSS), idade de animais de estimação, e curiosidades pessoais como total de dias vividos, horas de vida e até minutos. Além da idade exata entre duas datas (nascimento e hoje), a ferramenta também pode ser usada para calcular o tempo decorrido entre eventos históricos, tempo de empresa ou tempo de relacionamento.',
     howItWorks: 'Insira o dia e horário aproximado de nascimento. A ferramenta calcula o saldo do tempo de vida diante do relógio corrido hoje.',
     faqs: [
       {
         question: 'Como os anos bissextos afetam os cálculos?',
-        answer: 'Nossa calculadora integra a inclusão de anos com 366 dias (bissextos) no somatório de dias corridos para garantir precisão matemática.'
-      }
+        answer: 'Nossa calculadora integra a inclusão de anos com 366 dias (bissextos) no somatório de dias corridos para garantir precisão matemática. Anos bissextos ocorrem a cada 4 anos (divisíveis por 4), exceto séculos não divisíveis por 400.'
+      },
+      {
+        question: 'O que considerar no cálculo de idade para aposentadoria?',
+        answer: 'Para aposentadoria, o INSS considera a idade em anos completos na data do requerimento. Dias e meses não são arredondados: você precisa ter a idade mínima completa (ex: 65 anos para homens) no dia do pedido.'
+      },
+      {
+        question: 'Como calcular idade em meses para bebês?',
+        answer: 'Para bebês e crianças pequenas, a idade é frequentemente medida em meses. Subtraia o mês de nascimento do mês atual e ajuste com os dias. Exemplo: nascido em 15/03/2026, hoje 27/06/2026 = 3 meses e 12 dias.'
+      },
     ],
     tips: [
-      'Ideal para descobrir marcos exatos de meses de crianças, pets ou acompanhamento de aniversários de casamentos e sociedades.'
+      'Ideal para descobrir marcos exatos de meses de crianças, pets ou acompanhamento de aniversários de casamentos e sociedades.',
+      'Para cálculo de tempo de contribuição do INSS, lembre-se de que dias, meses e anos são contados integralmente.',
     ],
     relatedToolIds: ['dias-entre-datas', 'imc', 'regra-de-tre'],
     slug: 'calculadora-de-idade-exata'
@@ -333,16 +408,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'calculadoras',
     title: 'Calculadora de Dias Entre Datas',
     shortDescription: 'Calcule a distância exata de dias, semanas e meses entre dois dias determinados do calendário.',
-    longIntro: 'Planeje prazos de projetos judiciais, corporativos, data de entrega de obras ou simplesmente conte as férias contando apenas dias corridos ou descontando finais de semana e feriados nacionais.',
+    longIntro: 'Calcular a quantidade exata de dias entre duas datas é essencial para diversas situações profissionais e pessoais: prazos contratuais e judiciais, contagem de férias, períodos de carência de planos de saúde, vencimento de boletos e contas, prazos de garantia, estimativas de entrega de projetos, cálculo de juros de mora, contagem regressiva para eventos (casamento, viagem, vestibular), e acompanhamento de gestação. Além dos dias corridos, nossa calculadora permite desconte finais de semana e feriados para obter dias úteis, essencial para prazos processuais e comerciais. Você pode personalizar a contagem incluindo ou excluindo o dia final, conforme sua necessidade.',
     howItWorks: 'Defina a data inicial e a data alvo para colher as métricas de tempo líquido transcorrido e estimativa semanal de proximidade.',
     faqs: [
       {
-        question: 'A contagem inclui os dias iniciais e finais?',
-        answer: 'Você pode calibrar se prefere computar o dia final ou avaliar apenas o intervalo estrito absoluto de repouso entre os marcos.'
-      }
+        question: 'A contagem inclui os dias inicial e final?',
+        answer: 'Por padrão, nossa calculadora conta o intervalo completo entre as datas. Você pode calibrar se prefere computar o dia final ou avaliar apenas o intervalo estrito absoluto de repouso entre os marcos, ajustando as configurações.'
+      },
+      {
+        question: 'Como contar dias úteis excluindo finais de semana?',
+        answer: 'Selecione a opção "dias úteis" na calculadora. O sistema automaticamente desconsidera sábados e domingos da contagem. Para prazos judiciais, é possível também excluir feriados nacionais, estaduais e municipais.'
+      },
+      {
+        question: 'Quantos dias úteis tem um mês típico?',
+        answer: 'Um mês típico tem entre 20 e 23 dias úteis, dependendo da quantidade de feriados e finais de semana. Janeiro: ~22 dias. Fevereiro: ~18-20 dias. Média anual: ~252 dias úteis por ano (considerando 52 semanas × 5 dias úteis - feriados).'
+      },
     ],
     tips: [
-      'Facilita consideravelmente estimativas de aluguel por diárias, contagem de períodos de carência ou prazos contratuais corporativos.'
+      'Facilita consideravelmente estimativas de aluguel por diárias, contagem de períodos de carência ou prazos contratuais corporativos.',
+      'Para prazos processuais, sempre use o sistema de dias úteis desconsiderando feriados forenses.',
+      'Lembre-se: prazos em dias corridos incluem sábados, domingos e feriados — muito comum em contratos comerciais.',
     ],
     relatedToolIds: ['idade', 'regra-de-tre', 'horas-para-minutos'],
     slug: 'calculadora-dias-entre-datas'
@@ -432,22 +517,65 @@ export const TOOLS: ToolMetadata[] = [
     slug: 'calculadora-de-salario-liquido'
   },
 
+
+  // NOVA: CALCULADORA CLT vs PJ
+  {
+    id: 'clt-vs-pj',
+    categoryId: 'calculadoras',
+    title: 'Calculadora CLT vs PJ',
+    shortDescription: 'Compare quanto você ganha como CLT versus Pessoa Jurídica (PJ) e descubra qual regime compensa mais.',
+    longIntro: 'A comparação entre CLT (Carteira Assinada) e PJ (Pessoa Jurídica) é uma das dúvidas mais comuns entre profissionais brasileiros, especialmente programadores, designers, consultores e outros trabalhadores que podem atuar como MEI, EI ou Microempresa. Enquanto o CLT oferece benefícios como 13º salário, férias remuneradas, FGTS, INSS e estabilidade, o regime PJ geralmente paga um valor bruto maior mas exige que o profissional arque com todos os encargos trabalhistas, impostos (Simples Nacional, ISS, IRPJ) e contribuições previdenciárias (INSS) por conta própria. Esta calculadora compara os dois regimes de forma detalhada, considerando todos os benefícios do CLT (férias, 13º, FGTS, vale-transporte, vale-refeição, plano de saúde, seguro-desemprego) e os custos do PJ (impostos, contador, INSS como contribuinte individual, ausência de benefícios).',
+    howItWorks: 'Informe seu salário bruto CLT (ou valor pretendido PJ), os benefícios que você recebe como CLT (vale-transporte, vale-refeição, plano de saúde, etc.) e a alíquota de impostos como PJ (Simples Nacional). A calculadora compara o valor líquido anual de cada regime, considerando 13º salário, férias com 1/3, FGTS + multa, e todos os descontos obrigatórios para CLT, versus o faturamento anual PJ menos impostos, contador, INSS e ausência de benefícios. O resultado mostra qual regime é mais vantajoso financeiramente e qual a diferença anual entre os dois.',
+    faqs: [
+      {
+        question: 'Qual regime é mais vantajoso: CLT ou PJ?',
+        answer: 'Depende do valor oferecido. Como regra geral, o PJ precisa pagar pelo menos 30-50% a mais que o CLT para compensar a perda de benefícios (13º, férias, FGTS, INSS patronal, plano de saúde, vale-refeição). Para salários de até R$ 5.000, o CLT geralmente compensa mais. Acima de R$ 8.000-10.000, o PJ pode ser mais vantajoso financeiramente.'
+      },
+      {
+        question: 'Quais os custos ocultos do PJ?',
+        answer: 'Além dos impostos (Simples Nacional: 6-15% dependendo do anexo), o PJ precisa pagar: contador (R$ 150-600/mês), INSS como contribuinte individual (11% ou 20%), ISS municipal (2-5%), não tem 13º salário, férias remuneradas (precisa reservar dinheiro), FGTS, vale-transporte, vale-refeição, plano de saúde, e não tem direito a seguro-desemprego nem multa rescisória.'
+      },
+      {
+        question: 'Qual o valor mínimo que um PJ deve cobrar para equiparar ao CLT?',
+        answer: 'Multiplique seu salário CLT por 1,3 a 1,5 (dependendo dos benefícios). Exemplo: CLT de R$ 6.000 → PJ deve cobrar no mínimo R$ 7.800 a R$ 9.000. Regra prática: salário CLT × 12 (13º e férias) + FGTS (8%) + benefícios. Em seguida, divida por 11 meses de trabalho (reservando 1 mês de férias não remuneradas) e adicione 20-30% de custo operacional.'
+      }
+    ],
+    tips: [
+      'Considere também benefícios não financeiros: o CLT dá estabilidade e direitos trabalhistas; o PJ dá mais flexibilidade e potencial de ganho maior.',
+      'Para quem está migrando de CLT para PJ, negocie uma remuneração pelo menos 50% maior que seu salário CLT atual para compensar todos os benefícios perdidos.',
+      'MEI (Microempreendedor Individual) tem limite de faturamento de R$ 81.000/ano e é a opção mais barata de PJ para quem está começando como autônomo.',
+      'Consulte um contador para calcular exatamente sua alíquota efetiva no Simples Nacional, que varia conforme o anexo (comércio, indústria, serviços).'
+    ],
+    relatedToolIds: ['salario-liquido', 'inss', 'decimo-terceiro', 'rescisao', 'margem-lucro'],
+    slug: 'calculadora-clt-vs-pj'
+  },
+
   // CONVERSORES
   {
     id: 'metros-para-pes',
     categoryId: 'conversores',
     title: 'Conversor de Metros para Pés',
     shortDescription: 'Converta facilmente comprimento e altura entre o sistema métrico e imperial.',
-    longIntro: 'Uma ferramenta simplificada de conversão de metragens e pés (feet). Use largamente em aeronáutica, especificações de produtos, decoração de imóveis internacionais ou engenharia civil.',
+    longIntro: 'Converter metros para pés (feet) e vice-versa é essencial em diversas situações, especialmente ao lidar com especificações internacionais. O sistema imperial (pés, polegadas, milhas) ainda é amplamente utilizado nos Estados Unidos, Inglaterra e em alguns setores específicos como aviação civil (altitudes em pés), engenharia aeronáutica, especificações técnicas de produtos importados, decoração (móveis importados), e até mesmo dados biométricos de altura em países como EUA e Reino Unido. Saber converter rapidamente entre os sistemas métrico e imperial evita erros em projetos de construção, importação de equipamentos e interpretação de manuais técnicos. O fator exato de conversão é 1 metro = 3,28084 pés, e 1 pé = 0,3048 metros.',
     howItWorks: 'Preencha metros para receber pés ou vice-versa na mesma tela. O fator exato de conversão é 1 metro = 3.28084 pés.',
     faqs: [
       {
         question: 'Quantos pés há em 1 metro?',
-        answer: 'Exatamente 3.28084 pés padrão aproximados no padrão internacional de polegadas industriais.'
-      }
+        answer: 'Exatamente 3,28084 pés (feet) padrão no padrão internacional. Uma forma fácil de memorizar: 1 metro ≈ 3,3 pés. Inversamente, 1 pé ≈ 30,5 centímetros.'
+      },
+      {
+        question: 'Como converter minha altura de metros para pés?',
+        answer: 'Multiplique sua altura em metros por 3,28. Exemplo: 1,75m × 3,28 = 5,74 pés. Isso equivale a 5 pés e 9 polegadas (5\'9"). Nos EUA, alturas são comumente expressas em pés e polegadas.'
+      },
+      {
+        question: 'Por que a aviação usa pés?',
+        answer: 'A aviação civil internacional adota o sistema imperial por tradição histórica, já que os primeiros instrumentos de voo foram desenvolvidos nos EUA e Inglaterra. Todas as altitudes de voo são medidas em pés (feet) independentemente do país de origem.'
+      },
     ],
     tips: [
-      'Geralmente frotas de aviação civis baseiam suas altitudes prioritariamente na escala imperial de pés (feet).'
+      'Geralmente frotas de aviação civis baseiam suas altitudes prioritariamente na escala imperial de pés (feet).',
+      'Para conversão rápida: multiplique metros por 3,3 para obter pés aproximados. Divida pés por 3,3 para obter metros.',
+      'Tabelas de especificações de produtos nos EUA quase sempre usam pés (ft) para comprimento e polegadas (in) para detalhes menores.',
     ],
     relatedToolIds: ['quilos-para-libras', 'celsius-para-fahrenheit', 'regra-de-tre'],
     slug: 'converter-metros-para-pes'
@@ -457,16 +585,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'conversores',
     title: 'Conversor de Quilos para Libras',
     shortDescription: 'Transfira pesos entre kgs e pounds para bagagens, receitas e tabelas internacionais.',
-    longIntro: 'Evite acidentes ou taxas de excesso de bagagem aérea internacional convertendo quilogramas em libras no padrão imperial de massa britânico e norte-americano.',
+    longIntro: 'Converter quilogramas (kg) para libras (lbs) é uma necessidade frequente para quem viaja para países que usam o sistema imperial (EUA, Reino Unido, Canadá), pratica esportes com equipamentos importados, segue receitas culinárias internacionais ou precisa entender especificações de produtos. A libra (pound) é a unidade de massa do sistema imperial, amplamente utilizada nos Estados Unidos para peso corporal, alimentos, bagagens aéreas e halteres de academia. O fator de conversão é 1 kg ≈ 2,20462 lbs. Para uma conversão mental rápida, basta multiplicar os kg por 2,2 para obter libras, ou dividir as libras por 2,2 para obter kg.',
     howItWorks: 'Digite o valor em kg ou lb para fazer a conversão imediata. 1 quilo é aproximadamente 2.20462 libras.',
     faqs: [
       {
-        question: 'Como converter libras em kg na cabeça?',
-        answer: 'Para uma conta mental ágil de padaria, basta dividir a quantidade de libras por 2.2 para obter a massa próxima em quilogramas.'
-      }
+        question: 'Como converter libras em kg de cabeça?',
+        answer: 'Para cálculo mental rápido: divida a quantidade de libras por 2,2 para obter a massa aproximada em quilogramas. Exemplo: 150 lbs ÷ 2,2 ≈ 68 kg. Para maior precisão: 150 ÷ 2,20462 = 68,04 kg.'
+      },
+      {
+        question: 'Qual a diferença entre libra (lb) e libra troy?',
+        answer: 'A libra comum (avoirdupois) tem 453,59 gramas e é usada para peso corporal, alimentos e produtos em geral. A libra troy (usada para metais preciosos como ouro e prata) tem 373,24 gramas. A menos que você esteja negociando metais preciosos, use a libra comum.'
+      },
+      {
+        question: 'Por que academias americanas usam libras?',
+        answer: 'Equipamentos de academia fabricados nos Estados Unidos rotulam suas cargas em libras (lbs). Um haltere de 45 lbs equivale a aproximadamente 20,4 kg, e uma barra olímpica padrão pesa 45 lbs (20,4 kg).'
+      },
     ],
     tips: [
-      'Equipamentos de academia importados rotulam comumente suas cargas na unidade libras (lbs).'
+      'Equipamentos de academia importados rotulam comumente suas cargas na unidade libras (lbs).',
+      'A maioria das balanças digitais modernas permite alternar entre kg e lbs — verifique o botão de unidade.',
+      'Limites de bagagem aérea internacional: malas de 50 lbs ≈ 23 kg (padrão) e 70 lbs ≈ 32 kg.',
     ],
     relatedToolIds: ['metros-para-pes', 'celsius-para-fahrenheit', 'mb-para-gb'],
     slug: 'converter-quilos-para-libras'
@@ -476,16 +614,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'conversores',
     title: 'Conversor de Celsius para Fahrenheit',
     shortDescription: 'Converta temperaturas instantaneamente para receitas, previsão de tempo internacional ou pesquisas.',
-    longIntro: 'Determine valores de termômetros escalados em Celsius, Fahrenheit e até Kelvin. Muito conveniente para viagens para os EUA ou receitas de fornos domésticos com termostatos imperiais.',
+    longIntro: 'Converter temperaturas entre Celsius (°C) e Fahrenheit (°F) é essencial para viagens internacionais, receitas culinárias de origem americana ou inglesa, interpretação de previsões do tempo em países que usam o sistema imperial (EUA, Libéria, Ilhas Cayman), e compreensão de especificações técnicas de equipamentos importados. Enquanto o Brasil e a maioria dos países usam Celsius (0°C = congelamento, 100°C = ebulição), os Estados Unidos ainda utilizam Fahrenheit (32°F = congelamento, 212°F = ebulição). A conversão exata é: °F = (°C × 9/5) + 32, e °C = (°F - 32) × 5/9. Nossa calculadora também oferece conversão para Kelvin (K), a unidade de temperatura do Sistema Internacional (SI), usada em contextos científicos.',
     howItWorks: 'Qualquer modificação em um termômetro atualiza os equivalentes simultaneamente sem demandar recarregamento de página.',
     faqs: [
       {
         question: 'Onde o sistema Fahrenheit é regular?',
-        answer: 'Atualmente é usado principalmente nos Estados Unidos, Libéria e em diversas nações insulares banhadas pelo Caribe.'
-      }
+        answer: 'Atualmente é usado principalmente nos Estados Unidos e em seus territórios. Alguns países do Caribe e a Libéria também usam Fahrenheit no dia a dia. O Reino Unido usa Celsius para temperatura ambiente, mas Fahrenheit para temperaturas altas como água quente.'
+      },
+      {
+        question: 'Como converter Celsius para Fahrenheit rapidamente?',
+        answer: 'Multiplique °C por 2 e adicione 30 (versão simplificada). Exemplo: 25°C × 2 + 30 = 80°F (valor exato: 77°F). Para precisão: (°C × 9/5) + 32 = °F. 25°C × 1,8 + 32 = 77°F.'
+      },
+      {
+        question: 'Qual temperatura é igual em Celsius e Fahrenheit?',
+        answer: '-40° é o ponto onde as escalas Celsius e Fahrenheit se encontram: -40°C = -40°F. É um fato curioso útil para verificar se sua conversão está correta em temperaturas negativas extremas.'
+      },
     ],
     tips: [
-      'Zero graus Celsius (congelamento d\'água) equivale a 32 graus Fahrenheit na escala térmica imperial.'
+      'Zero graus Celsius (congelamento d\'água) equivale a 32 graus Fahrenheit na escala térmica imperial.',
+      'Temperatura corporal normal (36,5°C) equivale a aproximadamente 97,7°F.',
+      'Forno caseiro típico: 180°C ≈ 350°F (receitas americanas comuns usam 350°F para assar bolos).',
     ],
     relatedToolIds: ['metros-para-pes', 'quilos-para-libras', 'horas-para-minutos'],
     slug: 'converter-celsius-para-fahrenheit'
@@ -495,16 +643,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'conversores',
     title: 'Conversor de Real para Dólar',
     shortDescription: 'Verifique valores de Real (BRL) convertidos de/para Dólar Americano (USD) com cotação personalizável.',
-    longIntro: 'Simule orçamentos de compras de eletrônicos de importação rápida ou passagens internacionais. Você pode digitar e ajustar a cotação comercial livremente para acompanhar o câmbio obtido pela sua corretora.',
+    longIntro: 'Converter Real (BRL) para Dólar Americano (USD) e vice-versa é uma das consultas financeiras mais frequentes entre brasileiros, seja para planejar viagens internacionais, fazer compras em sites estrangeiros (Amazon, eBay, AliExpress), receber pagamentos em dólar (freelancers), ou acompanhar investimentos no exterior. O câmbio entre Real e Dólar é influenciado por diversos fatores: taxa SELIC, inflação (IPCA), balança comercial, fluxo de capital estrangeiro, cenário político nacional e internacional, e decisões do Federal Reserve (FED) nos EUA. É importante diferenciar o câmbio comercial (usado em transações financeiras) do câmbio turismo (usado em viagens, geralmente mais caro). Nossa calculadora permite ajustar manualmente a cotação para refletir a taxa praticada pelo seu banco ou corretora.',
     howItWorks: 'Basta informar a quantia fiduciária comercial sob a taxa cambial escolhida para que o reflexo financeiro seja atualizado.',
     faqs: [
       {
         question: 'O que é spread cambial?',
-        answer: 'Spread é a diferença cobrada por bancos e operadoras entre o valor real do dólar comercial anunciado na mídia e o custo final imposto ao cliente final na remessa física ou cartão.'
-      }
+        answer: 'Spread é a diferença cobrada por bancos e corretoras entre o valor real do dólar comercial anunciado na mídia e o custo final imposto ao cliente. Quanto maior o spread, maior a desvantagem para o consumidor. Algumas corretoras digitais oferecem spread reduzido (cerca de 1-2%).'
+      },
+      {
+        question: 'Qual a cotação ideal para comprar dólar?',
+        answer: 'Acompanhe o dólar comercial no Google Finance ou Bloomberg. Compare as taxas de pelo menos 3 instituições financeiras (bancos tradicionais, corretoras, contas digitais internacionais como Wise ou Nomad) antes de fechar o câmbio.'
+      },
+      {
+        question: 'Como calcular o IOF sobre compra em dólar?',
+        answer: 'IOF para compra de moeda em espécie: 1,1%. IOF para transações no cartão de crédito internacional: 4,38%. IOF para transferências internacionais (remessas): 0,38%. Exemplo: compra de US$ 1.000 no cartão: 1000 × 4,38% = US$ 43,80 de IOF.'
+      },
     ],
     tips: [
-      'Adicione os impostos obrigatórios IOF (atualmente 4.38% para cartões internacionais) ao orçar gastos turísticos em dólar.'
+      'Adicione os impostos obrigatórios IOF (atualmente 4,38% para cartões internacionais) ao orçar gastos turísticos em dólar.',
+      'Use contas digitais internacionais (Wise, Nomad, Avenue) para câmbio com spread reduzido e cotação mais próxima do comercial.',
+      'Evite comprar dólar em aeroportos — as taxas costumam ser as piores do mercado.',
     ],
     relatedToolIds: ['porcentagem', 'juros-compostos', 'regra-de-tre'],
     slug: 'converter-real-para-dolar'
@@ -514,16 +672,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'conversores',
     title: 'Conversor de Megabytes para Gigabytes',
     shortDescription: 'Calcule a equivalência de arquivos de informática de MB para GB.',
-    longIntro: 'Entenda os limites de armazenagem das suas unidades SSD, planos de internet de banda larga ou anexos de e-mail de arquivos de mídia em conversões baseadas em binário informático.',
+    longIntro: 'Converter Megabytes (MB) para Gigabytes (GB) é essencial para entender planos de internet, capacidade de armazenamento de dispositivos (HDs, SSDs, celulares, pendrives), tamanho de arquivos digitais (vídeos, fotos, jogos, documentos) e franquias de dados móveis. É importante entender a diferença entre a base binária (1024) usada por sistemas operacionais (Windows, macOS, Linux) e a base decimal (1000) usada por fabricantes de hardware para rotular seus produtos. Um HD de 1 TB comercial (decimal) aparece como aproximadamente 931 GB no Windows (binário). Nossa calculadora oferece ambas as opções de conversão.',
     howItWorks: 'Insira o montante e decida se a conversão utiliza a base padrão de TI (1024) ou a base comercial simplificada direta de decimais do mercado (1000).',
     faqs: [
       {
         question: 'Por que fabricantes vendem HDs menores que o reportado pelo Windows?',
-        answer: 'Fabricantes rotulam usando 1 GB = 1 bilhão de bytes base decimal (1000). Sistemas operacionais mapeiam binariamente (1024), fazendo um HD de 1 TB comercial transparecer cerca de 931 GB real nas pastas.'
-      }
+        answer: 'Fabricantes rotulam usando 1 GB = 1 bilhão de bytes (base decimal, 1000). Sistemas operacionais calculam usando 1 GB = 1.073.741.824 bytes (base binária, 1024). Isso faz um HD de 1 TB comercial aparecer como ~931 GB no sistema operacional.'
+      },
+      {
+        question: 'Quantos MB tem um GB?',
+        answer: 'Na base decimal (fabricantes): 1 GB = 1.000 MB. Na base binária (sistemas): 1 GB = 1.024 MB. A diferença se acumula com o tamanho do dispositivo — em 1 TB, a diferença é de aproximadamente 70 GB.'
+      },
+      {
+        question: 'Como saber meu consumo de internet?',
+        answer: 'Verifique seu plano de dados (geralmente em GB). Monitore no roteador ou aplicativo da operadora. Atividades comuns: streaming Netflix 1h = ~1-3 GB (HD) ou ~7 GB (4K), YouTube 1h = ~500 MB (HD), Zoom 1h = ~500 MB a 1 GB.'
+      },
     ],
     tips: [
-      'Geralmente, resolva as conversões de redes celulares sob 1 GB = 1024 MB para checagem precisa de franquias.'
+      'Geralmente, resolva as conversões de redes celulares sob 1 GB = 1024 MB para checagem precisa de franquias.',
+      'Para economizar dados móveis, baixe vídeos e músicas em Wi-Fi e use compressão de dados em aplicativos como YouTube e Chrome.',
+      'Um filme em HD (1080p) de 2 horas ocupa aproximadamente 4-8 GB. Em 4K, pode chegar a 15-30 GB.',
     ],
     relatedToolIds: ['kb-para-mb', 'quilos-para-libras', 'horas-para-minutos'],
     slug: 'converter-mb-para-gb'
@@ -533,16 +701,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'conversores',
     title: 'Conversor de Kilobytes para Megabytes',
     shortDescription: 'Converta pequenas unidades de armazenamento de computadores digitais.',
-    longIntro: 'Conversão ideal para calibrar tamanho de fotos compactadas, logos, e-mails ou mídias leves em kilobytes convertidos em megabytes corretos.',
+    longIntro: 'Converter Kilobytes (KB) para Megabytes (MB) é essencial para entender o tamanho de arquivos digitais menores como documentos de texto, imagens compactadas, e-mails com anexos, logos e ícones para web, e arquivos de configuração. Um kilobyte equivale a 1.024 bytes (base binária) ou 1.000 bytes (base decimal). Documentos de texto simples (.txt) ocupam tipicamente 1-10 KB, fotos compactadas para web ocupam 50-200 KB, e e-mails sem anexo têm cerca de 5-20 KB. Compreender essa escala ajuda a otimizar o carregamento de sites, gerenciar espaço em servidores de e-mail e dimensionar corretamente imagens para aplicações web.',
     howItWorks: 'Digite KB ou MB para computar os fatores clássicos binários (1024) que coordenam o tráfego de dados na rede.',
     faqs: [
       {
         question: 'O que o termo Bit representa?',
-        answer: 'Um Bit é a menor unidade mínima lógica elementar processada. 8 bits formam exatamente 1 Byte, a base das demais siglas superiores.'
-      }
+        answer: 'Um Bit é a menor unidade de informação digital, representando 0 ou 1 (sistema binário). 8 bits formam exatamente 1 Byte, a base para todas as demais unidades (KB, MB, GB, TB). Velocidades de internet são medidas em bits por segundo (Mbps), enquanto tamanhos de arquivos são em Bytes (MB, GB).'
+      },
+      {
+        question: 'Quantos KB tem 1 MB?',
+        answer: 'Em base binária (sistemas): 1 MB = 1.024 KB. Em base decimal (fabricantes): 1 MB = 1.000 KB. A diferença é de apenas 24 KB por MB, insignificante para arquivos pequenos mas acumulativa em grandes volumes.'
+      },
+      {
+        question: 'Qual o tamanho típico de um e-mail com anexo?',
+        answer: 'Um e-mail sem anexo: ~5-20 KB. Com foto de celular (2-5 MB): ~2-5 MB. Com documento PDF (500 KB): ~500 KB. A maioria dos servidores de e-mail (Gmail, Outlook) limita anexos a 25 MB por mensagem.'
+      },
     ],
     tips: [
-      'Um arquivo de texto corrido leve pode ocupar mero 4 KB de espaço de disco sem estourar limite algum.'
+      'Um arquivo de texto corrido leve pode ocupar mero 4 KB de espaço de disco sem estourar limite algum.',
+      'Para otimizar imagens para web, comprima para 100-200 KB por imagem — qualidade visual boa com carregamento rápido.',
+      'E-mails com muitos anexos grandes podem encher rapidamente sua cota de armazenamento gratuita (15 GB no Gmail).',
     ],
     relatedToolIds: ['mb-para-gb', 'horas-para-minutos', 'metros-para-pes'],
     slug: 'converter-kb-para-mb'
@@ -552,16 +730,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'conversores',
     title: 'Conversor de Horas para Minutos',
     shortDescription: 'Calcule e converta marcações horárias contínuas em frações de minutos totais acumulados.',
-    longIntro: 'Perfeito para calcular cronogramas de vídeos, carga de bateria de veículos elétricos, planilhas de ponto corporativas ou durações de treinos esportivos.',
+    longIntro: 'Converter horas para minutos e vice-versa é uma operação matemática simples mas essencial em diversas situações: calcular tempo de viagem, planejar cronogramas de trabalho e estudo, estimar duração de filmes e séries, calcular carga horária de trabalho, contabilizar horas extras, planejar treinos e atividades físicas, e estimar tempo de carregamento de baterias de dispositivos. Cada hora tem 60 minutos, e cada minuto tem 60 segundos. A conversão é direta: multiplique horas por 60 para obter minutos, ou divida minutos por 60 para obter horas. Nossa calculadora também lida com frações de hora (ex: 1,5 horas = 90 minutos) e permite converter entre horas, minutos e segundos simultaneamente.',
     howItWorks: 'O sistema multiplica horas por 60 para expor os minutos, ou divide o saldo acumulado de minutos de volta para horas.',
     faqs: [
       {
         question: 'Quantos minutos há em um dia completo de escala solar?',
-        answer: 'A escala possui 24 horas, totalizando exatamente 1.440 minutos corridos.'
-      }
+        answer: 'A escala possui 24 horas, totalizando exatamente 1.440 minutos corridos. Multiplicando por 60 segundos: 86.400 segundos por dia.'
+      },
+      {
+        question: 'Como converter horas decimais para horas:minutos?',
+        answer: 'Exemplo: 2,75 horas. As 2 horas inteiras permanecem. 0,75 × 60 = 45 minutos. Resultado: 2 horas e 45 minutos. Cuidado: 1,5 horas NÃO é 1h50, é 1h30 (90 minutos).'
+      },
+      {
+        question: 'Quantos minutos tem uma semana?',
+        answer: 'Uma semana tem 7 dias × 24 horas × 60 minutos = 10.080 minutos. Um mês de 30 dias tem 43.200 minutos. Um ano tem 525.600 minutos.'
+      },
     ],
     tips: [
-      'Multiplicações simples feitas de cabeça podem pregar peças em frações de centésimos (ex: 1,5 horas são 90 minutos, e não 150 minutos).'
+      'Multiplicações simples feitas de cabeça podem pregar peças em frações de centésimos (ex: 1,5 horas são 90 minutos, e não 150 minutos).',
+      'Para converter minutos em horas decimais: divida os minutos por 60. Ex: 90 min ÷ 60 = 1,5 horas.',
+      'A jornada de trabalho CLT de 44 horas semanais equivale a 2.640 minutos por semana ou aproximadamente 10.560 minutos por mês.',
     ],
     relatedToolIds: ['dias-para-horas', 'dias-entre-datas', 'idade'],
     slug: 'converter-horas-para-minutos'
@@ -571,16 +759,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'conversores',
     title: 'Conversor de Dias para Horas',
     shortDescription: 'Converta períodos de duração de dias corridos em horas totais correspondentes.',
-    longIntro: 'Encontre o volume global de horas compreendidas em prazos de produção de produtos, viagens longas, folgas do trabalho ou contagem de repouso programado.',
+    longIntro: 'Converter dias para horas é essencial para planejamento de viagens, cálculo de prazos de entrega, estimativas de projetos, contagem de período de férias, cálculo de diárias de hospedagem, tempo de garantia de produtos, e prazos de carência de planos e seguros. Cada dia possui 24 horas exatas (período de rotação da Terra). Nossa ferramenta permite converter dias em horas, minutos e segundos, além de calcular períodos compostos (ex: 3 dias e 12 horas = 84 horas). A conversão é direta: multiplique o número de dias por 24 para obter horas, ou divida horas por 24 para obter dias.',
     howItWorks: 'Indique a quantia numérica e tenha as respostas calculadas pelo multiplicador natural de padrão rotacional terrestre de 24 horas.',
     faqs: [
       {
         question: 'Quantas horas completam uma semana tradicional?',
-        answer: 'Composta por sete dias corridos, uma semana possui exatamente 168 horas acumuladas.'
-      }
+        answer: 'Composta por sete dias corridos, uma semana possui exatamente 168 horas acumuladas. Um mês de 30 dias: 720 horas. Um ano: 8.760 horas (8.784 em ano bissexto).'
+      },
+      {
+        question: 'Como calcular dias uteis em horas?',
+        answer: 'Dias úteis são de segunda a sexta-feira. Multiplique o número de dias úteis por 24 para obter horas corridas, ou por 8 a 12 para horas de trabalho/expediente padrão comercial.'
+      },
+      {
+        question: 'O que são horas de voo em dias?',
+        answer: 'Para viagens internacionais longas, a duração é frequentemente expressa em horas: Brasil-Europa ~10-12 horas de voo (menos de 1 dia). Brasil-Ásia ~24-30 horas (mais de 1 dia considerando conexões).'
+      },
     ],
     tips: [
-      'Muito favorável para estimar horas de voos, hospedagens ou garantias pós-compras faturadas por prazos corridos.'
+      'Muito favorável para estimar horas de voos, hospedagens ou garantias pós-compra faturadas por prazos corridos.',
+      'Prazos contratuais em "dias corridos" incluem fins de semana e feriados — sempre os converta para horas para planejamento preciso.',
+      'Carnaval: 4 dias (96 horas) de feriado prolongado. Reveillon: 1-2 dias (24-48 horas).',
     ],
     relatedToolIds: ['horas-para-minutos', 'dias-entre-datas', 'idade'],
     slug: 'converter-dias-para-horas'
@@ -592,21 +790,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'geradores',
     title: 'Gerador e Validador de CPF',
     shortDescription: 'Gere códigos de CPF válidos com ou sem pontuação para fins de desenvolvimento de software e testes de sistemas.',
-    longIntro: 'Ferramenta utilitária de ponta voltada exclusivamente para engenheiros de software, testadores (QA) e estudantes de bancos de dados validarem formulários de login e fluxos cadastrais locais com conformidade.',
+    longIntro: 'O Gerador de CPF é uma ferramenta essencial para desenvolvedores de software, profissionais de QA (Quality Assurance), analistas de sistemas, estudantes de TI e profissionais de marketing digital que precisam de números de CPF válidos para testar formulários, sistemas de cadastro, integrações com APIs, validações de dados e ambientes de homologação. O CPF (Cadastro de Pessoas Físicas) é composto por 11 dígitos: os 9 primeiros formam a raiz (identificando a pessoa na Receita Federal), e os 2 últimos são dígitos verificadores calculados pelo algoritmo módulo 11. Importante: os CPFs gerados são SINTÉTICOS, ou seja, matematicamente válidos mas não correspondem a nenhum cidadão real brasileiro. Nunca utilize dados reais de pessoas em ambientes de teste.',
     howItWorks: 'Selecione as opções de formatação com ou sem pontuação e clique no gerador de dados para as hashes válidas regidas pelo cálculo interno de dígitos verificadores.',
     faqs: [
       {
         question: 'O CPF gerado é de uma pessoa física real?',
-        answer: 'Não. Os números são criados sinteticamente através de algoritmos clássicos de módulo 11 de criptografia de controle, não guardando qualquer filiação cadastral de cidadãos reais brasileiros.'
+        answer: 'Não. Os números são criados sinteticamente através de algoritmos de módulo 11, não guardando qualquer filiação cadastral de cidadãos reais. São matematicamente válidos mas não pertencem a ninguém.'
       },
       {
         question: 'Como funciona o algoritmo verificador do CPF?',
-        answer: 'O algoritmo analisa os 9 primeiros dígitos distribuindo pesos lineares de 10 a 2 e soma os resultados. Segue-se o módulo 11 dita o primeiro dígito. A mesma lógica estendida com peso 11 gera o segundo algarismo.'
-      }
+        answer: 'O algoritmo usa os 9 primeiros dígitos, atribui pesos de 10 a 2, soma os resultados e aplica módulo 11. Se o resto for menor que 2, o primeiro dígito é 0; se maior, subtrai de 11. Repete o processo com 10 dígitos (pesos 11 a 2) para o segundo dígito.'
+      },
+      {
+        question: 'Posso usar CPFs gerados em produção?',
+        answer: 'Nunca utilize CPFs gerados em sistemas de produção ou para cadastrar pessoas reais. Eles servem exclusivamente para testes em ambientes de desenvolvimento (localhost), homologação e simulação de fluxos cadastrais.'
+      },
     ],
     tips: [
       'Nunca armazene dados pessoais reais de clientes em banco de dados locais de homologação ou laboratórios de desenvolvimento.',
-      'O portal oferece as duas saídas limpas de forma rápida com atalhos de cópias (Clipboard).'
+      'O portal oferece as duas saídas limpas (formatado e sem formatação) com atalhos de cópia para área de transferência.',
+      'Use CPFs sintéticos para popular bancos de dados de teste, evitando violações à LGPD com dados reais de terceiros.',
     ],
     relatedToolIds: ['cnpj', 'senha', 'uuid'],
     slug: 'gerador-de-cpf'
@@ -616,16 +819,25 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'geradores',
     title: 'Gerador e Validador de CNPJ',
     shortDescription: 'Gere CNPJ válidos sintéticos formate e valide CNPJ existentes para uso de homologação corporativa de TI.',
-    longIntro: 'Assim como na ferramenta de pessoa física, este motor apoia a comunidade de programação fornecendo estruturas jurídicas fictícias válidas em conformidade estrita aos validadores do MEC/Receita Federal do Brasil.',
+    longIntro: 'O Gerador de CNPJ é uma ferramenta indispensável para desenvolvedores e analistas que precisam de números de CNPJ sintéticos e matematicamente válidos para testar sistemas de cadastro empresarial, emissão de notas fiscais eletrônicas (NF-e) em ambiente de homologação, integrações com sistemas contábeis, fluxos de e-commerce B2B, cadastros de clientes PJ, e sistemas de gestão empresarial (ERP). O CNPJ (Cadastro Nacional da Pessoa Jurídica) possui 14 dígitos no formato XX.XXX.XXX/XXXX-XX: os 8 primeiros identificam a empresa, 4 dígitos identificam a filial (0001 para matriz), e os 2 últimos são dígitos verificadores. Assim como o CPF, os CNPJs gerados são sintéticos e não correspondem a empresas reais registradas na Receita Federal.',
     howItWorks: 'O botão de lote elabora estruturas de CNPJ compostas por 14 dígitos respeitando as posições de controle do cadastro empresarial.',
     faqs: [
       {
         question: 'Os cadastros gerados dão acesso ao CNPJ governamental?',
-        answer: 'Não. São dezenas de combinações computadas que cumprem testes matemáticos, ideais para mockups de faturamento.'
-      }
+        answer: 'Não. São combinações computacionais que cumprem os algoritmos matemáticos de validação, ideais para mockups de sistemas de faturamento e testes de integração. Não representam empresas reais ativas na Receita Federal.'
+      },
+      {
+        question: 'Como funciona o algoritmo verificador do CNPJ?',
+        answer: 'O CNPJ usa módulo 11 com pesos alternados. O primeiro dígito usa pesos de 5 a 9 (primeiros 12 dígitos). O segundo dígito usa pesos de 6 a 9 (13 dígitos). Se o resto for menor que 2, dígito = 0; senão, dígito = 11 - resto.'
+      },
+      {
+        question: 'Para que servem CNPJs de teste?',
+        answer: 'Popular bancos de dados de homologação, testar fluxos de cadastro de clientes PJ, simular emissão de NF-e em ambiente de sandbox, validar formulários de e-commerce B2B e testar integrações com sistemas contábeis e ERPs.'
+      },
     ],
     tips: [
-      'Excelente para testes de integrações de Nota Fiscal Eletrônica (NF-e) nos ambientes de sandbox.'
+      'Excelente para testes de integrações de Nota Fiscal Eletrônica (NF-e) nos ambientes de sandbox da SEFAZ.',
+      'Para testes completos de fluxo, combine com o gerador de CPF e endereço para simular cadastros empresariais completos.',
     ],
     relatedToolIds: ['cpf', 'senha', 'uuid'],
     slug: 'gerador-de-cnpj'
@@ -635,17 +847,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'geradores',
     title: 'Gerador de Senha Segura',
     shortDescription: 'Construa credenciais de máxima segurança impedindo hacking ou adivinhações maliciosas.',
-    longIntro: 'Fortaleça a proteção das suas credenciais digitais. Gere senhas customizadas impossíveis de sofrer ataques de força bruta ou engenharia social.',
+    longIntro: 'O Gerador de Senha Segura é uma ferramenta essencial para criar credenciais robustas e proteger suas contas online contra ataques cibernéticos. Com o aumento alarmante de vazamentos de dados e ataques de força bruta no Brasil e no mundo, usar senhas fortes e únicas para cada serviço nunca foi tão importante. Uma senha verdadeiramente segura deve ter no mínimo 12 caracteres (idealmente 16 ou mais), combinar letras maiúsculas e minúsculas, números e símbolos especiais, e não conter palavras do dicionário, datas de nascimento, nomes de familiares ou sequências previsíveis. Nossa ferramenta permite gerar senhas de até 64 caracteres com total personalização, incluindo opção de senhas legíveis (passphrases) para facilitar a memorização.',
     howItWorks: 'Regule o comprimento ideal (até 64 caracteres) com opções de alternância de caixa de letras, números e símbolos especiais de digitação.',
     faqs: [
       {
-        question: 'O que constitui uma credencial forte?',
-        answer: 'A força repousa na variedade (combinação aleatória de caracteres variados) e no comprimento (ideal superior a 12 caracteres).'
-      }
+        question: 'O que constitui uma senha forte?',
+        answer: 'A força repousa na variedade (combinação aleatória de maiúsculas, minúsculas, números e símbolos) e no comprimento (ideal superior a 12 caracteres). Cada caractere adicional multiplica exponencialmente o tempo necessário para quebrar a senha por força bruta.'
+      },
+      {
+        question: 'Quanto tempo leva para quebrar senhas?',
+        answer: 'Uma senha de 8 caracteres (só minúsculas): minutos. 8 caracteres (complexa): horas. 12 caracteres (complexa): séculos. 16 caracteres: milhões de anos. O comprimento é o fator mais importante.'
+      },
+      {
+        question: 'Senhas fortes precisam ser trocadas com frequência?',
+        answer: 'Não mais. As diretrizes atuais (NIST, 2024) recomendam trocar senhas apenas quando houver suspeita de comprometimento. O mais importante é usar senhas únicas para cada serviço e ativar a autenticação de dois fatores (2FA).'
+      },
     ],
     tips: [
       'Nunca aproveite senhas idênticas em variadas redes sociais ou contas de bancos.',
-      'Use um Chaveiro ou Gerenciador de Senhas criptografado confiável para organizá-las.'
+      'Use um Gerenciador de Senhas criptografado confiável (Bitwarden, 1Password, Proton Pass) para organizá-las.',
+      'Ative a autenticação de dois fatores (2FA) em todos os serviços que oferecerem — é a camada extra mais importante de segurança.',
     ],
     relatedToolIds: ['uuid', 'hash-sha256', 'hash-md5'],
     slug: 'gerador-de-senha-segura'
@@ -655,16 +876,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'geradores',
     title: 'Gerador de QR Code',
     shortDescription: 'Gere instantaneamente códigos de QR Code para URLs, textos, conexões Wi-Fi ou contatos.',
-    longIntro: 'Uma ferramenta versátil para divulgar contatos digitais, cardápios, links de pagamentos Pix, senhas ou materiais impressos gerando marcas escaneáveis prontas.',
+    longIntro: 'O Gerador de QR Code permite criar códigos QR personalizados para qualquer finalidade: compartilhar URLs, textos, conexões Wi-Fi, contatos (vCard), números de telefone, e-mails, localizações geográficas, pagamentos PIX, cardápios digitais, links para redes sociais e muito mais. QR Codes são códigos de barras bidimensionais que podem ser escaneados pela câmera de qualquer smartphone moderno sem necessidade de aplicativos adicionais. No Brasil, o QR Code se tornou onipresente com a popularização do PIX (sistema de pagamentos instantâneos do Banco Central), sendo utilizado em maquininhas de cartão, boletos bancários, telas de celular e cobranças presenciais.',
     howItWorks: 'Diga qual é a informação de origem correspondente. O renderizador gerará dinamicamente o código bidimensional bidirecional.',
     faqs: [
       {
         question: 'O QR Code gerado possui validade de tempo?',
-        answer: 'Não, são livres e perpétuos. Como não dependem de URLs redirecionadoras proprietárias nossas, o link aponta diretamente para o seu destino inserido.'
-      }
+        answer: 'Não, os QR Codes gerados são perpétuos e não expiram. Como o código armazena diretamente a URL ou informação que você inseriu (e não um link proprietário nosso), ele funcionará enquanto o destino estiver ativo.'
+      },
+      {
+        question: 'Como gerar um QR Code PIX?',
+        answer: 'Para gerar um QR Code PIX, você precisa da chave PIX (CPF, CNPJ, e-mail, telefone ou chave aleatória) e do valor da cobrança (para QR Code dinâmico). O QR Code estático (mesmo valor) pode ser gerado com sua chave PIX diretamente no seu banco.'
+      },
+      {
+        question: 'Quais dados um QR Code pode armazenar?',
+        answer: 'URLs (até 2.048 caracteres), textos simples (até 4.296 caracteres), informações de contato (vCard), conexão Wi-Fi (SSID + senha), números de telefone, SMS, e-mails, localizações geográficas, eventos de calendário e pagamentos PIX.'
+      },
     ],
     tips: [
-      'Verifique previamente com a câmera do celular se as margens de contraste visual e o tamanho do conteúdo não atrapalham a focalização.'
+      'Verifique previamente com a câmera do celular se as margens de contraste visual e o tamanho do código não atrapalham a focalização.',
+      'QR Codes com muitos dados precisam de resolução maior para serem escaneáveis — evite textos muito longos.',
+      'Sempre teste seu QR Code em pelo menos 2 dispositivos diferentes antes de imprimir em materiais promocionais.',
     ],
     relatedToolIds: ['senha', 'uuid', 'encode-url'],
     slug: 'gerador-de-qr-code'
@@ -674,16 +905,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'geradores',
     title: 'Gerador de UUID (v4)',
     shortDescription: 'Crie Identificadores Únicos Universais aleatórios de alta entropia para registros de bancos de dados.',
-    longIntro: 'Gere chaves lógicas UUID versadas na especificação v4 livres de conflitos de colisões de dados para servir como chaves de tabelas primárias (PK) de engenharia.',
+    longIntro: 'O Gerador de UUID v4 é uma ferramenta essencial para desenvolvedores de software que precisam de Identificadores Únicos Universais para usar como chaves primárias em bancos de dados, identificadores de sessão, tokens de API, rastreamento de requisições (correlation IDs), identificação de entidades em sistemas distribuídos e chaves para cache. UUIDs v4 são gerados aleatoriamente com 122 bits de entropia, resultando em aproximadamente 5,3 × 10³⁶ combinações possíveis — a probabilidade de colisão (dois UUIDs idênticos) é tão baixa que é considerada estatisticamente impossível na prática. O formato padrão é 8-4-4-4-12 (36 caracteres com hífens), representando 128 bits em hexadecimal.',
     howItWorks: 'Selecione a quantidade desejada de geração paralela de identificadores e obtenha instantaneamente os blocos hexadecimais estruturados clássicos.',
     faqs: [
       {
         question: 'O que garante a exclusividade de um UUID v4?',
-        answer: 'Sua lógica depende de geração pseudoaleatória de bits. A probabilidade de gerar duplicidades idênticas ao redor do globo é tão ínfima que é tratada cientificamente como impossível.'
-      }
+        answer: 'Sua lógica depende de geração aleatória de 122 bits (os outros 6 bits são fixos para identificar a versão 4). A probabilidade de gerar dois UUIDs idênticos é de 1 em 5,3 × 10³⁶ — essencialmente zero para qualquer aplicação prática.'
+      },
+      {
+        question: 'Qual a diferença entre UUID v4 e v7?',
+        answer: 'UUID v4 é completamente aleatório. UUID v7 é ordenado por timestamp (tempo), o que melhora o desempenho em índices de banco de dados (principalmente PostgreSQL e MySQL). UUID v4 ainda é o mais usado por simplicidade.'
+      },
+      {
+        question: 'Devo usar UUID ou ID sequencial como chave primária?',
+        answer: 'UUIDs são melhores para sistemas distribuídos, microserviços e APIs públicas (não expõem o volume de dados). IDs sequenciais são mais eficientes para índices de banco de dados e ocupam menos espaço (4 bytes vs 16 bytes). Escolha conforme sua arquitetura.'
+      },
     ],
     tips: [
-      'Substituir IDs inteiros autoincrementais por UUIDs preserva a privacidade do volume interno do seu banco de dados contra vazamentos de endpoints de APIs.'
+      'Substituir IDs inteiros autoincrementais por UUIDs preserva a privacidade do volume interno do seu banco de dados contra vazamentos em endpoints de API.',
+      'Para alto desempenho em consultas SQL, UUID v7 (baseado em timestamp) é superior ao UUID v4 (aleatório) em índices B-tree.',
+      'Considere usar UUIDs em sistemas que precisam gerar IDs offline (sem conexão com o banco central) para evitar conflitos.',
     ],
     relatedToolIds: ['senha', 'hash-sha256', 'lorem-ipsum'],
     slug: 'gerador-de-uuid'
@@ -693,16 +934,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'geradores',
     title: 'Gerador de Lorem Ipsum',
     shortDescription: 'Crie textos de marcação simulados para esquemas de diagramação de layouts e designs de interfaces.',
-    longIntro: 'Crie parágrafos, sentenças ou listas do provador tradicional em latim para povoar wireframes, panfletos, revistas ou design visual sem focar no significado textual de leitura.',
+    longIntro: 'O Gerador de Lorem Ipsum é uma ferramenta clássica para designers, desenvolvedores web, diagramadores e profissionais de marketing que precisam de texto de preenchimento para protótipos, wireframes, layouts de sites, mockups de aplicativos, apresentações e testes de tipografia. O texto Lorem Ipsum tradicional é derivado de uma obra de Cícero de 45 a.C. ("De Finibus Bonorum et Malorum"), mas foi adaptado ao longo dos séculos para se tornar o padrão da indústria gráfica. Sua principal vantagem é que a distribuição de letras se aproxima do texto natural em português ou inglês, permitindo avaliar a densidade visual e a legibilidade sem que o leitor se distraia com o significado do conteúdo.',
     howItWorks: 'Indique a quantia de parágrafos desejados e copie o bloco de diagramação clássico que remonta às oficinas gráficas do século XVI.',
     faqs: [
       {
         question: 'Qual o propósito do Lorem Ipsum?',
-        answer: 'Ele apresenta uma distribuição de letras uniforme nas frases, simulando perfeitamente a leitura do português ou inglês moderno sem prender a atenção da leitura do usuário ao design de marcas.'
-      }
+        answer: 'Ele apresenta uma distribuição de letras uniforme nas frases, simulando perfeitamente a leitura do português ou inglês moderno sem prender a atenção do usuário ao conteúdo. Isso permite que designers e clientes foquem no layout e na tipografia.'
+      },
+      {
+        question: 'O texto Lorem Ipsum tem significado?',
+        answer: 'O texto original em latim é uma passagem modificada de Cícero sobre ética e filosofia. Porém, as versões modernas comumente usadas em design são fragmentos embaralhados que não formam frases com sentido coerente.'
+      },
+      {
+        question: 'Existe um gerador de texto brasileiro?',
+        answer: 'Sim! Existem variações em português brasileiro que usam textos e nomes brasileiros. O mais famoso é o "Pudim" e o gerador de textos com nomes de políticos e celebridades brasileiras.'
+      },
     ],
     tips: [
-      'Configure seu gerador no Tool Brasil para iniciar com o clássico termo inicial "Lorem ipsum dolor sit amet..." de transição.'
+      'Configure seu gerador no Tool Brasil para iniciar com o clássico termo inicial "Lorem ipsum dolor sit amet..." de transição.',
+      'Para testes de layout responsivo, gere diferentes quantidades de parágrafos para simular variações de conteúdo.',
+      'Use o Lorem Ipsum em apresentações de layout para clientes — evita que foquem no conteúdo antes de aprovarem o design.',
     ],
     relatedToolIds: ['senha', 'contador-caracteres', 'removedor-espacos'],
     slug: 'gerador-de-lorem-ipsum'
@@ -712,16 +963,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'geradores',
     title: 'Gerador de Hash MD5',
     shortDescription: 'Gere resumos de criptografia MD5 de 128-bits para checar integridade lógica de arquivos compartilhados.',
-    longIntro: 'Compute as impressões lógicas MD5 rápidas para textos de dados para finalidade simples de assinaturas de checagens lógicas e comparações correlatas.',
+    longIntro: 'O Gerador de Hash MD5 produz resumos criptográficos de 128 bits (32 caracteres hexadecimais) a partir de qualquer texto ou arquivo. MD5 (Message Digest Algorithm 5) foi criado por Ronald Rivest em 1991 e foi amplamente utilizado para verificar integridade de arquivos, armazenar senhas e gerar assinaturas digitais. No entanto, o MD5 é considerado criptograficamente quebrado desde 2004, quando pesquisadores demonstraram ataques de colisão prática (dois arquivos diferentes gerando o mesmo hash). Hoje, o MD5 é útil apenas para verificações de integridade de baixa segurança, comparação de arquivos não críticos, checksums de downloads não sensíveis e sistemas legados. Para segurança real, use SHA-256, SHA-3 ou bcrypt.',
     howItWorks: 'Escreva qualquer texto livre na caixa para que o processador gere em tempo real a hash correspondente composta por 32 caracteres hexadecimais.',
     faqs: [
       {
-        question: 'O MD5 é seguro para reter segredos de senhas de produção?',
-        answer: 'Não. O algoritmo MD5 é vulnerável a riscos conhecidos de colisões de dados e ataques computacionais massivos. Use SHA-256 ou algoritmos de derivação modernos (Bcrypt) para credenciais importantes.'
-      }
+        question: 'O MD5 é seguro para armazenar senhas de produção?',
+        answer: 'Não. O MD5 é completamente inseguro para senhas devido a vulnerabilidades conhecidas de colisão e ataques de força bruta com GPUs. Use bcrypt, scrypt, argon2 ou SHA-256 com salt para armazenar senhas de forma segura.'
+      },
+      {
+        question: 'Para que o MD5 ainda é usado?',
+        answer: 'Verificação de integridade de downloads (embora SHA-256 seja preferível), sistemas legados que não podem ser atualizados, checksums de arquivos públicos não sensíveis, e como hash rápido em sistemas de cache onde segurança não é requisito.'
+      },
+      {
+        question: 'O que é uma colisão de hash?',
+        answer: 'Uma colisão ocorre quando dois conteúdos diferentes produzem exatamente o mesmo hash. Em 2004, pesquisadores demonstraram que era possível criar colisões MD5 intencionalmente, tornando o algoritmo inseguro para aplicações que exigem resistência a colisões.'
+      },
     ],
     tips: [
-      'Útil para comparar se duas fontes de dados extensas são exatamente iguais sem necessitar confrontar palavra por palavra.'
+      'Útil para comparar se duas fontes de dados extensas são exatamente iguais sem necessitar confrontar palavra por palavra.',
+      'Para verificar integridade de downloads importantes, prefira SHA-256 ou SHA-512 — oferecem muito mais segurança.',
+      'Nunca use MD5 como única camada de proteção para senhas em sistemas de produção.',
     ],
     relatedToolIds: ['hash-sha256', 'senha', 'uuid'],
     slug: 'gerador-de-hash-md5'
@@ -731,16 +992,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'geradores',
     title: 'Gerador de Hash SHA-256',
     shortDescription: 'Consiga impressões digitais criptográficas fortes e seguras de arquivos de textos livres.',
-    longIntro: 'Crie representações hexadecimais de 256 bits exclusivas, recomendadas largamente para validações digitais avançadas, blockchain e assinaturas integradas de integridade criptográfica de dados.',
+    longIntro: 'O Gerador de Hash SHA-256 produz resumos criptográficos de 256 bits (64 caracteres hexadecimais) a partir de qualquer texto ou arquivo. SHA-256 faz parte da família SHA-2 (Secure Hash Algorithm 2), projetada pela Agência de Segurança Nacional dos EUA (NSA) e publicada pelo NIST em 2001. É o padrão atual de hash seguro, amplamente utilizado em: blockchain e criptomoedas (Bitcoin usa SHA-256), certificados SSL/TLS, assinaturas digitais, integridade de arquivos, armazenamento seguro de senhas (com salt), verificação de downloads de software, e autenticação de mensagens (HMAC-SHA256). SHA-256 é considerado seguro contra ataques de colisão computacionalmente viáveis e é o padrão recomendado pelo governo brasileiro (ICP-Brasil) para assinaturas digitais.',
     howItWorks: 'Cole trechos e identifique o fingerprint criptográfico seguro respondido sem necessidade de comunicação externa de servidores.',
     faqs: [
       {
         question: 'O que o SHA representa?',
-        answer: 'Designa "Secure Hash Algorithm", uma classe projetada pela agência federal norte-americana (NSA) para garantir blindagem em autenticações criptográficas oficiais.'
-      }
+        answer: 'SHA significa "Secure Hash Algorithm" (Algoritmo de Hash Seguro), uma família de funções hash criptográficas publicadas pelo NIST (Instituto Nacional de Padrões e Tecnologia dos EUA). SHA-256 produz hashes de 256 bits (32 bytes).'
+      },
+      {
+        question: 'Qual a diferença entre SHA-256 e SHA-512?',
+        answer: 'SHA-256 produz hash de 256 bits (64 caracteres hexadecimais) e é mais rápido em processadores 32 bits. SHA-512 produz hash de 512 bits (128 caracteres hex) e é mais rápido em processadores 64 bits. Ambos são igualmente seguros para aplicações práticas.'
+      },
+      {
+        question: 'SHA-256 pode ser quebrado?',
+        answer: 'Até hoje (2026), não há ataques públicos conhecidos que tornem o SHA-256 computacionalmente inviável. É considerado seguro para todas as aplicações práticas, incluindo blockchain, certificados digitais e assinaturas de documentos.'
+      },
     ],
     tips: [
-      'Importante para conferir se deploys de softwares ou releases de scripts em servidores não foram fraudulentamente burlados por terceiros no canal de rede.'
+      'Importante para conferir se deploys de softwares ou releases de scripts em servidores não foram fraudulentamente alterados.',
+      'Compare hashes SHA-256 fornecidos pelo desenvolvedor original com o hash do arquivo baixado para verificar integridade.',
+      'Para aplicações que exigem segurança máxima, considere SHA-3 (padrão mais recente) ou SHA-512.',
     ],
     relatedToolIds: ['hash-md5', 'senha', 'uuid'],
     slug: 'gerador-de-hash-sha256'
@@ -752,16 +1023,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'ferramentas-web',
     title: 'Meu IP - Qual o meu IP Atual?',
     shortDescription: 'Descubra rapidamente seu endereço de IP de Internet público IPv4 ou IPv6 e dados de geolocalização.',
-    longIntro: 'Um atalho clínico para saber sob qual endereço IP suas conexões residenciais ou móveis trafegam na Web, identificando provedor, país, estado e coordenadas gerais simuladas de conexão física.',
+    longIntro: 'Descobrir seu endereço IP público é essencial para configurar servidores domésticos, acessar sistemas corporativos remotamente (VPN), verificar se sua VPN está funcionando corretamente, solucionar problemas de rede, configurar roteadores e firewalls, acessar conteúdos geograficamente restritos, e diagnosticar bloqueios de acesso a sites. Seu IP público pode ser IPv4 (formato 192.168.0.1) ou IPv6 (formato 2001:db8::1), dependendo do seu provedor de internet. Além do IP, nossa ferramenta também exibe informações de geolocalização aproximada, provedor (ISP), cidade e país — todas baseadas em dados públicos, sem violar sua privacidade. Importante: a geolocalização por IP não mostra sua localização exata, apenas a região do seu provedor.',
     howItWorks: 'Ao acessar, consultamos servidores IP públicos para recuperar o cabeçalho de navegação. Sem expor dados sigilosos ou infringir privacidade regulada.',
     faqs: [
       {
         question: 'Qual a diferença entre IP dinâmico e estático?',
-        answer: 'Ip dinâmico muda cada vez que reiniciamos o aparelho modem de rede contratado. Estático mantém sempre um valor imutável acordado para hospedar servidores fiduciários.'
-      }
+        answer: 'IP dinâmico muda cada vez que o roteador ou modem é reiniciado — é o padrão para residências. IP estático permanece fixo e é contratado especificamente para hospedar servidores, acessar sistemas corporativos ou configurar câmeras de segurança com acesso remoto.'
+      },
+      {
+        question: 'Meu IP mostra minha localização exata?',
+        answer: 'Não. A geolocalização por IP fornece a localização aproximada da central do seu provedor de internet (ISP), que pode ficar a quilômetros da sua casa. Não é possível determinar seu endereço exato apenas pelo IP público.'
+      },
+      {
+        question: 'Como esconder meu IP real?',
+        answer: 'Use uma VPN (Virtual Private Network) confiável que roteie seu tráfego por um servidor intermediário, ou use a rede Tor (The Onion Router) para anonimizar completamente sua navegação. Nem VPNs nem Tor garantem anonimato absoluto.'
+      },
     ],
     tips: [
-      'Servidores DNS locais mudam a geolocalização aproximada do seu IP. Use navegadores limpos caso queira testar a VPN instalada.'
+      'Servidores de DNS locais mudam a geolocalização aproximada do seu IP. Use navegadores limpos caso queira testar sua VPN.',
+      'Verifique seu IP antes e depois de ativar a VPN para confirmar que o serviço está funcionando corretamente.',
+      'Compartilhar seu IP público com estranhos pode permitir ataques direcionados — mantenha-o privado quando possível.',
     ],
     relatedToolIds: ['localizar-ip', 'dns-lookup', 'port-checker'],
     slug: 'qual-o-meu-ip'
@@ -771,16 +1052,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'ferramentas-web',
     title: 'Rastreador e Localizador de IP',
     shortDescription: 'Consulte detalhes geográficos, conexões autônomas (ASN) e provedores de qualquer IP mundial.',
-    longIntro: 'Uma ferramenta versátil para equipes de suporte, investigadores cibernéticos ou administradores verificarem a origem geográfica e infraestrutura por trás de um IP suspeito obtido em firewalls.',
+    longIntro: 'O Rastreador e Localizador de IP é uma ferramenta versátil para administradores de rede, equipes de segurança cibernética, analistas de suporte técnico e usuários curiosos que desejam saber a origem geográfica e informações de provedor associadas a um endereço IP. Ao inserir um IP (IPv4 ou IPv6), nossa ferramenta consulta bases de geolocalização pública para retornar: país, estado, cidade, coordenadas aproximadas, provedor de internet (ISP), sistema autônomo (ASN), e se o IP é residencial, corporativo, de datacenter ou de proxy/VPN. Esta ferramenta é útil para identificar origem de acessos suspeitos, verificar se um IP é de um datacenter (sinal de tráfego automatizado), diagnosticar problemas de roteamento de rede e investigar fraudes online.',
     howItWorks: 'Insira um IP IPv4 ou IPv6 no campo de consulta e buscaremos as correspondências cadastrais em bases gratuitas de geocodificação.',
     faqs: [
       {
-        question: 'O local indicado pela ferramenta mostra a casa exata de alguém?',
-        answer: 'Absolutamente não. A geolocalização por IP fornece margens aproximadas, apontando a central técnica do Provedor de Internet (ISP) na cidade ou região correspondente por questões de segurança de dados privados.'
-      }
+        question: 'A localização mostra a casa exata do usuário?',
+        answer: 'Não. A geolocalização por IP fornece a localização aproximada da central do provedor de internet (ISP) na cidade ou região, não o endereço físico da pessoa. A precisão varia de algumas centenas de metros (grandes centros) a dezenas de quilômetros (áreas rurais).'
+      },
+      {
+        question: 'O que significa ASN?',
+        answer: 'ASN (Autonomous System Number) é um número único que identifica cada rede autônoma na internet, como provedores de internet, empresas de hospedagem e grandes corporações. Exemplos: ASN 27699 (Vivo), ASN 7738 (Claro/NET), ASN 28573 (Oi).'
+      },
+      {
+        question: 'Como identificar um IP suspeito?',
+        answer: 'Verifique se o IP pertence a um datacenter (indicando tráfego automatizado ou VPN), se o país é diferente do esperado (possível fraude), se há histórico de spam ou ataques, e se o IP está listado em blacklists conhecidas como Spamhaus ou AbuseIPDB.'
+      },
     ],
     tips: [
-      'Provedores de redes sociais cruzam estas informações de geolocalização para disparar alertas de acessos de novos aparelhos nas contas.'
+      'Provedores de redes sociais cruzam informações de geolocalização para disparar alertas de login de novos dispositivos.',
+      'IPs de datacenters (AWS, Google Cloud, Azure) não devem ser usados para acessar serviços bancários — são sinais de fraude.',
+      'Ferramentas como AbuseIPDB e Talos Intelligence (Cisco) fornecem reputação histórica de endereços IP suspeitos.',
     ],
     relatedToolIds: ['meu-ip', 'whois', 'dns-lookup'],
     slug: 'localizar-endereco-de-ip'
@@ -790,16 +1081,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'ferramentas-web',
     title: 'Consulta WHOIS de Domínios',
     shortDescription: 'Veja as informações oficiais de registros dos proprietários de domínios nacionais (.br) e estrangeiros.',
-    longIntro: 'Descubra se o domínio que você deseja registrar já possui dono, veja a data exata de vencimento e quais os servidores de DNS responsáveis pela hospedagem técnica.',
+    longIntro: 'A consulta WHOIS é a principal ferramenta para obter informações sobre a titularidade e o registro de domínios na internet. Criado na década de 1970, o WHOIS é um protocolo que consulta bancos de dados públicos mantidos pelos registradores de domínio (como Registro.br para domínios .br, e ICANN para domínios genéricos como .com, .net, .org). Através da consulta, é possível descobrir: data de criação e expiração do domínio, servidores DNS responsáveis, situação cadastral (ativo, suspenso, em processo de transferência), e, quando não ocultos, dados do proprietário (nome, e-mail, telefone, endereço).',
     howItWorks: 'Preencha o domínio desejado (ex: google.com.br) para simular ou recuperar a resposta de consulta oficial cadastral pública de registro.',
     faqs: [
       {
         question: 'O que é a proteção WHOIS privada?',
-        answer: 'Vários provedores globais oferecem anonimato para ocultar dados de e-mail e nomes dos proprietários dos domínios (.com, .net) visando mitigar spans publicitários incisivos.'
-      }
+        answer: 'Muitos registradores oferecem um serviço pago para ocultar os dados pessoais do proprietário do domínio, exibindo informações genéricas do registrador no lugar. Isso protege contra spam, golpes e assédio, mas não é permitido para domínios .br (Registro.br exige dados reais e transparentes).'
+      },
+      {
+        question: 'Por que verificar a data de criação de um domínio?',
+        answer: 'Domínios recém-criados (menos de 6 meses) são um sinal de alerta para e-commerces suspeitos. Sites legítimos geralmente mantêm o mesmo domínio por anos. Sempre desconfie de promoções em sites com domínio criado há poucos meses.'
+      },
+      {
+        question: 'Como interpretar a resposta WHOIS de um domínio .br?',
+        answer: 'Domínios .br são gerenciados pelo Registro.br (Sistema de Registro de Domínios da Internet do Brasil). Os dados do proprietário são públicos no Brasil (sem proteção WHOIS privada). Você pode ver CPF/CNPJ, nome, e-mail e contato telefônico do titular.'
+      },
     ],
     tips: [
-      'Verifique domínios suspeitos de e-commerce conferindo se foram registrados há pouquíssimos dias de disparar vendas promocionais.'
+      'Verifique domínios suspeitos de e-commerce conferindo se foram registrados há pouquíssimos dias antes de disparar vendas promocionais.',
+      'Domínios prestes a expirar podem indicar sites abandonados ou vulneráveis a sequestro.',
+      'Para domínios .br, utilize o site oficial whois.registro.br para consultas mais completas e confiáveis.',
     ],
     relatedToolIds: ['dns-lookup', 'ssl-checker', 'ping'],
     slug: 'consulta-whois'
@@ -809,16 +1110,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'ferramentas-web',
     title: 'DNS Lookup - Consulta de Registros',
     shortDescription: 'Consulte os apontamentos A, AAAA, MX, TXT e CNAME de qualquer zona de domínio.',
-    longIntro: 'Ferramenta estrutural indispensável de TI para debugar problemas locais de propagação de domínios ou configurações de e-mails corporativos em servidores de apontamento.',
+    longIntro: 'O DNS Lookup (consulta de DNS) é uma ferramenta essencial para administradores de redes, desenvolvedores web e profissionais de TI diagnosticarem problemas de resolução de nomes, verificarem a propagação de registros DNS após alterações de hospedagem, e inspecionarem as configurações de e-mail e segurança de domínios. Ao consultar os registros DNS de um domínio, você pode ver: Registro A (endereço IPv4), AAAA (IPv6), CNAME (alias/apelido), MX (servidores de e-mail), TXT (autenticação SPF, DKIM, DMARC), NS (servidores de nomes autoritativos), e SOA (Start of Authority — informações sobre a zona DNS). Cada registro tem um TTL (Time to Live) que determina por quanto tempo a informação fica em cache nos servidores recursivos.',
     howItWorks: 'Insira o host de destino e o sistema simula as respostas do servidor identificando os diferentes tipos de registros lógicos.',
     faqs: [
       {
         question: 'O que significa cada registro DNS?',
-        answer: 'Registro A mapeia endereços IPv4. AAAA mapeia IPv6. MX lida com servidores responsáveis pelo e-mail receptivo. TXT armazena chaves de autenticação de servidores (SPF/DKIM) para segurança.'
-      }
+        answer: 'Registro A: mapeia domínio para IPv4. AAAA: mapeia para IPv6. MX: servidores de e-mail receptivo. TXT: informações textuais (SPF, DKIM, DMARC). CNAME: alias — um domínio aponta para outro. NS: servidores de nomes autoritativos da zona.'
+      },
+      {
+        question: 'O que é propagação de DNS?',
+        answer: 'Quando você altera registros DNS em seu registrador, a informação leva de alguns minutos a 48 horas para se propagar por todos os servidores DNS do mundo. O TTL configurado determina a velocidade: TTL baixo (300s) = propagação rápida. TTL alto (86400s) = propagação lenta.'
+      },
+      {
+        question: 'Como verificar se meu e-mail está configurado corretamente?',
+        answer: 'Verifique se os registros MX apontam para o servidor de e-mail correto (ex: Google, Microsoft 365, hospedagem). Verifique os registros SPF, DKIM e DMARC para autenticação e prevenção de spoofing (golpes com seu domínio).'
+      },
     ],
     tips: [
-      'Prazos TTL programados ditam o quão rápido uma alteração de DNS se propagará com sucesso pela Internet mundial.'
+      'Prazos TTL programados ditam o quão rápido uma alteração de DNS se propagará com sucesso pela Internet.',
+      'Ao migrar de servidor, reduza o TTL para 300 segundos (5 minutos) alguns dias antes da migração para acelerar a propagação.',
+      'Ferramentas como dig (Linux/macOS), nslookup (Windows) e whatsmydns.net ajudam a verificar a propagação global do DNS.',
     ],
     relatedToolIds: ['whois', 'ssl-checker', 'http-headers'],
     slug: 'consulta-dns-lookup'
@@ -828,16 +1139,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'ferramentas-web',
     title: 'Verificador de Certificado SSL',
     shortDescription: 'Valide a integridade do certificado SSL HTTPS de domínios e evite alertas de insegurança nos navegadores.',
-    longIntro: 'Inspecione a qualidade criptográfica do certificado SSL instalado do seu domínio de e-commerce, datas de vencimento, autoridade emissora e vulnerabilidades de conexões.',
+    longIntro: 'O Verificador de Certificado SSL inspeciona a validade, integridade e segurança do certificado HTTPS instalado em qualquer domínio. Certificados SSL/TLS são essenciais para criptografar a comunicação entre navegadores e servidores, garantindo que dados sensíveis como senhas, números de cartão de crédito e informações pessoais trafeguem de forma segura. A ferramenta verifica: data de emissão e expiração, autoridade certificadora (CA) emissora, algoritmos de criptografia utilizados, validade do nome do domínio (CN/SAN), suporte a protocolos TLS 1.2 e 1.3, e vulnerabilidades conhecidas. Sites sem HTTPS ou com certificados expirados são marcados como "Não Seguros" pelos navegadores modernos (Chrome, Firefox, Edge).',
     howItWorks: 'Forneça o domínio corporativo HTTPS para realizar a inspeção estrutural simulada detalhada de validade técnica.',
     faqs: [
       {
         question: 'O que é a autoridade CA no SSL?',
-        answer: 'CA representa autoridade certificadora oficial independente (como Let\'s Encrypt ou Cloudflare) responsável por assinar e atestar que a chave de criptografia de ponta a ponta é de fato do domínio solicitado.'
-      }
+        answer: 'CA (Certificate Authority) é a autoridade certificadora que assina e valida seu certificado SSL. Exemplos: Let\'s Encrypt (gratuito, 90 dias), Cloudflare, DigiCert, GoDaddy. A CA atesta que seu domínio realmente pertence a você.'
+      },
+      {
+        question: 'Com que frequência renovar o SSL?',
+        answer: 'Certificados gratuitos do Let\'s Encrypt expiram a cada 90 dias e devem ser renovados automaticamente via scripts ACME. Certificados pagos podem ter validade de 1 a 2 anos. A renovação automática evita o erro "Sua Conexão Não é Segura" nos navegadores.'
+      },
+      {
+        question: 'O que acontece quando o certificado expira?',
+        answer: 'Navegadores mostram um aviso de segurança vermelho bloqueando o acesso ao site. Visitantes podem desconsiderar o aviso e prosseguir, mas a confiança no site fica comprometida. Dados sensíveis (senhas, cartões) NÃO devem ser enviados em sites com certificado expirado.'
+      },
     ],
     tips: [
-      'Automatize a renovação dos seus certificados SSL gratuitos de 90 dias com scripts de ACME em servidores Linux.'
+      'Automatize a renovação dos seus certificados SSL gratuitos de 90 dias com scripts de ACME em servidores Linux.',
+      'Sempre use certificados de CAs reconhecidas (Let\'s Encrypt, DigiCert, Cloudflare) — certificados autoassinados geram alertas.',
+      'Após instalar um novo certificado, verifique com nossa ferramenta se todos os domínios e subdomínios estão cobertos.',
     ],
     relatedToolIds: ['http-headers', 'dns-lookup', 'whois'],
     slug: 'verificador-de-certificado-ssl'
@@ -847,16 +1168,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'ferramentas-web',
     title: 'Verificador de Portas de Rede',
     shortDescription: 'Verifique se portas de conexões tradicionais (80, 443, 21, 22, 3306) estão abertas e expostas na Internet pública.',
-    longIntro: 'Auxilia na detecção de vulnerabilidades e configurações de roteadores ou firewalls testando a acessibilidade de conexões comuns externas.',
+    longIntro: 'O Verificador de Portas é uma ferramenta essencial para administradores de redes, gamers, entusiastas de segurança e profissionais de TI diagnosticarem a acessibilidade de portas de rede na Internet. Portas são pontos de conexão virtual que permitem que diferentes serviços (web, e-mail, FTP, banco de dados) coexistam no mesmo servidor. Verificar portas abertas é crucial para: configurar servidores de jogos (portas 27015, 25565), testar se firewalls estão bloqueando serviços, diagnosticar problemas de conectividade VPN, identificar vulnerabilidades de segurança (portas expostas indevidamente), e validar regras de roteador (NAT/Port Forwarding).',
     howItWorks: 'Insira um domínio ou IP e escolha a porta recomendada para obter a resposta interativa de conexões bloqueadas ou ativas.',
     faqs: [
       {
-        question: 'O que o status "Porta Fechada" representa?',
-        answer: 'Indica que o roteador de internet rejeitou conexões na porta testada, ou não possui serviços de softwares aguardando tráfego nessa rota, protegendo o sistema.'
-      }
+        question: 'O que significa "Porta Fechada"?',
+        answer: 'Indica que não há serviço ouvindo naquela porta, ou que um firewall/roteador bloqueou a conexão. Portas fechadas são seguras. Portas abertas podem indicar serviços em execução que podem ser alvo de ataques.'
+      },
+      {
+        question: 'Quais portas são mais comuns?',
+        answer: '80 (HTTP), 443 (HTTPS — web segura), 22 (SSH), 21 (FTP), 25 (SMTP), 53 (DNS), 110 (POP3), 143 (IMAP), 3306 (MySQL), 5432 (PostgreSQL), 3389 (RDP — Área de Trabalho Remota), 27015 (jogos Steam), 25565 (Minecraft).'
+      },
+      {
+        question: 'É perigoso ter portas abertas?',
+        answer: 'Depende do serviço. Portas 80 e 443 para web são normais. Portas de acesso remoto como 22 (SSH) e 3389 (RDP) expostas publicamente são alvos comuns de ataques de força bruta. Portas de banco de dados (3306, 5432) NUNCA devem ficar expostas sem restrição de IP.'
+      },
     ],
     tips: [
-      'Portas de banco de dados (ex: MySQL 3306) nunca devem permanecer expostas sem limitação restrita de IP confiável no firewall corporativo.'
+      'Portas de banco de dados (ex: MySQL 3306) nunca devem permanecer expostas sem limitação restrita de IP confiável.',
+      'Use um firewall configurado para permitir apenas as portas essenciais para seu serviço — princípio do menor privilégio.',
+      'Ferramentas como nmap (Linux/Windows) permitem escanear todas as portas abertas de um IP para auditoria completa de segurança.',
     ],
     relatedToolIds: ['ping', 'traceroute', 'meu-ip'],
     slug: 'verificador-de-portas-abertas'
@@ -866,16 +1197,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'ferramentas-web',
     title: 'Teste de Ping Online',
     shortDescription: 'Meça a latência em milissegundos e a saúde da conexão para servidores de hospedagens mundiais.',
-    longIntro: 'Monitore o tempo de resposta e estabilidade de servidores de mídias ou plataformas de games avaliando o atraso em milissegundos.',
+    longIntro: 'O Teste de Ping Online mede a latência (tempo de resposta) entre seu dispositivo e servidores na internet, expressa em milissegundos (ms). Ping é uma ferramenta de diagnóstico de rede fundamental para: gamers que precisam de baixa latência em jogos online, profissionais que usam VoIP (chamadas pela internet), streamers de vídeo ao vivo, administradores de redes monitorando a saúde de servidores, e qualquer pessoa verificando a qualidade da conexão de internet. Uma latência baixa (até 20ms) indica conexão excelente para jogos e chamadas de vídeo. Latência acima de 150ms começa a causar atrasos perceptíveis. Acima de 300ms, a experiência se torna ruim para a maioria das aplicações em tempo real.',
     howItWorks: 'Dispare simulações completas de requisições ICMP para monitorá-las interativamente com gráficos dinâmicos de resposta.',
     faqs: [
       {
         question: 'Latência menor é melhor?',
-        answer: 'Sim. Em jogos e transmissões de vídeo, latências inferiores (ex: < 20ms) garantem interações em tempo real isentas de engasgos ou delay térmico.'
-      }
+        answer: 'Sim. Em jogos competitivos online e chamadas de vídeo, latências baixas (menos de 20ms) garantem resposta em tempo real. Latências acima de 100ms começam a causar delays perceptíveis. Acima de 300ms, a experiência se torna ruim.'
+      },
+      {
+        question: 'O que causa ping alto?',
+        answer: 'Distância física até o servidor (jogar em servidores do exterior), conexão Wi-Fi instável (prefira cabo de rede), roteador sobrecarregado,下载 pesados durante o jogo (streaming, torrent), provedor de internet com roteamento ineficiente, e picos de tráfego na rede local.'
+      },
+      {
+        question: 'Como reduzir o ping em jogos?',
+        answer: 'Use conexão cabeada (cabo Ethernet) em vez de Wi-Fi. Feche programas que consomem banda (streaming, torrents). Escolha servidores de jogo mais próximos geograficamente. Considere um provedor de internet com fibra óptica (menor latência). Ative o QoS no roteador para priorizar jogos.'
+      },
     ],
     tips: [
-      'Geralmente conexões cabeadas em fibra reduzem o atraso (jitter) quando comparadas a conexões domésticas sem-fio de rádio.'
+      'Geralmente conexões cabeadas em fibra óptica reduzem o atraso (jitter) quando comparadas a conexões Wi-Fi domésticas.',
+      'Teste o ping em diferentes horários do dia — horários de pico (18h-22h) geralmente têm latência maior devido à congestão.',
+      'Para diagnóstico completo, use também o traceroute para identificar em qual salto da rede está ocorrendo o atraso.',
     ],
     relatedToolIds: ['traceroute', 'port-checker', 'whois'],
     slug: 'teste-de-ping-online'
@@ -885,16 +1226,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'ferramentas-web',
     title: 'Traceroute - Rota de Rede',
     shortDescription: 'Rastreie todos os saltos e roteadores intermediários atravessados pelos pacotes até o servidor final.',
-    longIntro: 'Inspecione a rota tomada por pacotes de dados de internet. Descubra os nós de telecomunicações que estão causando lentidão na sua infraestrutura.',
+    longIntro: 'O Traceroute é uma ferramenta de diagnóstico de rede que mapeia todos os saltos (hops) que os pacotes de dados percorrem desde seu computador até um servidor de destino na internet. Cada salto representa um roteador ou equipamento de rede intermediário. O Traceroute é essencial para: identificar onde está ocorrendo lentidão ou perda de pacotes em uma conexão, diagnosticar problemas de roteamento (pacotes indo por caminhos ineficientes), verificar se um bloqueio de rede está sendo aplicado por algum provedor (ISP), e comparar a performance de diferentes provedores de internet. A ferramenta mostra o tempo de resposta (latência) de cada salto e quantos saltos existem entre você e o destino.',
     howItWorks: 'Preencha o destino desejado e simule a cascata de hops exibida com milissegundos individuais acumulados.',
     faqs: [
       {
-        question: 'Para que serve o Traceroute avançado?',
-        answer: 'Ajuda a diagnosticar se falhas de tráfego de conexões residem na rede interna, na operadora nacional ou em fibras marinhas continentais de links internacionais.'
-      }
+        question: 'Para que serve o Traceroute?',
+        answer: 'Ajuda a diagnosticar se falhas de tráfego de conexões residem na rede interna (seu roteador), na operadora nacional (ISP), em backbones interestaduais ou em links internacionais de cabos submarinos. Cada asterisco (* * *) indica um roteador que não respondeu ao diagnóstico.'
+      },
+      {
+        question: 'O que significam os asteriscos (* * *)?',
+        answer: 'Alguns roteadores de backbone configurados por segurança ignoram pacotes de diagnóstico ICMP, resultando em timeouts e asteriscos na saída. Isso não significa necessariamente que há problema — alguns roteadores priorizam tráfego real sobre diagnóstico.'
+      },
+      {
+        question: 'Quantos saltos são normais para destinos nacionais?',
+        answer: 'Destinos no mesmo estado: 5-10 saltos. Destinos em outros estados: 10-20 saltos. Destinos internacionais (EUA/Europa): 15-30 saltos. Mais de 30 saltos pode indicar roteamento ineficiente.'
+      },
     ],
     tips: [
-      'Alguns roteadores de backbone ignoram pacotes de diagnóstico, reportando pontuações asteriscos (* * *) por motivos de segurança anti-DDoS.'
+      'Alguns roteadores de backbone ignoram pacotes de diagnóstico, reportando asteriscos por motivos de segurança anti-DDoS.',
+      'Execute o traceroute para diferentes destinos (Google, sua hospedagem, um servidor de jogo) para comparar rotas.',
+      'Para diagnóstico mais preciso, use MTR (My TraceRoute) que combina traceroute com ping contínuo em cada salto.',
     ],
     relatedToolIds: ['ping', 'port-checker', 'dns-lookup'],
     slug: 'traceroute-de-rede'
@@ -904,16 +1255,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'ferramentas-web',
     title: 'Verificador de Headers HTTP',
     shortDescription: 'Inspecione as respostas de cabeçalhos de servidores Web (Cookies, segurança, cache e redirecionamentos).',
-    longIntro: 'Verifique se as diretivas de proteção cibernética (com HSTS, CSP ou X-Frame-Options) estão sendo enviadas devidamente pelo seu servidor web.',
+    longIntro: 'O Verificador de Headers HTTP inspeciona os cabeçalhos enviados por servidores web em resposta a uma requisição. Headers HTTP são metadados cruciais que controlam: segurança (HSTS, CSP, X-Frame-Options, X-Content-Type-Options), cache (Cache-Control, ETag, Expires), cookies (Set-Cookie), redirecionamentos (301, 302), tipo de conteúdo (Content-Type), compressão (Content-Encoding), e informações do servidor. Para desenvolvedores e administradores, verificar headers é essencial para garantir que as configurações de segurança estejam corretas, diagnosticar problemas de cache, confirmar redirecionamentos, e auditar a exposição de informações do servidor que podem ser exploradas por atacantes.',
     howItWorks: 'Simule o carregamento de uma URL para extrair os cabeçalhos de status HTTP de correspondência imediata.',
     faqs: [
       {
-        question: 'O que o cabeçalho HTTP de segurança dita?',
-        answer: 'Ele impõe aos navegadores regras estruturais impedindo que o site seja aninhado maliciosamente ou sofra ataques de scripts externos.'
-      }
+        question: 'O que o cabeçalho HSTS faz?',
+        answer: 'HSTS (HTTP Strict Transport Security) força navegadores a sempre usarem HTTPS para acessar seu site, nunca HTTP. Isso previne ataques de downgrade (homem-no-meio). Exemplo: Strict-Transport-Security: max-age=31536000; includeSubDomains.'
+      },
+      {
+        question: 'Como verificar se meu site está com cache otimizado?',
+        answer: 'Verifique os headers Cache-Control (max-age em segundos), ETag (validação de cache), e Expires (data de expiração). Headers corretos garantem que recursos estáticos (imagens, CSS, JS) sejam cacheados pelo navegador por dias ou semanas.'
+      },
+      {
+        question: 'O que o header X-Frame-Options protege?',
+        answer: 'X-Frame-Options: DENY ou SAMEORIGIN impede que seu site seja aberto dentro de um iframe em outro domínio. Isso previne ataques de clickjacking (sequestro de cliques) onde criminosos colocam seu site transparente sobre página falsa para capturar dados ou cliques do usuário.'
+      },
     ],
     tips: [
-      'Use caches de headers de navegador corretos para acelerar o carregamento repetido de imagens e arquivos estáticos estáticos pela sua rede.'
+      'Use headers de cache corretos para acelerar o carregamento repetido de imagens e arquivos estáticos pelo navegador.',
+      'Evite expor versões de servidor (Server: Apache/2.4.41) nos headers — isso dá informações valiosas para atacantes.',
+      'Ferramentas como securityheaders.com avaliam a segurança dos headers HTTP do seu site com nota de A+ a F.',
     ],
     relatedToolIds: ['ssl-checker', 'dns-lookup', 'whois'],
     slug: 'verificador-de-headers-http'
@@ -1326,16 +1687,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'utilitarios',
     title: 'Contador de Caracteres e Palavras',
     shortDescription: 'Analise o total de letras, espaços, palavras e parágrafos do seu texto dinamicamente em tempo real.',
-    longIntro: 'Excelente utilitário para redatores, estudantes acadêmicos e analistas de redes sociais adaptarem textos aos limites de postagens regulamentados do Twitter, LinkedIn, Instagram e metatags do Google.',
+    longIntro: 'O Contador de Caracteres e Palavras é uma ferramenta indispensável para redatores, jornalistas, estudantes, social media managers, copywriters, programadores e profissionais de marketing digital que precisam monitorar o tamanho de seus textos em tempo real. A ferramenta conta automaticamente: caracteres com espaço, caracteres sem espaço, palavras, parágrafos, frases, tempo médio de leitura, e densidade de palavras-chave. Essas métricas são cruciais para: escrever meta descrições do Google (limite ideal de 155-160 caracteres), posts no Twitter/X (limite de 280 caracteres), legendas do Instagram e LinkedIn, resumos acadêmicos com limites de palavras, e otimização de conteúdo para SEO. A contagem é atualizada instantaneamente enquanto você digita ou cola o texto.',
     howItWorks: 'À medida que você digita ou cola, as estatísticas de totais de caracteres (com e sem espaços), palavras e tempo de leitura dinâmica são atualizados sem cliques adicionais de ativação.',
     faqs: [
       {
         question: 'Por que o limite de caracteres importa para SEO do Google?',
-        answer: 'O Google exibe cerca de 60 caracteres no título e de 155 a 160 caracteres nas descrições de trecho de resultados de buscas da SERP para prevenir cortes indesejados nas telas dos celulares.'
-      }
+        answer: 'O Google exibe cerca de 60 caracteres no título das buscas e de 155 a 160 caracteres nas meta descrições. Títulos e descrições muito longos são cortados com reticências (...) nos resultados de busca, reduzindo a taxa de clique (CTR) do seu site.'
+      },
+      {
+        question: 'Qual o limite de caracteres ideal para cada rede social?',
+        answer: 'Twitter/X: 280 caracteres. LinkedIn: 3.000 caracteres. Facebook: 63.206 caracteres. Instagram legenda: 2.200 caracteres. YouTube descrição: 5.000 caracteres. E-mail marketing: ~200 caracteres no assunto para máxima taxa de abertura.'
+      },
+      {
+        question: 'O que é tempo médio de leitura?',
+        answer: 'É uma estimativa de quanto tempo uma pessoa leva para ler seu texto, baseada na média de 200-250 palavras por minuto para leitura silenciosa. Textos até 3 minutos de leitura (~600-750 palavras) são ideais para blogs e redes sociais.'
+      },
     ],
     tips: [
-      'Cole relatórios inteiros para calibrar de forma limpa o tempo de atenção de consumo estimado para o seu material.'
+      'Cole relatórios inteiros para calibrar de forma limpa o tempo de atenção de consumo estimado para o seu material.',
+      'Meta descrições do Google com 155-160 caracteres têm melhor taxa de clique. Evite cortes indesejados com reticências.',
+      'A densidade ideal de palavra-chave para SEO é de 1-2% — acima disso pode ser considerado keyword stuffing (prática penalizada).',
     ],
     relatedToolIds: ['removedor-espacos', 'lorem-ipsum', 'senha'],
     slug: 'contador-de-caracteres'
@@ -1345,16 +1716,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'utilitarios',
     title: 'Contador de Palavras Completo',
     shortDescription: 'Métricas exatas de volume léxico, frequência de repetições e densidade vocabular.',
-    longIntro: 'Vá além da mera contagem bruta. Entenda a densidade de palavras-chave mais repetidas no seu material escrito para orientar inteligência editorial e SEO avançado.',
+    longIntro: 'O Contador de Palavras Completo vai além da contagem bruta, oferecendo métricas avançadas de análise textual como: frequência de palavras (ranking de palavras mais usadas), densidade de palavras-chave, número de palavras únicas (riqueza vocabular), razão tipo-token (diversidade lexical), e distribuição de parágrafos por tamanho. Essas métricas são essenciais para: escritores que querem evitar repetição excessiva de vocabulário, profissionais de SEO analisando densidade de palavras-chave, revisores verificando consistência terminológica, pesquisadores analisando padrões textuais, e estudantes melhorando a qualidade da redação.',
     howItWorks: 'O processador varre o texto, isola pontuações e tabula as repetições estruturadas hierarquicamente.',
     faqs: [
       {
-        question: 'O excesso de repetição de palavras prejudica o ranking do meu site no Google?',
-        answer: 'Sim, a prática conhecida como "Keyword Stuffing" (lotar páginas com palavras-chave repetitivas desnecessárias) prejudica a legibilidade e é detectada por filtros restritivos de spam dos mecanismos modernos.'
-      }
+        question: 'O excesso de repetição de palavras prejudica o ranking do Google?',
+        answer: 'Sim, a prática conhecida como Keyword Stuffing (lotar páginas com palavras-chave repetitivas) prejudica a legibilidade e ativa filtros de spam dos mecanismos de busca. A densidade ideal de palavra-chave é de 1-2% do texto total.'
+      },
+      {
+        question: 'O que é riqueza vocabular (type-token ratio)?',
+        answer: 'É a divisão do número de palavras únicas (types) pelo total de palavras (tokens). Quanto maior o resultado, mais diverso é seu vocabulário. Textos com TTR acima de 0,6 indicam boa variedade lexical. Abaixo de 0,4 pode indicar repetição excessiva.'
+      },
+      {
+        question: 'Quantas palavras são recomendadas por tipo de conteúdo?',
+        answer: 'Post de blog: 1.500-2.500 palavras. Artigo de fundo: 2.500-5.000 palavras. Página de produto: 300-500 palavras. Descrição de vídeo YouTube: 200-500 palavras. E-mail marketing: 100-200 palavras. Post em rede social: 50-150 palavras.'
+      },
     ],
     tips: [
-      'Use sinônimos elegantes para diversificar a densidade textual e preservar a fluidez de leitura de seu portal.'
+      'Use sinônimos elegantes para diversificar a densidade textual e preservar a fluidez de leitura de seu portal.',
+      'Textos com vocabulário muito repetitivo (TTR baixo) podem ser considerados de baixa qualidade pelo algoritmo do Google.',
+      'A média de palavras por frase ideal para web é de 15-20 palavras — frases muito longas prejudicam a legibilidade.',
     ],
     relatedToolIds: ['contador-caracteres', 'removedor-espacos', 'lorem-ipsum'],
     slug: 'contador-de-palavras'
@@ -1364,16 +1745,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'utilitarios',
     title: 'Removedor de Espaços e Linhas',
     shortDescription: 'Limpe textos eliminando tabulações extras, quebras de linhas desnecessárias ou espaços redundantes.',
-    longIntro: 'Limpe blocos de códigos fontes ou relatórios copiados de arquivos PDFs que comumente importam quebras de parágrafos quebrados e espaços em branco que poluem a paginação.',
+    longIntro: 'O Removedor de Espaços e Linhas é uma ferramenta de limpeza e formatação de texto essencial para programadores, editores, analistas de dados e profissionais que trabalham com grandes blocos de texto copiados de PDFs, páginas web, documentos do Word ou e-mails. A ferramenta oferece: remoção de espaços duplicados, remoção de linhas vazias, remoção de tabulações, remoção de quebras de página (form feed), normalização de quebras de linha para o padrão Unix (LF) ou Windows (CRLF), e condensação de todo o texto em uma única linha contínua. Ideal para preparar dados para importação em bancos de dados, limpar texto copiado de PDFs para redação, formatar código-fonte, e higienizar dados antes de análise.',
     howItWorks: 'Regule se quer remover linhas vazias, espaços duplicados ou reduzir tudo de forma condensada a uma única linha contínua.',
     faqs: [
       {
         question: 'Este processo apaga pontuação útil?',
-        answer: 'Não. Ele foca apenas em higienizar caracteres invisíveis de espaços em branco vazios e caracteres de controle invisíveis de quebras de página.'
-      }
+        answer: 'Não. Ele foca apenas em caracteres de formatação invisíveis: espaços em branco duplicados, quebras de linha e parágrafo, tabulações, e caracteres de controle como form feed e carriage return. Pontuação, letras e números não são alterados.'
+      },
+      {
+        question: 'Por que PDFs copiados geram texto bagunçado?',
+        answer: 'PDFs armazenam informações de posicionamento absoluto dos caracteres na página, diferente de documentos de texto. Ao copiar, o interpretador tenta reconstruir a ordem de leitura, mas frequentemente insere quebras de linha e espaços extras onde não deveria.'
+      },
+      {
+        question: 'O que é normalização de quebras de linha?',
+        answer: 'A normalizacao de quebras de linha converte entre formatos: Windows usa CRLF (carriage return + line feed), Unix/Linux usa LF (line feed), e Mac antigo usava CR (carriage return). A ferramenta pode converter entre esses formatos para garantir compatibilidade entre sistemas operacionais diferentes.'
+      },
     ],
     tips: [
-      'Útil para higienizar dados em planilhas antes de transformá-los e carregá-los em formatos de bancos de dados relacionais SQL.'
+      'Útil para higienizar dados de planilhas antes de transformá-los e carregá-los em formatos de bancos de dados SQL.',
+      'PDFs jurídicos e acadêmicos costumam gerar as maiores bagunças na cópia — use a ferramenta para limpar rapidamente.',
+      'Para importar CSV, remova espaços extras das células que podem causar erros de processamento no banco de dados.',
     ],
     relatedToolIds: ['contador-caracteres', 'formatador-json', 'minificador-css'],
     slug: 'removedor-de-espacos-duplicados'
@@ -1383,16 +1774,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'utilitarios',
     title: 'Formatador e Identador JSON',
     shortDescription: 'Valide, idente e embeleze estruturas de dados JSON para facilitar a visualização por desenvolvedores.',
-    longIntro: 'Encontre erros lógicos de chaves perdidas, aspas incorretas, vírgulas residuais e converta strings e payloads em estruturas tabuladas perfeitamente alinhadas.',
+    longIntro: 'O Formatador e Validador JSON é uma ferramenta indispensável para desenvolvedores full-stack, analistas de dados, engenheiros de software e profissionais de TI que trabalham com APIs REST, arquivos de configuração, bancos de dados NoSQL, e integrações entre sistemas. O JSON (JavaScript Object Notation) é o formato de intercâmbio de dados mais utilizado na web moderna. A ferramenta oferece: formatação com indentação personalizada (2 ou 4 espaços), validação de sintaxe destacando erros precisamente (chaves faltando, vírgulas extras, aspas incorretas), minificação (compressão para produção), visualização em árvore hierárquica, e exportação para diferentes formatações. Útil para depurar respostas de APIs, preparar payloads para requisições POST, e organizar arquivos de configuração.',
     howItWorks: 'Cole a massa colapsada para colher a resposta formatada com recuo indentado colorível selecionável com validadores de erros estruturais embutidos.',
     faqs: [
       {
         question: 'Por que dados JSON costumam vir sem identação?',
-        answer: 'Sistemas transferem APIs de forma condensada (minificada) para desonerar bytes redundantes do tráfego de redes e acelerar a velocidade de requisições de servidores.'
-      }
+        answer: 'Sistemas transferem APIs de forma condensada (minificada) para reduzir tráfego de rede e acelerar a velocidade de carregamento. A identação adiciona caracteres desnecessários (espaços e quebras) que aumentam o tamanho do payload em 30-50%.'
+      },
+      {
+        question: 'O JSON aceita comentários?',
+        answer: 'Não, a especificação oficial do JSON não permite comentários. Se você precisa de comentários, considere JSON5 (JSON for Humans) ou YAML. Comentários em JSON inválido quebram a análise em parsers padrão.'
+      },
+      {
+        question: 'Como validar se um JSON é válido?',
+        answer: 'Cole o JSON na ferramenta e clique em formatar. Se houver erro de sintaxe, a ferramenta destacará a linha e posição aproximada do erro. Erros comuns: vírgula após o último item de array/objeto, aspas simples (\') em vez de duplas ("") e chaves/colchetes desbalanceados.'
+      },
     ],
     tips: [
-      'Gaste menos tempo debruçado descifrando bugs de chamadas internas de sistemas formatando os payloads.'
+      'Gaste menos tempo debugando bugs de chamadas de API formatando os payloads com o beautifier.',
+      'Sempre valide JSON de arquivos de configuração (tsconfig.json, package.json) após editar manualmente.',
+      'Para payloads de produção, use sempre JSON minificado (sem espaços) para reduzir tráfego e acelerar a resposta de APIs.',
     ],
     relatedToolIds: ['beautify-json', 'removedor-espacos', 'minificador-js'],
     slug: 'formatador-json'
@@ -1402,16 +1803,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'utilitarios',
     title: 'Minificador de Código CSS',
     shortDescription: 'Reduza o tamanho físico dos arquivos de folhas de estilo integradas das suas páginas Web.',
-    longIntro: 'Ajude suas páginas a carregarem de forma consideravelmente mais veloz no PageSpeed diminuindo o peso do código CSS estático consolidado do seu portal.',
+    longIntro: 'O Minificador de CSS reduz o tamanho de arquivos de estilo removendo espaços em branco, comentários, quebras de linha, e otimizando seletores para produção. CSS minificado pode ser de 30% a 60% menor que o original, resultando em carregamento mais rápido de páginas web, melhor pontuação no Google PageSpeed Insights, redução no consumo de banda do servidor, e melhor experiência do usuário em conexões móveis. A ferramenta mantém a funcionalidade completa do CSS — apenas remove caracteres desnecessários para o navegador interpretar as regras de estilo. Importante: sempre mantenha o arquivo original (comentado e organizado) para manutenção futura.',
     howItWorks: 'Apaga comentários do arquivo, remove quebras de linhas internas e aglutina os seletores de estilizações de classes equivalentes.',
     faqs: [
       {
-        question: 'A minificação altera a renderização visual final da página?',
-        answer: 'Não, o comportamento permanece intacto já que navegadores desconsideram quebras de linhas para interpretar seletores.'
-      }
+        question: 'A minificação altera a renderização visual?',
+        answer: 'Não, o comportamento visual permanece idêntico. Navegadores ignoram quebras de linha e espaços extras para interpretar seletores. A minificação remove apenas caracteres não funcionais, mantendo todas as regras, valores e propriedades intactas.'
+      },
+      {
+        question: 'Qual a redução típica de tamanho?',
+        answer: 'Arquivos CSS bem comentados: redução de 40-60%. Arquivos CSS já enxutos: redução de 15-25%. A maior economia vem da remoção de comentários extensos e espaços em branco. Um arquivo de 100 KB pode ser reduzido para 40-50 KB.'
+      },
+      {
+        question: 'Devo minificar CSS manualmente ou usar ferramentas de build?',
+        answer: 'Ferramentas de build automatizadas (Vite, Webpack, Gulp) devem fazer a minificação automaticamente no processo de build/deploy. A minificação manual é útil para testes rápidos ou projetos sem sistema de build configurado.'
+      },
     ],
     tips: [
-      'Mantenha sempre uma cópia original comentada legível do seu código CSS para manutenção posterior.'
+      'Mantenha sempre uma cópia original comentada legível do seu código CSS para manutenção posterior.',
+      'Configure seu bundler (Vite, Webpack) para minificar CSS automaticamente no build de produção.',
+      'CSS moderno com variáveis e aninhamento (nesting) também pode ser minificado — a ferramenta lida com todas as sintaxes.',
     ],
     relatedToolIds: ['minificador-js', 'formatador-json', 'removedor-espacos'],
     slug: 'minificador-de-css'
@@ -1421,16 +1832,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'utilitarios',
     title: 'Minificador de JavaScript',
     shortDescription: 'Otimize seus scripts reduzindo espaços em branco e unificando escopos básicos.',
-    longIntro: 'Gire aplicações client-side hiper velozes no ar aplicando compressão estática limpa em códigos JS de forma instantânea e descomplicada para o usuário.',
+    longIntro: 'O Minificador de JavaScript comprime o código-fonte removendo espaços, comentários, quebras de linha e renomeando variáveis locais para nomes mais curtos. A minificação JS pode reduzir o tamanho dos arquivos em 50-70%, resultando em: carregamento mais rápido de páginas web, melhor performance em redes móveis 3G/4G/5G, economia de banda do servidor de hospedagem, e melhor pontuação em métricas de performance (Core Web Vitals, PageSpeed). A ferramenta é ideal para preparar scripts para produção, testar o impacto da compressão no tempo de carregamento, e validar scripts de terceiros. Importante: a minificação é diferente de ofuscação (que altera nomes de funções e variáveis para dificultar engenharia reversa).',
     howItWorks: 'Compacta de modo limpo suas declarações e entrega blocos inline práticos de descarregar na mesma tela.',
     faqs: [
       {
-        question: 'O que o termo ofuscação dita?',
-        answer: 'Ofuscar vai além de comprimir. Ela altera nomes de variáveis internas para nomes curtos incompreensíveis, dificultando a engenharia reversa do software comercial de front-end.'
-      }
+        question: 'O que é ofuscação de código?',
+        answer: 'Ofuscar vai além de comprimir: altera nomes de variáveis, funções e propriedades para nomes curtos e sem significado (ex: a, b, c, x1, x2), dificultando a engenharia reversa. Minificação apenas remove espaços e comentários sem alterar nomes de identificadores.'
+      },
+      {
+        question: 'Minificação pode introduzir bugs?',
+        answer: 'Se o código original tem ponto e vírgula faltando ou depende de ASI (Automatic Semicolon Insertion) do JavaScript, a minificação pode quebrar o código. Sempre teste o código minificado em um ambiente de staging antes de enviar para produção.'
+      },
+      {
+        question: 'Qual a diferença entre minificação e compressão?',
+        answer: 'Minificação é a remoção de caracteres desnecessários do código-fonte (redução irreversível). Compressão (Gzip, Brotli) é aplicada pelo servidor web e reduz o tamanho durante a transferência (reversível, descompactada pelo navegador). Ideal: código minificado + compressão Gzip/Brotli.'
+      },
     ],
     tips: [
-      'Utilize minificadores automatizados nas suas pipelinesCI/CD de deploy para garantir ganho de desempenho contínuo automaticamente.'
+      'Utilize minificadores automatizados nas pipelines CI/CD de deploy para garantir ganho de performance contínuo.',
+      'Sempre mantenha o código fonte original (comentado e organizado) para manutenção — o minificado é apenas para produção.',
+      'A combinação de minificação + compressão Brotli pode reduzir o tamanho de arquivos JS em até 80%.',
     ],
     relatedToolIds: ['minificador-css', 'formatador-json', 'removedor-espacos'],
     slug: 'minificador-de-js'
@@ -1440,16 +1861,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'utilitarios',
     title: 'Beautify JSON Beautifier',
     shortDescription: 'Deixe seus arquivos JSON perfeitamente organizados estruturados e fáceis de ler.',
-    longIntro: 'O embelezador ideal para payloads de APIs. Um atalho rápido para analistas de dados inspecionarem o conteúdo de respostas de servidores de bases de Big Query.',
+    longIntro: 'O Beautify JSON (Embelezador de JSON) é a ferramenta ideal para desenvolvedores que precisam visualizar, organizar e depurar estruturas de dados JSON de forma clara e legível. Diferente de um formatador simples, o beautifier adiciona cores para diferentes tipos de dados (strings em verde, números em azul, booleanos em laranja, null em cinza), identação inteligente com linhas-guia (indent guides), e colapso/expansão de nós (tree view). Essencial para: inspecionar respostas de APIs REST, depurar payloads de webhooks, analisar arquivos de configuração, estudar estruturas de dados complexas, e preparar exemplos de código para documentação.',
     howItWorks: 'O interpretador ajusta os recuos tabulados adicionando cores vibrantes para identificar objetos chaves e listas lógicas.',
     faqs: [
       {
         question: 'O JSON aceita comentários internos?',
-        answer: 'Não, a especificação oficial padrão não tolera comentários de desenvolvimento.'
-      }
+        answer: 'Não, a especificação oficial do JSON (RFC 7159) não tolera comentários. Se você precisa de comentários em arquivos de configuração, use JSON5 (que permite comentários) ou mude para YAML. Comentários quebram parsers JSON padrão.'
+      },
+      {
+        question: 'Qual a diferença entre beautify e format?',
+        answer: 'Formatar organiza a estrutura com indentação. Beautify vai além: adiciona syntax highlighting (cores), indent guides (linhas-guia para cada nível), e tree view expansível. Ambos tornam o JSON mais legível, mas beautify é mais visual.'
+      },
+      {
+        question: 'Como usar JSON beautify no dia a dia?',
+        answer: 'Cole respostas de API no beautifier para inspecionar dados rapidamente. Use para preparar exemplos de JSON para documentação técnica de API. Utilize para encontrar erros em arquivos de configuração JSON visualmente.'
+      },
     ],
     tips: [
-      'Gere esquemas e utilize esta visualização limpa nas documentações internas das APIs de sua empresa.'
+      'Gere esquemas e utilize esta visualização limpa nas documentações internas das APIs de sua empresa.',
+      'Respostas de APIs com dezenas de campos aninhados ficam muito mais fáceis de analisar com syntax highlighting.',
+      'Combine com a formatação JSON para depurar rapidamente erros de sintaxe em requisições POST complexas.',
     ],
     relatedToolIds: ['formatador-json', 'encode-url', 'decode-url'],
     slug: 'beautify-json'
@@ -1459,16 +1890,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'utilitarios',
     title: 'Encode URL - Codificação de URLs',
     shortDescription: 'Codifique trechos de textos de parâmetros query strings no formato padrão amigável para envio web centrado.',
-    longIntro: 'Converta caracteres acentuados, cecilhas, símbolos ou espaços de URLs livres em sequências seguras em conformidade aos interpretadores de navegadores mundiais.',
+    longIntro: 'A Codificação de URLs (URL Encoding) converte caracteres especiais e acentuados em formato seguro para transmissão na web, substituindo caracteres não ASCII por notação percentual (ex: espaço vira %20, ç vira %E7, á vira %E1). O URL Encoding é obrigatório para: parâmetros de consulta em URLs de APIs REST, links com caracteres especiais, envio de dados via formulários HTML (GET/POST), parâmetros UTM para campanhas de marketing, e integrações com sistemas que exigem URLs limpas. Sem a codificação correta, caracteres acentuados, espaços e símbolos podem quebrar a URL, resultando em erros 400 (Bad Request) ou links quebrados.',
     howItWorks: 'Transforma espaços em notações especiais (%20) correspondentes para permitir postagens e envios em tags estruturadas de links sem perdas.',
     faqs: [
       {
         question: 'Por que codificar URLs é obrigatório para APIs?',
-        answer: 'Navegadores utilizam conjuntos de caracteres sob limites restritos. Enviar espaços em branco brutos no corpo quebra a integridade da requisição HTTP comercial.'
-      }
+        answer: 'Navegadores e servidores web utilizam conjuntos de caracteres limitados em URLs (apenas letras, números e alguns símbolos). Enviar espaços, acentos ou caracteres especiais sem codificação quebra a requisição HTTP, resultando em erro 400 ou interpretação incorreta dos parâmetros.'
+      },
+      {
+        question: 'Qual a diferença entre encodeURI e encodeURIComponent?',
+        answer: 'encodeURI() codifica a URL inteira preservando caracteres estruturais (://?#). encodeURIComponent() codifica TUDO, incluindo caracteres estruturais — use para codificar apenas o VALOR de cada parâmetro de query string, não a URL inteira.'
+      },
+      {
+        question: 'Como criar URLs seguras para campanhas de marketing?',
+        answer: 'Use a ferramenta para codificar parâmetros UTM (utm_source, utm_medium, utm_campaign) que contenham espaços, acentos ou caracteres especiais. Exemplo: utm_campaign=Promoção+Verão → utm_campaign=Promo%C3%A7%C3%A3o%20Ver%C3%A3o.'
+      },
     ],
     tips: [
-      'Essencial ao montar manualmente campanhas de marketing estruturadoras de UTM para rastreabilidade de cliques de campanhas.'
+      'Essencial ao montar manualmente campanhas de marketing com parâmetros UTM para rastreamento de cliques.',
+      'Sempre codifique APENAS o valor dos parâmetros, não a URL inteira — a estrutura da URL deve permanecer legível.',
+      'Caracteres como @, #, $, %, &, +, /, :, ;, =, ?, espaço precisam ser codificados em valores de parâmetros.',
     ],
     relatedToolIds: ['decode-url', 'qr-code', 'formatador-json'],
     slug: 'codificador-encode-url'
@@ -1478,16 +1919,26 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'utilitarios',
     title: 'Decode URL - Decodificação de URLs',
     shortDescription: 'Decodifique links e query strings e traduza-os em palavras de linguagem humana legíveis comuns.',
-    longIntro: 'O reverso da conversão de URLs do portal Tool Brasil. Ele limpa caracteres especiais, pontuações, recuperando os termos originais de campanhas que foram empacotados anteriormente.',
+    longIntro: 'A Decodificação de URLs (URL Decoding) converte URLs codificadas de volta ao formato legível, traduzindo notações percentuais (%20, %E7, %E1) para os caracteres originais (espaço, ç, á). Essencial para: analisar parâmetros de URLs recebidas em campanhas de marketing, depurar links quebrados ou mal formatados, inspecionar URLs de rastreamento, extrair parâmetros de query strings complexas, e converter URLs de e-mail marketing para formato legível. Muitas ferramentas de e-mail marketing e plataformas de anúncios codificam automaticamente as URLs — usar o decoder ajuda a verificar se os links estão corretos antes de enviar campanhas.',
     howItWorks: 'Vaze a string mascarada de entrada e a rotina resgata as palavras acentuadas e espaços em milissegundos.',
     faqs: [
       {
-        question: 'O que o percentual (%) nas URLs traduz?',
-        answer: 'Identifica uma codificação hexadecimal percent-encoding de um byte correspondente do mapeamento básico de caracteres.'
-      }
+        question: 'O que significa %20 em uma URL?',
+        answer: '%20 é a representação codificada do caractere de espaço (espaço ASCII 0x20). Em URLs, espaços não são permitidos e devem ser codificados como %20 ou + (em query strings, o sinal de + também representa espaço).'
+      },
+      {
+        question: 'Como saber se uma URL está codificada?',
+        answer: 'URLs codificadas contêm sequências como %20, %E1, %E7, %F3 no lugar de caracteres especiais. Se você ver espaços representados como %20 ou acentos como %E1, a URL está codificada e precisa de decodificação para ser legível.'
+      },
+      {
+        question: 'Qual a diferença entre %20 e + em URLs?',
+        answer: 'Em URLs, %20 é o espaço codificado padrão. Em query strings (após ?), o sinal + também representa espaço por razões históricas (formulários HTML). %20 funciona em qualquer lugar da URL; + funciona apenas em query strings.'
+      },
     ],
     tips: [
-      'Use para ler com clareza parâmetros compridos de cliques provenientes dos disparos de e-mails newsletters.'
+      'Use o decoder para verificar links de campanhas de e-mail marketing antes do disparo — garanta que estejam corretos.',
+      'Links de afiliados e URLs de rastreamento frequentemente usam codificação dupla — pode ser necessário decodificar duas vezes.',
+      'Sempre verifique URLs de campanhas UTM após o decoder para confirmar que os parâmetros de rastreamento estão corretos.',
     ],
     relatedToolIds: ['encode-url', 'qr-code', 'beautify-json'],
     slug: 'decodificador-decode-url'

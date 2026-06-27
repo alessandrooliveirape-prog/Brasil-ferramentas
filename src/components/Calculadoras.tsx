@@ -49,6 +49,7 @@ export default function Calculadoras({ toolId }: CalculadorasProps) {
       {toolId === 'calorias-diarias' && <CalculadoraCaloriasDiarias />}
       {toolId === 'nota-enem' && <CalculadoraNotaEnem />}
       {toolId === 'move-brasil' && <CalculadoraMoveBrasil />}
+      {toolId === 'clt-vs-pj' && <CalculadoraCLTvsPJ />}
     
     </div>
   );
@@ -2690,6 +2691,139 @@ function SalarioLiquido() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function CalculadoraCLTvsPJ() {
+  const [salarioCLT, setSalarioCLT] = useState(5000);
+  const [valeTransporte, setValeTransporte] = useState(200);
+  const [valeRefeicao, setValeRefeicao] = useState(800);
+  const [planoSaude, setPlanoSaude] = useState(300);
+  const [valorPJ, setValorPJ] = useState(7500);
+  const [aliquotaSimples, setAliquotaSimples] = useState(11);
+  const [custoContador, setCustoContador] = useState(300);
+
+  const cltAnual = salarioCLT * 13 + (salarioCLT / 3); // 13o + ferias 1/3
+  const fgtsAnual = salarioCLT * 12 * 0.08 + salarioCLT * 12 * 0.005; // FGTS 8% + multa 0.5%
+  const beneficiosAnual = (valeTransporte + valeRefeicao + planoSaude) * 12;
+  const custoTotalCLT = cltAnual + fgtsAnual + beneficiosAnual;
+
+  const faturamentoAnualPJ = valorPJ * 12;
+  const impostosPJ = faturamentoAnualPJ * (aliquotaSimples / 100);
+  const contadorAnual = custoContador * 12;
+  const inssPJ = faturamentoAnualPJ * 0.11;
+  const custoTotalPJ = impostosPJ + contadorAnual + inssPJ;
+  const liquidoPJ = faturamentoAnualPJ - custoTotalPJ;
+
+  const diferenca = liquidoPJ - custoTotalCLT;
+  const vantagem = diferenca > 0 ? 'PJ' : 'CLT';
+  const percentual = Math.abs(diferenca) / custoTotalCLT * 100;
+
+  return (
+    <div className="space-y-6" id="calc-clt-vs-pj">
+      <h3 className="text-lg font-bold text-slate-800 dark:text-white">Comparativo CLT vs PJ</h3>
+      <p className="text-sm text-slate-500 dark:text-slate-400">
+        Compare os regimes CLT e PJ lado a lado. Preencha os valores abaixo para descobrir qual compensa mais financeiramente.
+      </p>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* CLT Column */}
+        <div className="bg-blue-50 dark:bg-blue-900/20 p-5 rounded-xl border border-blue-200 dark:border-blue-800">
+          <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-4 flex items-center gap-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+            Regime CLT
+          </h4>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Salário Bruto Mensal (R$)</label>
+              <input type="number" value={salarioCLT} onChange={e => setSalarioCLT(Number(e.target.value))}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Vale Transporte (R$/mês)</label>
+              <input type="number" value={valeTransporte} onChange={e => setValeTransporte(Number(e.target.value))}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Vale Refeição (R$/mês)</label>
+              <input type="number" value={valeRefeicao} onChange={e => setValeRefeicao(Number(e.target.value))}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Plano de Saúde (R$/mês)</label>
+              <input type="number" value={planoSaude} onChange={e => setPlanoSaude(Number(e.target.value))}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-sm" />
+            </div>
+          </div>
+        </div>
+
+        {/* PJ Column */}
+        <div className="bg-emerald-50 dark:bg-emerald-900/20 p-5 rounded-xl border border-emerald-200 dark:border-emerald-800">
+          <h4 className="font-semibold text-emerald-700 dark:text-emerald-300 mb-4 flex items-center gap-2">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+            Regime PJ (Pessoa Jurídica)
+          </h4>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Valor Mensal PJ (R$)</label>
+              <input type="number" value={valorPJ} onChange={e => setValorPJ(Number(e.target.value))}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-sm" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Alíquota Simples Nacional (%)</label>
+              <input type="number" value={aliquotaSimples} onChange={e => setAliquotaSimples(Number(e.target.value))} step="0.1"
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-sm" />
+              <span className="text-[10px] text-slate-400">Anexo III (serviços): ~11-16%. Anexo IV (consultoria): ~16-21%.</span>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Custo Mensal do Contador (R$)</label>
+              <input type="number" value={custoContador} onChange={e => setCustoContador(Number(e.target.value))}
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-white text-sm" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Summary */}
+      <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-xl border border-slate-200 dark:border-slate-700">
+        <h4 className="font-semibold text-slate-800 dark:text-white mb-3">Resultado Anual</h4>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <div className="bg-blue-50 dark:bg-blue-900/10 p-4 rounded-lg">
+            <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Custo Total CLT (ano)</div>
+            <div className="text-xl font-bold text-blue-600 dark:text-blue-400">
+              R$ {custoTotalCLT.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </div>
+          </div>
+          <div className="bg-emerald-50 dark:bg-emerald-900/10 p-4 rounded-lg">
+            <div className="text-xs text-slate-500 dark:text-slate-400 mb-1">Líquido PJ (ano)</div>
+            <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400">
+              R$ {liquidoPJ.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </div>
+          </div>
+        </div>
+
+        <div className={`p-4 rounded-lg text-center ${
+          diferenca > 0
+            ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800'
+            : 'bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
+        }`}>
+          <span className="text-lg font-bold">
+            {vantagem === 'PJ'
+              ? `PJ compensa R$ ${Math.abs(diferenca).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} a mais por ano`
+              : `CLT compensa R$ ${Math.abs(diferenca).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} a mais por ano`
+            }
+          </span>
+          <div className="text-sm mt-1 opacity-80">
+            ({percentual.toFixed(1)}% de diferença)
+          </div>
+        </div>
+
+        <div className="mt-4 text-xs text-slate-400 dark:text-slate-500 text-center">
+          <p>* Este cálculo é uma estimativa. Consulte um contador para uma análise personalizada.</p>
+          <p className="mt-1">O regime PJ exige reserva para férias, 13° e contingências.</p>
+        </div>
+      </div>
     </div>
   );
 }
