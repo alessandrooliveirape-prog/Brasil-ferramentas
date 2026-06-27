@@ -6,3 +6,9 @@ coverage/
 *.log
 .env*
 !.env.example
+
+.vercel
+
+nul
+dist/
+node_modules/

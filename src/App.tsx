@@ -44,7 +44,7 @@ import ProgrammaticPage from './components/ProgrammaticPage';
 import Sitemap from './components/Sitemap';
 import Institucional from './components/Institucional';
 import AdSensePlaceholder from './components/AdSensePlaceholder';
-import SEOAnalyzer from './components/SEOAnalyzer';
+
 
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState(() => parseRoute());
@@ -182,16 +182,16 @@ export default function App() {
     {
       id: 'juros-compostos',
       tag: '🔥 Recomendado',
-      tagColor: 'bg-amber-100 dark:bg-amber-950/55 text-amber-800 dark:text-amber-400 border border-amber-200 dark:border-amber-900',
-      tagBg: 'from-amber-500/5 via-transparent to-transparent',
-      accentColor: 'text-amber-600 dark:text-amber-400',
+      tagColor: 'bg-slate-100 dark:bg-slate-950/55 text-emerald-800 dark:text-emerald-400 border border-slate-200 dark:border-slate-900',
+      tagBg: 'from-emerald-500/5 via-transparent to-transparent',
+      accentColor: 'text-emerald-600 dark:text-emerald-400',
     },
     {
       id: 'cpf',
       tag: '💻 Essencial Dev',
-      tagColor: 'bg-indigo-100 dark:bg-indigo-950/55 text-indigo-800 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-900',
-      tagBg: 'from-indigo-500/5 via-transparent to-transparent',
-      accentColor: 'text-indigo-600 dark:text-indigo-400',
+      tagColor: 'bg-slate-100 dark:bg-slate-950/55 text-emerald-800 dark:text-emerald-400 border border-slate-200 dark:border-slate-900',
+      tagBg: 'from-emerald-500/5 via-transparent to-transparent',
+      accentColor: 'text-emerald-600 dark:text-emerald-400',
     },
     {
       id: 'real-para-dolar',
@@ -203,9 +203,9 @@ export default function App() {
     {
       id: 'senha',
       tag: '🔒 Segurança',
-      tagColor: 'bg-rose-100 dark:bg-rose-950/55 text-rose-800 dark:text-rose-400 border border-rose-200 dark:border-rose-900',
+      tagColor: 'bg-slate-100 dark:bg-slate-950/55 text-emerald-800 dark:text-emerald-400 border border-slate-200 dark:border-slate-900',
       tagBg: 'from-rose-500/5 via-transparent to-transparent',
-      accentColor: 'text-rose-600 dark:text-rose-400',
+      accentColor: 'text-emerald-600 dark:text-emerald-400',
     }
   ].map(f => {
     const rawTool = TOOLS.find(t => t.id === f.id);
@@ -374,7 +374,7 @@ export default function App() {
                 <Wrench className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-lg font-extrabold tracking-tight bg-gradient-to-r from-emerald-600 to-indigo-600 bg-clip-text text-transparent">
+                <span className="text-lg font-extrabold tracking-tight text-emerald-600 dark:text-emerald-400 font-bold">
                   Tool Brasil
                 </span>
                 <span className="hidden sm:block text-[9px] text-slate-400 font-medium font-mono uppercase tracking-wider">
@@ -391,7 +391,7 @@ export default function App() {
               title="Alternar tema de cores"
               id="theme-toggler"
             >
-              {darkMode ? <Sun className="w-5 h-5 text-amber-500" /> : <Moon className="w-5 h-5" />}
+              {darkMode ? <Sun className="w-5 h-5 text-emerald-500" /> : <Moon className="w-5 h-5" />}
             </button>
             
             <a
@@ -568,14 +568,14 @@ export default function App() {
                 <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-xs" id="featured-tools-section">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="p-2 bg-amber-50 dark:bg-amber-950/40 rounded-lg text-amber-600 dark:text-amber-400">
-                        <Star className="w-4 h-4 fill-amber-500 text-amber-500" />
+                      <div className="p-2 bg-slate-50 dark:bg-slate-950/40 rounded-lg text-emerald-600 dark:text-emerald-400">
+                        <Star className="w-4 h-4 fill-emerald-500 text-emerald-500" />
                       </div>
                       <h2 className="text-sm font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-tight">
                         Ferramentas em Destaque
                       </h2>
                     </div>
-                    <span className="text-[10px] bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-400 font-mono px-2 py-0.5 rounded font-extrabold border border-amber-100 dark:border-amber-900">
+                    <span className="text-[10px] bg-slate-50 dark:bg-slate-950/40 text-emerald-700 dark:text-emerald-400 font-mono px-2 py-0.5 rounded font-extrabold border border-slate-100 dark:border-slate-900">
                       Recomendado
                     </span>
                   </div>
@@ -623,7 +623,7 @@ export default function App() {
                     {popularTools.length > 0 && (
                       <button
                         onClick={handleResetPopularity}
-                        className="p-1 px-2 flex items-center gap-1 text-[10px] text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 border border-slate-150 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 rounded hover:cursor-pointer transition"
+                        className="p-1 px-2 flex items-center gap-1 text-[10px] text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 border border-slate-150 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 rounded hover:cursor-pointer transition"
                         title="Limpar estatísticas de uso"
                       >
                         <RotateCcw className="w-2.5 h-2.5" /> Zerar Histórico
@@ -640,11 +640,11 @@ export default function App() {
                       const visits = useCounts[tool.id] || 0;
                       // Rank colors (1st = Emerald gold, 2nd = Emerald silver, 3rd = standard border elements)
                       const rankStyle = index === 0 
-                        ? 'bg-amber-500 border-amber-400 text-white dark:bg-amber-600 dark:border-amber-500'
+                        ? 'bg-slate-500 border-slate-400 text-white dark:bg-slate-600 dark:border-slate-500'
                         : index === 1
                         ? 'bg-slate-400 border-slate-300 text-white dark:bg-slate-500 dark:border-slate-400'
                         : index === 2
-                        ? 'bg-amber-700 border-amber-600 text-white'
+                        ? 'bg-slate-700 border-slate-600 text-white'
                         : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-755 text-slate-600 dark:text-slate-400';
 
                       return (
@@ -811,7 +811,7 @@ export default function App() {
                 {/* Intro */}
                 <div className="space-y-2">
                   <h3 className="text-base font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
-                    <Info className="w-4 h-4 text-indigo-500" /> Introdução
+                    <Info className="w-4 h-4 text-emerald-500" /> Introdução
                   </h3>
                   <p className="text-slate-500 dark:text-slate-350 leading-relaxed text-xs">
                     {activeTool.longIntro}
@@ -903,7 +903,7 @@ export default function App() {
               {/* COMPARTILHAMENTO SOCIAL VIRAL */}
               <div className="bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-xl p-6 shadow-sm" id="share-tool-section">
                 <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="w-4 h-4 text-amber-500" />
+                  <Sparkles className="w-4 h-4 text-emerald-500" />
                   <h3 className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Compartilhe esta Ferramenta</h3>
                 </div>
                 <div className="flex flex-wrap gap-3">
@@ -924,7 +924,7 @@ export default function App() {
                       const url = encodeURIComponent(`https://toolbrasil.com.br/#${activeTool.categoryId}/${activeTool.slug}`);
                       window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'noopener,noreferrer');
                     }}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-600 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm"
                     title="Compartilhar no Facebook"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 011-1h3v-4h-3a5 5 0 00-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>
@@ -947,7 +947,7 @@ export default function App() {
                       const url = encodeURIComponent(`https://toolbrasil.com.br/#${activeTool.categoryId}/${activeTool.slug}`);
                       window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${url}`, '_blank', 'noopener,noreferrer');
                     }}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-blue-700 hover:bg-blue-800 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm"
                     title="Compartilhar no LinkedIn"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
@@ -973,9 +973,7 @@ export default function App() {
               </div>
 
               {/* LIVE SCHEMA OR OPEN GRAPH DIAGNOSTIC PREVIEW PANEL FOR CODERS */}
-              <div id="seo-analytical-preview">
-                <SEOAnalyzer tool={activeTool} />
-              </div>
+              
 
             </div>
           )}
@@ -1090,10 +1088,10 @@ export default function App() {
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-900/30 text-emerald-400 rounded text-[10px] font-mono border border-emerald-800/50">
                 ✅ 100% Grátis
               </span>
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-indigo-900/30 text-indigo-400 rounded text-[10px] font-mono border border-indigo-800/50">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-slate-900/30 text-emerald-400 rounded text-[10px] font-mono border border-slate-800/50">
                 🔒 Sem Cadastro
               </span>
-              <span className="inline-flex items-center gap-1 px-2 py-1 bg-amber-900/30 text-amber-400 rounded text-[10px] font-mono border border-amber-800/50">
+              <span className="inline-flex items-center gap-1 px-2 py-1 bg-slate-900/30 text-emerald-400 rounded text-[10px] font-mono border border-slate-800/50">
                 🇧🇷 Feito no Brasil
               </span>
               <span className="text-slate-600 select-none font-mono">v1.3.0</span>

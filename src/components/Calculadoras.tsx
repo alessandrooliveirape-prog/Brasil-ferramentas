@@ -48,6 +48,8 @@ export default function Calculadoras({ toolId }: CalculadorasProps) {
       {toolId === 'idade-canina' && <CalculadoraIdadeCanina />}
       {toolId === 'calorias-diarias' && <CalculadoraCaloriasDiarias />}
       {toolId === 'nota-enem' && <CalculadoraNotaEnem />}
+      {toolId === 'move-brasil' && <CalculadoraMoveBrasil />}
+    
     </div>
   );
 }
@@ -349,7 +351,7 @@ function Financiamento() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-emerald-50/40 dark:bg-emerald-950/10 p-4 rounded-xl border border-emerald-100 dark:border-emerald-900/40">
             <div className="text-center md:border-r border-emerald-100 dark:border-emerald-900/30 p-2">
               <span className="block text-xs text-slate-500">Total de Juros Pagos</span>
-              <span className="text-lg font-bold text-red-500 dark:text-red-400 font-mono">R$ {resultado.jurosTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              <span className="text-lg font-bold text-slate-500 dark:text-slate-400 font-mono">R$ {resultado.jurosTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
             <div className="text-center p-2">
               <span className="block text-xs text-slate-500">Custo Total de Aquisição final</span>
@@ -375,7 +377,7 @@ function Financiamento() {
                     <td className="p-2.5 font-medium">{p.label} (Mês {p.mes})</td>
                     <td className="p-2.5 font-bold text-slate-800 dark:text-slate-200 font-mono">R$ {p.parcela.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     <td className="p-2.5 font-mono">R$ {p.amortizacao.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                    <td className="p-2.5 text-red-500 font-mono">R$ {p.juros.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    <td className="p-2.5 text-emerald-500 font-mono">R$ {p.juros.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     <td className="p-2.5 font-mono">R$ {p.saldo.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   </tr>
                 ))}
@@ -510,7 +512,7 @@ function Inss() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-emerald-50/30 dark:bg-emerald-950/20 p-4 rounded-xl border border-emerald-100 dark:border-emerald-900/35 text-center">
             <div className="p-2 border-r border-emerald-100/30">
               <span className="block text-xs text-slate-500">Desconto Retido INSS</span>
-              <span className="text-base font-bold text-red-500 dark:text-red-400 font-mono">R$ {resultado.desconto.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+              <span className="text-base font-bold text-slate-500 dark:text-slate-400 font-mono">R$ {resultado.desconto.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
             <div className="p-2 border-r border-emerald-100/30">
               <span className="block text-xs text-slate-500">Alíquota Média Efetiva</span>
@@ -539,7 +541,7 @@ function Inss() {
                     <td className="p-2 font-medium">{d.faixaStr}</td>
                     <td className="p-2">R$ {d.base.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
                     <td className="p-2">{d.aliquota.toFixed(1)}%</td>
-                    <td className="p-2 text-red-500">R$ {d.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
+                    <td className="p-2 text-emerald-500">R$ {d.valor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</td>
                   </tr>
                 ))}
               </tbody>
@@ -731,7 +733,7 @@ function Rescisao() {
             </div>
             <div className="p-3 bg-slate-50 dark:bg-slate-850 rounded">
               <span className="block text-[10px] text-slate-400">Multa Indemnizadora FGTS</span>
-              <span className="font-bold text-amber-600 dark:text-amber-400">R$ {resultado.multaFgts.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              <span className="font-bold text-emerald-600 dark:text-emerald-400">R$ {resultado.multaFgts.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
             </div>
           </div>
         </div>
@@ -811,16 +813,16 @@ function Imc() {
 
     if (imcValue < 18.5) {
       classif = 'Abaixo do peso';
-      cor = 'text-amber-500';
+      cor = 'text-emerald-500';
     } else if (imcValue >= 18.5 && imcValue < 25) {
       classif = 'Peso normal (Saudável)';
       cor = 'text-emerald-500';
     } else if (imcValue >= 25 && imcValue < 30) {
       classif = 'Sobrepeso';
-      cor = 'text-amber-600';
+      cor = 'text-emerald-600';
     } else {
       classif = 'Obesidade';
-      cor = 'text-red-500';
+      cor = 'text-emerald-500';
     }
 
     setResultado({
@@ -912,7 +914,7 @@ function CalculadoraIPVA() {
         <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
             <div><span className="block text-xs text-slate-500">Alíquota Aplicada</span><span className="text-lg font-bold text-slate-800 dark:text-slate-200 font-mono">{resultado.aliquota}%</span></div>
-            <div><span className="block text-xs text-slate-500">Valor do IPVA</span><span className="text-lg font-bold text-emerald-600 dark:text-emerald-400 font-mono">R$ {resultado.valorIPVA.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span></div>
+            <div><span className="block text-xs text-slate-500">Valor do IPVA</span><span className="text-lg font-bold text-slate-600 dark:text-slate-400 font-mono">R$ {resultado.valorIPVA.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span></div>
             <div><span className="block text-xs text-slate-500">Parcelas (3x)</span><span className="text-lg font-bold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.parcela.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span></div>
           </div>
         </div>
@@ -964,7 +966,7 @@ function CalculadoraIRPF() {
         <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
             <div><span className="block text-xs text-slate-500">Base de Cálculo</span><span className="text-lg font-bold text-slate-800 dark:text-slate-200 font-mono">R$ {resultado.baseCalculo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span></div>
-            <div><span className="block text-xs text-slate-500">Imposto Devido</span><span className={`text-lg font-bold font-mono ${resultado.imposto > 0 ? 'text-red-500' : 'text-emerald-600'}`}>R$ {resultado.imposto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span></div>
+            <div><span className="block text-xs text-slate-500">Imposto Devido</span><span className={`text-lg font-bold font-mono ${resultado.imposto > 0 ? 'text-emerald-500' : 'text-emerald-600'}`}>R$ {resultado.imposto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span></div>
             <div><span className="block text-xs text-slate-500">Alíquota Efetiva</span><span className="text-lg font-bold text-emerald-700 dark:text-emerald-300 font-mono">{resultado.aliquotaEfetiva.toFixed(2)}%</span></div>
           </div>
           {resultado.imposto === 0 && <p className="text-xs text-emerald-600 text-center font-semibold">Você está isento de declarar IRPF! 🎉</p>}
@@ -1026,10 +1028,10 @@ function CalculadoraMultaTransito() {
         </div>
       </div>
       {resultado && (
-        <div className="bg-amber-50/50 dark:bg-amber-950/20 p-5 rounded-xl border border-amber-100 dark:border-amber-950 space-y-3">
+        <div className="bg-slate-50/50 dark:bg-slate-950/20 p-5 rounded-xl border border-slate-100 dark:border-slate-950 space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
             <div><span className="block text-xs text-slate-500">Valor Base</span><span className="text-base font-bold font-mono">R$ {resultado.valorBase.toFixed(2)}</span></div>
-            <div><span className="block text-xs text-slate-500">Com Fator {fatorMultiplicador}x</span><span className="text-base font-bold font-mono text-red-500">R$ {resultado.valorComFator.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Com Fator {fatorMultiplicador}x</span><span className="text-base font-bold font-mono text-emerald-500">R$ {resultado.valorComFator.toFixed(2)}</span></div>
             <div><span className="block text-xs text-emerald-600">Valor com Desconto</span><span className="text-lg font-bold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.valorFinal.toFixed(2)}</span></div>
             <div><span className="block text-xs text-slate-500">Economia</span><span className="text-base font-bold text-emerald-600 font-mono">R$ {resultado.economia.toFixed(2)}</span></div>
           </div>
@@ -1073,8 +1075,8 @@ function CalculadoraPrecoPorKm() {
       {resultado && (
         <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100 space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
-            <div><span className="block text-xs text-slate-500">Comissão</span><span className="text-base font-bold text-red-500 font-mono">-R$ {resultado.comissaoValor.toFixed(2)}</span></div>
-            <div><span className="block text-xs text-slate-500">Combustível</span><span className="text-base font-bold text-amber-600 font-mono">-R$ {resultado.custoCombustivel.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Comissão</span><span className="text-base font-bold text-emerald-500 font-mono">-R$ {resultado.comissaoValor.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Combustível</span><span className="text-base font-bold text-emerald-600 font-mono">-R$ {resultado.custoCombustivel.toFixed(2)}</span></div>
             <div><span className="block text-xs text-slate-500">Lucro Líquido</span><span className="text-lg font-bold text-emerald-600 font-mono">R$ {resultado.lucroLiquido.toFixed(2)}</span></div>
             <div><span className="block text-xs text-emerald-600">💰 Lucro por km</span><span className="text-xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.lucroPorKm.toFixed(2)}</span></div>
           </div>
@@ -1109,8 +1111,8 @@ function CalculadoraGestacao() {
     let trimestre = '';
     let trimestreCor = '';
     if (semanas <= 13) { trimestre = '1º Trimestre'; trimestreCor = 'text-emerald-600'; }
-    else if (semanas <= 27) { trimestre = '2º Trimestre'; trimestreCor = 'text-blue-600'; }
-    else { trimestre = '3º Trimestre'; trimestreCor = 'text-amber-600'; }
+    else if (semanas <= 27) { trimestre = '2º Trimestre'; trimestreCor = 'text-emerald-600'; }
+    else { trimestre = '3º Trimestre'; trimestreCor = 'text-emerald-600'; }
 
     setResultado({ semanas, diasResto, dpp: dpp.toLocaleDateString('pt-BR'), trimestre, trimestreCor });
   }, [dum]);
@@ -1124,9 +1126,9 @@ function CalculadoraGestacao() {
       </div>
       {resultado && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
-          <div className="bg-pink-50 dark:bg-pink-950/20 p-4 rounded-xl border border-pink-100"><span className="block text-xs text-slate-500">Semanas</span><span className="text-2xl font-bold text-slate-800 dark:text-slate-200 font-mono">{resultado.semanas}</span></div>
-          <div className="bg-pink-50 dark:bg-pink-950/20 p-4 rounded-xl border border-pink-100"><span className="block text-xs text-slate-500">Dias</span><span className="text-2xl font-bold text-slate-800 dark:text-slate-200 font-mono">{resultado.diasResto}</span></div>
-          <div className={`${resultado.trimestreCor === 'text-emerald-600' ? 'bg-emerald-50' : resultado.trimestreCor === 'text-blue-600' ? 'bg-blue-50' : 'bg-amber-50'} dark:bg-opacity-10 p-4 rounded-xl border`}>
+          <div className="bg-slate-50 dark:bg-slate-950/20 p-4 rounded-xl border border-slate-100"><span className="block text-xs text-slate-500">Semanas</span><span className="text-2xl font-bold text-slate-800 dark:text-slate-200 font-mono">{resultado.semanas}</span></div>
+          <div className="bg-slate-50 dark:bg-slate-950/20 p-4 rounded-xl border border-slate-100"><span className="block text-xs text-slate-500">Dias</span><span className="text-2xl font-bold text-slate-800 dark:text-slate-200 font-mono">{resultado.diasResto}</span></div>
+          <div className={`${resultado.trimestreCor === 'text-emerald-600' ? 'bg-emerald-50' : resultado.trimestreCor === 'text-emerald-600' ? 'bg-slate-50' : 'bg-slate-50'} dark:bg-opacity-10 p-4 rounded-xl border`}>
             <span className="block text-xs text-slate-500">Trimestre</span>
             <span className={`text-xl font-extrabold font-mono ${resultado.trimestreCor}`}>{resultado.trimestre}</span>
           </div>
@@ -1192,11 +1194,11 @@ function CalculadoraTMB() {
         <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100 space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
             <div className="p-3 bg-white dark:bg-slate-800 rounded-lg border"><span className="block text-xs text-slate-500">TMB (Calorias em Repouso)</span><span className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">{Math.round(resultado.tmb)} kcal/dia</span></div>
-            <div className="p-3 bg-white dark:bg-slate-800 rounded-lg border"><span className="block text-xs text-slate-500">GET (Gasto Total)</span><span className="text-2xl font-extrabold text-blue-700 dark:text-blue-300 font-mono">{Math.round(resultado.get)} kcal/dia</span></div>
+            <div className="p-3 bg-white dark:bg-slate-800 rounded-lg border"><span className="block text-xs text-slate-500">GET (Gasto Total)</span><span className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">{Math.round(resultado.get)} kcal/dia</span></div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-            <div className="p-3 bg-amber-50 dark:bg-amber-950/20 rounded-lg border border-amber-100"><span className="block text-xs text-amber-600">Para Emagrecer (-500kcal)</span><span className="text-lg font-bold text-amber-700 dark:text-amber-300 font-mono">{Math.round(resultado.emagrecer)} kcal/dia</span></div>
-            <div className="p-3 bg-green-50 dark:bg-green-950/20 rounded-lg border border-green-100"><span className="block text-xs text-green-600">Para Ganhar Massa (+300kcal)</span><span className="text-lg font-bold text-green-700 dark:text-green-300 font-mono">{Math.round(resultado.ganhar)} kcal/dia</span></div>
+            <div className="p-3 bg-slate-50 dark:bg-slate-950/20 rounded-lg border border-slate-100"><span className="block text-xs text-emerald-600">Para Emagrecer (-500kcal)</span><span className="text-lg font-bold text-emerald-700 dark:text-emerald-300 font-mono">{Math.round(resultado.emagrecer)} kcal/dia</span></div>
+            <div className="p-3 bg-emerald-50 dark:bg-emerald-950/20 rounded-lg border border-emerald-100"><span className="block text-xs text-emerald-600">Para Ganhar Massa (+300kcal)</span><span className="text-lg font-bold text-emerald-700 dark:text-emerald-300 font-mono">{Math.round(resultado.ganhar)} kcal/dia</span></div>
           </div>
         </div>
       )}
@@ -1358,9 +1360,9 @@ function CalculadoraAposentadoria() {
         <div className="md:col-span-2"><label className="block text-xs font-semibold text-slate-500 mb-1">Regra</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={regra} onChange={e => setRegra(e.target.value)}><option value="pontos">Regra de Pontos</option><option value="idade-minima">Idade Mínima Progressiva</option><option value="por-idade">Aposentadoria por Idade</option></select></div>
       </div>
       {resultado && (
-        <div className={`p-5 rounded-xl border ${resultado.podeAposentar ? 'bg-emerald-50 border-emerald-200' : 'bg-amber-50 border-amber-200'}`}>
+        <div className={`p-5 rounded-xl border ${resultado.podeAposentar ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200'}`}>
           <div className="text-center mb-3">
-            <span className={`text-2xl font-extrabold ${resultado.podeAposentar ? 'text-emerald-600' : 'text-amber-600'}`}>
+            <span className={`text-2xl font-extrabold ${resultado.podeAposentar ? 'text-emerald-600' : 'text-emerald-600'}`}>
               {resultado.podeAposentar ? '✅ Você já pode se aposentar!' : '⏳ Ainda faltam alguns anos'}
             </span>
           </div>
@@ -1398,8 +1400,8 @@ function CalculadoraPisPasep() {
         <div><label className="block text-xs font-semibold text-slate-500 mb-1">Salário Mínimo (R$)</label><input type="number" className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={salarioMinimo} onChange={e => setSalarioMinimo(Number(e.target.value))} /></div>
       </div>
       {resultado && (
-        <div className={`p-5 rounded-xl border ${resultado.temDireito ? 'bg-emerald-50 border-emerald-200' : 'bg-amber-50 border-amber-200'}`}>
-          <p className={`text-center font-bold ${resultado.temDireito ? 'text-emerald-600' : 'text-amber-600'}`}>
+        <div className={`p-5 rounded-xl border ${resultado.temDireito ? 'bg-emerald-50 border-emerald-200' : 'bg-slate-50 border-slate-200'}`}>
+          <p className={`text-center font-bold ${resultado.temDireito ? 'text-emerald-600' : 'text-emerald-600'}`}>
             {resultado.temDireito ? '✅ Você tem direito ao PIS/PASEP!' : '❌ Você não atende os requisitos'}
           </p>
           {resultado.temDireito && (
@@ -1444,10 +1446,10 @@ function CalculadoraICMS() {
         </select></div>
       </div>
       {resultado && (
-        <div className="bg-indigo-50/50 dark:bg-indigo-950/20 p-5 rounded-xl border border-indigo-100">
+        <div className="bg-slate-50/50 dark:bg-slate-950/20 p-5 rounded-xl border border-slate-100">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
             <div><span className="block text-xs text-slate-500">Alíquota ICMS</span><span className="text-lg font-bold font-mono">{resultado.aliquota.toFixed(1)}%</span></div>
-            <div><span className="block text-xs text-slate-500">Valor do ICMS</span><span className="text-lg font-bold text-red-500 font-mono">R$ {resultado.valorICMS.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Valor do ICMS</span><span className="text-lg font-bold text-emerald-500 font-mono">R$ {resultado.valorICMS.toFixed(2)}</span></div>
             <div><span className="block text-xs text-slate-500">Preço Final</span><span className="text-lg font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.precoFinal.toFixed(2)}</span></div>
           </div>
         </div>
@@ -1477,7 +1479,7 @@ function CalculadoraITBI() {
         <div><label className="block text-xs font-semibold text-slate-500 mb-1">Município</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={municipio} onChange={e => setMunicipio(e.target.value)}><option value="SP">São Paulo (3%)</option><option value="RJ">Rio de Janeiro (3%)</option><option value="MG">Belo Horizonte (3%)</option><option value="PR">Curitiba (2,5%)</option><option value="RS">Porto Alegre (3%)</option><option value="DF">Brasília (3%)</option></select></div>
       </div>
       {resultado && (
-        <div className="bg-blue-50/50 dark:bg-blue-950/20 p-5 rounded-xl border border-blue-100">
+        <div className="bg-slate-50/50 dark:bg-slate-950/20 p-5 rounded-xl border border-slate-100">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
             <div><span className="block text-xs text-slate-500">Alíquota ITBI</span><span className="text-lg font-bold font-mono">{resultado.aliquota.toFixed(1)}%</span></div>
             <div><span className="block text-xs text-slate-500">Valor do ITBI</span><span className="text-lg font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.valorITBI.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span></div>
@@ -1509,7 +1511,7 @@ function CalculadoraITCMD() {
         <div><label className="block text-xs font-semibold text-slate-500 mb-1">Estado</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={estado} onChange={e => setEstado(e.target.value)}><option value="SP">SP (4%)</option><option value="RJ">RJ (5%)</option><option value="MG">MG (5%)</option><option value="PR">PR (4%)</option></select></div>
       </div>
       {resultado && (
-        <div className="bg-purple-50/50 dark:bg-purple-950/20 p-5 rounded-xl border border-purple-100 text-center">
+        <div className="bg-slate-50/50 dark:bg-slate-950/20 p-5 rounded-xl border border-slate-100 text-center">
           <span className="block text-xs text-slate-500">Alíquota: {resultado.aliquota.toFixed(0)}%</span>
           <span className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.valorITCMD.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
         </div>
@@ -1570,9 +1572,9 @@ function CalculadoraPericulosidade() {
       <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calculadora de Adicional de Periculosidade</h2>
       <div><label className="block text-xs font-semibold text-slate-500 mb-1">Salário Base (R$)</label><input type="number" className="w-full md:w-1/2 border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={salario} onChange={e => setSalario(Number(e.target.value))} /></div>
       {resultado && (
-        <div className="bg-amber-50/50 dark:bg-amber-950/20 p-5 rounded-xl border border-amber-100">
+        <div className="bg-slate-50/50 dark:bg-slate-950/20 p-5 rounded-xl border border-slate-100">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-            <div><span className="block text-xs text-slate-500">Adicional (30%)</span><span className="text-lg font-bold text-amber-600 font-mono">R$ {resultado.adicional.toFixed(2)}</span></div>
+            <div><span className="block text-xs text-slate-500">Adicional (30%)</span><span className="text-lg font-bold text-emerald-600 font-mono">R$ {resultado.adicional.toFixed(2)}</span></div>
             <div><span className="block text-xs text-slate-500">Salário Total</span><span className="text-2xl font-extrabold text-emerald-700 font-mono">R$ {resultado.total.toFixed(2)}</span></div>
           </div>
         </div>
@@ -1603,7 +1605,7 @@ function CalculadoraInsalubridade() {
         <div><label className="block text-xs font-semibold text-slate-500 mb-1">Grau de Insalubridade</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={grau} onChange={e => setGrau(e.target.value)}><option value="minimo">Mínimo (10%)</option><option value="medio">Médio (20%)</option><option value="maximo">Máximo (40%)</option></select></div>
       </div>
       {resultado && (
-        <div className="bg-orange-50/50 p-5 rounded-xl border border-orange-100 text-center">
+        <div className="bg-slate-50/50 p-5 rounded-xl border border-slate-100 text-center">
           <span className="block text-xs text-slate-500">Adicional ({resultado.perc.toFixed(0)}%)</span>
           <span className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.adicional.toFixed(2)}</span>
         </div>
@@ -1636,7 +1638,7 @@ function CalculadoraIdadeCanina() {
         <div><label className="block text-xs font-semibold text-slate-500 mb-1">Porte</label><select className="w-full border rounded-lg p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={porte} onChange={e => setPorte(e.target.value)}><option value="pequeno">Pequeno</option><option value="medio">Médio</option><option value="grande">Grande</option></select></div>
       </div>
       {resultado && (
-        <div className="bg-amber-50/50 dark:bg-amber-950/20 p-5 rounded-xl border border-amber-100 text-center">
+        <div className="bg-slate-50/50 dark:bg-slate-950/20 p-5 rounded-xl border border-slate-100 text-center">
           <span className="block text-xs text-slate-500">Idade em Anos Caninos 🐕</span>
           <span className="text-3xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">{resultado.idadeCanina} anos</span>
         </div>
@@ -1649,8 +1651,8 @@ function CalculadoraIdadeCanina() {
 function CalculadoraCaloriasDiarias() {
   const [peso, setPeso] = useState<number>(70);
   const [altura, setAltura] = useState<number>(170);
-  const [idade, setIdadeC] = useState<number>(30);
-  const [sexo, setSexoC] = useState<string>('masculino');
+  const [idade, setIdade] = useState<number>(30);
+  const [sexo, setSexo] = useState<string>('masculino');
   const [atividade, setAtividade] = useState<string>('moderado');
   const [objetivo, setObjetivo] = useState<string>('manter');
   const [resultado, setResultado] = useState<any>(null);
@@ -1658,7 +1660,7 @@ function CalculadoraCaloriasDiarias() {
   const fatoresAtv: {[key: string]: number} = { 'sedentario': 1.2, 'leve': 1.375, 'moderado': 1.55, 'intenso': 1.725 };
 
   useEffect(() => {
-    let tmb = sexoC === 'masculino' 
+    let tmb = sexo === 'masculino' 
       ? 88.36 + (13.4 * peso) + (4.8 * altura) - (5.7 * idade)
       : 447.6 + (9.2 * peso) + (3.1 * altura) - (4.3 * idade);
     const get = tmb * (fatoresAtv[atividade] || 1.55);
@@ -1672,8 +1674,8 @@ function CalculadoraCaloriasDiarias() {
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         <div><label className="block text-xs">Peso (kg)</label><input type="number" className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={peso} onChange={e => setPeso(Number(e.target.value))} /></div>
         <div><label className="block text-xs">Altura (cm)</label><input type="number" className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={altura} onChange={e => setAltura(Number(e.target.value))} /></div>
-        <div><label className="block text-xs">Idade</label><input type="number" className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={idadeC} onChange={e => setIdadeC(Number(e.target.value))} /></div>
-        <div><label className="block text-xs">Sexo</label><select className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={sexoC} onChange={e => setSexoC(e.target.value)}><option value="masculino">Masc</option><option value="feminino">Fem</option></select></div>
+        <div><label className="block text-xs">Idade</label><input type="number" className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={idade} onChange={e => setIdade(Number(e.target.value))} /></div>
+        <div><label className="block text-xs">Sexo</label><select className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={sexo} onChange={e => setSexo(e.target.value)}><option value="masculino">Masc</option><option value="feminino">Fem</option></select></div>
         <div><label className="block text-xs">Atividade</label><select className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={atividade} onChange={e => setAtividade(e.target.value)}><option value="sedentario">Sedentário</option><option value="leve">Leve</option><option value="moderado">Moderado</option><option value="intenso">Intenso</option></select></div>
         <div><label className="block text-xs">Objetivo</label><select className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={objetivo} onChange={e => setObjetivo(e.target.value)}><option value="perder">Perder Peso</option><option value="manter">Manter</option><option value="ganhar">Ganhar Massa</option></select></div>
       </div>
@@ -1725,7 +1727,7 @@ function CalculadoraNotaEnem() {
         <div><label className="block text-xs">Redação</label><input type="number" step="10" className="w-full border rounded p-2 text-sm bg-slate-50 dark:bg-slate-800" value={redacao} onChange={e => setRedacao(Number(e.target.value))} /></div>
       </div>
       {resultado && (
-        <div className="bg-indigo-50/50 dark:bg-indigo-950/20 p-5 rounded-xl border border-indigo-100 space-y-3">
+        <div className="bg-slate-50/50 dark:bg-slate-950/20 p-5 rounded-xl border border-slate-100 space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
             <div className="p-3 bg-white dark:bg-slate-800 rounded-lg"><span className="block text-xs text-slate-500">Média Simples</span><span className="text-2xl font-bold font-mono">{resultado.mediaSimples.toFixed(1)}</span></div>
             <div className="p-3 bg-white dark:bg-slate-800 rounded-lg"><span className="block text-xs text-slate-500">Média Ponderada (Mat + Redação)</span><span className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">{resultado.mediaPonderada.toFixed(1)}</span></div>
@@ -1735,6 +1737,166 @@ function CalculadoraNotaEnem() {
     </div>
   );
 }
+
+// ===== CALCULADORA MOVE BRASIL =====
+function CalculadoraMoveBrasil() {
+  const [valorVeiculo, setValorVeiculo] = useState<number>(80000);
+  const [entrada, setEntrada] = useState<number>(10000);
+  const [prazoMeses, setPrazoMeses] = useState<number>(60);
+  const [perfil, setPerfil] = useState<string>('masculino');
+  const [resultado, setResultado] = useState<any>(null);
+  const [showDetails, setShowDetails] = useState(false);
+
+  useEffect(() => {
+    const valorFinanciado = Math.max(0, valorVeiculo - entrada);
+    // Taxas BNDES Move Brasil - Taxas mensais diretas
+    const taxaMensal = perfil === 'feminino' ? 0.0091 : 0.0099;
+    
+    // Parcela Price
+    const parcela = valorFinanciado > 0 
+      ? (valorFinanciado * taxaMensal) / (1 - Math.pow(1 + taxaMensal, -prazoMeses))
+      : 0;
+    
+    const totalPago = parcela * prazoMeses;
+    const totalJuros = totalPago - valorFinanciado;
+    const custoEfetivoAnual = (Math.pow(1 + taxaMensal, 12) - 1) * 100;
+    
+    // Simulacao financiamento tradicional (mercado ~18% a.a.)
+    const taxaTradicional = 0.18 / 12;
+    const parcelaTradicional = valorFinanciado > 0
+      ? (valorFinanciado * taxaTradicional) / (1 - Math.pow(1 + taxaTradicional, -prazoMeses))
+      : 0;
+    const totalTradicional = parcelaTradicional * prazoMeses;
+    const economiaTotal = totalTradicional - totalPago;
+
+    setResultado({
+      valorFinanciado,
+      parcela,
+      totalPago,
+      totalJuros,
+      custoEfetivoAnual,
+      taxaAnual: taxaMensal * 12 * 100,      taxaMensalExibir: (taxaMensal * 100).toFixed(2),
+
+      parcelaTradicional,
+      totalTradicional,
+      economiaTotal
+    });
+  }, [valorVeiculo, entrada, prazoMeses, perfil]);
+
+  return (
+    <div className="space-y-6" id="calc-move-brasil">
+      <div className="flex items-center gap-3 mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
+        <div className="p-2.5 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
+          <svg className="w-6 h-6 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <div>
+          <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">Calculadora Move Brasil</h2>
+          <p className="text-xs text-slate-500">Programa Mover - Financiamento Subsidiado BNDES</p>
+        </div>
+      </div>
+
+      <div className="bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-emerald-950/20 dark:to-emerald-950/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/50 mb-4">
+        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+          <strong>MOVE Brasil</strong> é o programa do Governo Federal que oferece crédito subsidiado pelo BNDES para 
+          motoristas de aplicativo, taxistas e motoboys comprarem veículos novos com juros a partir de <strong>1,5% ao ano</strong>.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
+          <label htmlFor="move-valor" className="block text-xs font-semibold text-slate-500 mb-1">Valor do Veículo (R$)</label>
+          <input id="move-valor" type="number" className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none" 
+            value={valorVeiculo} onChange={e => setValorVeiculo(Number(e.target.value))} />
+          <span className="text-[10px] text-slate-400">Máx: R$ 150.000</span>
+        </div>
+        <div>
+          <label htmlFor="move-entrada" className="block text-xs font-semibold text-slate-500 mb-1">Valor de Entrada (R$)</label>
+          <input id="move-entrada" type="number" className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none" 
+            value={entrada} onChange={e => setEntrada(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Prazo (meses)</label>
+          <select className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-emerald-500 outline-none" 
+            value={prazoMeses} onChange={e => setPrazoMeses(Number(e.target.value))}>
+            {[24, 36, 48, 60, 72].map(m => <option key={m} value={m}>{m} meses ({m/12} anos)</option>)}
+          </select>
+        </div>
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Perfil</label>
+          <select className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-emerald-500 outline-none" 
+            value={perfil} onChange={e => setPerfil(e.target.value)}>
+            <option value="masculino">Masculino (0,99% a.m.)</option>
+            <option value="feminino">Feminino (0,91% a.m.)</option>
+          </select>
+        </div>
+      </div>
+
+      {resultado && (
+        <div className="space-y-4 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 text-center shadow-sm">
+              <span className="block text-xs text-slate-500 mb-1">💰 Valor Financiado</span>
+              <span className="text-xl font-extrabold text-slate-800 dark:text-slate-100 font-mono">
+                R$ {resultado.valorFinanciado.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              </span>
+            </div>
+            <div className="bg-emerald-50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-200 dark:border-emerald-900 text-center shadow-sm">
+              <span className="block text-xs text-emerald-600 dark:text-emerald-400 mb-1">📅 Parcela Mensal MOVE</span>
+              <span className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">
+                R$ {resultado.parcela.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              </span>
+              <span className="block text-[10px] text-emerald-500 mt-1">Taxa: {resultado.taxaMensalExibir}% a.m.</span>
+            </div>
+            <div className="bg-slate-50 dark:bg-slate-950/20 p-5 rounded-xl border border-slate-200 dark:border-slate-900 text-center shadow-sm">
+              <span className="block text-xs text-emerald-600 dark:text-emerald-400 mb-1">🏦 Parcela Mercado (18% a.a.)</span>
+              <span className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">
+                R$ {resultado.parcelaTradicional.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              </span>
+            </div>
+          </div>
+
+          <div className="bg-emerald-50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-200 dark:border-emerald-900 text-center">
+            <span className="block text-xs text-emerald-600 dark:text-emerald-400 mb-1">✅ Economia Total com o MOVE Brasil</span>
+            <span className="text-3xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">
+              R$ {resultado.economiaTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </span>
+          </div>
+
+          <button
+            onClick={() => setShowDetails(!showDetails)}
+            className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold hover:underline cursor-pointer flex items-center gap-1"
+          >
+            {showDetails ? '▼' : '▶'} {showDetails ? 'Ocultar' : 'Ver'} detalhes do financiamento
+          </button>
+
+          {showDetails && (
+            <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                <div className="p-2 bg-white dark:bg-slate-800 rounded"><span className="text-slate-400">Total Pago MOVE</span><br/><strong className="text-emerald-600 font-mono">R$ {resultado.totalPago.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong></div>
+                <div className="p-2 bg-white dark:bg-slate-800 rounded"><span className="text-slate-400">Total Juros MOVE</span><br/><strong className="text-emerald-600 font-mono">R$ {resultado.totalJuros.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong></div>
+                <div className="p-2 bg-white dark:bg-slate-800 rounded"><span className="text-slate-400">Custo Efetivo Total</span><br/><strong className="text-slate-700 font-mono">{resultado.custoEfetivoAnual.toFixed(2)}% a.a.</strong></div>
+                <div className="p-2 bg-white dark:bg-slate-800 rounded"><span className="text-slate-400">Total Mercado</span><br/><strong className="text-emerald-600 font-mono">R$ {resultado.totalTradicional.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong></div>
+              </div>
+            </div>
+          )}
+
+          <div className="bg-slate-50 dark:bg-slate-950/20 p-4 rounded-xl border border-slate-100 dark:border-slate-900/50">
+            <h4 className="text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-2">📋 Como Participar do MOVE Brasil</h4>
+            <ol className="text-xs text-slate-600 dark:text-slate-400 space-y-1.5 list-decimal pl-4">
+              <li><strong>Cadastre-se</strong> no portal oficial <a href="https://www.gov.br/movebrasil" target="_blank" className="text-emerald-600 underline">gov.br/movebrasil</a></li>
+              <li><strong>Aguarde a aprovação</strong> de elegibilidade (até 5 dias via gov.br)</li>
+              <li><strong>Procure uma concessionária</strong> ou banco credenciado pelo BNDES</li>
+              <li><strong>Solicite o crédito</strong> e passe pela análise bancária padrão</li>
+            </ol>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 // ===== PLACEHOLDER PARA NOVAS CALCULADORAS =====
 function PlaceholderCalculadora({ id }: { id: string }) {
@@ -1944,7 +2106,7 @@ function Porcentagem() {
           {res3 && (
             <div className="text-[11px] font-mono space-y-0.5">
               <div className="text-emerald-600 font-bold">Acrescido: {res3.a.toLocaleString('pt-BR')}</div>
-              <div className="text-red-500 font-bold">Descontado: {res3.d.toLocaleString('pt-BR')}</div>
+              <div className="text-emerald-500 font-bold">Descontado: {res3.d.toLocaleString('pt-BR')}</div>
             </div>
           )}
         </div>
@@ -2308,7 +2470,7 @@ function SeguroDesemprego() {
       {resultado && (
         <div className="space-y-4 pt-2">
           {!resultado.elegivel ? (
-            <div className="bg-rose-50 dark:bg-rose-950/20 p-4 rounded-xl border border-rose-100 dark:border-rose-950/50 text-rose-800 dark:text-rose-450 text-xs">
+            <div className="bg-slate-50 dark:bg-slate-950/20 p-4 rounded-xl border border-slate-100 dark:border-slate-950/50 text-emerald-800 dark:text-emerald-450 text-xs">
               <strong>⚠ Não Elegível ao Benefício:</strong> {resultado.motivoMsg}
             </div>
           ) : (
@@ -2476,7 +2638,7 @@ function SalarioLiquido() {
               </div>
               <div className="p-2 border-r border-emerald-100/30">
                 <span className="block text-xs text-slate-500">Total de Impostos e Descontos</span>
-                <span className="text-base font-bold text-red-500 dark:text-red-400 font-mono">
+                <span className="text-base font-bold text-emerald-500 dark:text-emerald-400 font-mono">
                   R$ {resultado.totalDescontos.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} ({resultado.pctDescontos.toFixed(1)}%)
                 </span>
               </div>
@@ -2489,9 +2651,9 @@ function SalarioLiquido() {
             </div>
             
             {/* Visual Progress Ratio */}
-            <div className="w-full bg-red-100 dark:bg-red-950/40 rounded-full h-2.5 mt-4 overflow-hidden flex">
+            <div className="w-full bg-slate-100 dark:bg-slate-950/40 rounded-full h-2.5 mt-4 overflow-hidden flex">
               <div className="bg-emerald-600 h-full" style={{ width: `${resultado.pctLiquido}%` }}></div>
-              <div className="bg-rose-500 h-full" style={{ width: `${resultado.pctDescontos}%` }}></div>
+              <div className="bg-slate-500 h-full" style={{ width: `${resultado.pctDescontos}%` }}></div>
             </div>
           </div>
 
@@ -2500,28 +2662,28 @@ function SalarioLiquido() {
             <div className="space-y-2">
               <div className="flex justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-2">
                 <span className="text-slate-500">Previdência Obrigatória (INSS Progressivo)</span>
-                <span className="font-mono font-bold text-red-500">- R$ {resultado.inss.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                <span className="font-mono font-bold text-emerald-500">- R$ {resultado.inss.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
               </div>
               <div className="flex justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-2">
                 <span className="text-slate-500">Imposto de Renda Retido na Fonte (IRRF)</span>
-                <span className="font-mono font-bold text-red-500">- R$ {resultado.irrf.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                <span className="font-mono font-bold text-emerald-500">- R$ {resultado.irrf.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
               </div>
               {valeTransporte && (
                 <div className="flex justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-2">
                   <span className="text-slate-500">Vale Transporte (Dedução de 6% do Empregado)</span>
-                  <span className="font-mono font-bold text-red-500">- R$ {resultado.vt.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  <span className="font-mono font-bold text-emerald-500">- R$ {resultado.vt.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                 </div>
               )}
               {vrCopart > 0 && (
                 <div className="flex justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-2">
                   <span className="text-slate-500">Vale Refeição / Alimentação (Preço Coparticipado)</span>
-                  <span className="font-mono font-bold text-red-500">- R$ {vrCopart.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  <span className="font-mono font-bold text-emerald-500">- R$ {vrCopart.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                 </div>
               )}
               {planoSaude > 0 && (
                 <div className="flex justify-between border-b border-dashed border-slate-200 dark:border-slate-800 pb-2">
                   <span className="text-slate-500">Dedução Plano de Saúde Coletivo Empresarial</span>
-                  <span className="font-mono font-bold text-red-500">- R$ {planoSaude.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  <span className="font-mono font-bold text-emerald-500">- R$ {planoSaude.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                 </div>
               )}
             </div>

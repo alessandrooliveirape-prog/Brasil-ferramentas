@@ -227,9 +227,20 @@ function DddBrasil() {
         <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">Códigos DDD do Brasil</h2>
       </div>
 
-      <p className="text-xs text-slate-500 leading-relaxed">
-        Consulte a região de cobertura, estados e principais cidades brasileiras atendidas por cada código DDD. Digite abaixo o DDD de seu interesse ou escolha um dos atalhos rápidos programados.
-      </p>
+      <div className="text-xs text-slate-500 leading-relaxed space-y-3">
+        <p>
+          Os códigos DDD (Discagem Direta à Distância) são uma criação da ANATEL que organiza as chamadas telefônicas intermunicipais e interestaduais em todo o Brasil. Cada DDD de 2 dígitos cobre uma ou mais cidades, facilitando a identificação geográfica do número chamador ou de destino.
+        </p>
+        <p>
+          <strong>Como surgiram os DDDs:</strong> O sistema foi implantado no Brasil na década de 1960 pela Embratel e expandido com a privatização do setor de telecomunicações em 1998. Atualmente, existem cerca de 70 códigos DDD ativos em todo o território nacional, desde o 11 (São Paulo) até o 99 (Imperatriz/MA).
+        </p>
+        <p>
+          <strong>Formato telefônico atual:</strong> Desde 2012, os telefones celulares em todas as regiões metropolitanas com DDDs que começam com dígitos 11-19, 21-28, 31-38, 41-49, 51-55, 61-69, 71-77, 79, 81-89 e 91-99 passaram a ter 9 dígitos (formato (XX) 9XXXX-XXXX). Os fixos permanecem com 8 dígitos, exceto em algumas localidades com 7.
+        </p>
+        <p>
+          Consulte abaixo o DDD desejado para ver o estado correspondente, principais cidades atendidas e o formato telefônico recomendado.
+        </p>
+      </div>
 
       {/* NOVO CAMPO DE CONSULTA PERSONALIZADA PEDIDO PELO USUÁRIO */}
       <div className="bg-slate-50 dark:bg-slate-850/50 p-4 rounded-xl border border-slate-150 dark:border-slate-800 space-y-3 shadow-xs">
@@ -350,7 +361,18 @@ function BancosBrasil() {
 
   return (
     <div className="space-y-6" id="prog-bancos">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Banco Oficial e Código ISPB</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Bancos do Brasil - Códigos COMPE e ISPB</h2>
+      <div className="text-xs text-slate-500 leading-relaxed space-y-3">
+        <p>
+          A tabela abaixo apresenta os principais bancos brasileiros com seus respectivos códigos de compensação bancária (COMPE) números ISPB (Identificador de Sistema de Pagamentos Brasileiro). Esses códigos são essenciais para transferências eletrônicas, boletos bancários, TEDs, DOCs e cadastramento de contas bancárias em sistemas corporativos.
+        </p>
+        <p>
+          <strong>Código COMPE:</strong> Criado pelo Banco Central do Brasil, o código COMPE identifica exclusivamente cada instituição financeira no Sistema de Pagamentos Brasileiro. É um número de 3 dígitos usado em boletos, DOC/TED e identificação de contas bancárias. Exemplos: 001 (Banco do Brasil), 341 (Itaú), 237 (Bradesco).
+        </p>
+        <p>
+          <strong>ISPB:</strong> O Identificador de Sistema de Pagamentos Brasileiro é um número de 8 dígitos que identifica de forma única cada participante do SPB (Sistema de Pagamentos Brasileiro). Este número é utilizado principalmente em transações PIX, TED e transferências interbancárias eletrônicas.
+        </p>
+      </div>
       
       <input
         type="text"
@@ -425,7 +447,21 @@ function CepBrasil() {
 
   return (
     <div className="space-y-6" id="prog-cep">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Consulta Nacional de CEP Correios</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Consulta Nacional de CEP Correios Online</h2>
+      <div className="text-xs text-slate-500 leading-relaxed space-y-3">
+        <p>
+          O CEP (Código de Endereçamento Postal) é um sistema de código numérico criado pela Empresa Brasileira de Correios e Telégrafos para organizar e facilitar a entrega de correspondências e encomendas em todo o país. Cada CEP de 8 dígitos identifica áreas geográficas progressivamente menores: região, estado, município, bairro, logradouro e lado da rua.
+        </p>
+        <p>
+          <strong>Estrutura do CEP:</strong> O formato atual é XXXXX-XXX. Os primeiros 5 dígitos identificam a região, e os 3 últimos o bairro ou logradouro específico. CEPs terminados em 000 geralmente indicam a agência central de uma cidade, enquanto CEPs específicos (por logradouro) são usados para ruas e avenidas de grande volume postal.
+        </p>
+        <p>
+          <strong>Faixas de CEP por estado:</strong> Os CEPs são distribuídos por região: Sudeste (01000-19999), Sul (80000-99999), Nordeste (40000-65999), Norte (66000-69999) e Centro-Oeste (70000-79999). Cada estado tem faixas específicas dentro desses intervalos.
+        </p>
+        <p>
+          Digite o CEP abaixo para consultar o endereço completo via API oficial do ViaCEP, o mesmo sistema utilizado pelos Correios.
+        </p>
+      </div>
       
       <div className="flex gap-2">
         <input
@@ -472,7 +508,21 @@ function CnaeConsulta() {
 
   return (
     <div className="space-y-6" id="prog-cnae">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Código CNAE Atividades Econômicas</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Código CNAE - Classificação Nacional de Atividades Econômicas</h2>
+      <div className="text-xs text-slate-500 leading-relaxed space-y-3">
+        <p>
+          O CNAE (Classificação Nacional de Atividades Econômicas) é o sistema oficial de classificação de atividades econômicas utilizado no Brasil. Criado pelo IBGE, é obrigatório para todos os cadastros fiscais e empresariais do país, incluindo CNPJ na Receita Federal, inscrição estadual e municipal.
+        </p>
+        <p>
+          <strong>Estrutura do CNAE:</strong> São 7 dígitos no formato XXXX-X/XX, organizados em: Seção (letra de A a U), Divisão (2 primeiros dígitos), Grupo (3º dígito), Classe (4º a 6º dígitos) e Subclasse (7º dígito). A subclasse de 7 dígitos é o nível mais detalhado e o utilizado para registro de empresas.
+        </p>
+        <p>
+          <strong>Importância para empresas:</strong> O CNAE determina a tributação aplicável (Simples Nacional: Anexos I a V, Lucro Presumido ou Real), alíquotas de ISS e ICMS, obrigações acessórias, classificação de risco para vigilância sanitária, e enquadramento sindical patronal.
+        </p>
+        <p>
+          Confira abaixo exemplos de códigos CNAE na área de tecnologia e serviços, com sua descrição e tributação no Simples Nacional.
+        </p>
+      </div>
       <input type="text" className="w-full md:w-1/2 border dark:border-slate-755 p-2 text-xs bg-slate-50 dark:bg-slate-800 dark:text-slate-100 rounded-lg" placeholder="Pesquise CNAE de TI ou Mídia (ex: publicidade, 6201)..." value={term} onChange={(e) => setTerm(e.target.value)} />
       
       <div className="overflow-x-auto">
@@ -519,7 +569,23 @@ function SalarioMinimoHistorico() {
   return (
     <div className="space-y-6" id="prog-salario">
       <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Salário Mínimo Histórico (1994-2026)</h2>
-      <p className="text-xs text-slate-500">Tabela completa com todos os valores do salário mínimo brasileiro desde o Plano Real até os dias atuais.</p>
+      <div className="text-xs text-slate-500 leading-relaxed space-y-3">
+        <p>
+          Acompanhe a evolução do salário mínimo brasileiro desde o Plano Real (1994) até os dias atuais. O salário mínimo é o menor valor que um empregador pode pagar legalmente a um trabalhador no Brasil, conforme definido pela Lei Complementar nº 103/2000 e atualizado anualmente por decreto presidencial.
+        </p>
+        <p>
+          <strong>Política de valorização:</strong> Até 2019, o reajuste do salário mínimo seguia a fórmula do INPC (inflação) + variação do PIB de dois anos anteriores. A partir de 2020, o governo passou a definir os reajustes por decreto anual, considerando a inflação e o limite fiscal do orçamento federal.
+        </p>
+        <p>
+          <strong>Impacto econômico:</strong> O salário mínimo serve como referência para benefícios previdenciários (aposentadorias, pensões, auxílio-doença), seguro-desemprego, abono salarial (PIS/PASEP) e benefício de prestação continuada (BPC/LOAS). Cerca de 50 milhões de brasileiros têm sua renda atrelada ao piso nacional.
+        </p>
+        <p>
+          <strong>Poder de compra:</strong> Em 1994, com o Plano Real, o salário mínimo era de R$ 64,79. Em 2025, alcançou R$ 1.518,00 um aumento nominal de mais de 2.200%, embora o poder de compra real tenha crescido aproximadamente 150% no mesmo período, considerando a inflação acumulada.
+        </p>
+        <p>
+          Veja na tabela abaixo todos os valores do salário mínimo desde 1994, com a variação percentual anual.
+        </p>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full text-xs text-left">
           <thead className="bg-slate-50 dark:bg-slate-850 uppercase text-[10px]">
@@ -560,7 +626,20 @@ function FeriadosNacionais() {
   return (
     <div className="space-y-6" id="prog-feriados">
       <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Feriados Nacionais do Brasil 2026</h2>
-      <p className="text-xs text-slate-500">Calendário completo de feriados nacionais, pontos facultativos e datas comemorativas oficiais.</p>
+      <div className="text-xs text-slate-500 leading-relaxed space-y-3">
+        <p>
+          O Brasil possui 12 feriados nacionais oficiais, além de feriados estaduais e municipais que variam conforme a localidade. Os feriados nacionais foram definidos pela Lei nº 10.607/2002 e alterações posteriores. Em 2023, o Dia da Consciência Negra (20 de novembro) foi incluído como feriado nacional pela Lei 14.759/2023.
+        </p>
+        <p>
+          <strong>Feriados religiosos móveis:</strong> O Carnaval, a Sexta-Feira Santa (Paixão de Cristo) e Corpus Christi são feriados móveis, cujas datas variam anualmente de acordo com o calendário litúrgico da Igreja Católica. O Carnaval é ponto facultativo na segunda e terça-feira, enquanto a Quarta-Feira de Cinzas é ponto facultativo até as 14h.
+        </p>
+        <p>
+          <strong>Pontos facultativos:</strong> Além dos feriados nacionais, existem pontos facultativos como o Carnaval (segunda e terça), a Quarta-Feira de Cinzas (até 14h), a Véspera de Natal (24 de dezembro após 14h) e a Véspera de Ano Novo (31 de dezembro após 14h). Nestas datas, o funcionamento de órgãos públicos é opcional.
+        </p>
+        <p>
+          Confira abaixo todos os feriados nacionais obrigatórios para 2026, com suas respectivas datas e tipos.
+        </p>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full text-xs text-left">
           <thead className="bg-slate-50 dark:bg-slate-850 uppercase text-[10px]">
@@ -599,8 +678,21 @@ function SelicHistorica() {
 
   return (
     <div className="space-y-6" id="prog-selic">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Taxa SELIC Histórica</h2>
-      <p className="text-xs text-slate-500">Histórico completo da taxa básica de juros da economia brasileira desde 1996. Referência para investimentos em renda fixa.</p>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Taxa SELIC Histórica (1996-2026)</h2>
+      <div className="text-xs text-slate-500 leading-relaxed space-y-3">
+        <p>
+          A taxa SELIC (Sistema Especial de Liquidação e Custódia) é a taxa básica de juros da economia brasileira, definida pelo Copom (Comitê de Política Monetária) do Banco Central. Ela é o principal instrumento de política monetária para controlar a inflação e influencia todas as demais taxas de juros do país.
+        </p>
+        <p>
+          <strong>Como a SELIC influencia seus investimentos:</strong> A SELIC impacta diretamente os rendimentos da poupança (que rende 70% da SELIC + TR quando a SELIC está acima de 8,5% ao ano), CDBs, fundos de renda fixa, títulos do Tesouro Direto (Tesouro SELIC) e o custo do crédito para pessoas físicas e jurídicas.
+        </p>
+        <p>
+          <strong>Momentos históricos marcantes:</strong> A SELIC atingiu seu pico máximo em 1998 (28,86% a.a.) durante a crise cambial. A menor taxa registrada foi em 2020 (3,36% a.a.) durante a pandemia, quando o Copom reduziu os juros para estimular a economia. Em 2025/2026, a SELIC voltou a subir para conter a inflação, atingindo cerca de 14,25% a.a.
+        </p>
+        <p>
+          Veja abaixo o histórico completo da taxa SELIC desde 1996, com indicação de alta ou queda em relação ao ano anterior.
+        </p>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full text-xs text-left">
           <thead className="bg-slate-50 dark:bg-slate-850 uppercase text-[10px]">
@@ -631,7 +723,20 @@ function CalendarioINSS() {
   return (
     <div className="space-y-6" id="prog-inss">
       <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Calendário de Pagamentos INSS 2026</h2>
-      <p className="text-xs text-slate-500">Datas de depósito de aposentadorias, pensões e benefícios assistenciais organizadas pelo dígito final do benefício.</p>
+      <div className="text-xs text-slate-500 leading-relaxed space-y-3">
+        <p>
+          O INSS (Instituto Nacional do Seguro Social) organiza o pagamento de aposentadorias, pensões por morte, auxílios (doença, acidente, reclusão), salário-maternidade e Benefício de Prestação Continuada (BPC/LOAS) de acordo com o número final do benefício, sem considerar o dígito verificador.
+        </p>
+        <p>
+          <strong>Calendário de pagamento:</strong> Os pagamentos são realizados nos últimos 10 dias úteis do mês (para benefícios de até 1 salário mínimo) ou nos 10 primeiros dias úteis do mês seguinte (para benefícios acima de 1 salário mínimo). O dígito final do benefício determina o dia exato do depósito.
+        </p>
+        <p>
+          <strong>Consulta de pagamento:</strong> Para consultar seu calendário individual de pagamentos, utilize o aplicativo MEU INSS (disponível para Android e iOS), o site gov.br/meuinss ou ligue para a Central 135. Tenha em mãos seu CPF e o número do benefício.
+        </p>
+        <p>
+          Selecione abaixo o dígito final do seu benefício para ver a data prevista de depósito no mês corrente.
+        </p>
+      </div>
       <div className="flex gap-4 flex-wrap">
         <div><label className="block text-xs font-semibold text-slate-500 mb-1">Final do Benefício (sem dígito)</label>
           <select className="border rounded p-2 text-sm dark:bg-slate-800" value={finalBeneficio} onChange={e => setFinalBeneficio(Number(e.target.value))}>
@@ -668,6 +773,20 @@ function CodigosNCM() {
   return (
     <div className="space-y-6" id="prog-ncm">
       <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Códigos NCM - Nomenclatura Comum do Mercosul</h2>
+      <div className="text-xs text-slate-500 leading-relaxed space-y-3">
+        <p>
+          A NCM (Nomenclatura Comum do Mercosul) é um sistema de classificação de mercadorias adotado por todos os países do Mercosul (Brasil, Argentina, Paraguai e Uruguai). Baseada no SH (Sistema Harmonizado de Designação e Codificação de Mercadorias) da Organização Mundial de Aduanas (OMA), a NCM é composta por 8 dígitos: os 6 primeiros são do SH e os 2 últimos especificam o desdobramento regional.
+        </p>
+        <p>
+          <strong>Importância do código NCM:</strong> O código NCM é obrigatório em operações de comércio exterior (importação e exportação), emissão de Nota Fiscal Eletrônica (NF-e), Declaração Única de Importação (DUIMP) e demais documentos fiscais. Ele determina o tratamento tributário aplicável, alíquotas de impostos (II, IPI, PIS, COFINS) e eventuais restrições ou benefícios fiscais.
+        </p>
+        <p>
+          <strong>Estrutura do NCM:</strong> Seção (I a XXI) - Capítulo (2 dígitos) - Posição (4 dígitos) - Subposição (6 dígitos SH) - Item NCM (8 dígitos). Por exemplo: 8471.30.12 (computadores portáteis) - Seção XVI, Capítulo 84, Posição 8471.
+        </p>
+        <p>
+          Consulte abaixo alguns dos principais códigos NCM utilizados no Brasil para importação e faturamento eletrônico.
+        </p>
+      </div>
       <input type="text" className="w-full md:w-1/2 border rounded-lg p-2 text-xs bg-slate-50 dark:bg-slate-800" placeholder="Pesquise por NCM ou produto..." value={term} onChange={e => setTerm(e.target.value)} />
       <div className="overflow-x-auto">
         <table className="w-full text-xs text-left">
@@ -702,7 +821,21 @@ function CodigosIBGE() {
 
   return (
     <div className="space-y-6" id="prog-ibge">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Códigos IBGE de Municípios</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Códigos IBGE de Municípios Brasileiros</h2>
+      <div className="text-xs text-slate-500 leading-relaxed space-y-3">
+        <p>
+          Os códigos IBGE (Instituto Brasileiro de Geografia e Estatística) são identificadores numéricos únicos de 7 dígitos atribuídos a cada município brasileiro. Estes códigos são amplamente utilizados em sistemas governamentais, pesquisas censitárias, cadastros fiscais e bases de dados corporativas.
+        </p>
+        <p>
+          <strong>Estrutura do código IBGE de município:</strong> Código de 7 dígitos no formato X XXXXXX. Os 2 primeiros dígitos identificam a Unidade Federativa (UF), seguindo a mesma ordem alfabética dos estados (11 = Rondônia, 12 = Acre, ..., 53 = Distrito Federal). Os 5 dígitos restantes identificam o município dentro do estado.
+        </p>
+        <p>
+          <strong>Para que servem:</strong> Os códigos IBGE são usados no Censo Demográfico (realizado a cada 10 anos), Pesquisa Nacional por Amostra de Domicílios (PNAD Contínua), cadastros do SUS, sistemas de ensino (Censo Escolar/INEP), nota fiscal eletrônica (código do município do destinatário) e registros civis (Cartórios).
+        </p>
+        <p>
+          Consulte abaixo os códigos IBGE dos principais municípios brasileiros por capital e grandes cidades.
+        </p>
+      </div>
       <input type="text" className="w-full md:w-1/2 border rounded-lg p-2 text-xs bg-slate-50 dark:bg-slate-800" placeholder="Pesquise por cidade, código IBGE ou UF..." value={term} onChange={e => setTerm(e.target.value)} />
       <div className="overflow-x-auto">
         <table className="w-full text-xs text-left">
@@ -739,7 +872,14 @@ function DddPorEstado({ uf, nome, ddds }: { uf: string; nome: string; ddds: stri
           </div>
         </div>
       </div>
-      <p className="text-xs text-slate-500">Os códigos DDD de {nome} abrangem todas as regiões do estado, incluindo a capital e cidades do interior. Consulte a lista completa de DDDs de {uf} para ligações interestaduais.</p>
+      <div className="text-xs text-slate-500 space-y-2">
+        <p>Os códigos DDD de {nome} abrangem todas as regiões do estado, incluindo a capital e cidades do interior. Consulte a lista completa de DDDs de {uf} para ligações interestaduais e intermunicipais.</p>
+        <p>Para ligar de outro estado para {nome}, disque: 0 + operadora + DDD desejado + número do telefone. Para chamadas dentro do mesmo estado, basta discar diretamente o número (com o DDD para celulares ou sem o DDD para fixos locais).</p>
+        <div className="bg-slate-50 dark:bg-slate-850 p-3 rounded-lg border mt-2">
+          <p className="font-bold text-emerald-700 dark:text-emerald-400 mb-1">Áreas de cobertura dos DDDs de {uf}:</p>
+          <p>Os DDDs {ddds} cobrem todas as macrorregiões do estado de {nome}, desde a capital até as cidades do interior, garantindo conectividade telefônica em todo o território estadual.</p>
+        </div>
+      </div>
     </div>
   );
 }
@@ -766,7 +906,15 @@ function SalarioMinimoPorAno({ year }: { year: string }) {
       ) : (
         <p className="text-xs text-slate-500">Ano não encontrado na base histórica. Consulte a página completa de histórico do salário mínimo.</p>
       )}
-      <p className="text-xs text-slate-400">O salário mínimo é o menor valor que um empregador pode pagar legalmente a um trabalhador no Brasil. Seu reajuste anual considera a inflação e o crescimento do PIB.</p>
+      <div className="text-xs text-slate-400 space-y-2">
+        <p>O salário mínimo é o menor valor que um empregador pode pagar legalmente a um trabalhador no Brasil, conforme definido pela Constituição Federal. Seu reajuste anual considera a inflação acumulada (INPC) e, quando possível, o crescimento do PIB de dois anos anteriores.</p>
+        <p>
+          <strong>O que o salário mínimo influencia:</strong> Aposentadorias e pensões do INSS, seguro-desemprego, abono salarial PIS/PASEP, BPC (Benefício de Prestação Continuada), contribuição do Microempreendedor Individual (MEI), e reajustes de aluguéis e mensalidades escolares indexadas ao piso nacional.
+        </p>
+        <p>
+          Consulte o histórico completo na página de <a href="#programatico/salario-minimo-historico" className="text-emerald-600 font-bold hover:underline">Salário Mínimo Histórico</a> com todos os valores desde 1994.
+        </p>
+      </div>
     </div>
   );
 }
@@ -776,7 +924,15 @@ function SelicPorAno() {
   return (
     <div className="space-y-6" id="prog-selic-ano">
       <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Taxa SELIC - Acompanhamento</h2>
-      <p className="text-xs text-slate-500">A taxa SELIC é a taxa básica de juros da economia brasileira. Consulte a página completa de <a href="#programatico/selic-historica" className="text-emerald-600 font-bold hover:underline">histórico da SELIC</a> para dados completos desde 1996.</p>
+      <div className="text-xs text-slate-500 leading-relaxed space-y-3">
+        <p>A taxa SELIC é a taxa básica de juros da economia brasileira, definida pelo COPOM (Comitê de Política Monetária) do Banco Central. Consulte a página completa de <a href="#programatico/selic-historica" className="text-emerald-600 font-bold hover:underline">histórico da SELIC</a> para dados completos desde 1996.</p>
+        <p>
+          <strong>Reuniões do COPOM:</strong> O comitê se reúne a cada 45 dias (8 reuniões ordinárias por ano) para definir a meta da taxa SELIC. A decisão é tomada por votação e busca equilibrar o controle da inflação com o estímulo ao crescimento econômico. O resultado de cada reunião é divulgado em comunicado oficial e impacta imediatamente os mercados financeiros.
+        </p>
+        <p>
+          <strong>Impactos da SELIC no seu bolso:</strong> Quando a SELIC sobe, o crédito fica mais caro (juros de cartão, financiamentos, cheque especial), os investimentos em renda fixa rendem mais (CDB, Tesouro Direto, fundos DI), e a inflação tende a ceder. Quando a SELIC cai, o crédito fica mais barato, mas os rendimentos da renda fixa diminuem, estimulando investimentos em risco (renda variável) e consumo.
+        </p>
+      </div>
       <div className="bg-indigo-50/50 dark:bg-indigo-950/20 p-4 rounded-xl border border-indigo-100">
         <p className="text-xs">A taxa SELIC atual é definida pelo COPOM (Comitê de Política Monetária) e influencia diretamente os rendimentos da poupança, CDBs, fundos de investimento e o custo do crédito.</p>
       </div>
@@ -789,7 +945,11 @@ function IbgePorEstado() {
   return (
     <div className="space-y-6" id="prog-ibge-estado">
       <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Códigos IBGE por Estado</h2>
-      <p className="text-xs text-slate-500">Os códigos IBGE identificam cada município brasileiro com 7 dígitos. Consulte a página completa de <a href="#programatico/codigos-ibge" className="text-emerald-600 font-bold hover:underline">todos os códigos IBGE</a> para a lista completa por estado e município.</p>
+      <div className="text-xs text-slate-500 leading-relaxed space-y-3">
+        <p>Os códigos IBGE identificam cada município brasileiro com 7 dígitos. Consulte a página completa de <a href="#programatico/codigos-ibge" className="text-emerald-600 font-bold hover:underline">todos os códigos IBGE</a> para a lista completa por estado e município.</p>
+        <p>O código IBGE de município é composto por 7 dígitos, onde os 2 primeiros identificam a Unidade Federativa e os 5 restantes o município dentro do estado. Este código é amplamente utilizado em pesquisas do IBGE (Censo, PNAD, Contas Regionais), sistemas do SUS (Cadastro Nacional de Estabelecimentos de Saúde), INEP (Censo Escolar), TSE (título de eleitor) e cadastros fiscais (NF-e e SPED).</p>
+        <p><strong>Códigos das UFs brasileiras:</strong> 11 Rondônia, 12 Acre, 13 Amazonas, 14 Roraima, 15 Pará, 16 Amapá, 17 Tocantins, 21 Maranhão, 22 Piauí, 23 Ceará, 24 Rio Grande do Norte, 25 Paraíba, 26 Pernambuco, 27 Alagoas, 28 Sergipe, 29 Bahia, 31 Minas Gerais, 32 Espírito Santo, 33 Rio de Janeiro, 35 São Paulo, 41 Paraná, 42 Santa Catarina, 43 Rio Grande do Sul, 50 Mato Grosso do Sul, 51 Mato Grosso, 52 Goiás, 53 Distrito Federal.</p>
+      </div>
       <div className="bg-blue-50/50 dark:bg-blue-950/20 p-4 rounded-xl border border-blue-100 text-xs space-y-2">
         <p><strong>O que é o código IBGE?</strong> O Instituto Brasileiro de Geografia e Estatística (IBGE) atribui um código numérico de 7 dígitos para cada município brasileiro. Este código é usado em pesquisas, documentos oficiais e sistemas governamentais.</p>
         <p>Os 2 primeiros dígitos identificam a Unidade Federativa (UF), e os 5 restantes identificam o município dentro do estado.</p>
@@ -802,9 +962,29 @@ function IbgePorEstado() {
 function PrevisaoTempo() {
   return (
     <div className="space-y-6" id="prog-tempo">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Previsão do Tempo</h2>
-      <div className="bg-amber-50/50 dark:bg-amber-950/20 p-4 rounded-xl border border-amber-100 text-xs">
-        <p>A previsão do tempo é atualizada diariamente com base nos dados meteorológicos oficiais. Consulte sites especializados como INMET e Climatempo para a previsão completa e atualizada.</p>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Previsão do Tempo nas Capitais Brasileiras</h2>
+      <div className="text-xs text-slate-500 leading-relaxed space-y-3">
+        <p>
+          O Brasil possui uma grande diversidade climática devido à sua extensão territorial e localização geográfica. O país abrange seis tipos climáticos principais: equatorial úmido (Amazônia), tropical (Centro-Oeste e parte do Sudeste), tropical semiárido (Nordeste), tropical altitude (regiões serranas do Sudeste), tropical atlântico (litoral) e subtropical (Sul).
+        </p>
+        <p>
+          <strong>Clima nas capitais:</strong> São Paulo e Curitiba têm clima subtropical com inverno frio e úmido. Rio de Janeiro, Salvador e Recife têm clima tropical atlântico com verão quente e chuvoso. Brasília e Belo Horizonte têm clima tropical de altitude com estação seca bem definida. Manaus e Belém têm clima equatorial úmido com chuvas o ano todo. Fortaleza e Natal têm clima tropical com sol praticamente o ano inteiro.
+        </p>
+        <p>
+          <strong>Temperaturas médias:</strong> No inverno (junho a agosto), as médias variam de 12°C em Curitiba a 26°C em Fortaleza. No verão (dezembro a fevereiro), as médias variam de 24°C em São Paulo a 32°C em Manaus e Rio de Janeiro.
+        </p>
+      </div>
+      <div className="bg-amber-50/50 dark:bg-amber-950/20 p-4 rounded-xl border border-amber-100 text-xs space-y-2">
+        <p className="font-bold">Índice de páginas de previsão por capital:</p>
+        <ul className="list-disc pl-4 space-y-1">
+          <li><a href="#programatico/tempo-sao-paulo" className="text-emerald-600 hover:underline">São Paulo (SP)</a></li>
+          <li><a href="#programatico/tempo-rio-de-janeiro" className="text-emerald-600 hover:underline">Rio de Janeiro (RJ)</a></li>
+          <li><a href="#programatico/tempo-belo-horizonte" className="text-emerald-600 hover:underline">Belo Horizonte (MG)</a></li>
+          <li><a href="#programatico/tempo-salvador" className="text-emerald-600 hover:underline">Salvador (BA)</a></li>
+          <li><a href="#programatico/tempo-brasilia" className="text-emerald-600 hover:underline">Brasília (DF)</a></li>
+          <li><a href="#programatico/tempo-fortaleza" className="text-emerald-600 hover:underline">Fortaleza (CE)</a></li>
+        </ul>
+        <p className="mt-2">Para previsão detalhada e atualizada em tempo real, consulte o INMET (Instituto Nacional de Meteorologia) ou aplicativos especializados como Climatempo e AccuWeather.</p>
       </div>
     </div>
   );
@@ -812,34 +992,306 @@ function PrevisaoTempo() {
 
 // 18. PÁGINA DE FERRAMENTA LONG TAIL
 function PaginaFerramentaLongTail({ id }: { id: string }) {
-  const nomes: {[key: string]: {titulo: string, desc: string}} = {
-    'simular-aposentadoria-por-idade': { titulo: 'Simular Aposentadoria por Idade INSS', desc: 'Simule sua aposentadoria por idade no INSS. Calcule quando você poderá se aposentar e o valor do benefício.' },
-    'calcular-13o-salario': { titulo: 'Calcular 13º Salário', desc: 'Calcule seu décimo terceiro salário proporcional aos meses trabalhados no ano.' },
-    'calcular-rescisao-trabalhista': { titulo: 'Calcular Rescisão Trabalhista', desc: 'Simule os valores da sua rescisão de contrato CLT: saldo de salário, férias, 13º e FGTS.' },
-    'simular-financiamento-casa-propria': { titulo: 'Simular Financiamento Imobiliário', desc: 'Simule o financiamento da casa própria comparando os sistemas SAC e Price.' },
-    'consultar-cep-correios': { titulo: 'Consultar CEP Correios', desc: 'Consulte CEP de qualquer endereço do Brasil utilizando a base dos Correios.' },
-    'consultar-ddd-telefone': { titulo: 'Consultar DDD Telefônico', desc: 'Consulte o DDD de qualquer estado ou cidade brasileira para chamadas interestaduais.' },
-    'gerar-senha-forte': { titulo: 'Gerar Senha Forte', desc: 'Gere senhas fortes e seguras para proteger suas contas online.' },
-    'gerar-cpf-valido': { titulo: 'Gerar CPF Válido', desc: 'Gere CPF válido para testes de sistemas. Inclui dígitos verificadores.' },
-    'gerar-cnpj-valido': { titulo: 'Gerar CNPJ Válido', desc: 'Gere CNPJ válidos para testes corporativos e desenvolvimento de sistemas.' },
-    'gerar-qr-code-pix': { titulo: 'Gerar QR Code PIX', desc: 'Crie QR Codes para pagamentos instantâneos PIX.' },
-    'calcular-imc-gratis': { titulo: 'Calcular IMC Grátis', desc: 'Calcule seu Índice de Massa Corporal e veja a classificação OMS.' },
-    'calcular-juros-compostos-mensais': { titulo: 'Calcular Juros Compostos', desc: 'Simule investimentos com juros compostos e aportes mensais.' },
-    'calcular-porcentagem-online': { titulo: 'Calcular Porcentagem', desc: 'Calcule porcentagem de valores, descontos e aumentos online.' },
-    'calcular-inss-salario': { titulo: 'Calcular INSS', desc: 'Calcule o desconto do INSS sobre seu salário com as alíquotas progressivas.' },
+  const paginas: {[key: string]: {titulo: string, conteudo: React.ReactNode}} = {
+    'simular-aposentadoria-por-idade': {
+      titulo: 'Simular Aposentadoria por Idade INSS 2026',
+      conteudo: (
+        <>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Simular a aposentadoria por idade pelo INSS é o primeiro passo para planejar seu futuro financeiro. A aposentadoria por idade é um dos benefícios mais solicitados do RGPS (Regime Geral de Previdência Social) e passou por mudanças significativas com a Reforma da Previdência de 2019.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Regras atuais (pós-reforma):</strong> Para se aposentar por idade, a mulher precisa ter no mínimo 62 anos e o homem 65 anos, com pelo menos 15 anos de contribuição para ambos os sexos. Para quem já contribuía antes da reforma, existem regras de transição que podem ser mais benéficas.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Regras de transição:</strong> São várias opções: sistema de pontos (soma da idade + tempo de contribuição), idade mínima progressiva, pedágio 50% e pedágio 100%. Cada uma se aplica a perfis diferentes de segurados, dependendo de quando começaram a contribuir e do tempo restante para se aposentar.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Valor do benefício:</strong> O valor da aposentadoria por idade é calculado com base na média de todos os salários de contribuição desde julho de 1994, multiplicada pelo fator previdenciário (quando aplicável). A reforma mudou o cálculo para 60% da média + 2% para cada ano que exceder 20 anos de contribuição para homens e 15 para mulheres.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            Para simular sua aposentadoria com precisão, utilize nossa <a href="#calculadoras/calculadora-de-aposentadoria-inss" className="text-emerald-600 font-bold hover:underline">Calculadora de Aposentadoria INSS</a> completa, que considera todas as regras de transição e calcula o valor estimado do benefício.
+          </p>
+          <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-4 rounded-xl border border-emerald-100 text-xs space-y-2 mt-4">
+            <p className="font-bold text-emerald-800 dark:text-emerald-400">Índice</p>
+            <ul className="list-disc pl-4 text-slate-500 space-y-1">
+              <li>Quem tem direito à aposentadoria por idade?</li>
+              <li>Qual a idade mínima para se aposentar?</li>
+              <li>Como funciona o pedágio 50% e 100%?</li>
+              <li>Qual o valor do benefício em 2026?</li>
+              <li>Documentos necessários para solicitar</li>
+            </ul>
+          </div>
+        </>
+      )
+    },
+    'calcular-13o-salario': {
+      titulo: 'Calcular 13º Salário Proporcional 2026',
+      conteudo: (
+        <>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            O décimo terceiro salário, também conhecido como gratificação natalina, é um direito garantido a todos os trabalhadores brasileiros com carteira assinada (CLT), servidores públicos, aposentados e pensionistas do INSS. Instituído pela Lei 4.090/1962, o benefício corresponde a 1/12 avos da remuneração devida em dezembro, por mês trabalhado no ano.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Como é calculado:</strong> O valor do 13º salário é proporcional aos meses trabalhados durante o ano. Cada mês trabalhado por pelo menos 15 dias dá direito a 1/12 do salário. O cálculo é: (salário bruto ÷ 12) x meses trabalhados.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Parcelas:</strong> O 13º é pago em duas parcelas. A primeira parcela, paga entre fevereiro e novembro, corresponde à metade do salário bruto sem descontos. A segunda parcela, paga até 20 de dezembro, inclui todos os descontos legais como INSS, Imposto de Renda (IRRF) e pensão alimentícia, se houver.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Descontos:</strong> O desconto do INSS no 13º segue a tabela progressiva vigente, calculado sobre o valor total do benefício. O IRRF também é calculado sobre o valor total, considerando dependentes e outras deduções legais.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            Utilize nossa <a href="#calculadoras/calculadora-de-decimo-terceiro" className="text-emerald-600 font-bold hover:underline">Calculadora de 13º Salário</a> para simular as duas parcelas com todos os descontos aplicados corretamente.
+          </p>
+        </>
+      )
+    },
+    'calcular-rescisao-trabalhista': {
+      titulo: 'Calcular Rescisão Trabalhista CLT - Simulação Completa',
+      conteudo: (
+        <>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            A rescisão trabalhista é o conjunto de verbas devidas ao empregado quando o contrato de trabalho é encerrado. O cálculo varia conforme o tipo de demissão: sem justa causa, com justa causa, pedido de demissão ou acordo mútuo (Lei 13.467/2017 - Reforma Trabalhista).
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Verbas rescisórias comuns:</strong> Saldo de salário (dias trabalhados no mês da demissão), aviso prévio (indenizado ou trabalhado), férias vencidas e proporcionais com 1/3 constitucional, 13º salário proporcional, multa de 40% sobre o FGTS (demissão sem justa causa) e saque do FGTS.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Demissão por acordo (484-A CLT):</strong> Criada pela Reforma Trabalhista, permite que empregado e empregador rescindam o contrato de comum acordo. Nesse caso, o empregado recebe metade do aviso prévio indenizado, multa de 20% sobre o FGTS, e pode sacar até 80% do FGTS. NÃO tem direito ao seguro-desemprego.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Documentos necessários:</strong> Para o cálculo preciso, tenha em mãos: data de admissão e demissão, último salário bruto, média de horas extras, valor do FGTS e motivo da rescisão. Utilize nossa <a href="#calculadoras/calculadora-de-rescisao-trabalhista" className="text-emerald-600 font-bold hover:underline">Calculadora de Rescisão</a> completa.
+          </p>
+        </>
+      )
+    },
+    'simular-financiamento-casa-propria': {
+      titulo: 'Simular Financiamento da Casa Própria - SAC vs Price',
+      conteudo: (
+        <>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Simular o financiamento imobiliário é essencial antes de comprar a casa própria. No Brasil, os dois sistemas mais comuns são o SAC (Sistema de Amortização Constante) e a Tabela Price (Sistema Francês de Amortização). Cada um tem características próprias que impactam diretamente o valor das parcelas e o custo total do financiamento.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>SAC (Sistema de Amortização Constante):</strong> As parcelas são decrescentes ao longo do tempo. No início, as prestações são mais altas, mas diminuem progressivamente. A amortização do saldo devedor é constante, fazendo com que os juros totais pagos sejam menores. Ideal para quem pode pagar parcelas maiores no início.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Tabela Price:</strong> As parcelas são fixas do início ao fim do contrato. A amortização começa pequena e vai aumentando com o tempo, enquanto os juros diminuem na mesma proporção. Ideal para quem precisa de previsibilidade no orçamento mensal.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            Para simular seu financiamento com detalhamento completo (tabela de evolução mensal, comparação entre sistemas, custo efetivo total), use nosso <a href="#calculadoras/simulador-de-financiamento" className="text-emerald-600 font-bold hover:underline">Simulador de Financiamento</a> completo.
+          </p>
+        </>
+      )
+    },
+    'consultar-cep-correios': {
+      titulo: 'Consultar CEP Correios - Busca de Endereço Online',
+      conteudo: (
+        <>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            O CEP (Código de Endereçamento Postal) é um sistema de códigos numérico criado pelos Correios para organizar a entrega de correspondências e encomendas em todo o território nacional. Composto por 8 dígitos no formato XXXXX-XXX, ele identifica ruas, avenidas, bairros e até grandes edifícios.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Como funciona a consulta:</strong> Utilizamos a API oficial do ViaCEP, um serviço gratuito e público que consulta a base de CEPs dos Correios. Basta digitar o CEP desejado, e a ferramenta retorna o logradouro, bairro, cidade, estado e até o código IBGE do município.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Dicas para consulta:</strong> Certifique-se de digitar os 8 dígitos sem pontos ou traços. CEPs de ruas muito novas podem não estar cadastrados na base. Para CEPs de grandes empresas ou edifícios (CEP específico), a consulta geralmente retorna o logradouro completo.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            Use nossa <a href="#programatico/cep-brasil" className="text-emerald-600 font-bold hover:underline">ferramenta de consulta de CEP</a> interativa para buscar qualquer endereço do Brasil.
+          </p>
+        </>
+      )
+    },
+    'consultar-ddd-telefone': {
+      titulo: 'Consultar DDD Telefônico - Códigos do Brasil',
+      conteudo: (
+        <>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Os códigos DDD (Discagem Direta à Distância) são essenciais para realizar chamadas telefônicas interestaduais e intermunicipais no Brasil. Gerenciados pela ANATEL, cada código de 2 dígitos corresponde a uma região específica do país, abrangendo uma ou várias cidades.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Como usar o DDD:</strong> Para ligar de um DDD para outro, disc: 0 + código da operadora + DDD de destino + número do telefone. Exemplo: 0 15 11 91234-5678 (de qualquer DDD para São Paulo capital via operadora 15 - Vivo).
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>DDDs mais comuns:</strong> 11 (São Paulo capital e RM), 21 (Rio de Janeiro capital), 31 (Belo Horizonte), 41 (Curitiba), 51 (Porto Alegre), 61 (Brasília), 71 (Salvador), 81 (Recife), 85 (Fortaleza), 91 (Belém).
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            Desde 2012, os telefones fixos e celulares no Brasil passaram a ter 9 dígitos nas regiões metropolitanas que possuem DDDs 11, 12, 13, 14, 15, 16, 17, 18, 19, 21, 22, 24, 27, 28, 31, 32, 33, 34, 35, 37, 38, 41, 42, 43, 44, 45, 46, 47, 48, 49, 51, 53, 54, 55, 61, 62, 63, 64, 65, 66, 67, 68, 69, 71, 73, 74, 75, 77, 79, 81, 82, 83, 84, 85, 86, 87, 88, 89, 91, 92, 93, 94, 95, 96, 97, 98, 99.
+          </p>
+        </>
+      )
+    },
+    'gerar-senha-forte': {
+      titulo: 'Gerar Senha Forte e Segura Online',
+      conteudo: (
+        <>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Uma senha forte é a primeira linha de defesa contra invasões de contas online, roubo de identidade e vazamento de dados pessoais. Com o aumento de ataques cibernéticos no Brasil e no mundo, criar senhas robustas nunca foi tão importante.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Características de uma senha forte:</strong> Mínimo de 12 a 16 caracteres, combinação de letras maiúsculas e minúsculas, números e símbolos especiais (!@#$%&∗), sem palavras do dicionário, datas de nascimento ou sequências óbvias como "123456" ou "senha".
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Boas práticas de segurança:</strong> Use senhas diferentes para cada serviço (nunca repita a mesma senha), ative a autenticação de dois fatores (2FA) sempre que possível, utilize um gerenciador de senhas confiável (como Bitwarden, 1Password ou o próprio gerenciador do navegador), troque senhas periodicamente.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            Utilize nosso <a href="#geradores/gerador-de-senha-segura" className="text-emerald-600 font-bold hover:underline">Gerador de Senha Segura</a> para criar senhas de até 64 caracteres com total personalização.
+          </p>
+        </>
+      )
+    },
+    'gerar-cpf-valido': {
+      titulo: 'Gerar CPF Válido para Testes - Online',
+      conteudo: (
+        <>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Gerar CPF válido é uma necessidade comum para desenvolvedores de software, analistas de QA e estudantes de TI que precisam testar sistemas, formulários e validações cadastrais sem utilizar dados pessoais reais de cidadãos brasileiros.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Como o CPF é gerado:</strong> O CPF (Cadastro de Pessoas Físicas) é composto por 11 dígitos: os 9 primeiros são a raiz, e os 2 últimos são dígitos verificadores calculados pelo algoritmo módulo 11. Nosso gerador utiliza exatamente este algoritmo matemático oficial da Receita Federal para produzir CPFs sintéticos válidos.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Para ambientes de teste:</strong> Os CPFs gerados são sintéticos (não correspondem a pessoas reais) e ideais para popular bancos de dados de homologação, testar fluxos de cadastro em lojas virtuais, simular integrações com sistemas externos e validar máscaras de formulários.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            Use nosso <a href="#geradores/gerador-de-cpf" className="text-emerald-600 font-bold hover:underline">Gerador de CPF</a> completo, que também valida CPFs existentes e oferece formatação com ou sem pontuação.
+          </p>
+        </>
+      )
+    },
+    'gerar-cnpj-valido': {
+      titulo: 'Gerar CNPJ Válido - Simulador para Testes',
+      conteudo: (
+        <>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            O CNPJ (Cadastro Nacional da Pessoa Jurídica) é o registro de empresas junto à Receita Federal. Assim como o CPF para pessoas físicas, o CNPJ possui dígitos verificadores calculados por algoritmo específico que garante a validade matemática do número.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Estrutura do CNPJ:</strong> O CNPJ possui 14 dígitos no formato XX.XXX.XXX/XXXX-XX. Os primeiros 8 dígitos identificam a empresa matriz, o três dígitos seguintes identificam a filial (0001 para matriz), e os dois últimos são dígitos verificadores.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Para testes de sistemas:</strong> CNPJs gerados são sintéticos e não correspondem a empresas reais. Use para testar cadastros de clientes PJ, integrações com NF-e (Nota Fiscal Eletrônica) em ambiente de sandbox, simular emissão de boletos e validar formulários de e-commerce B2B.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            Utilize nosso <a href="#geradores/gerador-de-cnpj" className="text-emerald-600 font-bold hover:underline">Gerador de CNPJ</a> completo que também funciona como validador de CNPJs existentes.
+          </p>
+        </>
+      )
+    },
+    'gerar-qr-code-pix': {
+      titulo: 'Gerar QR Code PIX - Código de Pagamento Instantâneo',
+      conteudo: (
+        <>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            O PIX revolucionou o sistema de pagamentos brasileiro desde seu lançamento em novembro de 2020 pelo Banco Central. Os QR Codes PIX permitem pagamentos instantâneos 24 horas por dia, 7 dias por semana, incluindo feriados, com transferência de recursos em segundos.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Tipos de QR Code PIX:</strong> QR Code estático (mesmo valor, pode ser impresso e reutilizado) e QR Code dinâmico (valor gerado para cada transação, comum em e-commerces). Ambos são regulamentados pelo Banco Central e seguem o padrão EMV.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Chaves PIX mais comuns:</strong> CPF/CNPJ (mais utilizado), e-mail, número de telefone celular, chave aleatória (EVP - Endereço Virtual de Pagamento). Todas as chaves são cadastradas na instituição financeira de preferência do usuário.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            Use nosso <a href="#geradores/gerador-de-qr-code" className="text-emerald-600 font-bold hover:underline">Gerador de QR Code</a> para criar códigos para qualquer finalidade: PIX, URLs, textos, Wi-Fi e contatos.
+          </p>
+        </>
+      )
+    },
+    'calcular-imc-gratis': {
+      titulo: 'Calcular IMC Grátis - Índice de Massa Corporal',
+      conteudo: (
+        <>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            O IMC (Índice de Massa Corporal) é o padrão internacional da Organização Mundial da Saúde (OMS) para classificar o estado nutricional de adultos. O cálculo é simples: divide-se o peso (em kg) pela altura ao quadrado (em metros).
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Tabela de classificação OMS:</strong> Abaixo de 18,5: Abaixo do peso. 18,5 a 24,9: Peso normal (faixa ideal). 25,0 a 29,9: Sobrepeso. 30,0 a 34,9: Obesidade grau I. 35,0 a 39,9: Obesidade grau II. Acima de 40: Obesidade grau III (mórbida).
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Limitações do IMC:</strong> O IMC não distingue massa muscular de gordura corporal. Atletas com alta massa muscular podem apresentar IMC elevado mesmo com baixo percentual de gordura. Para uma avaliação completa, considere também o percentual de gordura, circunferência abdominal e exames clínicos.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            Use nossa <a href="#calculadoras/calculadora-de-imc" className="text-emerald-600 font-bold hover:underline">Calculadora de IMC</a> interativa, que além do índice mostra o peso ideal para sua altura e dicas personalizadas.
+          </p>
+        </>
+      )
+    },
+    'calcular-juros-compostos-mensais': {
+      titulo: 'Calcular Juros Compostos Mensais para Investimentos',
+      conteudo: (
+        <>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Os juros compostos, também conhecidos como "juros sobre juros", são a força mais poderosa do universo financeiro. Ao contrário dos juros simples, onde o rendimento é calculado apenas sobre o valor inicial, os juros compostos acumulam rendimentos sobre rendimentos anteriores, gerando um crescimento exponencial ao longo do tempo.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Fórmula dos juros compostos:</strong> M = C x (1 + i)^t, onde M é o montante final, C é o capital inicial, i é a taxa de juros periódica e t é o tempo. Com aportes mensais, a fórmula incorpora cada contribuição individualmente ao cálculo.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Exemplo prático:</strong> Investindo R$ 500,00 por mês com taxa de 0,8% ao mês (aproximadamente 10% ao ano), em 10 anos você terá aproximadamente R$ 101.500,00. Em 20 anos, esse valor salta para mais de R$ 300.000,00. Quanto mais cedo começar, maior o efeito dos juros compostos.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            Simule seus investimentos com nossa <a href="#calculadoras/calculadora-de-juros-compostos" className="text-emerald-600 font-bold hover:underline">Calculadora de Juros Compostos</a> completa, que mostra a evolução ano a ano com aportes mensais.
+          </p>
+        </>
+      )
+    },
+    'calcular-porcentagem-online': {
+      titulo: 'Calcular Porcentagem Online - Calculadora Grátis',
+      conteudo: (
+        <>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            Calcular porcentagem é uma das operações matemáticas mais comuns no dia a dia. Seja para calcular descontos em compras, aumentaróes de preços, comissões de vendas, juros de parcelamentos ou variações percentuais de indicadores, dominar o cálculo de porcentagem é essencial.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Tipos de cálculo:</strong> Nossa calculadora oferece três modalidades: 1) Descobrir quanto é X% de um valor (ex: 15% de R$ 200 = R$ 30). 2) Descobrir qual a porcentagem de um valor em relação a outro (ex: R$ 30 de R$ 200 = 15%). 3) Calcular a variação percentual entre dois valores (ex: de R$ 100 para R$ 120 = aumento de 20%).
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Aplicações práticas:</strong> Calcular comissões de vendas, determinar multas por atraso (geralmente 2% ao mês), calcular juros de mora, estimar gorjetas em restaurantes (10% padrão), analisar variação de preços entre períodos, calcular impostos percentuais.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            Use nossa <a href="#calculadoras/calculadora-de-porcentagem" className="text-emerald-600 font-bold hover:underline">Calculadora de Porcentagem</a> completa para todos os tipos de cálculo percentual.
+          </p>
+        </>
+      )
+    },
+    'calcular-inss-salario': {
+      titulo: 'Calcular INSS sobre o Salário - Desconto 2026',
+      conteudo: (
+        <>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            O desconto do INSS (Instituto Nacional do Seguro Social) é uma contribuição obrigatória para todos os trabalhadores com carteira assinada (CLT) no Brasil. Este desconto financia a Previdência Social, garantindo benefícios como aposentadoria, pensão por morte, auxílio-doença e salário-maternidade.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Tabela progressiva 2026:</strong> O desconto do INSS segue alíquotas progressivas, ou seja, cada faixa salarial tem sua própria alíquota aplicada apenas sobre o valor que excede o limite da faixa anterior. As alíquotas variam de 7,5% a 14% dependendo da faixa salarial, com teto máximo de contribuição.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            <strong>Como calcular:</strong> Diferente do sistema antigo (que aplicava uma alíquota única sobre o salário total), o cálculo progressivo de 2020 em diante aplica cada percentual apenas sobre a parcela do salário dentro de cada faixa. Isso torna o desconto mais justo para salários mais baixos.
+          </p>
+          <p className="text-xs text-slate-500 leading-relaxed mt-3">
+            Calcule o desconto exato do INSS na sua folha de pagamento com nossa <a href="#calculadoras/calculadora-desconto-inss" className="text-emerald-600 font-bold hover:underline">Calculadora de Desconto INSS</a>, que aplica a tabela progressiva correta.
+          </p>
+        </>
+      )
+    }
   };
-  const info = nomes[id] || { titulo: 'Ferramenta', desc: 'Use nossas ferramentas gratuitas online.' };
+  const info = paginas[id];
+  if (!info) {
+    return <p className="text-xs text-slate-500">Página não encontrada.</p>;
+  }
   return (
-    <div className="space-y-6" id={`prog-longtail-${id}`}>
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">{info.titulo}</h2>
-      <p className="text-xs text-slate-500">{info.desc}</p>
-      <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-4 rounded-xl border border-emerald-100 text-xs space-y-3">
-        <p>Esta ferramenta está disponível na nossa <a href="/" className="text-emerald-600 font-bold hover:underline">central de ferramentas</a>. Acesse a página principal e encontre a ferramenta desejada na categoria correspondente.</p>
-        <div className="flex gap-2 pt-2">
-          <a href="#calculadoras" className="px-3 py-1.5 bg-emerald-600 text-white rounded text-xs font-bold hover:opacity-90">Ver Calculadoras</a>
-          <a href="#conversores" className="px-3 py-1.5 bg-indigo-600 text-white rounded text-xs font-bold hover:opacity-90">Ver Conversores</a>
-          <a href="#" className="px-3 py-1.5 bg-slate-600 text-white rounded text-xs font-bold hover:opacity-90">Página Inicial</a>
-        </div>
+    <div className="space-y-4" id={`prog-longtail-${id}`}>
+      <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">{info.titulo}</h2>
+      <article className="space-y-2">
+        {info.conteudo}
+      </article>
+      <div className="bg-slate-50 dark:bg-slate-850 p-4 rounded-xl border text-xs mt-6 flex gap-3 flex-wrap">
+        <span className="font-bold text-slate-500">Ferramentas relacionadas:</span>
+        <a href="#calculadoras" className="text-emerald-600 font-bold hover:underline">Calculadoras</a>
+        <a href="#conversores" className="text-emerald-600 font-bold hover:underline">Conversores</a>
+        <a href="#geradores" className="text-emerald-600 font-bold hover:underline">Geradores</a>
+        <a href="#" className="text-emerald-600 font-bold hover:underline">Página Inicial</a>
       </div>
     </div>
   );
@@ -861,7 +1313,21 @@ function CboConsulta() {
 
   return (
     <div className="space-y-6" id="prog-cbo">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Classificação CBO Ocupações de Trabalho</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">CBO - Classificação Brasileira de Ocupações</h2>
+      <div className="text-xs text-slate-500 leading-relaxed space-y-3">
+        <p>
+          A CBO (Classificação Brasileira de Ocupações) é o documento oficial do Ministério do Trabalho e Emprego que reconhece, nomeia e codifica os cargos e ocupações existentes no mercado de trabalho brasileiro. Instituída pela Portaria nº 397/2002, a CBO é a referência obrigatória para registro de empregados (RAIS/CAGED), contratos de trabalho e estatísticas oficiais do emprego.
+        </p>
+        <p>
+          <strong>Estrutura do código CBO:</strong> São 7 dígitos no formato XXXX-XX, organizados em: Grande Grupo (1º dígito), Subgrupo Principal (2 primeiros dígitos), Subgrupo (3 primeiros dígitos), Família Ocupacional (4 primeiros dígitos) e Ocupação (código completo de 6 dígitos).
+        </p>
+        <p>
+          <strong>Para que serve:</strong> O código CBO é obrigatório na admissão de empregados (eSocial e CAGED), definição de piso salarial por categoria profissional, concessão de registros profissionais (conselhos de classe), estatísticas do mercado de trabalho (PNAD, RAIS) e políticas públicas de emprego e renda.
+        </p>
+        <p>
+          Consulte abaixo exemplos de ocupações na área de tecnologia da informação e comunicação com seus respectivos códigos CBO.
+        </p>
+      </div>
       <input type="text" className="w-full md:w-1/2 border p-2 text-xs bg-slate-50 dark:bg-slate-800 dark:text-slate-100 rounded-lg" placeholder="Pesquise cargos CLT (ex: Programador, SEO, 2124)..." value={term} onChange={(e) => setTerm(e.target.value)} />
       
       <div className="overflow-x-auto">

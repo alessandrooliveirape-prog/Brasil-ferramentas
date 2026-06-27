@@ -64,8 +64,8 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'calculadoras',
     title: 'Calculadora de Juros Compostos',
     shortDescription: 'Calcule o crescimento de investimentos ao longo do tempo com aportes mensais e juros acumulados.',
-    longIntro: 'Esta ferramenta permite calcular detalhadamente a evolução do seu capital exposto a taxas de juros compostos. Ideal para simular o acúmulo de riqueza para planos de aposentadoria, investimentos em renda fixa, fundos ou poupança.',
-    howItWorks: 'Informe o capital inicial, a taxa de juros (mensal ou anual), o tempo de investimento e o aporte mensal opcional. A ferramenta projeta a evolução ano a ano com tabelas de rendimentos correspondentes.',
+    longIntro: 'Esta ferramenta permite calcular detalhadamente a evolução do seu capital exposto a taxas de juros compostos, também conhecidos como juros sobre juros. Diferente dos juros simples, onde o rendimento incide apenas sobre o capital inicial, nos juros compostos os rendimentos acumulam sobre rendimentos anteriores, gerando um crescimento exponencial ao longo do tempo. Ideal para simular o acúmulo de riqueza para planos de aposentadoria, investimentos em renda fixa (CDB, LCI, LCA, Tesouro Direto), fundos de investimento, previdência privada ou poupança.',
+    howItWorks: 'Informe o capital inicial que você pretende investir, a taxa de juros (mensal ou anual), o tempo total de investimento em meses e o valor do aporte mensal opcional que deseja acrescentar. A ferramenta projeta a evolução ano a ano com tabelas detalhadas de rendimentos, mostrando período a período o saldo acumulado, os juros recebidos no período, e o total investido até o momento, permitindo visualizar claramente o efeito exponencial dos juros compostos ao longo do tempo.',
     faqs: [
       {
         question: 'O que são juros compostos?',
@@ -82,7 +82,8 @@ export const TOOLS: ToolMetadata[] = [
     ],
     tips: [
       'Iniciar aportes o quanto antes otimiza significativamente o efeito bola de neve dos juros compostos.',
-      'Aportar valores constantes, por menores que pareçam, faz uma diferença colossal após 10 ou 15 anos.'
+      'Aportar valores constantes, por menores que pareçam, faz uma diferença colossal após 10 ou 15 anos.',
+      'O fator mais importante nos juros compostos é o TEMPO: quanto mais cedo você começar a investir, maior será o resultado final.'
     ],
     relatedToolIds: ['juros-simples', 'financiamento', 'porcentagem', 'fgts'],
     slug: 'calculadora-de-juros-compostos'
@@ -156,7 +157,7 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'calculadoras',
     title: 'Calculadora de Desconto INSS',
     shortDescription: 'Calcule a alíquota efetiva e o desconto previdenciário sobre o seu salário bruto de acordo com as regras vigentes.',
-    longIntro: 'Descubra a retenção previdenciária oficial do INSS calculada progressivamente sobre sua remuneração bruta atual. Entenda exatamente quanto vai para sua futura previdência oficial.',
+    longIntro: 'Descubra a retenção previdenciária oficial do INSS calculada progressivamente sobre sua remuneração bruta atual. Entenda exatamente quanto vai para sua futura previdência oficial. Desde 2020, o desconto do INSS segue alíquotas progressivas: cada faixa salarial contribui com um percentual diferente (7,5%, 9%, 12% e 14%) aplicado apenas sobre o valor que excede o limite da faixa anterior, tornando o sistema mais justo para salários mais baixos.',
     howItWorks: 'Digite o valor do salário bruto. O sistema utilizará os intervalos de faixas progressivas vigentes de contribuição e calculará o desconto real e a alíquota média efetiva.',
     faqs: [
       {
@@ -196,7 +197,7 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'calculadoras',
     title: 'Calculadora de Rescisão de Contrato',
     shortDescription: 'Antecipe e estude os valores líquidos de rescisões trabalhistas sob regimes CLT em variados formatos.',
-    longIntro: 'Esta calculadora foi desenhada para trabalhadores e gestores avaliarem as verbas rescisórias devidas no término do vínculo CLT, simulando o saldo salarial, férias pendentes e proporcionais, 13º e as multas aplicáveis.',
+    longIntro: 'Esta calculadora foi desenhada para trabalhadores e gestores avaliarem as verbas rescisórias devidas no término do vínculo CLT, simulando detalhadamente o saldo de salário, férias vencidas e proporcionais acrescidas de 1/3 constitucional, 13º salário proporcional, aviso prévio (trabalhado ou indenizado) e as multas aplicáveis sobre o FGTS. A calculadora considera os diferentes tipos de demissão previstos na legislação brasileira: sem justa causa, com justa causa, pedido de demissão e o acordo mútuo criado pela Reforma Trabalhista (Lei 13.467/2017).',
     howItWorks: 'Selecione as datas de início e término contratual, o último salário nominal bruto, o tipo de demissão (com ou sem justa causa, pedido ou comum acordo) e se houve aviso prévio cumprido ou indenizado.',
     faqs: [
       {
@@ -235,8 +236,8 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'calculadoras',
     title: 'Calculadora de IMC',
     shortDescription: 'Verifique seu Índice de Massa Corporal e descubra sua classificação nutricional ideal.',
-    longIntro: 'Uma ferramenta rápida de saúde pública para examinar se a proporção de peso corporal para sua altura está em consonância com as diretrizes de referência da Organização Mundial da Saúde (OMS).',
-    howItWorks: 'Forneça sua altura em centímetros e o peso líquido em quilogramas para obter o IMC, a margem de peso ideal para suas proporções e o grau de classificação correspondente.',
+    longIntro: 'O IMC (Índice de Massa Corporal) é o padrão internacional da Organização Mundial da Saúde (OMS) para classificação do estado nutricional de adultos. Uma ferramenta rápida de saúde pública para examinar se a proporção de peso corporal para sua altura está em consonância com as diretrizes de referência da OMS. O IMC é amplamente utilizado em triagens clínicas e estudos populacionais por sua simplicidade e correlação com riscos de saúde, embora não meça diretamente a gordura corporal nem distinga massa muscular de gordura.',
+    howItWorks: 'Forneça sua altura em centímetros e o peso líquido em quilogramas. A calculadora calcula automaticamente o IMC usando a fórmula padrão (peso ÷ altura²), exibe o valor numérico, a faixa de classificação OMS (abaixo do peso, normal, sobrepeso ou obesidade), o peso ideal mínimo e máximo para sua altura, e dicas personalizadas baseadas na sua classificação atual.',
     faqs: [
       {
         question: 'Como o cálculo do IMC é estruturado?',
@@ -407,7 +408,7 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'calculadoras',
     title: 'Calculadora de Salário Líquido',
     shortDescription: 'Preveja seu salário líquido CLT deduzindo INSS, Imposto de Renda (IRRF), vale-transporte e outros descontos.',
-    longIntro: 'Configure seu salário bruto mensal, dependentes familiares e deduções extras para descobrir exatamente quanto cairá na sua conta bancária todo mês como Salário Líquido CLT, visualizando o detalhamento completo de todos os descontos aplicados.',
+    longIntro: 'Configure seu salário bruto mensal, dependentes familiares e deduções extras para descobrir exatamente quanto cairá na sua conta bancária todo mês como Salário Líquido CLT, visualizando o detalhamento completo de todos os descontos aplicados. O salário líquido é o valor final recebido pelo trabalhador após as deduções obrigatórias de INSS (alíquotas progressivas de 7,5% a 14%), Imposto de Renda Retido na Fonte (IRRF com tabela progressiva), vale-transporte (até 6%), plano de saúde e pensão alimentícia, quando aplicável.',
     howItWorks: 'Forneça o valor do seu salário bruto mensal, a quantidade de dependentes legais e configure todos os descontos adicionais que ocorrem em sua folha de pagamento (como Vale Transporte, plano de saúde ou coparticipações).',
     faqs: [
       {
@@ -1764,6 +1765,26 @@ export const TOOLS: ToolMetadata[] = [
     tips: ['Leve dólares para Argentina, não reais. O dólar americano tem melhor aceitação no câmbio blue.', 'Use Western Union para receber em pesos ao câmbio blue - é um dos métodos mais vantajosos.'],
     relatedToolIds: ['real-para-dolar', 'euro-para-real', 'libra-para-real'],
     slug: 'converter-peso-argentino-para-real'
+  },
+
+  // ===== CALCULADORA MOVE BRASIL =====
+  {
+    id: 'move-brasil',
+    categoryId: 'calculadoras',
+    title: 'Calculadora Move Brasil - Programa Mover Motoristas',
+    shortDescription: 'Simule o financiamento do programa MOVE Brasil para motoristas de aplicativo, taxistas e motoboys.',
+    longIntro: 'O programa MOVE Brasil (Mobilidade Verde e Inovação) é uma iniciativa do Governo Federal que oferece linhas de crédito subsidiadas pelo BNDES para motoristas profissionais adquirirem veículos novos (flex, híbridos ou elétricos) com juros reduzidos. Esta calculadora simula o valor das parcelas, economia total e condições ideais para taxistas, motoristas de app (Uber, 99) e entregadores (motoboys).',
+    howItWorks: 'Informe o valor do veículo desejado (até R$ 150 mil), seu perfil profissional, valor de entrada e prazo de financiamento. A calculadora aplica as taxas do BNDES vigentes e exibe o valor das parcelas, economia total e comparação com financiamento tradicional.',
+    faqs: [
+      { question: 'Quem pode participar do MOVE Brasil?', answer: 'Motoristas de aplicativo com cadastro ativo há pelo menos 12 meses e 100 corridas realizadas, taxistas com registro ativo, e entregadores (motoboys) cadastrados há pelo menos 6 meses com 100 entregas ou vínculo CLT.' },
+      { question: 'Qual o valor máximo do veículo?', answer: 'O programa financia veículos novos (flex, híbridos ou elétricos) com valor de até R$ 150 mil.' },
+      { question: 'Quais as taxas de juros do programa?', answer: 'Para mulheres: taxa fixa de 1,5 a.a. (custo final até 11,5 a.a.). Para os demais: taxa fixa de 2,5 a.a. (custo final até 12,6 a.a.). O prazo máximo e de 72 meses com carência de até 6 meses.' },
+      { question: 'Precisa de entrada?', answer: 'O BNDES pode financiar até 100% dos itens elegíveis, mas a exigênciade entrada depende da politica da instituição financeira. O programa é vedado de cobrar tarifa de cadastro.' },
+      { question: 'Ate quando posso solicitar?', answer: 'As instituicoes financeiras devem contratar as operacoes até 15 de setembro de 2026, sujeito a disponibilidade orçamentária.' }
+    ],
+    tips: ['Compare as taxas oferecidas por diferentes bancos credenciados pelo BNDES antes de fechar o contrato.', 'Considere o custo total do veículo incluindo IPVA, seguro e manutenção no planejamento financeiro.', 'Mulheres tem condições especiais com taxas ainda mais baixas - aproveite o benefício!'],
+    relatedToolIds: ['preco-por-km', 'consumo-combustivel', 'ipva', 'financiamento'],
+    slug: 'calculadora-move-brasil'
   },
 ];
 
