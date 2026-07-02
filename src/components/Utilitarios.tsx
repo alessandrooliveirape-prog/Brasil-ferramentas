@@ -11,7 +11,7 @@ interface UtilitariosProps {
 
 export default function Utilitarios({ toolId }: UtilitariosProps) {
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-xl p-6 shadow-sm" id="utilitarios-container">
+    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm animate-fade-in" id="utilitarios-container">
       {(toolId === 'contador-caracteres' || toolId === 'contador-palavras') && <ContadorTexto />}
       {toolId === 'removedor-espacos' && <RemovedorEspacos />}
       {(toolId === 'formatador-json' || toolId === 'beautify-json') && <JsonFormatter />}
@@ -29,7 +29,7 @@ export default function Utilitarios({ toolId }: UtilitariosProps) {
   );
 }
 
-// 1. CONTADOR DE CARACTERES E PALAVRAS (WITH WORD DENSITY!)
+// 1. CONTADOR DE CARACTERES E PALAVRAS (WITH DENSITY)
 function ContadorTexto() {
   const [texto, setTexto] = useState<string>('A Tool Brasil oferece as melhores soluções de SEO programático gratuitas.');
   const [stats, setStats] = useState<any>(null);
@@ -39,21 +39,16 @@ function ContadorTexto() {
     const charComEspacos = raw.length;
     const charSemEspacos = raw.replace(/\s+/g, '').length;
     
-    // Contagem de palavras
     const palavrasArray = raw.trim().split(/\s+/).filter(w => w.length > 0);
     const totalPalavras = palavrasArray.length;
     
-    // Contagem de parágrafos
     const totalParagrafos = raw.split(/\n+/).filter(p => p.trim().length > 0).length;
-    
-    // Tempo estimado de leitura (base de ~200 palavras por minuto)
     const tempoLeitura = Math.ceil(totalPalavras / 200) || 1;
 
-    // Frequência de palavras (densidade lúdica)
     const frequencia: { [key: string]: number } = {};
     palavrasArray.forEach(p => {
       const clean = p.toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
-      if (clean.length > 3) { // apenas termos relevantes maiores
+      if (clean.length > 3) {
         frequencia[clean] = (frequencia[clean] || 0) + 1;
       }
     });
@@ -74,12 +69,12 @@ function ContadorTexto() {
 
   return (
     <div className="space-y-6" id="util-texto">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Contador e Analisador de Texto</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Contador e Analisador de Texto</h2>
       
       <div className="space-y-2">
-        <label className="block text-xs font-semibold text-slate-500">Cole ou digite seu conteúdo:</label>
+        <label className="block text-xs font-bold text-slate-500 dark:text-slate-400">Cole ou digite seu conteúdo:</label>
         <textarea
-          className="w-full border dark:border-slate-750 p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 rounded-lg text-sm font-sans focus:outline-emerald-500 focus:bg-white"
+          className="w-full border border-slate-300 dark:border-slate-700 p-3 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-lg text-sm font-sans focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all"
           rows={6}
           value={texto}
           onChange={(e) => setTexto(e.target.value)}
@@ -90,34 +85,34 @@ function ContadorTexto() {
       {stats && (
         <div className="space-y-6 animate-fade-in">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3 text-center">
-            <div className="bg-slate-50 dark:bg-slate-850 p-3 rounded-lg border border-slate-150">
-              <span className="block text-[10px] text-slate-400 uppercase">Com Espaços</span>
-              <span className="text-lg font-bold font-mono text-slate-800 dark:text-slate-200">{stats.cc}</span>
+            <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+              <span className="block text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold">Com Espaços</span>
+              <span className="text-lg font-bold font-mono text-slate-800 dark:text-slate-100">{stats.cc}</span>
             </div>
-            <div className="bg-slate-50 dark:bg-slate-850 p-3 rounded-lg border border-slate-150">
-              <span className="block text-[10px] text-slate-400 uppercase">Sem Espaços</span>
-              <span className="text-lg font-bold font-mono text-slate-800 dark:text-slate-200">{stats.cs}</span>
+            <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+              <span className="block text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold">Sem Espaços</span>
+              <span className="text-lg font-bold font-mono text-slate-800 dark:text-slate-100">{stats.cs}</span>
             </div>
-            <div className="bg-slate-50 dark:bg-slate-850 p-3 rounded-lg border border-slate-150">
-              <span className="block text-[10px] text-slate-400 uppercase">Palavras</span>
+            <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+              <span className="block text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold">Palavras</span>
               <span className="text-lg font-bold font-mono text-emerald-600 dark:text-emerald-400">{stats.pal}</span>
             </div>
-            <div className="bg-slate-50 dark:bg-slate-850 p-3 rounded-lg border border-slate-150">
-              <span className="block text-[10px] text-slate-400 uppercase">Parágrafos</span>
-              <span className="text-lg font-bold font-mono text-slate-800 dark:text-slate-200">{stats.par}</span>
+            <div className="bg-slate-50 dark:bg-slate-950 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+              <span className="block text-[10px] text-slate-500 dark:text-slate-400 uppercase font-bold">Parágrafos</span>
+              <span className="text-lg font-bold font-mono text-slate-800 dark:text-slate-100">{stats.par}</span>
             </div>
-            <div className="col-span-2 md:col-span-1 bg-emerald-50/50 dark:bg-emerald-950/20 p-3 rounded-lg border border-emerald-100 dark:border-emerald-950">
-              <span className="block text-[10px] text-emerald-600 dark:text-emerald-500 uppercase">Est. Leitura</span>
+            <div className="col-span-2 md:col-span-1 bg-emerald-50/50 dark:bg-emerald-950/20 p-3 rounded-lg border border-emerald-100 dark:border-emerald-950/40">
+              <span className="block text-[10px] text-emerald-600 dark:text-emerald-450 uppercase font-bold">Est. Leitura</span>
               <span className="text-lg font-bold font-mono text-emerald-700 dark:text-emerald-300">~{stats.tempo} min</span>
             </div>
           </div>
 
           {stats.topWords.length > 0 && (
             <div className="space-y-2">
-              <h3 className="text-xs font-semibold text-slate-500 uppercase">Densidade Vocabular (Repetições de Termos Chaves):</h3>
+              <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Densidade Vocabular (Repetições de Termos Chaves):</h3>
               <div className="flex flex-wrap gap-2 text-xs">
                 {stats.topWords.map(([w, count]: any, i: number) => (
-                  <span key={i} className="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700">
+                  <span key={i} className="bg-slate-105 dark:bg-slate-800 text-slate-800 dark:text-slate-200 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700">
                     <strong>{w}</strong>: {count}x
                   </span>
                 ))}
@@ -138,9 +133,7 @@ function RemovedorEspacos() {
 
   const limpar = () => {
     let result = inputStr;
-    // Remove espaços duplicados
     result = result.replace(/[ \t]+/g, ' ');
-    // Se selecionado, remove linhas completamente em branco
     if (removerLinhasVazias) {
       result = result.split('\n').filter(line => line.trim().length > 0).join('\n');
     }
@@ -151,22 +144,35 @@ function RemovedorEspacos() {
 
   return (
     <div className="space-y-6" id="util-spaces">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Removedor de Espaços Extras</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Removedor de Espaços Extras</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="block text-xs font-semibold text-slate-500">Texto Sujo</label>
-          <textarea className="w-full border dark:border-slate-750 p-2.5 bg-slate-50 dark:bg-slate-800 rounded-lg text-xs" rows={6} value={inputStr} onChange={(e) => setInputStr(e.target.value)} />
+          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">Texto Original</label>
+          <textarea 
+            className="w-full border border-slate-350 dark:border-slate-700 p-2.5 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-lg text-xs outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" 
+            rows={6} 
+            value={inputStr} 
+            onChange={(e) => setInputStr(e.target.value)} 
+          />
         </div>
         <div className="space-y-2">
-          <label className="block text-xs font-semibold text-slate-500">Texto Higienizado</label>
-          <textarea readOnly className="w-full border dark:border-slate-750 p-2.5 bg-slate-50 dark:bg-slate-900 rounded-lg text-xs" rows={6} value={outputStr} />
+          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">Texto Higienizado</label>
+          <textarea 
+            readOnly 
+            className="w-full border border-slate-300 dark:border-slate-800 p-2.5 bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 rounded-lg text-xs font-medium" 
+            rows={6} 
+            value={outputStr} 
+          />
         </div>
       </div>
       
-      <div className="flex justify-between items-center bg-slate-50 dark:bg-slate-850 p-3 rounded-lg border border-slate-150">
-        <label className="flex items-center gap-2 text-xs hover:cursor-pointer"><input type="checkbox" checked={removerLinhasVazias} onChange={() => setRemoverLinhasVazias(!removerLinhasVazias)} className="rounded" /> Remover Linhas em Branco Vazias</label>
-        <button onClick={() => navigator.clipboard.writeText(outputStr)} className="bg-emerald-600 text-white font-bold text-xs py-1.5 px-4 rounded hover:cursor-pointer">Copiar Tratado</button>
+      <div className="flex justify-between items-center bg-slate-50 dark:bg-slate-950 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+        <label className="flex items-center gap-2 text-xs hover:cursor-pointer text-slate-700 dark:text-slate-300 font-medium">
+          <input type="checkbox" checked={removerLinhasVazias} onChange={() => setRemoverLinhasVazias(!removerLinhasVazias)} className="rounded text-emerald-600 focus:ring-emerald-500" />
+          Remover Linhas em Branco Vazias
+        </label>
+        <button onClick={() => navigator.clipboard.writeText(outputStr)} className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-1.5 px-4 rounded hover:cursor-pointer transition-colors">Copiar Tratado</button>
       </div>
     </div>
   );
@@ -197,26 +203,36 @@ function JsonFormatter() {
 
   return (
     <div className="space-y-6" id="util-json">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Formatador e Embelezador JSON</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Formatador e Embelezador JSON</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="block text-xs font-semibold text-slate-500 font-mono">Raw string corporativo</label>
-          <textarea className="w-full border p-2.5 font-mono text-xs dark:bg-slate-800 bg-slate-50 dark:text-slate-100 rounded-lg" rows={10} value={jsonStr} onChange={(e) => setJsonStr(e.target.value)} />
+          <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 font-mono">Raw string / JSON Desordenado</label>
+          <textarea 
+            className="w-full border border-slate-300 dark:border-slate-700 p-2.5 font-mono text-xs bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 rounded-lg outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" 
+            rows={10} 
+            value={jsonStr} 
+            onChange={(e) => setJsonStr(e.target.value)} 
+          />
         </div>
         <div className="space-y-2">
-          <label className="block text-xs font-semibold text-slate-500 font-mono">JSON Perfeitamente Formatado</label>
-          <textarea readOnly className="w-full border p-2.5 font-mono text-xs bg-slate-950 text-emerald-400 rounded-lg" rows={10} value={formatted || errorLog} />
+          <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 font-mono">JSON Perfeitamente Formatado</label>
+          <textarea 
+            readOnly 
+            className="w-full border border-slate-300 dark:border-slate-800 p-2.5 font-mono text-xs bg-slate-950 text-emerald-400 rounded-lg border-none" 
+            rows={10} 
+            value={formatted || errorLog} 
+          />
         </div>
       </div>
       
       {errorLog && (
-        <div className="p-3 bg-red-50 text-red-700 text-xs font-mono rounded border border-red-200">
+        <div className="p-3 bg-red-50 dark:bg-red-950/20 text-red-700 dark:text-red-400 text-xs font-mono rounded border border-red-200 dark:border-red-900/50">
           ⚠️ Falha de Sintaxe JSON: {errorLog}
         </div>
       )}
 
       {!errorLog && formatted && (
-        <button onClick={() => navigator.clipboard.writeText(formatted)} className="w-full bg-emerald-600 text-white font-bold text-xs py-2 rounded">Copiar JSON Formatado</button>
+        <button onClick={() => navigator.clipboard.writeText(formatted)} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 rounded-lg transition-colors">Copiar JSON Formatado</button>
       )}
     </div>
   );
@@ -229,11 +245,8 @@ function MinificadorCss() {
 
   const minificar = () => {
     let clean = cssStr;
-    // Remove comentários do tipo /* ... */
     clean = clean.replace(/\/\*[\s\S]*?\*\//g, '');
-    // Remove múltiplos espaços e novas linhas
     clean = clean.replace(/\s+/g, ' ');
-    // Remove espaços decorativos nos seletores
     clean = clean.replace(/\s*([{};:])\s*/g, '$1');
     setMinified(clean.trim());
   };
@@ -242,18 +255,28 @@ function MinificadorCss() {
 
   return (
     <div className="space-y-6" id="util-css">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Minificador de Folhas de Estilo CSS</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Minificador de Folhas de Estilo CSS</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-xs font-semibold text-slate-400">CSS Completo</label>
-          <textarea className="w-full border p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-xs rounded-lg" rows={8} value={cssStr} onChange={(e) => setCssStr(e.target.value)} />
+        <div className="space-y-2">
+          <label className="block text-xs font-bold text-slate-500 dark:text-slate-400">CSS Completo</label>
+          <textarea 
+            className="w-full border border-slate-300 dark:border-slate-700 p-2.5 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-mono text-xs rounded-lg outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" 
+            rows={8} 
+            value={cssStr} 
+            onChange={(e) => setCssStr(e.target.value)} 
+          />
         </div>
-        <div>
-          <label className="block text-xs font-semibold text-slate-400">CSS Minificado</label>
-          <textarea readOnly className="w-full border p-2 bg-slate-950 text-slate-350 font-mono text-xs rounded-lg" rows={8} value={minified} />
+        <div className="space-y-2">
+          <label className="block text-xs font-bold text-slate-500 dark:text-slate-400">CSS Minificado</label>
+          <textarea 
+            readOnly 
+            className="w-full border border-slate-350 dark:border-slate-800 p-2.5 bg-slate-950 text-slate-200 font-mono text-xs rounded-lg border-none" 
+            rows={8} 
+            value={minified} 
+          />
         </div>
       </div>
-      <button onClick={() => navigator.clipboard.writeText(minified)} className="w-full bg-slate-800 text-white text-xs py-2 rounded">Copiar Estilo Minificado</button>
+      <button onClick={() => navigator.clipboard.writeText(minified)} className="w-full bg-slate-800 hover:bg-slate-700 text-white text-xs py-2 rounded-lg font-bold transition-colors">Copiar Estilo Minificado</button>
     </div>
   );
 }
@@ -265,11 +288,8 @@ function MinificadorJs() {
 
   const minificar = () => {
     let clean = jsStr;
-    // Remove comentários de linha simples //
     clean = clean.replace(/\/\/.*$/gm, '');
-    // Remove comentários multilinha /* */
     clean = clean.replace(/\/\*[\s\S]*?\*\//g, '');
-    // Remove quebras de linha e tabulações excessivas
     clean = clean.replace(/\s+/g, ' ');
     setMinified(clean.trim());
   };
@@ -278,18 +298,28 @@ function MinificadorJs() {
 
   return (
     <div className="space-y-6" id="util-js">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Minificador de JavaScript</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Minificador de JavaScript</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-xs font-semibold text-slate-400">JS Legível</label>
-          <textarea className="w-full border p-2 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-xs rounded-lg" rows={8} value={jsStr} onChange={(e) => setJsStr(e.target.value)} />
+        <div className="space-y-2">
+          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">JS Legível</label>
+          <textarea 
+            className="w-full border border-slate-300 dark:border-slate-700 p-2.5 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-mono text-xs rounded-lg outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" 
+            rows={8} 
+            value={jsStr} 
+            onChange={(e) => setJsStr(e.target.value)} 
+          />
         </div>
-        <div>
-          <label className="block text-xs font-semibold text-slate-400">JS Compactado</label>
-          <textarea readOnly className="w-full border p-2 bg-slate-950 text-slate-300 font-mono text-xs rounded-lg" rows={8} value={minified} />
+        <div className="space-y-2">
+          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">JS Compactado</label>
+          <textarea 
+            readOnly 
+            className="w-full border border-slate-350 dark:border-slate-800 p-2.5 bg-slate-955 text-slate-200 font-mono text-xs rounded-lg border-none" 
+            rows={8} 
+            value={minified} 
+          />
         </div>
       </div>
-      <button onClick={() => navigator.clipboard.writeText(minified)} className="w-full bg-slate-800 text-white text-xs py-2 rounded font-mono">Copiar Script Minificado</button>
+      <button onClick={() => navigator.clipboard.writeText(minified)} className="w-full bg-slate-800 hover:bg-slate-700 text-white text-xs py-2 rounded-lg font-bold transition-colors">Copiar Script Minificado</button>
     </div>
   );
 }
@@ -305,14 +335,52 @@ function EncodeUrlSelector() {
 
   return (
     <div className="space-y-6" id="util-encode">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Codificador de Parâmetros URL (Encode)</h2>
-      <div className="space-y-3">
-        <label className="block text-xs text-slate-500">Texto bruto para codificar</label>
-        <input type="text" className="w-full border p-2.5 rounded-lg text-sm bg-slate-50 dark:bg-slate-800 dark:text-slate-100" value={inputVal} onChange={(e) => setInputVal(e.target.value)} />
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Codificador de Parâmetros URL (Encode)</h2>
+      <div className="space-y-2">
+        <label className="block text-xs font-bold text-slate-500 dark:text-slate-400">Texto bruto para codificar</label>
+        <input 
+          type="text" 
+          className="w-full border border-slate-300 dark:border-slate-700 p-2.5 rounded-lg text-sm bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-medium" 
+          value={inputVal} 
+          onChange={(e) => setInputVal(e.target.value)} 
+        />
       </div>
       <div className="space-y-2">
-        <span className="block text-xs font-mono text-slate-400">String Codificada (Pronta para query param)</span>
-        <div className="bg-slate-950 p-3 rounded font-mono text-xs text-amber-400 select-all border border-slate-850 truncate">{encoded}</div>
+        <span className="block text-xs font-bold font-mono text-slate-500 dark:text-slate-400">String Codificada (Pronta para query param)</span>
+        <div className="bg-slate-950 p-3 rounded font-mono text-xs text-amber-400 select-all border border-slate-800 truncate">{encoded}</div>
+      </div>
+    </div>
+  );
+}
+
+// 7. DECODE URL
+function DecodeUrlSelector() {
+  const [inputVal, setInputVal] = useState<string>('chave%3Dbrasil%20ferramentas%26origem%3Dpesquisa%20google');
+  const [decoded, setDecoded] = useState<string>('');
+
+  useEffect(() => {
+    try {
+      setDecoded(decodeURIComponent(inputVal));
+    } catch {
+      setDecoded('Erro de decodificação: Sintaxe mal formada.');
+    }
+  }, [inputVal]);
+
+  return (
+    <div className="space-y-6" id="util-decode">
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Decodificador de Parâmetros URL (Decode)</h2>
+      <div className="space-y-2">
+        <label className="block text-xs font-bold text-slate-500 dark:text-slate-400">String codificada</label>
+        <input 
+          type="text" 
+          className="w-full border border-slate-300 dark:border-slate-700 p-2.5 rounded-lg text-sm bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-medium" 
+          value={inputVal} 
+          onChange={(e) => setInputVal(e.target.value)} 
+        />
+      </div>
+      <div className="space-y-2">
+        <span className="block text-xs font-bold font-mono text-slate-500 dark:text-slate-400">String Decodificada (Linguagem Humana)</span>
+        <div className="bg-slate-950 p-3 rounded font-mono text-xs text-emerald-400 select-all border border-slate-800 truncate">{decoded}</div>
       </div>
     </div>
   );
@@ -343,22 +411,22 @@ function Cronometro() {
 
   return (
     <div className="space-y-6" id="util-crono">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Cronômetro Online</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Cronômetro Online</h2>
       <div className="text-center space-y-4">
-        <div className="text-5xl md:text-7xl font-mono font-extrabold text-emerald-600 dark:text-emerald-400 tracking-widest bg-slate-50 dark:bg-slate-850 p-6 rounded-xl border">
+        <div className="text-5xl md:text-7xl font-mono font-extrabold text-emerald-700 dark:text-emerald-400 tracking-widest bg-slate-100/50 dark:bg-slate-955 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
           {formatar(tempo)}
         </div>
         <div className="flex gap-2 justify-center">
           <button onClick={() => setAtivo(!ativo)} className={`px-6 py-2 rounded-lg font-bold text-sm ${ativo ? 'bg-red-500 hover:bg-red-600' : 'bg-emerald-600 hover:bg-emerald-700'} text-white transition hover:cursor-pointer`}>
             {ativo ? '⏹ Pausar' : '▶ Iniciar'}
           </button>
-          <button onClick={registrarVolta} disabled={!ativo} className="px-4 py-2 bg-slate-200 dark:bg-slate-800 rounded-lg font-bold text-sm disabled:opacity-50 hover:cursor-pointer">⏱ Volta</button>
-          <button onClick={resetar} className="px-4 py-2 bg-slate-200 dark:bg-slate-800 rounded-lg font-bold text-sm hover:cursor-pointer">🔄 Resetar</button>
+          <button onClick={registrarVolta} disabled={!ativo} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 border border-slate-250 dark:border-slate-700 rounded-lg font-bold text-sm disabled:opacity-50 hover:cursor-pointer transition-colors">⏱ Volta</button>
+          <button onClick={resetar} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 border border-slate-250 dark:border-slate-700 rounded-lg font-bold text-sm hover:cursor-pointer transition-colors">🔄 Resetar</button>
         </div>
         {voltas.length > 0 && (
           <div className="max-h-40 overflow-y-auto space-y-1">
             {voltas.map((v, i) => (
-              <div key={i} className="font-mono text-xs text-slate-400 bg-slate-50 dark:bg-slate-850 px-3 py-1 rounded border">
+              <div key={i} className="font-mono text-xs text-slate-605 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800">
                 Volta {voltas.length - i}: {v}
               </div>
             ))}
@@ -409,17 +477,22 @@ function SeparadorSilabas() {
 
   return (
     <div className="space-y-6" id="util-silabas">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Separador de Sílabas</h2>
-      <div>
-        <label className="block text-xs font-semibold text-slate-500 mb-1">Digite uma palavra</label>
-        <input type="text" className="w-full md:w-1/2 border rounded-lg p-2.5 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-sm" value={palavra} onChange={e => setPalavra(e.target.value.toLowerCase().normalize('NFD'))} />
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Separador de Sílabas</h2>
+      <div className="space-y-2">
+        <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">Digite uma palavra</label>
+        <input 
+          type="text" 
+          className="w-full md:w-1/2 border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 text-sm outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 font-medium" 
+          value={palavra} 
+          onChange={e => setPalavra(e.target.value.toLowerCase().normalize('NFD'))} 
+        />
       </div>
       {separado && (
-        <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-4 rounded-xl border border-emerald-100 text-center">
-          <span className="text-2xl font-bold text-emerald-700 dark:text-emerald-300 tracking-wider">{separado}</span>
+        <div className="bg-emerald-50 dark:bg-emerald-950/20 p-4 rounded-xl border border-emerald-100 dark:border-emerald-900/50 text-center">
+          <span className="text-2xl font-bold text-emerald-700 dark:text-emerald-300 tracking-wider font-mono">{separado}</span>
         </div>
       )}
-      <p className="text-[10px] text-slate-400 italic">* Separação simplificada para palavras comuns. Palavras com hiatos, tritongos ou encontros consonantais complexos podem ter variações.</p>
+      <p className="text-[10px] text-slate-450 dark:text-slate-500 italic">* Separação simplificada para palavras comuns. Palavras com hiatos, tritongos ou encontros consonantais complexos podem ter variações.</p>
     </div>
   );
 }
@@ -442,24 +515,38 @@ function MaiusculasMinusculas() {
 
   return (
     <div className="space-y-6" id="util-case">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Conversor de Maiúsculas/Minúsculas</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Conversor de Maiúsculas/Minúsculas</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-xs font-semibold text-slate-500 mb-1">Texto Original</label>
-          <textarea className="w-full border rounded-lg p-2.5 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-xs" rows={4} value={texto} onChange={e => setTexto(e.target.value)} />
+        <div className="space-y-2">
+          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">Texto Original</label>
+          <textarea 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 text-xs outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" 
+            rows={4} 
+            value={texto} 
+            onChange={e => setTexto(e.target.value)} 
+          />
         </div>
-        <div>
-          <label className="block text-xs font-semibold text-slate-500 mb-1">Resultado</label>
-          <textarea readOnly className="w-full border rounded-lg p-2.5 bg-emerald-950/10 dark:bg-emerald-950/20 text-emerald-700 dark:text-emerald-300 text-xs font-medium" rows={4} value={resultado} />
+        <div className="space-y-2">
+          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">Resultado</label>
+          <textarea 
+            readOnly 
+            className="w-full border border-slate-300 dark:border-slate-800 rounded-lg p-2.5 bg-emerald-50/50 dark:bg-emerald-950/10 text-emerald-800 dark:text-emerald-400 text-xs font-semibold" 
+            rows={4} 
+            value={resultado} 
+          />
         </div>
       </div>
       <div className="flex flex-wrap gap-2">
         {['maiusculas', 'minusculas', 'capitalizado', 'alternado'].map(m => (
-          <button key={m} onClick={() => setModo(m)} className={`px-4 py-1.5 rounded text-xs font-bold hover:cursor-pointer ${modo === m ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400'}`}>
+          <button 
+            key={m} 
+            onClick={() => setModo(m)} 
+            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-colors hover:cursor-pointer border ${modo === m ? 'bg-emerald-650 text-white border-emerald-600' : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 border-slate-250 dark:border-slate-700'}`}
+          >
             {m === 'maiusculas' ? 'MAIÚSCULAS' : m === 'minusculas' ? 'minúsculas' : m === 'capitalizado' ? 'Capitalizado' : 'aLtErNaDo'}
           </button>
         ))}
-        <button onClick={() => navigator.clipboard.writeText(resultado)} className="px-4 py-1.5 rounded text-xs font-bold bg-slate-800 text-white hover:cursor-pointer">Copiar</button>
+        <button onClick={() => navigator.clipboard.writeText(resultado)} className="px-4 py-1.5 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white hover:cursor-pointer transition-colors border border-slate-900 dark:border-slate-700">Copiar</button>
       </div>
     </div>
   );
@@ -478,19 +565,24 @@ function ExtratorEmail() {
 
   return (
     <div className="space-y-6" id="util-email">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Extrator de E-mails</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Extrator de E-mails</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-xs font-semibold text-slate-500 mb-1">Texto ou HTML</label>
-          <textarea className="w-full border rounded-lg p-2.5 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-xs font-mono" rows={6} value={texto} onChange={e => setTexto(e.target.value)} />
+        <div className="space-y-2">
+          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">Texto ou HTML</label>
+          <textarea 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-955 text-slate-900 dark:text-slate-100 text-xs font-mono outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" 
+            rows={6} 
+            value={texto} 
+            onChange={e => setTexto(e.target.value)} 
+          />
         </div>
-        <div>
-          <label className="block text-xs font-semibold text-slate-500 mb-1">E-mails Encontrados ({emails.length})</label>
-          <div className="border rounded-lg p-2.5 bg-slate-950 text-emerald-400 text-xs font-mono min-h-[140px] space-y-1">
+        <div className="space-y-2">
+          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">E-mails Encontrados ({emails.length})</label>
+          <div className="border border-slate-300 dark:border-slate-800 rounded-lg p-2.5 bg-slate-950 text-emerald-450 text-xs font-mono min-h-[140px] space-y-1">
             {emails.length > 0 ? emails.map((e, i) => <div key={i}>📧 {e}</div>) : <div className="text-slate-500">Nenhum e-mail encontrado</div>}
           </div>
           {emails.length > 0 && (
-            <button onClick={() => navigator.clipboard.writeText(emails.join('\n'))} className="mt-2 px-3 py-1.5 bg-emerald-600 text-white text-xs rounded hover:cursor-pointer">
+            <button onClick={() => navigator.clipboard.writeText(emails.join('\n'))} className="mt-2 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs rounded-lg hover:cursor-pointer transition-colors font-bold">
               Copiar Todos
             </button>
           )}
@@ -500,7 +592,7 @@ function ExtratorEmail() {
   );
 }
 
-// 12. COMPARADOR DE TEXTOS
+// 12. COMPARADOR DE TEXTOS (DIFF)
 function ComparadorTextos() {
   const [textoA, setTextoA] = useState<string>('Este é o texto original da versão A.');
   const [textoB, setTextoB] = useState<string>('Este é o texto modificado da versão B.');
@@ -524,18 +616,28 @@ function ComparadorTextos() {
 
   return (
     <div className="space-y-6" id="util-diff">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Comparador de Textos (Diff)</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Comparador de Textos (Diff)</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-xs font-semibold text-slate-500 mb-1">Versão A (Original)</label>
-          <textarea className="w-full border rounded-lg p-2.5 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-xs font-mono" rows={6} value={textoA} onChange={e => setTextoA(e.target.value)} />
+        <div className="space-y-2">
+          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">Versão A (Original)</label>
+          <textarea 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 text-xs font-mono outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" 
+            rows={6} 
+            value={textoA} 
+            onChange={e => setTextoA(e.target.value)} 
+          />
         </div>
-        <div>
-          <label className="block text-xs font-semibold text-slate-500 mb-1">Versão B (Modificada)</label>
-          <textarea className="w-full border rounded-lg p-2.5 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 text-xs font-mono" rows={6} value={textoB} onChange={e => setTextoB(e.target.value)} />
+        <div className="space-y-2">
+          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">Versão B (Modificada)</label>
+          <textarea 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 text-xs font-mono outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" 
+            rows={6} 
+            value={textoB} 
+            onChange={e => setTextoB(e.target.value)} 
+          />
         </div>
       </div>
-      <div className="border rounded-lg p-3 bg-slate-950 min-h-[100px]">
+      <div className="border border-slate-300 dark:border-slate-800 rounded-lg p-3 bg-slate-950 min-h-[100px]">
         {diffLinhas.length === 0 ? (
           <div className="text-xs text-slate-500 text-center">Textos idênticos. Faça alterações para ver as diferenças.</div>
         ) : (
@@ -552,7 +654,7 @@ function ComparadorTextos() {
   );
 }
 
-// ===== VALIDADOR DE CARTÃO DE CRÉDITO =====
+// 13. VALIDADOR DE CARTÃO DE CRÉDITO
 function ValidadorCartao() {
   const [numero, setNumero] = useState<string>('4532 1234 5678 9012');
   const [resultado, setResultado] = useState<any>(null);
@@ -599,66 +701,28 @@ function ValidadorCartao() {
 
   return (
     <div className="space-y-6" id="util-cartao">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Validador de Cartão de Crédito</h2>
-      <div>
-        <label className="block text-xs font-semibold text-slate-500 mb-1">Número do Cartão</label>
-        <input type="text" className="w-full md:w-1/2 border rounded-lg p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 font-mono text-lg tracking-widest" value={numero} onChange={e => formatarNumero(e.target.value)} placeholder="0000 0000 0000 0000" />
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Validador de Cartão de Crédito</h2>
+      <div className="space-y-2">
+        <label className="block text-xs font-bold text-slate-550 dark:text-slate-400 mb-1">Número do Cartão</label>
+        <input 
+          type="text" 
+          className="w-full md:w-1/2 border border-slate-350 dark:border-slate-700 rounded-lg p-3 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 font-mono text-lg tracking-widest outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" 
+          value={numero} 
+          onChange={e => formatarNumero(e.target.value)} 
+          placeholder="0000 0000 0000 0000" 
+        />
       </div>
       {resultado && (
-        <div className={`p-5 rounded-xl border text-center ${resultado.valido ? 'bg-emerald-50 border-emerald-200' : 'bg-red-50 border-red-200'}`}>
-          <span className={`text-2xl font-extrabold block ${resultado.valido ? 'text-emerald-600' : 'text-red-600'}`}>
+        <div className={`p-5 rounded-xl border text-center transition-all duration-250 ${resultado.valido ? 'bg-emerald-50/50 border-emerald-200 dark:bg-emerald-950/20 dark:border-emerald-900/50' : 'bg-red-50/50 border-red-200 dark:bg-red-950/20 dark:border-red-900/50'}`}>
+          <span className={`text-2xl font-extrabold block ${resultado.valido ? 'text-emerald-700 dark:text-emerald-400' : 'text-red-700 dark:text-red-400'}`}>
             {resultado.valido ? '✅ Cartão Válido' : '❌ Cartão Inválido'}
           </span>
           <div className="grid grid-cols-2 gap-3 mt-3 text-xs max-w-xs mx-auto">
-            <div className="p-2 bg-white dark:bg-slate-800 rounded">Bandeira: <strong>{resultado.bandeira}</strong></div>
-            <div className="p-2 bg-white dark:bg-slate-800 rounded">Final: <strong className="font-mono">{resultado.digito}</strong></div>
+            <div className="p-2.5 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200">Bandeira: <strong>{resultado.bandeira}</strong></div>
+            <div className="p-2.5 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200">Final: <strong className="font-mono">{resultado.digito}</strong></div>
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-// PLACEHOLDER PARA NOVOS UTILITÁRIOS
-function PlaceholderUtilitario({ id }: { id: string }) {
-  const nomes: {[key: string]: string} = {
-    'validador-cartao': 'Validador de Cartão de Crédito',
-  };
-  return (
-    <div className="space-y-6 text-center py-8" id={`placeholder-${id}`}>
-      <div className="p-4 bg-amber-50/50 dark:bg-amber-950/20 rounded-xl border border-amber-100">
-        <span className="text-3xl block mb-3">🛠️</span>
-        <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100">{nomes[id] || id}</h3>
-        <p className="text-xs text-slate-500 mt-2 max-w-md mx-auto">Ferramenta em desenvolvimento.</p>
-      </div>
-    </div>
-  );
-}
-
-// 7. DECODE URL
-function DecodeUrlSelector() {
-  const [inputVal, setInputVal] = useState<string>('chave%3Dbrasil%20ferramentas%26origem%3Dpesquisa%20google');
-  const [decoded, setDecoded] = useState<string>('');
-
-  useEffect(() => {
-    try {
-      setDecoded(decodeURIComponent(inputVal));
-    } catch {
-      setDecoded('Erro de decodificação: Sintaxe mal formada.');
-    }
-  }, [inputVal]);
-
-  return (
-    <div className="space-y-6" id="util-decode">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">Decodificador de Parâmetros URL (Decode)</h2>
-      <div className="space-y-3">
-        <label className="block text-xs text-slate-500">String codificada</label>
-        <input type="text" className="w-full border p-2.5 rounded-lg text-sm bg-slate-50 dark:bg-slate-800 dark:text-slate-100" value={inputVal} onChange={(e) => setInputVal(e.target.value)} />
-      </div>
-      <div className="space-y-2">
-        <span className="block text-xs font-mono text-slate-400">String Decodificada (Linguagem Humana)</span>
-        <div className="bg-slate-950 p-3 rounded font-mono text-xs text-emerald-400 select-all border border-slate-850 truncate">{decoded}</div>
-      </div>
     </div>
   );
 }
