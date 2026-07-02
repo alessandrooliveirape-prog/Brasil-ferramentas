@@ -48,7 +48,7 @@ export function generateSitemapPlugin(): Plugin {
         { id: 'utilitarios', priority: 0.8 },
       ];
       categories.forEach(c => {
-        entries.push({ loc: `${host}/#${c.id}`, changefreq: 'weekly', priority: c.priority, lastmod: today });
+        entries.push({ loc: `${host}/${c.id}`, changefreq: 'weekly', priority: c.priority, lastmod: today });
       });
 
       // Ferramentas (from toolsData.ts - we load it dynamically to match)
@@ -154,7 +154,7 @@ export function generateSitemapPlugin(): Plugin {
       ];
 
       toolSlugs.forEach(t => {
-        entries.push({ loc: `${host}/#${t.categoryId}/${t.slug}`, changefreq: 'weekly', priority: t.priority });
+        entries.push({ loc: `${host}/${t.categoryId}/${t.slug}`, changefreq: 'weekly', priority: t.priority });
       });
 
       // Páginas Programáticas
@@ -223,17 +223,17 @@ export function generateSitemapPlugin(): Plugin {
       ];
 
       programmaticPages.forEach(p => {
-        entries.push({ loc: `${host}/#programatico/${p.id}`, changefreq: 'weekly', priority: p.priority });
+        entries.push({ loc: `${host}/programatico/${p.id}`, changefreq: 'weekly', priority: p.priority });
       });
 
       // Páginas Institucionais
       const institutionalPages = ['sobre', 'contato', 'privacidade', 'termos', 'cookies', 'transparencia-adsense'];
       institutionalPages.forEach(p => {
-        entries.push({ loc: `${host}/#institucional/${p}`, changefreq: 'monthly', priority: 0.4 });
+        entries.push({ loc: `${host}/institucional/${p}`, changefreq: 'monthly', priority: 0.4 });
       });
 
       // Sitemap HTML
-      entries.push({ loc: `${host}/#sitemap`, changefreq: 'weekly', priority: 0.5, lastmod: today });
+      entries.push({ loc: `${host}/sitemap`, changefreq: 'weekly', priority: 0.5, lastmod: today });
 
       // Gerar XML
       let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';

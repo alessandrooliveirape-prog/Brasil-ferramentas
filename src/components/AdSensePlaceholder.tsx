@@ -24,16 +24,15 @@ const positionStyles: Record<string, string> = {
 export default function AdSensePlaceholder({ slotId, position, className = '' }: AdSensePlaceholderProps) {
   return (
     <div 
-      className={`w-full bg-slate-50 dark:bg-slate-900/50 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl flex items-center justify-center overflow-hidden ${positionStyles[position] || 'min-h-[90px]'} ${className}`}
+      className={`w-full bg-slate-100/40 dark:bg-slate-900/30 border border-slate-200/50 dark:border-slate-800/60 rounded-xl flex flex-col items-center justify-center overflow-hidden transition-all duration-300 ${positionStyles[position] || 'min-h-[90px]'} ${className}`}
       id={`adsense-wrapper-${slotId}`}
       data-ad-slot={slotId}
       data-ad-position={position}
     >
-      {/* 
-        O Google AdSense (auto-ads ou manual) irá inserir os anúncios aqui.
-        O espaço é mantido visível para o rastreador do Google e para prevenir
-        layout shift (CLS) quando os anúncios carregarem.
-      */}
+      {/* Google AdSense policy compliant labeling to identify ad spaces */}
+      <span className="text-[9px] font-mono tracking-widest text-slate-400 dark:text-slate-650 uppercase select-none pointer-events-none">
+        Publicidade
+      </span>
     </div>
   );
 }

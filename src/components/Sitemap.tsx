@@ -87,7 +87,7 @@ export default function Sitemap() {
         <div className="bg-slate-50 dark:bg-slate-850 p-4 rounded-lg border border-slate-205 flex flex-col justify-between">
           <div>
             <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Mapeamento sitemap.xml</h3>
-            <p className="text-[11px] text-slate-400">Total de URLs mapeadas para o rastreador: <strong>{1 + 6 + TOOLS.length + Object.keys(PROGRAMMATIC_PAGES).length} indexáveis</strong>.</p>
+            <p className="text-[11px] text-slate-400">Total de URLs mapeadas para o rastreador: <strong>{1 + 6 + TOOLS.length + Object.keys(ALL_PROGRAMMATIC_PAGES).length} indexáveis</strong>.</p>
           </div>
           <button
             onClick={handleDownloadXml}
@@ -134,7 +134,7 @@ export default function Sitemap() {
           <div className="p-3 bg-slate-50 dark:bg-slate-850 rounded-lg">
             <h4 className="font-semibold text-slate-700 dark:text-slate-200 border-b border-slate-200 pb-1.5 mb-2">Páginas Programáticas</h4>
             <div className="font-mono text-[10px] text-slate-400 line-clamp-4">
-              {Object.keys(PROGRAMMATIC_PAGES).map(k => `${host}/programatico/${k}`).join('\n')}
+              {Object.keys(ALL_PROGRAMMATIC_PAGES).map(k => `${host}/programatico/${k}`).join('\n')}
             </div>
           </div>
         </div>

@@ -80,18 +80,33 @@ export default function App() {
       'senha': 25,
       'inss': 19,
       'meu-ip': 15,
-      'calculadoras': 1 // Safe default catch-all
+      'calculadoras': 1
     };
   });
 
-  // Parse state routing based on URL Hash
+  // Parse state routing based on URL Pathname (with legacy hash redirection)
   function parseRoute() {
-    const hash = window.location.hash.replace('#', '');
-    if (!hash) {
+    // Legacy Redirection Support: if hash is present (e.g. #calculadoras/calculadora-de-juros-compostos)
+    let hash = window.location.hash.replace('#', '');
+    if (hash) {
+      let redirectPath = '/' + hash;
+      window.history.replaceState({}, '', redirectPath);
+      window.location.hash = ''; // clear hash
+    }
+
+    let path = window.location.pathname;
+    if (path.startsWith('/')) {
+      path = path.slice(1);
+    }
+    if (path.endsWith('/')) {
+      path = path.slice(0, -1);
+    }
+
+    if (!path) {
       return { view: 'home', categoryId: null, slug: null, id: null };
     }
 
-    const parts = hash.split('/');
+    const parts = path.split('/');
     if (parts[0] === 'sitemap') {
       return { view: 'sitemap', categoryId: null, slug: null, id: 'sitemap' };
     }
@@ -114,15 +129,45 @@ export default function App() {
     return { view: 'home', categoryId: null, slug: null, id: null };
   }
 
-  // Set up listeners for hash routing
+  // Set up listeners for pathname routing and internal click interception (SPA performance)
   useEffect(() => {
-    const handleHashChange = () => {
+    const handleLocationChange = () => {
       setCurrentRoute(parseRoute());
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener('hashchange', handleLocationChange);
+
+    // Intercept internal link clicks to keep navigation fast without full page reloads
+    const handleLinkClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const anchor = target.closest('a');
+      if (anchor && anchor.href) {
+        const url = new URL(anchor.href);
+        const isSelfTarget = !anchor.target || anchor.target === '_self';
+        const isInternal = url.origin === window.location.origin;
+        const isDownload = anchor.hasAttribute('download') || url.pathname.endsWith('.xml') || url.pathname.endsWith('.txt');
+        
+        if (isInternal && isSelfTarget && !isDownload) {
+          e.preventDefault();
+          window.history.pushState({}, '', url.pathname + url.search);
+          handleLocationChange();
+        }
+      }
+    };
+    window.addEventListener('click', handleLinkClick);
+
+    // Execute once initially if hash legacy route existed
+    if (window.location.hash) {
+      handleLocationChange();
+    }
+
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener('hashchange', handleLocationChange);
+      window.removeEventListener('click', handleLinkClick);
+    };
   }, []);
 
   // Update dark class on body and persist in local storage
@@ -146,19 +191,71 @@ export default function App() {
     activeTool = TOOLS.find(t => t.slug === currentRoute.slug) || null;
   }
 
-  // Set browser title dynamically
+  // Dynamically set browser title and optimize meta tags in the DOM for crawlers
   useEffect(() => {
+    let title = "Tool Brasil | Ferramentas Online Gratuitas";
+    let desc = "Tool Brasil é o melhor portal de utilitários online gratuitos. Acesse calculadoras financeiras, geradores de CPF/CNPJ, conversores de moedas e unidades, e testadores web rápidos.";
+    let pathSuffix = "";
+
     if (currentRoute.view === 'tool' && activeTool) {
-      document.title = `${activeTool.title} | Tool Brasil`;
+      title = `${activeTool.title} | Tool Brasil`;
+      desc = activeTool.shortDescription;
+      pathSuffix = `${activeTool.categoryId}/${activeTool.slug}`;
     } else if (currentRoute.view === 'category' && currentRoute.categoryId) {
       const cat = CATEGORIES.find(c => c.id === currentRoute.categoryId);
       if (cat) {
-        document.title = `${cat.name} | Tool Brasil`;
-      } else {
-        document.title = "Tool Brasil | Ferramentas Online Gratuitas";
+        title = `${cat.name} | Tool Brasil`;
+        desc = cat.description;
+        pathSuffix = cat.id;
       }
+    } else if (currentRoute.view === 'programatico' && currentRoute.id) {
+      const prog = ALL_PROGRAMMATIC_PAGES[currentRoute.id];
+      if (prog) {
+        title = `${prog.title} | Tool Brasil`;
+        desc = prog.description;
+        pathSuffix = `programatico/${currentRoute.id}`;
+      }
+    } else if (currentRoute.view === 'sitemap') {
+      title = "Mapa do Site | Tool Brasil";
+      desc = "Mapa do site completo com todos os utilitários, calculadoras, geradores e páginas de SEO programático da Tool Brasil.";
+      pathSuffix = "sitemap";
+    } else if (currentRoute.view === 'institucional' && currentRoute.id) {
+      title = `${currentRoute.id.toUpperCase()} | Tool Brasil`;
+      desc = `Informações institucionais de ${currentRoute.id} da Tool Brasil.`;
+      pathSuffix = `institucional/${currentRoute.id}`;
+    }
+
+    document.title = title;
+
+    // Update Meta Description
+    let metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', desc);
     } else {
-      document.title = "Tool Brasil | Ferramentas Online Gratuitas";
+      metaDesc = document.createElement('meta');
+      metaDesc.setAttribute('name', 'description');
+      metaDesc.setAttribute('content', desc);
+      document.head.appendChild(metaDesc);
+    }
+
+    // Update Open Graph Title
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', title);
+
+    // Update Open Graph Description
+    const ogDesc = document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', desc);
+
+    // Update Canonical URL
+    let canonical = document.querySelector('link[rel="canonical"]');
+    const newCanonicalUrl = `https://toolbrasil.com.br/${pathSuffix}`;
+    if (canonical) {
+      canonical.setAttribute('href', newCanonicalUrl);
+    } else {
+      canonical = document.createElement('link');
+      canonical.setAttribute('rel', 'canonical');
+      canonical.setAttribute('href', newCanonicalUrl);
+      document.head.appendChild(canonical);
     }
   }, [currentRoute, activeTool]);
 
@@ -251,41 +348,41 @@ export default function App() {
     }
   };
 
+  const crumbs = buildBreadcrumbs();
+
   // Build reactive breadcrumbs
-  const buildBreadcrumbs = () => {
-    const crumbs = [{ name: 'Início', hash: '#' }];
+  function buildBreadcrumbs() {
+    const crumbs = [{ name: 'Início', path: '/' }];
 
     if (currentRoute.categoryId && currentRoute.categoryId !== 'programatico' && currentRoute.categoryId !== 'institucional') {
       const cat = CATEGORIES.find(c => c.id === currentRoute.categoryId);
       if (cat) {
-        crumbs.push({ name: cat.name, hash: `#${cat.id}` });
+        crumbs.push({ name: cat.name, path: `/${cat.id}` });
       }
     }
 
     if (activeTool) {
-      crumbs.push({ name: activeTool.title, hash: `#${activeTool.categoryId}/${activeTool.slug}` });
+      crumbs.push({ name: activeTool.title, path: `/${activeTool.categoryId}/${activeTool.slug}` });
     } else if (currentRoute.view === 'programatico' && currentRoute.id) {
       const prog = ALL_PROGRAMMATIC_PAGES[currentRoute.id];
       if (prog) {
-        crumbs.push({ name: 'SEO Programático', hash: '#programatico/ddd-brasil' });
-        crumbs.push({ name: prog.title, hash: `#programatico/${currentRoute.id}` });
+        crumbs.push({ name: 'SEO Programático', path: '/programatico/ddd-brasil' });
+        crumbs.push({ name: prog.title, path: `/programatico/${currentRoute.id}` });
       }
     } else if (currentRoute.view === 'institucional' && currentRoute.id) {
-      crumbs.push({ name: 'Institucional', hash: '#institucional/sobre' });
-      crumbs.push({ name: currentRoute.id.toUpperCase(), hash: `#institucional/${currentRoute.id}` });
+      crumbs.push({ name: 'Institucional', path: '/institucional/sobre' });
+      crumbs.push({ name: currentRoute.id.toUpperCase(), path: `/institucional/${currentRoute.id}` });
     } else if (currentRoute.view === 'sitemap') {
-      crumbs.push({ name: 'Mapa do Site', hash: '#sitemap' });
+      crumbs.push({ name: 'Mapa do Site', path: '/sitemap' });
     } else if (currentRoute.view === 'category' && currentRoute.categoryId) {
       const cat = CATEGORIES.find(c => c.id === currentRoute.categoryId);
       if (cat) {
-        crumbs.push({ name: cat.name, hash: `#${cat.id}` });
+        crumbs.push({ name: cat.name, path: `/${cat.id}` });
       }
     }
 
     return crumbs;
-  };
-
-  const crumbs = buildBreadcrumbs();
+  }
 
   // Schema.org JSON-LD Structured Data
   const getBreadcrumbSchema = () => {
@@ -293,7 +390,7 @@ export default function App() {
       '@type': 'ListItem',
       position: i + 1,
       name: c.name,
-      item: `https://toolbrasil.com.br${c.hash === '#' ? '' : c.hash}`
+      item: `https://toolbrasil.com.br${c.path}`
     }));
     return {
       '@context': 'https://schema.org',
@@ -310,7 +407,7 @@ export default function App() {
           {
             '@type': 'WebApplication',
             name: activeTool.title,
-            url: `https://toolbrasil.com.br/#${activeTool.categoryId}/${activeTool.slug}`,
+            url: `https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`,
             description: activeTool.shortDescription,
             applicationCategory: 'BusinessApplication',
             operatingSystem: 'All',
@@ -367,9 +464,11 @@ export default function App() {
       
       {/* HEADER SECTION */}
       <header className="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800" id="app-header">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <a href="#" className="flex items-center gap-2 group">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
+          
+          {/* Logo */}
+          <div className="flex items-center gap-6 shrink-0">
+            <a href="/" className="flex items-center gap-2 group">
               <div className="p-2 bg-emerald-600 rounded-lg text-white group-hover:scale-105 transition-transform shadow-md shadow-emerald-500/10">
                 <Wrench className="w-5 h-5" />
               </div>
@@ -384,22 +483,53 @@ export default function App() {
             </a>
           </div>
 
-          <div className="flex items-center gap-4">
+          {/* Category Quick Links for Desktop */}
+          <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold text-slate-600 dark:text-slate-350">
+            {CATEGORIES.filter(c => c.id !== 'institucional' && c.id !== 'programatico').map((cat) => {
+              const isCatActive = currentRoute.categoryId === cat.id && currentRoute.view === 'category';
+              return (
+                <a
+                  key={cat.id}
+                  href={`/${cat.id}`}
+                  className={`hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors py-1 ${isCatActive ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-500 font-bold' : ''}`}
+                >
+                  {cat.name}
+                </a>
+              );
+            })}
+            <a
+              href="/sitemap"
+              className={`hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors py-1 ${currentRoute.view === 'sitemap' ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-500 font-bold' : ''}`}
+            >
+              Mapa do Site
+            </a>
+          </nav>
+
+          {/* Search bar & Toggler */}
+          <div className="flex items-center gap-4 flex-grow max-w-xs justify-end md:max-w-md">
+            
+            {/* Header Universal Search Input */}
+            <div className="relative w-full max-w-[180px] sm:max-w-[240px] md:max-w-[300px]" id="header-search-wrapper">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                <Search className="w-3.5 h-3.5" />
+              </div>
+              <input
+                type="text"
+                className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full py-1.5 pl-8 pr-4 text-[11px] outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 dark:text-slate-100 transition-all font-medium"
+                placeholder="Buscar calculadora ou gerador..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+
             <button
               onClick={() => setDarkMode(!darkMode)}
-              className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition"
+              className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition shrink-0"
               title="Alternar tema de cores"
               id="theme-toggler"
             >
-              {darkMode ? <Sun className="w-5 h-5 text-emerald-500" /> : <Moon className="w-5 h-5" />}
+              {darkMode ? <Sun className="w-4 h-4 text-emerald-500" /> : <Moon className="w-4 h-4" />}
             </button>
-            
-            <a
-              href="#sitemap"
-              className="sr-only"
-            >
-              Map
-            </a>
           </div>
         </div>
       </header>
@@ -414,18 +544,18 @@ export default function App() {
             <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-none">
               Ferramentas Online Gratuitas para o Dia a Dia
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-xl mx-auto">
+            <p className="text-slate-550 dark:text-slate-400 text-sm md:text-base max-w-xl mx-auto">
               Sua central brasileira de utilitários rápidos para cálculos trabalhistas, segurança de senhas, decodificadores e automação.
             </p>
 
-            {/* REAL TIME BUSCADOR */}
+            {/* REAL TIME BUSCADOR (Hero) */}
             <div className="relative max-w-xl mx-auto" id="main-search-wrapper">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                 <Search className="w-5 h-5" />
               </div>
               <input
                 type="text"
-                className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-full py-3.5 pl-11 pr-5 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-sm"
+                className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-full py-3.5 pl-12 pr-6 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-sm transition-all"
                 placeholder="Pesquise entre 40+ ferramentas ex: Juros Compostos, CPF, CEP..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -443,11 +573,11 @@ export default function App() {
       {/* BREADCRUMBS RAIL */}
       {currentRoute.view !== 'home' && (
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-4" id="breadcrumbs-rail">
-          <div className="bg-white dark:bg-slate-900 px-4 py-2 rounded-lg border border-slate-150 dark:border-slate-805 flex items-center gap-1.5 flex-wrap text-xs text-slate-500 font-medium">
+          <div className="bg-white dark:bg-slate-900 px-4 py-2 rounded-lg border border-slate-150 dark:border-slate-805 flex items-center gap-1.5 flex-wrap text-xs text-slate-550 font-medium">
             {crumbs.map((c, i) => (
               <React.Fragment key={i}>
                 {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-slate-300" />}
-                <a href={c.hash} className="hover:text-emerald-600 transition">
+                <a href={c.path} className="hover:text-emerald-600 transition">
                   {c.name}
                 </a>
               </React.Fragment>
@@ -459,8 +589,8 @@ export default function App() {
       {/* SEARCH RESULTS BOARD */}
       {searchQuery.trim().length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-6" id="search-results-board">
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 space-y-4">
-            <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm animate-fade-in">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
               🔍 Resultados para "{searchQuery}" ({searchResults.length})
             </h3>
 
@@ -471,11 +601,11 @@ export default function App() {
                 {searchResults.map((r: any, idx) => (
                   <a
                     key={idx}
-                    href={r.type === 'programatico' ? `#programatico/${r.slug}` : `#${r.categoryId}/${r.slug}`}
-                    className="p-3 bg-slate-50 dark:bg-slate-850 rounded-lg hover:border-emerald-500 border border-slate-200 dark:border-slate-800 transition block"
+                    href={r.type === 'programatico' ? `/programatico/${r.slug}` : `/${r.categoryId}/${r.slug}`}
+                    className="p-3.5 bg-slate-50 dark:bg-slate-850 rounded-lg hover:border-emerald-500 border border-slate-200 dark:border-slate-800 transition-all block group"
                   >
-                    <span className="font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
-                      {r.title} <ArrowRight className="w-3 h-3 text-emerald-500" />
+                    <span className="font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-450">
+                      {r.title} <ArrowRight className="w-3 h-3 text-emerald-500 transition-transform group-hover:translate-x-0.5" />
                     </span>
                     <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">{r.shortDescription}</p>
                   </a>
@@ -485,7 +615,7 @@ export default function App() {
             
             <button
               onClick={() => setSearchQuery('')}
-              className="text-xs text-emerald-600 font-bold px-3 py-1 rounded bg-emerald-50 hover:cursor-pointer"
+              className="text-xs text-emerald-705 dark:text-emerald-455 font-bold px-3 py-1.5 rounded-lg bg-emerald-55 dark:bg-emerald-950/40 hover:cursor-pointer hover:bg-emerald-100 transition"
             >
               Fechar Resultados
             </button>
@@ -496,20 +626,20 @@ export default function App() {
       {/* MAIN CONTAINER LAYOUT */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-6 flex-grow grid grid-cols-1 lg:grid-cols-4 gap-6" id="main-holder">
         
-        {/* LEFT NAV SIDEBAR */}
-        <aside className="lg:col-span-1 space-y-4" id="left-sidebar">
+        {/* LEFT NAV SIDEBAR - order-2 renders sidebar below content on mobile, left on desktop */}
+        <aside className="order-2 lg:order-1 lg:col-span-1 space-y-4" id="left-sidebar">
           
-          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-3">
-            <h3 className="text-xs font-extrabold text-slate-400 uppercase tracking-wider">
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-150 dark:border-slate-800 shadow-xs space-y-3">
+            <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
               Categorias
             </h3>
             
             <nav className="space-y-1">
               <a
-                href="#"
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition ${currentRoute.view === 'home' ? 'bg-emerald-600 text-white font-bold' : 'text-slate-600 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
+                href="/"
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${currentRoute.view === 'home' ? 'bg-emerald-600 text-white font-bold shadow-xs' : 'text-slate-600 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
               >
-                <Home className="w-4 h-4" /> Início / Home
+                <Home className="w-4 h-4 text-slate-400" /> Início / Home
               </a>
 
               {CATEGORIES.filter(c => c.id !== 'institucional' && c.id !== 'programatico').map((cat) => {
@@ -517,8 +647,8 @@ export default function App() {
                 return (
                   <a
                     key={cat.id}
-                    href={`#${cat.id}`}
-                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition ${isActive ? 'bg-emerald-50 dark:bg-slate-850 border border-emerald-300 dark:border-emerald-900 text-emerald-700 dark:text-emerald-400 font-bold' : 'text-slate-600 dark:text-slate-355 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
+                    href={`/${cat.id}`}
+                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${isActive ? 'bg-emerald-50 dark:bg-slate-850 border border-emerald-300 dark:border-emerald-900 text-emerald-700 dark:text-emerald-400 font-bold' : 'text-slate-600 dark:text-slate-355 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
                   >
                     <div className="flex items-center gap-2">
                       {renderIcon(cat.icon, "w-4 h-4 text-slate-400")}
@@ -534,19 +664,19 @@ export default function App() {
           </div>
 
           {/* DYNAMIC METRIC DISPATCHER */}
-          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 text-xs">
-            <span className="text-[10px] font-bold text-slate-400 uppercase flex items-center gap-1">
-              <FileSearch className="w-3 h-3" /> Conteúdo Programático
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-150 dark:border-slate-800 shadow-xs space-y-2 text-xs">
+            <span className="text-[10px] font-bold text-slate-405 uppercase flex items-center gap-1.5">
+              <FileSearch className="w-3.5 h-3.5 text-slate-400" /> Conteúdo Programático
             </span>
             <div className="grid grid-cols-1 gap-1">
-              <a href="#programatico/ddd-brasil" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 font-mono">▸ DDD Brasil</a>
-              <a href="#programatico/cep-brasil" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 font-mono">▸ CEP Correios</a>
-              <a href="#programatico/bancos-brasil" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 font-mono">▸ Bancos & ISPB</a>
-              <a href="#programatico/salario-minimo-historico" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 font-mono">▸ Salário Mínimo Histórico</a>
-              <a href="#programatico/feriados-nacionais" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 font-mono">▸ Feriados Nacionais</a>
-              <a href="#programatico/selic-historica" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 font-mono">▸ Taxa SELIC Histórica</a>
+              <a href="/programatico/ddd-brasil" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors font-mono">▸ DDD Brasil</a>
+              <a href="/programatico/cep-brasil" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors font-mono">▸ CEP Correios</a>
+              <a href="/programatico/bancos-brasil" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors font-mono">▸ Bancos & ISPB</a>
+              <a href="/programatico/salario-minimo-historico" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors font-mono">▸ Salário Mínimo Histórico</a>
+              <a href="/programatico/feriados-nacionais" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors font-mono">▸ Feriados Nacionais</a>
+              <a href="/programatico/selic-historica" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors font-mono">▸ Taxa SELIC Histórica</a>
             </div>
-            <a href="#sitemap" className="text-[10px] text-emerald-600 font-bold block pt-1 hover:underline">
+            <a href="/sitemap" className="text-[10px] text-emerald-600 dark:text-emerald-450 font-bold block pt-1 hover:underline">
               Ver todas as páginas →
             </a>
           </div>
@@ -554,17 +684,17 @@ export default function App() {
           <AdSensePlaceholder slotId="slot-3" position="sidebar" />
         </aside>
 
-        {/* RECT CONTENT VIEWER */}
-        <section className="lg:col-span-3 space-y-6" id="primary-content-view">
+        {/* PRIMARY CONTENT VIEWER - order-1 renders content above sidebar on mobile, right on desktop */}
+        <section className="order-1 lg:order-2 lg:col-span-3 space-y-6" id="primary-content-view">
           
           {/* 1. HOME VIEW */}
           {currentRoute.view === 'home' && (
             <div className="space-y-6" id="view-home">
               
-              {/* BRAND NEW SECTIONS: FEATURED & POPULAR */}
+              {/* FEATURED & POPULAR */}
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 pb-2" id="dashboard-destaques-populares">
                 
-                {/* 1. CURATED FEATURED SECTION */}
+                {/* CURATED FEATURED SECTION */}
                 <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-xs" id="featured-tools-section">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -575,7 +705,7 @@ export default function App() {
                         Ferramentas em Destaque
                       </h2>
                     </div>
-                    <span className="text-[10px] bg-slate-50 dark:bg-slate-950/40 text-emerald-700 dark:text-emerald-400 font-mono px-2 py-0.5 rounded font-extrabold border border-slate-100 dark:border-slate-900">
+                    <span className="text-[10px] bg-slate-50 dark:bg-slate-950/40 text-emerald-800 dark:text-emerald-400 font-mono px-2 py-0.5 rounded font-extrabold border border-slate-150 dark:border-slate-900">
                       Recomendado
                     </span>
                   </div>
@@ -588,9 +718,8 @@ export default function App() {
                     {featuredTools.map((tool) => (
                       <a
                         key={tool.id}
-                        href={`#${tool.categoryId}/${tool.slug}`}
+                        href={`/${tool.categoryId}/${tool.slug}`}
                         className="group relative p-3.5 rounded-xl border border-slate-150 dark:border-slate-800 bg-linear-to-br hover:border-emerald-500 dark:hover:border-emerald-700 hover:shadow-xs transition-all duration-300 flex flex-col justify-between space-y-2"
-                        style={{ backgroundSize: '200% 200%' }}
                       >
                         <div className="space-y-1">
                           <span className={`inline-block text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full ${tool.tagColor}`}>
@@ -609,7 +738,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* 2. DYNAMICAL POPULAR TOOLS SECTION */}
+                {/* DYNAMICAL POPULAR TOOLS SECTION */}
                 <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-xs" id="popular-tools-section">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -623,7 +752,7 @@ export default function App() {
                     {popularTools.length > 0 && (
                       <button
                         onClick={handleResetPopularity}
-                        className="p-1 px-2 flex items-center gap-1 text-[10px] text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 border border-slate-150 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 rounded hover:cursor-pointer transition"
+                        className="p-1 px-2 flex items-center gap-1 text-[10px] text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-450 border border-slate-150 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 rounded hover:cursor-pointer transition"
                         title="Limpar estatísticas de uso"
                       >
                         <RotateCcw className="w-2.5 h-2.5" /> Zerar Histórico
@@ -638,7 +767,6 @@ export default function App() {
                   <div className="space-y-2 pt-1">
                     {displayPopularTools.map((tool, index) => {
                       const visits = useCounts[tool.id] || 0;
-                      // Rank colors (1st = Emerald gold, 2nd = Emerald silver, 3rd = standard border elements)
                       const rankStyle = index === 0 
                         ? 'bg-slate-500 border-slate-400 text-white dark:bg-slate-600 dark:border-slate-500'
                         : index === 1
@@ -650,7 +778,7 @@ export default function App() {
                       return (
                         <a
                           key={tool.id}
-                          href={`#${tool.categoryId}/${tool.slug}`}
+                          href={`/${tool.categoryId}/${tool.slug}`}
                           className="flex items-center justify-between p-2.5 rounded-xl border border-slate-100 dark:border-slate-850 hover:bg-slate-50/80 dark:hover:bg-slate-850/80 hover:border-emerald-400 dark:hover:border-emerald-800 transition-all duration-200 group"
                         >
                           <div className="flex items-center gap-3">
@@ -710,16 +838,16 @@ export default function App() {
                       {TOOLS.filter(t => t.categoryId === cat.id).slice(0, 4).map((tool) => (
                         <a
                           key={tool.id}
-                          href={`#${cat.id}/${tool.slug}`}
-                          className="text-[10px] bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded border border-slate-200 dark:border-slate-750 transition font-medium"
+                          href={`/${cat.id}/${tool.slug}`}
+                          className="text-[10px] bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-350 px-2.5 py-1 rounded border border-slate-200 dark:border-slate-750 transition font-medium"
                         >
                           {tool.title.replace('Calculadora de ', '').replace('Conversor de ', '')}
                         </a>
                       ))}
                     </div>
                     <a
-                      href={`#${cat.id}`}
-                      className="text-[11px] text-emerald-600 font-bold block pt-1 hover:underline"
+                      href={`/${cat.id}`}
+                      className="text-[11px] text-emerald-600 dark:text-emerald-450 font-bold block pt-1 hover:underline"
                     >
                       Acessar todas →
                     </a>
@@ -734,21 +862,21 @@ export default function App() {
                 </h3>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">As ferramentas mais buscadas pelos brasileiros — todas gratuitas e sem necessidade de cadastro.</p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                  <a href="#calculadoras/calculadora-de-juros-compostos" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Calcular Juros Compostos</a>
-                  <a href="#geradores/gerador-de-cpf" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Gerar CPF Válido</a>
-                  <a href="#conversores/converter-real-para-dolar" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Real para Dólar Hoje</a>
-                  <a href="#programatico/ddd-brasil" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Lista de DDDs Brasil</a>
-                  <a href="#calculadoras/calculadora-de-inss" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Calcular INSS 2025</a>
-                  <a href="#calculadoras/simulador-de-financiamento" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Simular Financiamento Casa</a>
-                  <a href="#geradores/gerador-de-senha-segura" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Gerar Senha Segura</a>
-                  <a href="#conversores/converter-real-para-euro" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Real para Euro Hoje</a>
-                  <a href="#utilitarios/meu-ip" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Qual é o Meu IP?</a>
-                  <a href="#programatico/cep-brasil" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Buscar CEP Online</a>
-                  <a href="#calculadoras/calcular-imc" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Calcular IMC Grátis</a>
-                  <a href="#programatico/salario-minimo-historico" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Salário Mínimo Histórico</a>
-                  <a href="#conversores/converter-mb-para-gb" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">MB para GB Conversor</a>
-                  <a href="#geradores/gerador-de-qr-code" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Gerar QR Code</a>
-                  <a href="#utilitarios/validador-de-cartao-de-credito" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Validar Cartão Crédito</a>
+                  <a href="/calculadoras/calculadora-de-juros-compostos" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Calcular Juros Compostos</a>
+                  <a href="/geradores/gerador-de-cpf" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Gerar CPF Válido</a>
+                  <a href="/conversores/converter-real-para-dolar" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Real para Dólar Hoje</a>
+                  <a href="/programatico/ddd-brasil" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Lista de DDDs Brasil</a>
+                  <a href="/calculadoras/calculadora-de-inss" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Calcular INSS 2025</a>
+                  <a href="/calculadoras/simulador-de-financiamento" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Simular Financiamento Casa</a>
+                  <a href="/geradores/gerador-de-senha-segura" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Gerar Senha Segura</a>
+                  <a href="/conversores/converter-real-para-euro" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Real para Euro Hoje</a>
+                  <a href="/utilitarios/meu-ip" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Qual é o Meu IP?</a>
+                  <a href="/programatico/cep-brasil" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Buscar CEP Online</a>
+                  <a href="/calculadoras/calcular-imc" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Calcular IMC Grátis</a>
+                  <a href="/programatico/salario-minimo-historico" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Salário Mínimo Histórico</a>
+                  <a href="/conversores/converter-mb-para-gb" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">MB para GB Conversor</a>
+                  <a href="/geradores/gerador-de-qr-code" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Gerar QR Code</a>
+                  <a href="/utilitarios/validador-de-cartao-de-credito" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-850 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Validar Cartão Crédito</a>
                 </div>
               </div>
             </div>
@@ -771,8 +899,8 @@ export default function App() {
                       {TOOLS.filter(t => t.categoryId === cat.id).map((tool) => (
                         <a
                           key={tool.id}
-                          href={`#${cat.id}/${tool.slug}`}
-                          className="bg-slate-50 dark:bg-slate-850 hover:bg-white dark:hover:bg-slate-800 border p-4 rounded-xl hover:border-emerald-500 transition block"
+                          href={`/${cat.id}/${tool.slug}`}
+                          className="bg-slate-50 dark:bg-slate-850 hover:bg-white dark:hover:bg-slate-800 border p-4 rounded-xl hover:border-emerald-500 transition-all block"
                         >
                           <span className="font-bold text-sm text-slate-800 dark:text-slate-100 block">
                             {tool.title}
@@ -887,7 +1015,7 @@ export default function App() {
                         return (
                           <a
                             key={relId}
-                            href={`#${matched.categoryId}/${matched.slug}`}
+                            href={`/${matched.categoryId}/${matched.slug}`}
                             className="bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-200 px-3 py-1.5 rounded-lg border text-xs font-medium transition"
                           >
                             {matched.title}
@@ -912,7 +1040,7 @@ export default function App() {
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={() => {
-                      const url = encodeURIComponent(`https://toolbrasil.com.br/#${activeTool.categoryId}/${activeTool.slug}`);
+                      const url = encodeURIComponent(`https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
                       const text = encodeURIComponent(`${activeTool.title} - Tool Brasil`);
                       window.open(`https://wa.me/?text=${text}%20${url}`, '_blank', 'noopener,noreferrer');
                     }}
@@ -924,7 +1052,7 @@ export default function App() {
                   </button>
                   <button
                     onClick={() => {
-                      const url = encodeURIComponent(`https://toolbrasil.com.br/#${activeTool.categoryId}/${activeTool.slug}`);
+                      const url = encodeURIComponent(`https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
                       window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'noopener,noreferrer');
                     }}
                     className="flex items-center gap-2 px-4 py-2.5 bg-slate-600 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm"
@@ -935,7 +1063,7 @@ export default function App() {
                   </button>
                   <button
                     onClick={() => {
-                      const url = encodeURIComponent(`https://toolbrasil.com.br/#${activeTool.categoryId}/${activeTool.slug}`);
+                      const url = encodeURIComponent(`https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
                       const text = encodeURIComponent(`${activeTool.title} - Tool Brasil`);
                       window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'noopener,noreferrer');
                     }}
@@ -947,7 +1075,7 @@ export default function App() {
                   </button>
                   <button
                     onClick={() => {
-                      const url = encodeURIComponent(`https://toolbrasil.com.br/#${activeTool.categoryId}/${activeTool.slug}`);
+                      const url = encodeURIComponent(`https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
                       window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${url}`, '_blank', 'noopener,noreferrer');
                     }}
                     className="flex items-center gap-2 px-4 py-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm"
@@ -958,7 +1086,7 @@ export default function App() {
                   </button>
                   <button
                     onClick={() => {
-                      const url = `https://toolbrasil.com.br/#${activeTool.categoryId}/${activeTool.slug}`;
+                      const url = `https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`;
                       navigator.clipboard.writeText(url);
                       const btn = document.getElementById('copy-link-btn');
                       if (btn) { btn.textContent = '✅ Copiado!'; setTimeout(() => { if (btn) btn.textContent = '📋 Copiar Link'; }, 2000); }
@@ -975,9 +1103,6 @@ export default function App() {
                 </p>
               </div>
 
-              {/* LIVE SCHEMA OR OPEN GRAPH DIAGNOSTIC PREVIEW PANEL FOR CODERS */}
-              
-
             </div>
           )}
 
@@ -989,7 +1114,7 @@ export default function App() {
               {/* INTERLINKING BACK TO HOME FOR INDEXATION */}
               <div className="p-4 bg-slate-100 dark:bg-slate-900 border rounded-lg text-xs space-y-2 flex justify-between items-center">
                 <span className="text-slate-500">Deseja calcular outros índices corporativos do Brasil?</span>
-                <a href="#" className="bg-emerald-600 text-white font-bold px-3 py-1.5 rounded text-[11px] font-mono">
+                <a href="/" className="bg-emerald-600 text-white font-bold px-3 py-1.5 rounded text-[11px] font-mono">
                   Lista de Ferramentas
                 </a>
               </div>
@@ -1022,63 +1147,63 @@ export default function App() {
           
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Calculadoras Populares</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-350 mb-3">Calculadoras Populares</h4>
               <ul className="space-y-1.5 text-xs">
-                <li><a href="#calculadoras/calculadora-de-juros-compostos" className="hover:text-emerald-400">Juros Compostos</a></li>
-                <li><a href="#calculadoras/simulador-de-financiamento" className="hover:text-emerald-400">Financiamento SAC/Price</a></li>
-                <li><a href="#calculadoras/calculadora-de-ferias-trabalhista" className="hover:text-emerald-400">Férias CLT</a></li>
-                <li><a href="#calculadoras/calculadora-de-rescisao-trabalhista" className="hover:text-emerald-400">Rescisão Trabalhista</a></li>
-                <li><a href="#calculadoras/calculadora-de-inss" className="hover:text-emerald-400">Calcular INSS 2025</a></li>
+                <li><a href="/calculadoras/calculadora-de-juros-compostos" className="hover:text-emerald-400">Juros Compostos</a></li>
+                <li><a href="/calculadoras/simulador-de-financiamento" className="hover:text-emerald-400">Financiamento SAC/Price</a></li>
+                <li><a href="/calculadoras/calculadora-de-ferias-trabalhista" className="hover:text-emerald-400">Férias CLT</a></li>
+                <li><a href="/calculadoras/calculadora-de-rescisao-trabalhista" className="hover:text-emerald-400">Rescisão Trabalhista</a></li>
+                <li><a href="/calculadoras/calculadora-de-inss" className="hover:text-emerald-400">Calcular INSS 2025</a></li>
               </ul>
             </div>
             
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Conversores & Dados</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-350 mb-3">Conversores & Dados</h4>
               <ul className="space-y-1.5 text-xs">
-                <li><a href="#conversores/converter-real-para-dolar" className="hover:text-emerald-400">Real para Dólar</a></li>
-                <li><a href="#conversores/converter-real-para-euro" className="hover:text-emerald-400">Real para Euro</a></li>
-                <li><a href="#conversores/converter-mb-para-gb" className="hover:text-emerald-400">MB para GB</a></li>
-                <li><a href="#conversores/converter-metros-para-pes" className="hover:text-emerald-400">Metros para Pés</a></li>
-                <li><a href="#conversores/libra-real" className="hover:text-emerald-400">Libra para Real</a></li>
-                <li><a href="#conversores/peso-argentino-real" className="hover:text-emerald-400">Peso Argentino</a></li>
+                <li><a href="/conversores/converter-real-para-dolar" className="hover:text-emerald-400">Real para Dólar</a></li>
+                <li><a href="/conversores/converter-real-para-euro" className="hover:text-emerald-400">Real para Euro</a></li>
+                <li><a href="/conversores/converter-mb-para-gb" className="hover:text-emerald-400">MB para GB</a></li>
+                <li><a href="/conversores/converter-metros-para-pes" className="hover:text-emerald-400">Metros para Pés</a></li>
+                <li><a href="/conversores/libra-real" className="hover:text-emerald-400">Libra para Real</a></li>
+                <li><a href="/conversores/peso-argentino-real" className="hover:text-emerald-400">Peso Argentino</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Geradores & Utilitários</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-350 mb-3">Geradores & Utilitários</h4>
               <ul className="space-y-1.5 text-xs">
-                <li><a href="#geradores/gerador-de-cpf" className="hover:text-emerald-400">Gerador CPF</a></li>
-                <li><a href="#geradores/gerador-de-cnpj" className="hover:text-emerald-400">Gerador CNPJ</a></li>
-                <li><a href="#geradores/gerador-de-senha-segura" className="hover:text-emerald-400">Gerar Senha Forte</a></li>
-                <li><a href="#geradores/gerador-de-qr-code" className="hover:text-emerald-400">QR Code Grátis</a></li>
-                <li><a href="#utilitarios/validador-de-cartao-de-credito" className="hover:text-emerald-400">Validar Cartão</a></li>
-                <li><a href="#geradores/gerador-rg" className="hover:text-emerald-400">Gerador RG</a></li>
+                <li><a href="/geradores/gerador-de-cpf" className="hover:text-emerald-400">Gerador CPF</a></li>
+                <li><a href="/geradores/gerador-de-cnpj" className="hover:text-emerald-400">Gerador CNPJ</a></li>
+                <li><a href="/geradores/gerador-de-senha-segura" className="hover:text-emerald-400">Gerar Senha Forte</a></li>
+                <li><a href="/geradores/gerador-de-qr-code" className="hover:text-emerald-400">QR Code Grátis</a></li>
+                <li><a href="/utilitarios/validador-de-cartao-de-credito" className="hover:text-emerald-400">Validar Cartão</a></li>
+                <li><a href="/geradores/gerador-rg" className="hover:text-emerald-400">Gerador RG</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">📊 Conteúdo Programático</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-355 mb-3">📊 Conteúdo Programático</h4>
               <ul className="space-y-1.5 text-xs">
-                <li><a href="#programatico/ddd-brasil" className="hover:text-emerald-400">Códigos DDD Brasil</a></li>
-                <li><a href="#programatico/cep-brasil" className="hover:text-emerald-400">Buscar CEP Correios</a></li>
-                <li><a href="#programatico/bancos-brasil" className="hover:text-emerald-400">Bancos & ISPB</a></li>
-                <li><a href="#programatico/salario-minimo-historico" className="hover:text-emerald-400">Salário Mínimo Histórico</a></li>
-                <li><a href="#programatico/selic-historica" className="hover:text-emerald-400">Taxa SELIC Histórica</a></li>
-                <li><a href="#programatico/feriados-nacionais" className="hover:text-emerald-400">Feriados Nacionais</a></li>
-                <li><a href="#sitemap" className="text-emerald-500 font-bold hover:underline">📄 Ver Todas as Páginas →</a></li>
+                <li><a href="/programatico/ddd-brasil" className="hover:text-emerald-400">Códigos DDD Brasil</a></li>
+                <li><a href="/programatico/cep-brasil" className="hover:text-emerald-400">Buscar CEP Correios</a></li>
+                <li><a href="/programatico/bancos-brasil" className="hover:text-emerald-400">Bancos & ISPB</a></li>
+                <li><a href="/programatico/salario-minimo-historico" className="hover:text-emerald-400">Salário Mínimo Histórico</a></li>
+                <li><a href="/programatico/selic-historica" className="hover:text-emerald-400">Taxa SELIC Histórica</a></li>
+                <li><a href="/programatico/feriados-nacionais" className="hover:text-emerald-400">Feriados Nacionais</a></li>
+                <li><a href="/sitemap" className="text-emerald-500 font-bold hover:underline">📄 Ver Todas as Páginas →</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Institucional</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-350 mb-3">Institucional</h4>
               <ul className="space-y-1.5 text-xs">
-                <li><a href="#institucional/sobre" className="hover:text-emerald-400">Sobre Nós</a></li>
-                <li><a href="#institucional/contato" className="hover:text-emerald-400">Contato / Fale Conosco</a></li>
-                <li><a href="#institucional/privacidade" className="hover:text-emerald-400">Política de Privacidade</a></li>
-                <li><a href="#institucional/termos" className="hover:text-emerald-400">Termos de Uso</a></li>
-                <li><a href="#institucional/cookies" className="hover:text-emerald-400">Política de Cookies</a></li>
-                <li><a href="#institucional/anunciantes" className="hover:text-emerald-400">Anunciar / AdSense</a></li>
-                <li><a href="#sitemap" className="hover:text-emerald-400">Mapa do Site</a></li>
+                <li><a href="/institucional/sobre" className="hover:text-emerald-400">Sobre Nós</a></li>
+                <li><a href="/institucional/contato" className="hover:text-emerald-400">Contato / Fale Conosco</a></li>
+                <li><a href="/institucional/privacidade" className="hover:text-emerald-400">Política de Privacidade</a></li>
+                <li><a href="/institucional/termos" className="hover:text-emerald-400">Termos de Uso</a></li>
+                <li><a href="/institucional/cookies" className="hover:text-emerald-400">Política de Cookies</a></li>
+                <li><a href="/institucional/anunciantes" className="hover:text-emerald-400">Anunciar / AdSense</a></li>
+                <li><a href="/sitemap" className="hover:text-emerald-400">Mapa do Site</a></li>
               </ul>
             </div>
           </div>
@@ -1097,13 +1222,13 @@ export default function App() {
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-slate-900/30 text-emerald-400 rounded text-[10px] font-mono border border-slate-800/50">
                 🇧🇷 Feito no Brasil
               </span>
-              <span className="text-slate-600 select-none font-mono">v1.3.0</span>
+              <span className="text-slate-600 select-none font-mono">v2.0.0</span>
               <a href="/sitemap.xml" className="hover:text-emerald-400 underline underline-offset-2">sitemap.xml</a>
               <a href="/robots.txt" className="hover:text-emerald-400 underline underline-offset-2">robots.txt</a>
             </div>
           </div>
 
-          {/* DISCLOSURE DE AFILIADOS (conforme política Amazon Associates) */}
+          {/* DISCLOSURE DE AFILIADOS */}
           <div className="text-center text-[10px] text-slate-600 leading-relaxed max-w-3xl mx-auto">
             <p className="font-semibold text-slate-400">
               Como Associado da Amazon, ganho com compras qualificadas. 
