@@ -14,8 +14,6 @@ import {
   Shield, 
   Search, 
   Home, 
-  Moon, 
-  Sun,
   ChevronRight,
   ArrowRight,
   ExternalLink,
@@ -48,17 +46,6 @@ import AffiliateSection from './components/AffiliateSection';
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState(() => parseRoute());
   const [searchQuery, setSearchQuery] = useState('');
-  const [darkMode, setDarkMode] = useState(() => {
-    try {
-      const saved = localStorage.getItem('tool_brasil_dark_mode_v1');
-      if (saved !== null) {
-        return JSON.parse(saved);
-      }
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    } catch (e) {
-      return false;
-    }
-  });
   const [faqOpen, setFaqOpen] = useState<{ [key: string]: boolean }>({});
 
   // Dynamic tool popularity scoring tracked in LocalStorage
@@ -82,6 +69,12 @@ export default function App() {
       'calculadoras': 1
     };
   });
+
+  // Ensure dark class is always removed from document element (pure light mode)
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.remove('dark');
+  }, []);
 
   // Parse state routing based on URL Pathname (with legacy hash redirection)
   function parseRoute() {
@@ -169,21 +162,6 @@ export default function App() {
       window.removeEventListener('click', handleLinkClick);
     };
   }, []);
-
-  // Update dark class on body and persist in local storage
-  useEffect(() => {
-    const root = window.document.documentElement;
-    if (darkMode) {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    try {
-      localStorage.setItem('tool_brasil_dark_mode_v1', JSON.stringify(darkMode));
-    } catch (e) {
-      console.error(e);
-    }
-  }, [darkMode]);
 
   // Determine current active tool if any
   let activeTool = null;
@@ -275,30 +253,30 @@ export default function App() {
     {
       id: 'juros-compostos',
       tag: '🔥 Recomendado',
-      tagColor: 'bg-emerald-50 dark:bg-emerald-950/20 text-emerald-800 dark:text-emerald-450 border border-emerald-150 dark:border-emerald-900/50',
+      tagColor: 'bg-emerald-50 text-emerald-800 border border-emerald-200',
       tagBg: 'from-emerald-500/5 via-transparent to-transparent',
-      accentColor: 'text-emerald-600 dark:text-emerald-400',
+      accentColor: 'text-emerald-700',
     },
     {
       id: 'cpf',
       tag: '💻 Essencial Dev',
-      tagColor: 'bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700',
+      tagColor: 'bg-slate-100 text-slate-800 border border-slate-300',
       tagBg: 'from-slate-500/5 via-transparent to-transparent',
-      accentColor: 'text-slate-700 dark:text-slate-300',
+      accentColor: 'text-slate-800',
     },
     {
       id: 'real-para-dolar',
       tag: '📈 Finanças',
-      tagColor: 'bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700',
+      tagColor: 'bg-slate-100 text-slate-800 border border-slate-300',
       tagBg: 'from-slate-500/5 via-transparent to-transparent',
-      accentColor: 'text-slate-700 dark:text-slate-300',
+      accentColor: 'text-slate-800',
     },
     {
       id: 'senha',
       tag: '🔒 Segurança',
-      tagColor: 'bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700',
+      tagColor: 'bg-slate-100 text-slate-800 border border-slate-300',
       tagBg: 'from-slate-500/5 via-transparent to-transparent',
-      accentColor: 'text-slate-700 dark:text-slate-300',
+      accentColor: 'text-slate-800',
     }
   ].map(f => {
     const rawTool = TOOLS.find(t => t.id === f.id);
@@ -449,10 +427,10 @@ export default function App() {
   const searchResults = getFilteredTools();
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300" id="main-root">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 transition-colors duration-300" id="main-root">
       
       {/* HEADER SECTION */}
-      <header className="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800" id="app-header">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200" id="app-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
           
           {/* Logo */}
@@ -462,25 +440,25 @@ export default function App() {
                 <Wrench className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-lg font-extrabold tracking-tight text-emerald-600 dark:text-emerald-400 font-bold">
+                <span className="text-lg font-extrabold tracking-tight text-emerald-600 font-bold">
                   Tool Brasil
                 </span>
-                <span className="hidden sm:block text-[9px] text-slate-400 font-medium font-mono uppercase tracking-wider">
+                <span className="hidden sm:block text-[9px] text-slate-500 font-bold font-mono uppercase tracking-wider">
                   ToolBrasil.com
                 </span>
               </div>
             </a>
           </div>
 
-          {/* Category Quick Links for Desktop - standardized slate colors */}
-          <nav className="hidden lg:flex items-center gap-6 text-xs font-semibold text-slate-650 dark:text-slate-300">
+          {/* Category Quick Links for Desktop */}
+          <nav className="hidden lg:flex items-center gap-6 text-xs font-extrabold text-slate-800">
             {CATEGORIES.filter(c => c.id !== 'institucional' && c.id !== 'programatico').map((cat) => {
               const isCatActive = currentRoute.categoryId === cat.id && currentRoute.view === 'category';
               return (
                 <a
                   key={cat.id}
                   href={`/${cat.id}`}
-                  className={`hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors py-1 ${isCatActive ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-500 font-bold' : ''}`}
+                  className={`hover:text-emerald-700 transition-colors py-1 ${isCatActive ? 'text-emerald-600 border-b-2 border-emerald-500 font-bold' : ''}`}
                 >
                   {cat.name}
                 </a>
@@ -488,57 +466,48 @@ export default function App() {
             })}
           </nav>
 
-          {/* Search bar & Toggler */}
+          {/* Search bar */}
           <div className="flex items-center gap-4 flex-grow max-w-xs justify-end md:max-w-md">
             
             {/* Header Universal Search Input */}
             <div className="relative w-full max-w-[180px] sm:max-w-[240px] md:max-w-[300px]" id="header-search-wrapper">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
                 <Search className="w-3.5 h-3.5" />
               </div>
               <input
                 type="text"
-                className="w-full bg-slate-105 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full py-1.5 pl-8 pr-4 text-[11px] outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 dark:text-slate-100 transition-all font-medium"
+                className="w-full bg-slate-50 border border-slate-350 rounded-full py-1.5 pl-8 pr-4 text-[11px] outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 transition-all font-semibold"
                 placeholder="Buscar calculadora ou gerador..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="p-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition shrink-0"
-              title="Alternar tema de cores"
-              id="theme-toggler"
-            >
-              {darkMode ? <Sun className="w-4 h-4 text-emerald-500" /> : <Moon className="w-4 h-4" />}
-            </button>
           </div>
         </div>
       </header>
 
-      {/* SEARCH AND PROMO SECTION (IF HOME) */}
+      {/* HERO HERO (IF HOME) */}
       {currentRoute.view === 'home' && (
-        <section className="bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-950 border-b border-slate-200 dark:border-slate-850 py-12 md:py-16 text-center px-4" id="hero-banner">
+        <section className="bg-gradient-to-b from-white to-slate-50 border-b border-slate-200 py-12 md:py-16 text-center px-4" id="hero-banner">
           <div className="max-w-3xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900 rounded-full text-emerald-700 dark:text-emerald-400 text-xs font-bold font-mono">
-              <Award className="w-4 h-4" /> 100% Gratuito, Sem Filtro de Cadastro
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200 rounded-full text-emerald-800 text-xs font-bold font-mono">
+              <Award className="w-4 h-4 text-emerald-605" /> 100% Gratuito, Sem Cadastro
             </div>
-            <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-slate-100 tracking-tight leading-none">
+            <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-none">
               Ferramentas Online Gratuitas para o Dia a Dia
             </h1>
-            <p className="text-slate-600 dark:text-slate-300 text-sm md:text-base max-w-xl mx-auto">
+            <p className="text-slate-700 text-sm md:text-base max-w-xl mx-auto font-medium">
               Sua central brasileira de utilitários rápidos para cálculos trabalhistas, segurança de senhas, decodificadores e automação.
             </p>
 
             {/* REAL TIME BUSCADOR (Hero) */}
             <div className="relative max-w-xl mx-auto" id="main-search-wrapper">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
                 <Search className="w-5 h-5" />
               </div>
               <input
                 type="text"
-                className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-full py-3.5 pl-12 pr-6 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-sm transition-all"
+                className="w-full bg-white border border-slate-400 rounded-full py-3.5 pl-12 pr-6 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-xs transition-all font-medium text-slate-900"
                 placeholder="Pesquise entre 40+ ferramentas ex: Juros Compostos, CPF, CEP..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -556,11 +525,11 @@ export default function App() {
       {/* BREADCRUMBS RAIL */}
       {currentRoute.view !== 'home' && (
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-4" id="breadcrumbs-rail">
-          <div className="bg-white dark:bg-slate-900 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center gap-1.5 flex-wrap text-xs text-slate-600 dark:text-slate-300 font-medium">
+          <div className="bg-white px-4 py-2.5 rounded-lg border border-slate-300 flex items-center gap-1.5 flex-wrap text-xs text-slate-800 font-semibold">
             {crumbs.map((c, i) => (
               <React.Fragment key={i}>
-                {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-slate-300" />}
-                <a href={c.path} className="hover:text-emerald-600 transition">
+                {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-slate-450" />}
+                <a href={c.path} className="hover:text-emerald-700 transition">
                   {c.name}
                 </a>
               </React.Fragment>
@@ -572,25 +541,25 @@ export default function App() {
       {/* SEARCH RESULTS BOARD */}
       {searchQuery.trim().length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-6" id="search-results-board">
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm animate-fade-in">
-            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-2">
+          <div className="bg-white p-6 rounded-xl border border-slate-300 space-y-4 shadow-xs animate-fade-in">
+            <h3 className="text-xs font-bold text-slate-850 uppercase tracking-wider flex items-center gap-2">
               🔍 Resultados para "{searchQuery}" ({searchResults.length})
             </h3>
 
             {searchResults.length === 0 ? (
-              <p className="text-xs text-slate-400 font-mono">Nenhuma ferramenta foi localizada com estes termos comerciais.</p>
+              <p className="text-xs text-slate-500 font-semibold font-mono">Nenhuma ferramenta foi localizada com estes termos.</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {searchResults.map((r: any, idx) => (
                   <a
                     key={idx}
                     href={r.type === 'programatico' ? `/programatico/${r.slug}` : `/${r.categoryId}/${r.slug}`}
-                    className="p-3.5 bg-slate-55 dark:bg-slate-850 rounded-lg hover:border-emerald-500 border border-slate-200 dark:border-slate-800 transition-all block group"
+                    className="p-3.5 bg-slate-50 rounded-lg hover:border-emerald-600 border border-slate-300 hover:bg-white transition-all block group"
                   >
-                    <span className="font-bold text-sm text-slate-800 dark:text-slate-100 flex items-center gap-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-450">
-                      {r.title} <ArrowRight className="w-3 h-3 text-emerald-505 transition-transform group-hover:translate-x-0.5" />
+                    <span className="font-extrabold text-sm text-slate-900 flex items-center gap-1.5 group-hover:text-emerald-600">
+                      {r.title} <ArrowRight className="w-3.5 h-3.5 text-slate-500 transition-transform group-hover:translate-x-0.5" />
                     </span>
-                    <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">{r.shortDescription}</p>
+                    <p className="text-[11.5px] text-slate-650 mt-1 line-clamp-2">{r.shortDescription}</p>
                   </a>
                 ))}
               </div>
@@ -598,7 +567,7 @@ export default function App() {
             
             <button
               onClick={() => setSearchQuery('')}
-              className="text-xs text-emerald-700 dark:text-emerald-400 font-bold px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 hover:cursor-pointer hover:bg-emerald-100 transition"
+              className="text-xs text-emerald-800 font-bold px-3 py-1.5 rounded-lg bg-emerald-50 hover:cursor-pointer hover:bg-emerald-100 transition"
             >
               Fechar Resultados
             </button>
@@ -612,17 +581,17 @@ export default function App() {
         {/* LEFT NAV SIDEBAR - order-2 renders sidebar below content on mobile, left on desktop */}
         <aside className="order-2 lg:order-1 lg:col-span-1 space-y-4" id="left-sidebar">
           
-          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
-            <h3 className="text-xs font-bold text-slate-450 uppercase tracking-wider">
+          <div className="bg-white p-4 rounded-xl border border-slate-300 shadow-xs space-y-3">
+            <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
               Categorias
             </h3>
             
             <nav className="space-y-1">
               <a
                 href="/"
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${currentRoute.view === 'home' ? 'bg-emerald-600 text-white font-bold shadow-xs' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-850'}`}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${currentRoute.view === 'home' ? 'bg-emerald-600 text-white font-bold shadow-xs' : 'text-slate-800 hover:bg-slate-100 hover:text-slate-950'}`}
               >
-                <Home className="w-4 h-4 text-slate-450" /> Início / Home
+                <Home className="w-4 h-4 text-slate-500" /> Início / Home
               </a>
 
               {CATEGORIES.filter(c => c.id !== 'institucional' && c.id !== 'programatico').map((cat) => {
@@ -631,13 +600,13 @@ export default function App() {
                   <a
                     key={cat.id}
                     href={`/${cat.id}`}
-                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${isActive ? 'bg-emerald-50 dark:bg-slate-800 border border-emerald-250 dark:border-emerald-950 text-emerald-800 dark:text-emerald-400 font-bold' : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-850'}`}
+                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold tracking-wide transition-all ${isActive ? 'bg-emerald-50 border border-emerald-300 text-emerald-800 font-bold' : 'text-slate-800 hover:bg-slate-100 hover:text-slate-950'}`}
                   >
                     <div className="flex items-center gap-2">
-                      {renderIcon(cat.icon, "w-4 h-4 text-slate-400")}
+                      {renderIcon(cat.icon, "w-4 h-4 text-slate-500")}
                       <span>{cat.name}</span>
                     </div>
-                    <span className="text-[9px] bg-slate-100 dark:bg-slate-800 text-slate-400 rounded px-1.5 py-0.5">
+                    <span className="text-[9.5px] bg-slate-100 text-slate-600 font-extrabold rounded px-1.5 py-0.5">
                       {TOOLS.filter(t => t.categoryId === cat.id).length}
                     </span>
                   </a>
@@ -647,19 +616,19 @@ export default function App() {
           </div>
 
           {/* DYNAMIC METRIC DISPATCHER */}
-          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-2 text-xs">
-            <span className="text-[10px] font-bold text-slate-450 uppercase flex items-center gap-1.5">
-              <FileSearch className="w-3.5 h-3.5 text-slate-400" /> Conteúdo Programático
+          <div className="bg-white p-4 rounded-xl border border-slate-300 shadow-xs space-y-2 text-xs">
+            <span className="text-[10px] font-extrabold text-slate-900 uppercase flex items-center gap-1.5">
+              <FileSearch className="w-3.5 h-3.5 text-slate-500" /> Conteúdo Programático
             </span>
             <div className="grid grid-cols-1 gap-1">
-              <a href="/programatico/ddd-brasil" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors font-mono">▸ DDD Brasil</a>
-              <a href="/programatico/cep-brasil" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors font-mono">▸ CEP Correios</a>
-              <a href="/programatico/bancos-brasil" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors font-mono">▸ Bancos & ISPB</a>
-              <a href="/programatico/salario-minimo-historico" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors font-mono">▸ Salário Mínimo Histórico</a>
-              <a href="/programatico/feriados-nacionais" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors font-mono">▸ Feriados Nacionais</a>
-              <a href="/programatico/selic-historica" className="text-slate-600 dark:text-slate-300 hover:text-emerald-500 transition-colors font-mono">▸ Taxa SELIC Histórica</a>
+              <a href="/programatico/ddd-brasil" className="text-slate-700 hover:text-emerald-600 transition-colors font-mono font-semibold">▸ DDD Brasil</a>
+              <a href="/programatico/cep-brasil" className="text-slate-700 hover:text-emerald-600 transition-colors font-mono font-semibold">▸ CEP Correios</a>
+              <a href="/programatico/bancos-brasil" className="text-slate-700 hover:text-emerald-600 transition-colors font-mono font-semibold">▸ Bancos & ISPB</a>
+              <a href="/programatico/salario-minimo-historico" className="text-slate-700 hover:text-emerald-600 transition-colors font-mono font-semibold">▸ Salário Mínimo Histórico</a>
+              <a href="/programatico/feriados-nacionais" className="text-slate-700 hover:text-emerald-600 transition-colors font-mono font-semibold">▸ Feriados Nacionais</a>
+              <a href="/programatico/selic-historica" className="text-slate-700 hover:text-emerald-600 transition-colors font-mono font-semibold">▸ Taxa SELIC Histórica</a>
             </div>
-            <a href="/" className="text-[10px] text-slate-500 dark:text-slate-400 hover:text-emerald-600 font-bold block pt-1">
+            <a href="/" className="text-[10px] text-slate-500 hover:text-emerald-600 font-bold block pt-1">
               Ir para o Início →
             </a>
           </div>
@@ -678,22 +647,22 @@ export default function App() {
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 pb-2" id="dashboard-destaques-populares">
                 
                 {/* CURATED FEATURED SECTION */}
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-xs" id="featured-tools-section">
+                <div className="bg-white border border-slate-300 rounded-2xl p-5 space-y-4 shadow-xs" id="featured-tools-section">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="p-2 bg-slate-50 dark:bg-slate-950/40 rounded-lg text-emerald-600 dark:text-emerald-400">
+                      <div className="p-2 bg-slate-50 rounded-lg text-emerald-600">
                         <Star className="w-4 h-4 fill-emerald-500 text-emerald-500" />
                       </div>
-                      <h2 className="text-sm font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-tight">
+                      <h2 className="text-sm font-extrabold text-slate-900 uppercase tracking-tight">
                         Ferramentas em Destaque
                       </h2>
                     </div>
-                    <span className="text-[10px] bg-slate-50 dark:bg-slate-950/40 text-emerald-800 dark:text-emerald-450 font-mono px-2 py-0.5 rounded font-extrabold border border-slate-200 dark:border-slate-800">
+                    <span className="text-[10px] bg-slate-100 text-emerald-850 font-mono px-2 py-0.5 rounded font-extrabold border border-slate-300">
                       Recomendado
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-605 dark:text-slate-400 leading-normal">
+                  <p className="text-xs text-slate-700 leading-normal font-medium">
                     Utilitários de alta performance e grande relevância selecionados para otimizar suas atividades diárias.
                   </p>
 
@@ -702,18 +671,18 @@ export default function App() {
                       <a
                         key={tool.id}
                         href={`/${tool.categoryId}/${tool.slug}`}
-                        className="group relative p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 hover:border-emerald-500 dark:hover:border-emerald-700 hover:shadow-xs transition-all duration-300 flex flex-col justify-between space-y-2"
+                        className="group relative p-3.5 rounded-xl border border-slate-200 bg-slate-50 hover:border-emerald-600 hover:bg-white hover:shadow-xs transition-all duration-300 flex flex-col justify-between space-y-2"
                       >
                         <div className="space-y-1">
                           <span className={`inline-block text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full ${tool.tagColor}`}>
                             {tool.tag}
                           </span>
-                          <h3 className="font-extrabold text-slate-800 dark:text-slate-100 text-xs sm:text-xs group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors flex items-center justify-between gap-1">
+                          <h3 className="font-extrabold text-slate-900 text-xs sm:text-xs group-hover:text-emerald-700 transition-colors flex items-center justify-between gap-1">
                             <span>{tool.title.replace('Calculadora de ', '').replace('Gerador de ', '').replace('Conversor de ', '')}</span>
                             <ArrowRight className="w-3.5 h-3.5 text-slate-400 shrink-0 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                           </h3>
                         </div>
-                        <p className="text-[10.5px] text-slate-500 dark:text-slate-400 leading-normal line-clamp-2">
+                        <p className="text-[11.5px] text-slate-700 leading-normal line-clamp-2 font-medium">
                           {tool.shortDescription}
                         </p>
                       </a>
@@ -722,20 +691,20 @@ export default function App() {
                 </div>
 
                 {/* DYNAMICAL POPULAR TOOLS SECTION */}
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-xs" id="popular-tools-section">
+                <div className="bg-white border border-slate-300 rounded-2xl p-5 space-y-4 shadow-xs" id="popular-tools-section">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-lg text-emerald-600 dark:text-emerald-400">
+                      <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600">
                         <Flame className="w-4 h-4 fill-emerald-500 text-emerald-500" />
                       </div>
-                      <h2 className="text-sm font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-tight">
+                      <h2 className="text-sm font-extrabold text-slate-900 uppercase tracking-tight">
                         Ferramentas Mais Acessadas
                       </h2>
                     </div>
                     {popularTools.length > 0 && (
                       <button
                         onClick={handleResetPopularity}
-                        className="p-1 px-2 flex items-center gap-1 text-[10px] text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-450 border border-slate-150 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 rounded hover:cursor-pointer transition"
+                        className="p-1 px-2 flex items-center gap-1 text-[10px] text-slate-500 hover:text-emerald-700 border border-slate-300 hover:bg-slate-50 rounded hover:cursor-pointer transition font-bold"
                         title="Limpar estatísticas de uso"
                       >
                         <RotateCcw className="w-2.5 h-2.5" /> Zerar Histórico
@@ -743,7 +712,7 @@ export default function App() {
                     )}
                   </div>
 
-                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-normal">
+                  <p className="text-xs text-slate-700 leading-normal font-medium">
                     Seu ranqueamento de uso local. Atualizado em tempo real à medida que você navega pelas ferramentas.
                   </p>
 
@@ -751,28 +720,28 @@ export default function App() {
                     {displayPopularTools.map((tool, index) => {
                       const visits = useCounts[tool.id] || 0;
                       const rankStyle = index === 0 
-                        ? 'bg-slate-500 border-slate-450 text-white dark:bg-slate-600 dark:border-slate-500'
+                        ? 'bg-slate-650 border-slate-600 text-white font-bold'
                         : index === 1
-                        ? 'bg-slate-400 border-slate-350 text-white dark:bg-slate-550 dark:border-slate-450'
+                        ? 'bg-slate-500 border-slate-400 text-white font-bold'
                         : index === 2
-                        ? 'bg-slate-700 border-slate-600 text-white'
-                        : 'bg-slate-105 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400';
+                        ? 'bg-slate-400 border-slate-300 text-white font-bold'
+                        : 'bg-slate-100 border-slate-250 text-slate-700 font-bold';
 
                       return (
                         <a
                           key={tool.id}
                           href={`/${tool.categoryId}/${tool.slug}`}
-                          className="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-850 hover:border-emerald-400 dark:hover:border-emerald-800 transition-all duration-200 group"
+                          className="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 hover:border-emerald-500 transition-all duration-200 group"
                         >
                           <div className="flex items-center gap-3">
                             <span className={`w-6 h-6 rounded-full border text-xs font-mono font-black flex items-center justify-center shrink-0 ${rankStyle}`}>
                               {index + 1}
                             </span>
                             <div className="min-w-0">
-                              <span className="text-[8.5px] font-bold text-slate-400 uppercase tracking-wider block font-mono">
+                              <span className="text-[8.5px] font-bold text-slate-500 uppercase tracking-wider block font-mono">
                                 {CATEGORIES.find(c => c.id === tool.categoryId)?.name || tool.categoryId}
                               </span>
-                              <span className="font-bold text-slate-800 dark:text-slate-100 text-xs group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors block truncate">
+                              <span className="font-extrabold text-slate-900 text-xs group-hover:text-emerald-700 transition-colors block truncate">
                                 {tool.title}
                               </span>
                             </div>
@@ -780,16 +749,16 @@ export default function App() {
                           
                           <div className="flex items-center gap-2 pr-0.5 shrink-0">
                             {visits > 0 ? (
-                              <div className="inline-flex items-center gap-1 text-[10px] bg-emerald-50 dark:bg-emerald-950/25 text-emerald-800 dark:text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-100 dark:border-emerald-900/50 font-mono font-bold">
-                                <TrendingUp className="w-3 h-3 text-emerald-600 dark:text-emerald-450" />
+                              <div className="inline-flex items-center gap-1 text-[10px] bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-200 font-mono font-bold">
+                                <TrendingUp className="w-3 h-3 text-emerald-600" />
                                 <span>{visits} {visits === 1 ? 'visita' : 'visitas'}</span>
                               </div>
                             ) : (
-                              <div className="text-[9px] text-slate-400 dark:text-slate-500 font-mono uppercase bg-slate-50 dark:bg-slate-850/40 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-800">
+                              <div className="text-[9px] text-slate-500 font-mono uppercase bg-slate-50 px-2 py-0.5 rounded border border-slate-300">
                                 Sugerido
                               </div>
                             )}
-                            <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 group-hover:translate-x-0.5 transition-transform" />
+                            <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:translate-x-0.5 transition-transform" />
                           </div>
                         </a>
                       );
@@ -804,17 +773,17 @@ export default function App() {
                 {CATEGORIES.filter(c => c.id !== 'institucional' && c.id !== 'programatico').map((cat) => (
                   <div
                     key={cat.id}
-                    className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-xl space-y-3 shadow-xs hover:shadow-md transition"
+                    className="bg-white border border-slate-300 p-5 rounded-xl space-y-3 shadow-xs hover:shadow-md transition"
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-lg text-emerald-600 dark:text-emerald-400">
+                      <div className="p-2.5 bg-slate-50 rounded-lg text-emerald-600">
                         {renderIcon(cat.icon, "w-5 h-5")}
                       </div>
-                      <h3 className="font-extrabold text-base text-slate-800 dark:text-slate-100">
+                      <h3 className="font-black text-base text-slate-900">
                         {cat.name}
                       </h3>
                     </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-normal">
+                    <p className="text-xs text-slate-700 leading-normal font-medium">
                       {cat.description}
                     </p>
                     <div className="pt-2 flex flex-wrap gap-1.5">
@@ -822,7 +791,7 @@ export default function App() {
                         <a
                           key={tool.id}
                           href={`/${cat.id}/${tool.slug}`}
-                          className="text-[10px] bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 transition font-medium"
+                          className="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-900 hover:text-black px-2.5 py-1.5 rounded-lg border border-slate-300 transition font-semibold"
                         >
                           {tool.title.replace('Calculadora de ', '').replace('Conversor de ', '')}
                         </a>
@@ -830,7 +799,7 @@ export default function App() {
                     </div>
                     <a
                       href={`/${cat.id}`}
-                      className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold block pt-1 hover:underline"
+                      className="text-[11px] text-emerald-700 font-bold block pt-1 hover:underline"
                     >
                       Acessar todas →
                     </a>
@@ -839,27 +808,27 @@ export default function App() {
               </div>
 
               {/* SEARCH SUGGESTIONS - LONG TAIL KEYWORDS */}
-              <div className="bg-emerald-900/5 dark:bg-emerald-950/10 border border-emerald-100 dark:border-emerald-950/45 p-5 rounded-xl space-y-3">
-                <h3 className="text-sm font-bold text-emerald-800 dark:text-emerald-400 flex items-center gap-1.5">
+              <div className="bg-emerald-900/5 border border-emerald-200 p-5 rounded-xl space-y-3">
+                <h3 className="text-sm font-black text-emerald-800 flex items-center gap-1.5">
                   <BookOpen className="w-4 h-4" /> 🔍 Principais Consultas do Google
                 </h3>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400">As ferramentas mais buscadas pelos brasileiros — todas gratuitas e sem necessidade de cadastro.</p>
+                <p className="text-[11.5px] text-slate-700 font-medium">As ferramentas mais buscadas pelos brasileiros — todas gratuitas e sem necessidade de cadastro.</p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                  <a href="/calculadoras/calculadora-de-juros-compostos" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Calcular Juros Compostos</a>
-                  <a href="/geradores/gerador-de-cpf" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Gerar CPF Válido</a>
-                  <a href="/conversores/converter-real-para-dolar" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Real para Dólar Hoje</a>
-                  <a href="/programatico/ddd-brasil" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Lista de DDDs Brasil</a>
-                  <a href="/calculadoras/calculadora-de-inss" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Calcular INSS 2025</a>
-                  <a href="/calculadoras/simulador-de-financiamento" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Simular Financiamento Casa</a>
-                  <a href="/geradores/gerador-de-senha-segura" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Gerar Senha Segura</a>
-                  <a href="/conversores/converter-real-para-euro" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Real para Euro Hoje</a>
-                  <a href="/utilitarios/meu-ip" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Qual é o Meu IP?</a>
-                  <a href="/programatico/cep-brasil" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Buscar CEP Online</a>
-                  <a href="/calculadoras/calcular-imc" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Calcular IMC Grátis</a>
-                  <a href="/programatico/salario-minimo-historico" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Salário Mínimo Histórico</a>
-                  <a href="/conversores/converter-mb-para-gb" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">MB para GB Conversor</a>
-                  <a href="/geradores/gerador-de-qr-code" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Gerar QR Code</a>
-                  <a href="/utilitarios/validador-de-cartao-de-credito" className="p-2 border bg-white dark:bg-slate-900 rounded hover:border-emerald-600 dark:border-slate-800 font-medium hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition">Validar Cartão Crédito</a>
+                  <a href="/calculadoras/calculadora-de-juros-compostos" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Calcular Juros Compostos</a>
+                  <a href="/geradores/gerador-de-cpf" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Gerar CPF Válido</a>
+                  <a href="/conversores/converter-real-para-dolar" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Real para Dólar Hoje</a>
+                  <a href="/programatico/ddd-brasil" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Lista de DDDs Brasil</a>
+                  <a href="/calculadoras/calculadora-de-inss" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Calcular INSS 2025</a>
+                  <a href="/calculadoras/simulador-de-financiamento" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Simular Financiamento Casa</a>
+                  <a href="/geradores/gerador-de-senha-segura" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Gerar Senha Segura</a>
+                  <a href="/conversores/converter-real-para-euro" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Real para Euro Hoje</a>
+                  <a href="/utilitarios/meu-ip" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Qual é o Meu IP?</a>
+                  <a href="/programatico/cep-brasil" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Buscar CEP Online</a>
+                  <a href="/calculadoras/calcular-imc" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Calcular IMC Grátis</a>
+                  <a href="/programatico/salario-minimo-historico" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Salário Mínimo Histórico</a>
+                  <a href="/conversores/converter-mb-para-gb" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">MB para GB Conversor</a>
+                  <a href="/geradores/gerador-de-qr-code" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Gerar QR Code</a>
+                  <a href="/utilitarios/validador-de-cartao-de-credito" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Validar Cartão Crédito</a>
                 </div>
               </div>
             </div>
@@ -872,23 +841,23 @@ export default function App() {
                 const cat = CATEGORIES.find(c => c.id === currentRoute.categoryId);
                 if (!cat) return null;
                 return (
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl space-y-3">
-                    <h2 className="text-2xl font-black text-slate-800 dark:text-slate-100">
+                  <div className="bg-white border border-slate-300 p-6 rounded-xl space-y-3">
+                    <h2 className="text-2xl font-black text-slate-900">
                       {cat.name}
                     </h2>
-                    <p className="text-xs text-slate-500">{cat.description}</p>
+                    <p className="text-xs text-slate-700 font-semibold">{cat.description}</p>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                       {TOOLS.filter(t => t.categoryId === cat.id).map((tool) => (
                         <a
                           key={tool.id}
                           href={`/${cat.id}/${tool.slug}`}
-                          className="bg-slate-50 dark:bg-slate-850 hover:bg-white dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 p-4 rounded-xl hover:border-emerald-500 transition-all block"
+                          className="bg-slate-55 hover:bg-white border border-slate-300 p-4 rounded-xl hover:border-emerald-600 transition-all block group"
                         >
-                          <span className="font-bold text-sm text-slate-800 dark:text-slate-100 block">
+                          <span className="font-extrabold text-base text-slate-900 block group-hover:text-emerald-700 transition-colors">
                             {tool.title}
                           </span>
-                          <span className="text-[11px] text-slate-400 mt-1 block line-clamp-2">
+                          <span className="text-[12px] text-slate-750 mt-1 block line-clamp-2 font-semibold">
                             {tool.shortDescription}
                           </span>
                         </a>
@@ -917,37 +886,37 @@ export default function App() {
               <AdSensePlaceholder slotId="slot-2" position="meio" />
 
               {/* RICH SEO TEXTUAL CONTENT */}
-              <article className="bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-805 rounded-xl p-6 space-y-6 text-sm" id="tool-editorial-content">
+              <article className="bg-white border border-slate-300 rounded-xl p-6 space-y-6 text-sm" id="tool-editorial-content">
                 
                 {/* Intro */}
                 <div className="space-y-2">
-                  <h3 className="text-base font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
-                    <Info className="w-4 h-4 text-emerald-500" /> Introdução
+                  <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-1.5 border-b pb-1.5">
+                    <Info className="w-4 h-4 text-emerald-600" /> Introdução
                   </h3>
-                  <p className="text-slate-500 dark:text-slate-350 leading-relaxed text-xs">
+                  <p className="text-slate-700 leading-relaxed text-sm">
                     {activeTool.longIntro}
                   </p>
                 </div>
 
                 {/* How it works */}
                 <div className="space-y-2">
-                  <h3 className="text-base font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
-                    <Wrench className="w-4 h-4 text-emerald-500" /> Como Funciona?
+                  <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-1.5 border-b pb-1.5">
+                    <Wrench className="w-4 h-4 text-emerald-600" /> Como Funciona?
                   </h3>
-                  <p className="text-slate-500 dark:text-slate-350 leading-relaxed text-xs">
+                  <p className="text-slate-700 leading-relaxed text-sm">
                     {activeTool.howItWorks}
                   </p>
                 </div>
 
                 {/* Tips */}
                 {activeTool.tips && activeTool.tips.length > 0 && (
-                  <div className="bg-emerald-50/50 dark:bg-emerald-950/10 border border-emerald-100 dark:border-emerald-950 p-4 rounded-lg space-y-2">
-                    <h4 className="text-xs font-bold text-emerald-800 dark:text-emerald-400 uppercase tracking-wide">
+                  <div className="bg-emerald-50 border border-emerald-250 p-4 rounded-lg space-y-2">
+                    <h4 className="text-xs font-black text-emerald-900 uppercase tracking-wide">
                       💡 Dicas de Uso e Boas Práticas:
                     </h4>
-                    <ul className="list-disc pl-4 text-slate-550 dark:text-slate-300 text-xs space-y-1">
+                    <ul className="list-disc pl-5 text-slate-800 text-sm space-y-1.5">
                       {activeTool.tips.map((tip, idx) => (
-                        <li key={idx}>{tip}</li>
+                        <li key={idx} className="font-semibold">{tip}</li>
                       ))}
                     </ul>
                   </div>
@@ -956,11 +925,11 @@ export default function App() {
                 {/* FAQ Accordions */}
                 {activeTool.faqs && activeTool.faqs.length > 0 && (
                   <div className="space-y-3 pt-2">
-                    <h3 className="text-xs font-extrabold uppercase text-slate-400 tracking-wider">
-                      Preguntas Frequentes (FAQ)
+                    <h3 className="text-xs font-black uppercase text-slate-500 tracking-wider">
+                      Perguntas Frequentes (FAQ)
                     </h3>
                     
-                    <div className="divide-y divide-slate-150 dark:divide-slate-800">
+                    <div className="divide-y divide-slate-200">
                       {activeTool.faqs.map((faq, idx) => {
                         const faqKey = `${activeTool?.id}-${idx}`;
                         const isOpen = faqOpen[faqKey];
@@ -968,13 +937,13 @@ export default function App() {
                           <div key={idx} className="py-2.5">
                             <button
                               onClick={() => setFaqOpen(p => ({ ...p, [faqKey]: !isOpen }))}
-                              className="w-full text-left font-semibold text-slate-800 dark:text-slate-200 text-xs flex justify-between items-center transition hover:text-emerald-600 hover:cursor-pointer"
+                              className="w-full text-left font-bold text-slate-900 text-xs flex justify-between items-center transition hover:text-emerald-700 hover:cursor-pointer"
                             >
                               <span>{faq.question}</span>
-                              <span className="text-slate-400">{isOpen ? '−' : '+'}</span>
+                              <span className="text-slate-500">{isOpen ? '−' : '+'}</span>
                             </button>
                             {isOpen && (
-                              <p className="text-xs text-slate-400 mt-2 font-light leading-relaxed animate-fade-in pl-1">
+                              <p className="text-xs text-slate-700 mt-2 font-medium leading-relaxed animate-fade-in pl-1">
                                 {faq.answer}
                               </p>
                             )}
@@ -987,8 +956,8 @@ export default function App() {
 
                 {/* RELATIVE INTERLINKING SYSTEM */}
                 {activeTool.relatedToolIds && activeTool.relatedToolIds.length > 0 && (
-                  <div className="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">
+                  <div className="pt-4 border-t border-slate-200 space-y-2">
+                    <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block">
                       🔗 Ferramentas Relacionadas Recomendadas:
                     </span>
                     <div className="flex flex-wrap gap-2 pt-1">
@@ -999,7 +968,7 @@ export default function App() {
                           <a
                             key={relId}
                             href={`/${matched.categoryId}/${matched.slug}`}
-                            className="bg-slate-50 hover:bg-slate-105 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-200 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-medium transition"
+                            className="bg-slate-100 hover:bg-slate-200 text-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold transition"
                           >
                             {matched.title}
                           </a>
@@ -1015,10 +984,10 @@ export default function App() {
               <AffiliateSection toolId={activeTool.id} />
 
               {/* COMPARTILHAMENTO SOCIAL VIRAL */}
-              <div className="bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-xl p-6 shadow-sm" id="share-tool-section">
+              <div className="bg-white border border-slate-300 rounded-xl p-6" id="share-tool-section">
                 <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="w-4 h-4 text-emerald-500" />
-                  <h3 className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">Compartilhe esta Ferramenta</h3>
+                  <Sparkles className="w-4 h-4 text-emerald-600" />
+                  <h3 className="text-xs font-extrabold text-slate-600 uppercase tracking-wider">Compartilhe esta Ferramenta</h3>
                 </div>
                 <div className="flex flex-wrap gap-3">
                   <button
@@ -1027,7 +996,7 @@ export default function App() {
                       const text = encodeURIComponent(`${activeTool.title} - Tool Brasil`);
                       window.open(`https://wa.me/?text=${text}%20${url}`, '_blank', 'noopener,noreferrer');
                     }}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-xs"
                     title="Compartilhar no WhatsApp"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
@@ -1038,7 +1007,7 @@ export default function App() {
                       const url = encodeURIComponent(`https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
                       window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'noopener,noreferrer');
                     }}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-600 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-655 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-xs"
                     title="Compartilhar no Facebook"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 011-1h3v-4h-3a5 5 0 00-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>
@@ -1050,7 +1019,7 @@ export default function App() {
                       const text = encodeURIComponent(`${activeTool.title} - Tool Brasil`);
                       window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'noopener,noreferrer');
                     }}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-xs"
                     title="Compartilhar no X (Twitter)"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -1061,7 +1030,7 @@ export default function App() {
                       const url = encodeURIComponent(`https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
                       window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${url}`, '_blank', 'noopener,noreferrer');
                     }}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-xs"
                     title="Compartilhar no LinkedIn"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
@@ -1075,13 +1044,13 @@ export default function App() {
                       if (btn) { btn.textContent = '✅ Copiado!'; setTimeout(() => { if (btn) btn.textContent = '📋 Copiar Link'; }, 2000); }
                     }}
                     id="copy-link-btn"
-                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-105 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-sm border border-slate-200 dark:border-slate-700"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-xs border border-slate-300"
                     title="Copiar link"
                   >
                     📋 Copiar Link
                   </button>
                 </div>
-                <p className="text-[10px] text-slate-400 mt-3 text-center">
+                <p className="text-[10px] text-slate-500 mt-3 text-center font-bold">
                   Ajude outras pessoas a descobrirem esta ferramenta! Compartilhe nas suas redes sociais. 💚
                 </p>
               </div>
@@ -1095,8 +1064,8 @@ export default function App() {
               <ProgrammaticPage id={currentRoute.id} />
               
               {/* INTERLINKING BACK TO HOME FOR INDEXATION */}
-              <div className="p-4 bg-slate-100 dark:bg-slate-900 border rounded-lg text-xs space-y-2 flex justify-between items-center">
-                <span className="text-slate-500">Deseja calcular outros índices corporativos do Brasil?</span>
+              <div className="p-4 bg-slate-100 border border-slate-300 rounded-lg text-xs space-y-2 flex justify-between items-center">
+                <span className="text-slate-700 font-semibold">Deseja calcular outros índices corporativos do Brasil?</span>
                 <a href="/" className="bg-emerald-600 text-white font-bold px-3 py-1.5 rounded text-[11px] font-mono">
                   Lista de Ferramentas
                 </a>
@@ -1118,12 +1087,12 @@ export default function App() {
       </main>
 
       {/* FOOTER DISCLOSURES & DISPATCHERS */}
-      <footer className="bg-slate-900 border-t border-slate-850 py-12 text-slate-400 mt-12 text-sm" id="app-footer">
+      <footer className="bg-slate-900 border-t border-slate-850 py-12 text-slate-400 mt-12 text-sm font-semibold" id="app-footer">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           
           <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-350 mb-3">Calculadoras Populares</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Calculadoras Populares</h4>
               <ul className="space-y-1.5 text-xs">
                 <li><a href="/calculadoras/calculadora-de-juros-compostos" className="hover:text-emerald-400">Juros Compostos</a></li>
                 <li><a href="/calculadoras/simulador-de-financiamento" className="hover:text-emerald-400">Financiamento SAC/Price</a></li>
@@ -1134,7 +1103,7 @@ export default function App() {
             </div>
             
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-350 mb-3">Conversores & Dados</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Conversores & Dados</h4>
               <ul className="space-y-1.5 text-xs">
                 <li><a href="/conversores/converter-real-para-dolar" className="hover:text-emerald-400">Real para Dólar</a></li>
                 <li><a href="/conversores/converter-real-para-euro" className="hover:text-emerald-400">Real para Euro</a></li>
@@ -1146,7 +1115,7 @@ export default function App() {
             </div>
 
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-350 mb-3">Geradores & Utilitários</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Geradores & Utilitários</h4>
               <ul className="space-y-1.5 text-xs">
                 <li><a href="/geradores/gerador-de-cpf" className="hover:text-emerald-400">Gerador CPF</a></li>
                 <li><a href="/geradores/gerador-de-cnpj" className="hover:text-emerald-400">Gerador CNPJ</a></li>
@@ -1158,7 +1127,7 @@ export default function App() {
             </div>
 
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-355 mb-3">📊 Conteúdo Programático</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">📊 Conteúdo Programático</h4>
               <ul className="space-y-1.5 text-xs">
                 <li><a href="/programatico/ddd-brasil" className="hover:text-emerald-400">Códigos DDD Brasil</a></li>
                 <li><a href="/programatico/cep-brasil" className="hover:text-emerald-400">Buscar CEP Correios</a></li>
@@ -1170,7 +1139,7 @@ export default function App() {
             </div>
 
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-350 mb-3">Institucional</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Institucional</h4>
               <ul className="space-y-1.5 text-xs">
                 <li><a href="/institucional/sobre" className="hover:text-emerald-400">Sobre Nós</a></li>
                 <li><a href="/institucional/contato" className="hover:text-emerald-400">Contato / Fale Conosco</a></li>
@@ -1186,7 +1155,7 @@ export default function App() {
             <p>
               &copy; {new Date().getFullYear()} <strong className="text-slate-300">Tool Brasil</strong>. Todos os direitos reservados. Ferramentas 100% gratuitas — sem cadastro, sem limites.
             </p>
-            <div className="flex items-center justify-center gap-3 mt-4 md:mt-0 flex-wrap">
+            <div className="flex items-center justify-center gap-3 mt-4 md:mt-0 flex-wrap text-slate-400">
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-900/30 text-emerald-400 rounded text-[10px] font-mono border border-emerald-800/50">
                 ✅ 100% Grátis
               </span>
@@ -1203,8 +1172,8 @@ export default function App() {
           </div>
 
           {/* DISCLOSURE DE AFILIADOS */}
-          <div className="text-center text-[10px] text-slate-600 leading-relaxed max-w-3xl mx-auto">
-            <p className="font-semibold text-slate-400">
+          <div className="text-center text-[10px] text-slate-500 leading-relaxed max-w-3xl mx-auto">
+            <p className="font-bold text-slate-400">
               Como Associado da Amazon, ganho com compras qualificadas. 
               O Tool Brasil também participa do Programa de Afiliados da Shopee, 
               recebendo comissões por vendas realizadas através dos links de 
