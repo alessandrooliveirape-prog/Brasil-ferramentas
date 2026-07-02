@@ -48,6 +48,15 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [faqOpen, setFaqOpen] = useState<{ [key: string]: boolean }>({});
 
+  // Real-time rates state for the homepage ticker
+  const [homeRates, setHomeRates] = useState<{ [key: string]: any }>({
+    USD: { bid: 5.62, pctChange: '0.00' },
+    EUR: { bid: 6.08, pctChange: '0.00' },
+    GBP: { bid: 7.15, pctChange: '0.00' },
+    BTC: { bid: 345000.0, pctChange: '0.00' }
+  });
+  const [homeRatesLoading, setHomeRatesLoading] = useState<boolean>(true);
+
   // Dynamic tool popularity scoring tracked in LocalStorage
   const [useCounts, setUseCounts] = useState<{ [key: string]: number }>(() => {
     try {
@@ -75,6 +84,34 @@ export default function App() {
     const root = window.document.documentElement;
     root.classList.remove('dark');
   }, []);
+
+  // Fetch API rates from AwesomeAPI specifically for the homepage ticker
+  useEffect(() => {
+    if (currentRoute.view !== 'home') return;
+    let active = true;
+    const fetchHomeRates = async () => {
+      setHomeRatesLoading(true);
+      try {
+        const res = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL,EUR-BRL,BTC-BRL,GBP-BRL');
+        if (!res.ok) throw new Error('API failed');
+        const data = await res.json();
+        if (active) {
+          setHomeRates({
+            USD: { bid: parseFloat(data.USDBRL.bid), pctChange: data.USDBRL.pctChange },
+            EUR: { bid: parseFloat(data.EURBRL.bid), pctChange: data.EURBRL.pctChange },
+            GBP: { bid: parseFloat(data.GBPBRL.bid), pctChange: data.GBPBRL.pctChange },
+            BTC: { bid: parseFloat(data.BTCBRL.bid), pctChange: data.BTCBRL.pctChange }
+          });
+        }
+      } catch (e) {
+        console.warn('Failed to load homepage rates:', e);
+      } finally {
+        if (active) setHomeRatesLoading(false);
+      }
+    };
+    fetchHomeRates();
+    return () => { active = false; };
+  }, [currentRoute.view]);
 
   // Parse state routing based on URL Pathname (with legacy hash redirection)
   function parseRoute() {
@@ -489,7 +526,7 @@ export default function App() {
       {/* HERO HERO (IF HOME) */}
       {currentRoute.view === 'home' && (
         <section className="bg-gradient-to-b from-white to-slate-50 border-b border-slate-200 py-12 md:py-16 text-center px-4" id="hero-banner">
-          <div className="max-w-3xl mx-auto space-y-6">
+          <div className="max-w-4xl mx-auto space-y-6">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200 rounded-full text-emerald-800 text-xs font-bold font-mono">
               <Award className="w-4 h-4 text-emerald-605" /> 100% Gratuito, Sem Cadastro
             </div>
@@ -513,6 +550,90 @@ export default function App() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
+
+            {/* DYNAMIC REAL-TIME CURRENCY TICKER (HOMEPAGE WIDGET) */}
+            <div className="pt-8 max-w-4xl mx-auto animate-fade-in" id="home-rates-ticker">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                
+                {/* Dólar Card */}
+                <a 
+                  href="/conversores/real-para-dolar"
+                  className="bg-white p-3.5 rounded-xl border border-slate-350 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">USD ⇄ BRL</span>
+                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${parseFloat(homeRates.USD.pctChange) >= 0 ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'}`}>
+                      {parseFloat(homeRates.USD.pctChange) >= 0 ? '▲' : '▼'} {homeRates.USD.pctChange}%
+                    </span>
+                  </div>
+                  <div className="mt-2.5">
+                    <span className="text-lg font-black text-slate-900 font-mono">
+                      R$ {homeRates.USD.bid.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                    <span className="block text-[9.5px] text-slate-500 font-bold uppercase mt-0.5">Dólar Comercial</span>
+                  </div>
+                </a>
+
+                {/* Euro Card */}
+                <a 
+                  href="/conversores/euro-para-real"
+                  className="bg-white p-3.5 rounded-xl border border-slate-350 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">EUR ⇄ BRL</span>
+                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${parseFloat(homeRates.EUR.pctChange) >= 0 ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'}`}>
+                      {parseFloat(homeRates.EUR.pctChange) >= 0 ? '▲' : '▼'} {homeRates.EUR.pctChange}%
+                    </span>
+                  </div>
+                  <div className="mt-2.5">
+                    <span className="text-lg font-black text-slate-900 font-mono">
+                      R$ {homeRates.EUR.bid.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                    <span className="block text-[9.5px] text-slate-500 font-bold uppercase mt-0.5">Euro Comercial</span>
+                  </div>
+                </a>
+
+                {/* Libra Card */}
+                <a 
+                  href="/conversores/libra-para-real"
+                  className="bg-white p-3.5 rounded-xl border border-slate-350 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">GBP ⇄ BRL</span>
+                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${parseFloat(homeRates.GBP.pctChange) >= 0 ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'}`}>
+                      {parseFloat(homeRates.GBP.pctChange) >= 0 ? '▲' : '▼'} {homeRates.GBP.pctChange}%
+                    </span>
+                  </div>
+                  <div className="mt-2.5">
+                    <span className="text-lg font-black text-slate-900 font-mono">
+                      R$ {homeRates.GBP.bid.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    </span>
+                    <span className="block text-[9.5px] text-slate-500 font-bold uppercase mt-0.5">Libra Esterlina</span>
+                  </div>
+                </a>
+
+                {/* Bitcoin Card */}
+                <a 
+                  href="/conversores/bitcoin-para-real"
+                  className="bg-white p-3.5 rounded-xl border border-slate-350 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">BTC ⇄ BRL</span>
+                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${parseFloat(homeRates.BTC.pctChange) >= 0 ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'}`}>
+                      {parseFloat(homeRates.BTC.pctChange) >= 0 ? '▲' : '▼'} {homeRates.BTC.pctChange}%
+                    </span>
+                  </div>
+                  <div className="mt-2.5">
+                    <span className="text-lg font-black text-slate-900 font-mono">
+                      R$ {homeRates.BTC.bid.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                    </span>
+                    <span className="block text-[9.5px] text-slate-500 font-bold uppercase mt-0.5">Bitcoin (BTC)</span>
+                  </div>
+                </a>
+
+              </div>
+            </div>
+
           </div>
         </section>
       )}
@@ -542,7 +663,7 @@ export default function App() {
       {searchQuery.trim().length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-6" id="search-results-board">
           <div className="bg-white p-6 rounded-xl border border-slate-300 space-y-4 shadow-xs animate-fade-in">
-            <h3 className="text-xs font-bold text-slate-850 uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-xs font-bold text-slate-855 uppercase tracking-wider flex items-center gap-2">
               🔍 Resultados para "{searchQuery}" ({searchResults.length})
             </h3>
 
@@ -559,7 +680,7 @@ export default function App() {
                     <span className="font-extrabold text-sm text-slate-900 flex items-center gap-1.5 group-hover:text-emerald-600">
                       {r.title} <ArrowRight className="w-3.5 h-3.5 text-slate-500 transition-transform group-hover:translate-x-0.5" />
                     </span>
-                    <p className="text-[11.5px] text-slate-650 mt-1 line-clamp-2">{r.shortDescription}</p>
+                    <p className="text-[11.5px] text-slate-700 mt-1 line-clamp-2 font-medium">{r.shortDescription}</p>
                   </a>
                 ))}
               </div>
@@ -750,7 +871,7 @@ export default function App() {
                           <div className="flex items-center gap-2 pr-0.5 shrink-0">
                             {visits > 0 ? (
                               <div className="inline-flex items-center gap-1 text-[10px] bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-200 font-mono font-bold">
-                                <TrendingUp className="w-3 h-3 text-emerald-600" />
+                                <TrendingUp className="w-3 h-3 text-emerald-605" />
                                 <span>{visits} {visits === 1 ? 'visita' : 'visitas'}</span>
                               </div>
                             ) : (
@@ -758,7 +879,7 @@ export default function App() {
                                 Sugerido
                               </div>
                             )}
-                            <ChevronRight className="w-3.5 h-3.5 text-slate-500 group-hover:translate-x-0.5 transition-transform" />
+                            <ChevronRight className="w-3.5 h-3.5 text-slate-505 group-hover:translate-x-0.5 transition-transform" />
                           </div>
                         </a>
                       );
@@ -791,7 +912,7 @@ export default function App() {
                         <a
                           key={tool.id}
                           href={`/${cat.id}/${tool.slug}`}
-                          className="text-[11px] bg-slate-100 hover:bg-slate-200 text-slate-900 hover:text-black px-2.5 py-1.5 rounded-lg border border-slate-300 transition font-semibold"
+                          className="text-[11px] bg-slate-105 hover:bg-slate-200 text-slate-905 hover:text-black px-2.5 py-1.5 rounded-lg border border-slate-300 transition font-semibold"
                         >
                           {tool.title.replace('Calculadora de ', '').replace('Conversor de ', '')}
                         </a>
@@ -799,7 +920,7 @@ export default function App() {
                     </div>
                     <a
                       href={`/${cat.id}`}
-                      className="text-[11px] text-emerald-700 font-bold block pt-1 hover:underline"
+                      className="text-[11px] text-emerald-705 font-bold block pt-1 hover:underline"
                     >
                       Acessar todas →
                     </a>
@@ -814,21 +935,21 @@ export default function App() {
                 </h3>
                 <p className="text-[11.5px] text-slate-700 font-medium">As ferramentas mais buscadas pelos brasileiros — todas gratuitas e sem necessidade de cadastro.</p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
-                  <a href="/calculadoras/calculadora-de-juros-compostos" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Calcular Juros Compostos</a>
-                  <a href="/geradores/gerador-de-cpf" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Gerar CPF Válido</a>
-                  <a href="/conversores/converter-real-para-dolar" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Real para Dólar Hoje</a>
-                  <a href="/programatico/ddd-brasil" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Lista de DDDs Brasil</a>
-                  <a href="/calculadoras/calculadora-de-inss" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Calcular INSS 2025</a>
-                  <a href="/calculadoras/simulador-de-financiamento" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Simular Financiamento Casa</a>
-                  <a href="/geradores/gerador-de-senha-segura" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Gerar Senha Segura</a>
-                  <a href="/conversores/converter-real-para-euro" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Real para Euro Hoje</a>
-                  <a href="/utilitarios/meu-ip" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Qual é o Meu IP?</a>
-                  <a href="/programatico/cep-brasil" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Buscar CEP Online</a>
-                  <a href="/calculadoras/calcular-imc" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Calcular IMC Grátis</a>
-                  <a href="/programatico/salario-minimo-historico" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Salário Mínimo Histórico</a>
-                  <a href="/conversores/converter-mb-para-gb" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">MB para GB Conversor</a>
-                  <a href="/geradores/gerador-de-qr-code" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Gerar QR Code</a>
-                  <a href="/utilitarios/validador-de-cartao-de-credito" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 text-slate-900 transition">Validar Cartão Crédito</a>
+                  <a href="/calculadoras/calculadora-de-juros-compostos" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-650 font-semibold hover:bg-emerald-50 text-slate-900 transition">Calcular Juros Compostos</a>
+                  <a href="/geradores/gerador-de-cpf" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-650 font-semibold hover:bg-emerald-50 text-slate-900 transition">Gerar CPF Válido</a>
+                  <a href="/conversores/converter-real-para-dolar" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-650 font-semibold hover:bg-emerald-50 text-slate-900 transition">Real para Dólar Hoje</a>
+                  <a href="/programatico/ddd-brasil" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-650 font-semibold hover:bg-emerald-50 text-slate-900 transition">Lista de DDDs Brasil</a>
+                  <a href="/calculadoras/calculadora-de-inss" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-650 font-semibold hover:bg-emerald-50 text-slate-900 transition">Calcular INSS 2025</a>
+                  <a href="/calculadoras/simulador-de-financiamento" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-650 font-semibold hover:bg-emerald-50 text-slate-900 transition">Simular Financiamento Casa</a>
+                  <a href="/geradores/gerador-de-senha-segura" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-655 font-semibold hover:bg-emerald-50 text-slate-900 transition">Gerar Senha Segura</a>
+                  <a href="/conversores/converter-real-para-euro" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-650 font-semibold hover:bg-emerald-50 text-slate-900 transition">Real para Euro Hoje</a>
+                  <a href="/utilitarios/meu-ip" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-650 font-semibold hover:bg-emerald-50 text-slate-900 transition">Qual é o Meu IP?</a>
+                  <a href="/programatico/cep-brasil" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-650 font-semibold hover:bg-emerald-50 text-slate-900 transition">Buscar CEP Online</a>
+                  <a href="/calculadoras/calcular-imc" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-650 font-semibold hover:bg-emerald-50 text-slate-900 transition">Calcular IMC Grátis</a>
+                  <a href="/programatico/salario-minimo-historico" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-650 font-semibold hover:bg-emerald-50 text-slate-900 transition">Salário Mínimo Histórico</a>
+                  <a href="/conversores/converter-mb-para-gb" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-650 font-semibold hover:bg-emerald-50 text-slate-900 transition">MB para GB Conversor</a>
+                  <a href="/geradores/gerador-de-qr-code" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-650 font-semibold hover:bg-emerald-50 text-slate-900 transition">Gerar QR Code</a>
+                  <a href="/utilitarios/validador-de-cartao-de-credito" className="p-2 border border-slate-300 bg-white rounded hover:border-emerald-650 font-semibold hover:bg-emerald-50 text-slate-900 transition">Validar Cartão Crédito</a>
                 </div>
               </div>
             </div>
@@ -854,7 +975,7 @@ export default function App() {
                           href={`/${cat.id}/${tool.slug}`}
                           className="bg-slate-55 hover:bg-white border border-slate-300 p-4 rounded-xl hover:border-emerald-600 transition-all block group"
                         >
-                          <span className="font-extrabold text-base text-slate-900 block group-hover:text-emerald-700 transition-colors">
+                          <span className="font-extrabold text-base text-slate-900 block group-hover:text-emerald-705 transition-colors">
                             {tool.title}
                           </span>
                           <span className="text-[12px] text-slate-750 mt-1 block line-clamp-2 font-semibold">
@@ -925,7 +1046,7 @@ export default function App() {
                 {/* FAQ Accordions */}
                 {activeTool.faqs && activeTool.faqs.length > 0 && (
                   <div className="space-y-3 pt-2">
-                    <h3 className="text-xs font-black uppercase text-slate-500 tracking-wider">
+                    <h3 className="text-xs font-black uppercase text-slate-505 tracking-wider">
                       Perguntas Frequentes (FAQ)
                     </h3>
                     
@@ -957,7 +1078,7 @@ export default function App() {
                 {/* RELATIVE INTERLINKING SYSTEM */}
                 {activeTool.relatedToolIds && activeTool.relatedToolIds.length > 0 && (
                   <div className="pt-4 border-t border-slate-200 space-y-2">
-                    <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest block">
+                    <span className="text-[10px] font-extrabold text-slate-505 uppercase tracking-widest block">
                       🔗 Ferramentas Relacionadas Recomendadas:
                     </span>
                     <div className="flex flex-wrap gap-2 pt-1">
@@ -1007,7 +1128,7 @@ export default function App() {
                       const url = encodeURIComponent(`https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
                       window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'noopener,noreferrer');
                     }}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-655 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-xs"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-600 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-xs"
                     title="Compartilhar no Facebook"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 011-1h3v-4h-3a5 5 0 00-5 5v2.01h-2l-.396 3.98h2.396v8.01z"/></svg>
