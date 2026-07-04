@@ -148,7 +148,7 @@ export function generateSitemapPlugin(): Plugin {
         { categoryId: 'utilitarios', slug: 'cronometro-online', priority: 0.8 },
         { categoryId: 'utilitarios', slug: 'separador-de-silabas', priority: 0.8 },
         { categoryId: 'utilitarios', slug: 'conversor-maiusculas-minusculas', priority: 0.8 },
-        { categoryId: 'utilitarios', slug: 'extrator-de-emails', priority: 0.8 },
+        { categoryId: 'utilitarios', slug: 'filtro-de-emails', priority: 0.8 },
         { categoryId: 'utilitarios', slug: 'comparador-de-textos', priority: 0.8 },
         { categoryId: 'utilitarios', slug: 'validador-de-cartao-de-credito', priority: 0.8 },
       ];

@@ -169,6 +169,10 @@ function CpfGeradorValidador() {
           )}
         </div>
       </div>
+
+      <div className="mt-6 p-4 bg-slate-50 dark:bg-slate-850/50 rounded-lg border border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+        <span className="font-semibold text-slate-700 dark:text-slate-350">Nota de Utilidade:</span> Esta ferramenta utiliza algoritmos puramente matemáticos e lógicos para gerar e validar sequências numéricas locais. Não possuímos vínculo com a Receita Federal do Brasil e nenhum dado gerado pertence a cidadãos reais ou fica armazenado em nossos servidores. O uso é estritamente destinado a testes de software, design e fins educativos.
+      </div>
     </div>
   );
 }
@@ -334,6 +338,10 @@ function SenhaGerador() {
           </div>
           <button onClick={gerarSenha} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded text-xs shadow transition">Gerar Nova Senha</button>
         </div>
+      </div>
+
+      <div className="mt-6 p-4 bg-slate-50 dark:bg-slate-850/50 rounded-lg border border-slate-200 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+        <span className="font-semibold text-slate-700 dark:text-slate-350">Nota de Utilidade:</span> Esta ferramenta utiliza algoritmos puramente matemáticos e lógicos para gerar e validar sequências numéricas locais. Não possuímos vínculo com a Receita Federal do Brasil e nenhum dado gerado pertence a cidadãos reais ou fica armazenado em nossos servidores. O uso é estritamente destinado a testes de software, design e fins educativos.
       </div>
     </div>
   );

@@ -1,6 +1,11 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
+ * 
+ * 🔒 PRIVACIDADE & VELOCIDADE (CLIENT-SIDE):
+ * Todo o processamento de utilitários de texto (contadores, removedores, formatadores JSON, etc.)
+ * é executado 100% localmente no navegador do usuário (client-side).
+ * Nenhuma requisição ou dado é submetido ao servidor backend.
  */
 
 import React, { useState, useEffect } from 'react';
@@ -552,7 +557,7 @@ function MaiusculasMinusculas() {
   );
 }
 
-// 11. EXTRATOR DE E-MAILS
+// 11. FILTRO E LOCALIZADOR DE E-MAILS
 function ExtratorEmail() {
   const [texto, setTexto] = useState<string>('Entre em contato: contato@toolbrasil.com.br ou suporte@empresa.com.br');
   const [emails, setEmails] = useState<string[]>([]);
@@ -565,10 +570,10 @@ function ExtratorEmail() {
 
   return (
     <div className="space-y-6" id="util-email">
-      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Extrator de E-mails</h2>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Filtro e Localizador de E-mails</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">Texto ou HTML</label>
+          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">Texto ou Relatório</label>
           <textarea 
             className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-955 text-slate-900 dark:text-slate-100 text-xs font-mono outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" 
             rows={6} 
@@ -577,9 +582,9 @@ function ExtratorEmail() {
           />
         </div>
         <div className="space-y-2">
-          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">E-mails Encontrados ({emails.length})</label>
+          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">E-mails Localizados ({emails.length})</label>
           <div className="border border-slate-300 dark:border-slate-800 rounded-lg p-2.5 bg-slate-950 text-emerald-450 text-xs font-mono min-h-[140px] space-y-1">
-            {emails.length > 0 ? emails.map((e, i) => <div key={i}>📧 {e}</div>) : <div className="text-slate-500">Nenhum e-mail encontrado</div>}
+            {emails.length > 0 ? emails.map((e, i) => <div key={i}>📧 {e}</div>) : <div className="text-slate-500">Nenhum e-mail localizado</div>}
           </div>
           {emails.length > 0 && (
             <button onClick={() => navigator.clipboard.writeText(emails.join('\n'))} className="mt-2 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs rounded-lg hover:cursor-pointer transition-colors font-bold">

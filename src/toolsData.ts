@@ -1653,17 +1653,17 @@ export const TOOLS: ToolMetadata[] = [
   {
     id: 'extrator-email',
     categoryId: 'utilitarios',
-    title: 'Extrator de E-mails',
-    shortDescription: 'Extraia todos os endereços de e-mail de um texto ou página HTML.',
-    longIntro: 'Extraia automaticamente todos os endereços de e-mail presentes em um texto, código HTML ou documento. Útil para profissionais de marketing, recrutadores e desenvolvedores.',
-    howItWorks: 'Cole o texto ou HTML no campo de entrada. A ferramenta identifica e extrai todos os endereços de e-mail válidos usando expressões regulares.',
+    title: 'Filtro e Localizador de E-mails',
+    shortDescription: 'Filtre, limpe e organize endereços de e-mail a partir de blocos de textos ou relatórios.',
+    longIntro: 'Organize, limpe e filtre endereços de e-mail a partir de blocos de textos, listas ou relatórios próprios fornecidos voluntariamente pelo usuário para fins de organização interna.',
+    howItWorks: 'Cole o seu bloco de texto ou relatório no campo de entrada. A ferramenta identifica e organiza todos os endereços de e-mail válidos locais.',
     faqs: [
       { question: 'Quais formatos de e-mail são reconhecidos?', answer: 'Qualquer formato válido de e-mail como nome@dominio.com, nome.sobrenome@empresa.com.br, nome+tag@dominio.org, entre outros.' },
-      { question: 'A ferramenta extrai e-mails de páginas web?', answer: 'Sim, cole o código HTML completo da página e a ferramenta extrairá todos os e-mails encontrados no conteúdo.' }
+      { question: 'Como a ferramenta auxilia na privacidade?', answer: 'Toda a filtragem e localização de contatos é realizada localmente no próprio navegador do usuário, sem qualquer upload ou armazenamento dos dados fornecidos voluntariamente.' }
     ],
-    tips: ['Sempre respeite a LGPD ao coletar e processar endereços de e-mail de terceiros.', 'Use esta ferramenta apenas para fins legítimos como contato profissional ou migração de dados autorizada.'],
+    tips: ['Sempre respeite a LGPD ao organizar e processar endereços de e-mail.', 'Use a ferramenta para estruturar e validar listas de contatos de relatórios próprios internos.'],
     relatedToolIds: ['removedor-espacos', 'contador-caracteres', 'encode-url'],
-    slug: 'extrator-de-emails'
+    slug: 'filtro-de-emails'
   },
   {
     id: 'comparador-textos',

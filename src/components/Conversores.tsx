@@ -1,6 +1,11 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
+ * 
+ * 🔒 PRIVACIDADE & VELOCIDADE (CLIENT-SIDE):
+ * Todo o processamento de utilitários de texto (conversores, formatação, etc.)
+ * é executado 100% localmente no navegador do usuário (client-side).
+ * Nenhuma requisição ou dado é submetido ao servidor backend.
  */
 
 import React, { useState, useEffect } from 'react';
@@ -770,7 +775,7 @@ function NumerosRomanos() {
     for (let i = 0; i < r.length; i++) {
       const atual = map[r[i]] || 0;
       const prox = map[r[i+1]] || 0;
-      if (atual < prox) { total -= atual; } else { total += activeTool ? 0 : atual; } // safe math
+      if (atual < prox) { total -= atual; } else { total += atual; } // safe math
     }
     return total;
   };
