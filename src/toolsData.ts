@@ -1600,7 +1600,7 @@ export const TOOLS: ToolMetadata[] = [
       { question: 'Onde consultar a situação do Título de Eleitor?', answer: 'A situação regular do título pode ser consultada no site oficial do Tribunal Superior Eleitoral (TSE) ou no aplicativo e-Título.' }
     ],
     tips: ['Mantenha seu título de eleitor regularizado para evitar multas e impedimentos como: não poder tirar passaporte ou assumir cargos públicos.', 'Vote sempre para manter seu título em situação regular!'],
-    relatedToolIds: ['cpf', 'cep-brasil', 'cnae-consulta'],
+    relatedToolIds: ['cpf', 'cnpj', 'meu-ip'],
     slug: 'verificador-de-titulo-de-eleitor'
   },
 
@@ -2063,6 +2063,28 @@ export const TOOLS: ToolMetadata[] = [
     tips: ['Não consuma menos de 1.200 calorias por dia (mulheres) ou 1.500 (homens) sem acompanhamento médico.', 'Distribua as calorias em 5-6 refeições ao dia para manter o metabolismo ativo.'],
     relatedToolIds: ['tmb', 'imc', 'idade'],
     slug: 'calculadora-de-calorias-diarias'
+  },
+
+  // GERADOR DE RECIBO
+  {
+    id: 'recibo',
+    categoryId: 'geradores',
+    title: 'Gerador de Recibo Online',
+    shortDescription: 'Gere recibos de pagamento personalizados e prontos para impressão ou download em PDF.',
+    longIntro: 'O Gerador de Recibo Online é um utilitário prático para autônomos, prestadores de serviços, freelancers e pequenos empresários (MEI) emitirem recibos de pagamento de forma simples e rápida. Emita recibos de prestação de serviços, aluguel, venda de mercadorias ou qualquer outro tipo de transação comercial. Preencha os dados do emissor, pagador, valor e descrição do serviço. O sistema formata automaticamente o valor por extenso em reais e gera uma página otimizada para impressão física ou salvamento como PDF, livre de propagandas obstrutivas ou marcas d\'água.',
+    howItWorks: 'Insira o valor numérico (o sistema converte automaticamente para o formato por extenso), os nomes e documentos (CPF/CNPJ) do pagador e emissor, a descrição do recebimento, a cidade e a data. Clique no botão de gerar para visualizar o recibo formatado e pronto para impressão ou download em PDF.',
+    faqs: [
+      { question: 'Como imprimir ou salvar o recibo em PDF?', answer: 'Após preencher os dados do recibo, clique no botão "Imprimir / Salvar como PDF". Na janela de impressão do seu sistema operacional, escolha a impressora física ou a opção "Salvar como PDF" para gerar o arquivo digital.' },
+      { question: 'Os dados do recibo são salvos no servidor?', answer: 'Não. Toda a geração do recibo é realizada localmente no seu navegador. A Tool Brasil respeita sua privacidade e não armazena, transmite ou visualiza nenhuma das informações inseridas.' },
+      { question: 'Qual a diferença entre recibo e nota fiscal?', answer: 'O recibo é apenas um comprovante de que um pagamento foi realizado, não tendo valor para recolhimento fiscal. A nota fiscal é o documento oficial exigido pela Receita Federal para comprovação de faturamento e incidência de tributação.' }
+    ],
+    tips: [
+      'Assine o recibo impresso e forneça uma cópia para o pagador, mantendo outra via para o seu controle financeiro pessoal.',
+      'Sempre confira os documentos (CPF/CNPJ) do emissor e do pagador antes de emitir o recibo.',
+      'O sistema converte automaticamente valores decimais para extenso em reais brasileiros, facilitando o preenchimento correto.'
+    ],
+    relatedToolIds: ['cpf', 'cnpj', 'margem-lucro'],
+    slug: 'gerador-de-recibo-online'
   },
 
   // CONVERSOR DE LIBRA PARA REAL

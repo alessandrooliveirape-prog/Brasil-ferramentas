@@ -78,9 +78,67 @@ function run() {
 }
 
 /**
+ * Schema.org JSON-LD Structured Data Helpers
+ */
+function getBreadcrumbSchema(crumbs: { name: string; path: string }[]) {
+  const items = crumbs.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.name,
+    item: `https://toolbrasil.com.br${c.path}`
+  }));
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items
+  };
+}
+
+function getWebApplicationSchema(tool: any) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: tool.title,
+    url: `https://toolbrasil.com.br/${tool.categoryId}/${tool.slug}`,
+    description: tool.shortDescription,
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'All',
+    offers: { '@type': 'Offer', price: '0.00', priceCurrency: 'BRL' }
+  };
+}
+
+function getFAQPageSchema(tool: any) {
+  if (!tool.faqs || tool.faqs.length === 0) return null;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: tool.faqs.map((faq: any) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: { '@type': 'Answer', text: faq.answer }
+    }))
+  };
+}
+
+function buildSchemaTags(crumbs: { name: string; path: string }[], toolObj?: any) {
+  const breadcrumb = getBreadcrumbSchema(crumbs);
+  let tags = `<script type="application/ld+json">\n${JSON.stringify(breadcrumb, null, 2)}\n</script>`;
+  if (toolObj) {
+    const webApp = getWebApplicationSchema(toolObj);
+    tags += `\n<script type="application/ld+json">\n${JSON.stringify(webApp, null, 2)}\n</script>`;
+    
+    const faq = getFAQPageSchema(toolObj);
+    if (faq) {
+      tags += `\n<script type="application/ld+json">\n${JSON.stringify(faq, null, 2)}\n</script>`;
+    }
+  }
+  return tags;
+}
+
+/**
  * Utilitário para substituir metadados e injetar corpo no HTML
  */
-function buildHtmlPage(template: string, title: string, desc: string, canonicalUrl: string, bodyContent: string): string {
+function buildHtmlPage(template: string, title: string, desc: string, canonicalUrl: string, bodyContent: string, schemaJsonLd?: string): string {
   let html = template;
 
   // Substitui Title
@@ -98,6 +156,11 @@ function buildHtmlPage(template: string, title: string, desc: string, canonicalU
   html = html.replace(/<link rel="canonical" href=".*?" \/>/g, `<link rel="canonical" href="${canonicalUrl}" />`);
   html = html.replace(/<meta property="og:url" content=".*?" \/>/g, `<meta property="og:url" content="${canonicalUrl}" />`);
   html = html.replace(/<meta property="twitter:url" content=".*?" \/>/g, `<meta property="twitter:url" content="${canonicalUrl}" />`);
+
+  // Injeta o schema no <head> se fornecido
+  if (schemaJsonLd) {
+    html = html.replace('</head>', `${schemaJsonLd}\n</head>`);
+  }
 
   // Monta o layout comum (Header + Sidebar + Main Content + Footer)
   const fullBody = `
@@ -248,7 +311,9 @@ function generateHomeHtml(template: string): string {
     </div>
   `;
 
-  return buildHtmlPage(template, title, desc, canonical, content);
+  const crumbs = [{ name: 'Início', path: '/' }];
+  const schemaTags = buildSchemaTags(crumbs);
+  return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
 }
 
 function generateCategoryHtml(template: string, cat: any): string {
@@ -276,7 +341,12 @@ function generateCategoryHtml(template: string, cat: any): string {
     </div>
   `;
 
-  return buildHtmlPage(template, title, desc, canonical, content);
+  const crumbs = [
+    { name: 'Início', path: '/' },
+    { name: cat.name, path: `/${cat.id}` }
+  ];
+  const schemaTags = buildSchemaTags(crumbs);
+  return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
 }
 
 function generateToolHtml(template: string, tool: any): string {
@@ -386,7 +456,13 @@ function generateToolHtml(template: string, tool: any): string {
     </div>
   `;
 
-  return buildHtmlPage(template, title, desc, canonical, content);
+  const crumbs = [
+    { name: 'Início', path: '/' },
+    { name: catName, path: `/${tool.categoryId}` },
+    { name: tool.title, path: `/${tool.categoryId}/${tool.slug}` }
+  ];
+  const schemaTags = buildSchemaTags(crumbs, tool);
+  return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
 }
 
 function generateProgrammaticHtml(template: string, id: string, page: any): string {
@@ -421,7 +497,12 @@ function generateProgrammaticHtml(template: string, id: string, page: any): stri
     </div>
   `;
 
-  return buildHtmlPage(template, title, desc, canonical, content);
+  const crumbs = [
+    { name: 'Início', path: '/' },
+    { name: page.title, path: `/programatico/${id}` }
+  ];
+  const schemaTags = buildSchemaTags(crumbs);
+  return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
 }
 
 function generateInstitutionalHtml(template: string, id: string): string {
@@ -546,7 +627,12 @@ function generateInstitutionalHtml(template: string, id: string): string {
     `;
   }
 
-  return buildHtmlPage(template, title, desc, canonical, content);
+  const crumbs = [
+    { name: 'Início', path: '/' },
+    { name: title, path: `/institucional/${id}` }
+  ];
+  const schemaTags = buildSchemaTags(crumbs);
+  return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
 }
 
 run();

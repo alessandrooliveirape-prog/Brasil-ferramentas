@@ -26,6 +26,7 @@ export default function Geradores({ toolId }: GeradoresProps) {
       {toolId === 'placa-mercosul' && <PlacaMercosul />}
       {toolId === 'cores-aleatorias' && <CoresAleatorias />}
       {toolId === 'gerador-rg' && <GeradorRG />}
+      {toolId === 'recibo' && <GeradorRecibo />}
     </div>
   );
 }
@@ -807,6 +808,328 @@ function HashSha256Gerador() {
           <div className="bg-slate-950 p-3 rounded font-mono text-xs text-yellow-400 select-all border border-slate-850 truncate">{sha256Value}</div>
         </div>
         <button onClick={() => navigator.clipboard.writeText(sha256Value)} className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 text-slate-700 py-1.5 px-3 rounded text-xs select-none">Copiar Hash</button>
+      </div>
+    </div>
+  );
+}
+
+// Helper para converter valor numérico para escrita por extenso em português
+function valorPorExtenso(valor: number): string {
+  if (valor === 0) return 'zero reais';
+  
+  const unidades = ['', 'um', 'dois', 'três', 'quatro', 'cinco', 'seis', 'sete', 'oito', 'nove'];
+  const dezenas10 = ['dez', 'onze', 'doze', 'treze', 'catorze', 'quinze', 'dezesseis', 'dezessete', 'dezoito', 'dezenove'];
+  const dezenas = ['', '', 'vinte', 'trinta', 'quarenta', 'cinquenta', 'sessenta', 'setenta', 'oitenta', 'noventa'];
+  const centenas = ['', 'cento', 'duzentos', 'trezentos', 'quatrocentos', 'quinhentos', 'seiscentos', 'setecentos', 'oitocentos', 'novecentos'];
+  
+  const converterGrupo = (n: number): string => {
+    if (n === 0) return '';
+    if (n === 100) return 'cem';
+    
+    let cent = Math.floor(n / 100);
+    let resto = n % 100;
+    let dez = Math.floor(resto / 10);
+    let uni = resto % 10;
+    
+    let parts = [];
+    if (cent > 0) parts.push(centenas[cent]);
+    if (resto > 0) {
+      if (resto >= 10 && resto < 20) {
+        parts.push(dezenas10[resto - 10]);
+      } else {
+        if (dez > 0) parts.push(dezenas[dez]);
+        if (uni > 0) parts.push(unidades[uni]);
+      }
+    }
+    return parts.join(' e ');
+  };
+
+  const parteInteira = Math.floor(valor);
+  const centavos = Math.round((valor - parteInteira) * 100);
+
+  let extensoReais = '';
+  
+  if (parteInteira > 0) {
+    if (parteInteira === 1) {
+      extensoReais = 'um real';
+    } else {
+      let milhões = Math.floor(parteInteira / 1000000);
+      let restoMilhões = parteInteira % 1000000;
+      let milhares = Math.floor(restoMilhões / 1000);
+      let restoMilhares = restoMilhões % 1000;
+      
+      let partes = [];
+      if (milhões > 0) {
+        if (milhões === 1) {
+          partes.push('um milhão');
+        } else {
+          partes.push(converterGrupo(milhões) + ' milhões');
+        }
+      }
+      if (milhares > 0) {
+        if (milhares === 1) {
+          partes.push('mil');
+        } else {
+          partes.push(converterGrupo(milhares) + ' mil');
+        }
+      }
+      if (restoMilhares > 0) {
+        partes.push(converterGrupo(restoMilhares));
+      }
+      extensoReais = partes.join(' e ') + ' reais';
+    }
+  }
+
+  let extensoCentavos = '';
+  if (centavos > 0) {
+    if (centavos === 1) {
+      extensoCentavos = 'um centavo';
+    } else {
+      extensoCentavos = converterGrupo(centavos) + ' centavos';
+    }
+  }
+
+  if (extensoReais && extensoCentavos) {
+    return `${extensoReais} e ${extensoCentavos}`;
+  }
+  return extensoReais || extensoCentavos || 'zero reais';
+}
+
+// 15. GERADOR DE RECIBO ONLINE
+function GeradorRecibo() {
+  const [valor, setValor] = useState<string>('1500.00');
+  const [emissorNome, setEmissorNome] = useState<string>('');
+  const [emissorDoc, setEmissorDoc] = useState<string>('');
+  const [pagadorNome, setPagadorNome] = useState<string>('');
+  const [pagadorDoc, setPagadorDoc] = useState<string>('');
+  const [referente, setReferente] = useState<string>('Prestação de serviços de desenvolvimento de software.');
+  const [cidade, setCidade] = useState<string>('São Paulo');
+  const [data, setData] = useState<string>(() => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  });
+  const [showRecibo, setShowRecibo] = useState<boolean>(true);
+
+  // Computa o extenso em tempo real
+  const numValor = parseFloat(valor) || 0;
+  const extenso = valorPorExtenso(numValor);
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const formatarData = (dataStr: string) => {
+    if (!dataStr) return '';
+    const [ano, mes, dia] = dataStr.split('-');
+    const meses = [
+      'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+      'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+    ];
+    const nomeMes = meses[parseInt(mes, 10) - 1] || mes;
+    return `${parseInt(dia, 10)} de ${nomeMes} de ${ano}`;
+  };
+
+  const formatarMoeda = (num: number) => {
+    return num.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  };
+
+  return (
+    <div className="space-y-6" id="ger-recibo">
+      <style dangerouslySetInnerHTML={{ __html: `
+        @media print {
+          #main-root, #main-root * {
+            visibility: hidden;
+          }
+          #print-receipt-area, #print-receipt-area * {
+            visibility: visible;
+          }
+          #print-receipt-area {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            border: 2px solid #000 !important;
+            padding: 24px !important;
+            margin: 0 !important;
+            color: #000 !important;
+            background-color: #fff !important;
+          }
+        }
+      `}} />
+
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3 no-print">Gerador de Recibo Online</h2>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 no-print">
+        {/* FORMULÁRIO DE ENTRADA */}
+        <div className="space-y-4 bg-slate-50 dark:bg-slate-850 p-4 rounded-xl border border-slate-200">
+          <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-350 border-b border-slate-200 dark:border-slate-800 pb-2">Preencha os Dados do Recibo</h3>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1">
+              <label className="block text-xs font-semibold text-slate-500">Valor (R$)</label>
+              <input 
+                type="number" 
+                step="0.01"
+                className="w-full border p-2.5 rounded-lg bg-white dark:bg-slate-800 text-sm focus:outline-emerald-500 dark:text-slate-100 font-mono"
+                value={valor}
+                onChange={(e) => setValor(e.target.value)}
+                placeholder="0,00"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="block text-xs font-semibold text-slate-500">Data de Emissão</label>
+              <input 
+                type="date"
+                className="w-full border p-2.5 rounded-lg bg-white dark:bg-slate-800 text-sm focus:outline-emerald-500 dark:text-slate-100 font-mono"
+                value={data}
+                onChange={(e) => setData(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-3 pt-2">
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Dados do Emissor (Quem recebe o valor)</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-slate-500">Nome / Razão Social</label>
+                <input 
+                  type="text" 
+                  className="w-full border p-2 rounded-lg bg-white dark:bg-slate-800 text-xs dark:text-slate-100"
+                  value={emissorNome}
+                  onChange={(e) => setEmissorNome(e.target.value)}
+                  placeholder="Ex: João da Silva ME"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-slate-500">CPF / CNPJ</label>
+                <input 
+                  type="text" 
+                  className="w-full border p-2 rounded-lg bg-white dark:bg-slate-800 text-xs dark:text-slate-100 font-mono"
+                  value={emissorDoc}
+                  onChange={(e) => setEmissorDoc(e.target.value)}
+                  placeholder="00.000.000/0001-00"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3 pt-2">
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Dados do Pagador (Quem pagou o valor)</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-slate-500">Nome / Razão Social</label>
+                <input 
+                  type="text" 
+                  className="w-full border p-2 rounded-lg bg-white dark:bg-slate-800 text-xs dark:text-slate-100"
+                  value={pagadorNome}
+                  onChange={(e) => setPagadorNome(e.target.value)}
+                  placeholder="Ex: Maria Souza"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="block text-xs font-medium text-slate-500">CPF / CNPJ</label>
+                <input 
+                  type="text" 
+                  className="w-full border p-2 rounded-lg bg-white dark:bg-slate-800 text-xs dark:text-slate-100 font-mono"
+                  value={pagadorDoc}
+                  onChange={(e) => setPagadorDoc(e.target.value)}
+                  placeholder="000.000.000-00"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-xs font-semibold text-slate-500">Descrição do Pagamento (Referente a)</label>
+            <textarea 
+              className="w-full border p-2.5 rounded-lg bg-white dark:bg-slate-800 text-xs dark:text-slate-100 leading-relaxed"
+              rows={2}
+              value={referente}
+              onChange={(e) => setReferente(e.target.value)}
+              placeholder="Ex: Prestação de serviços de consultoria técnica."
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-xs font-semibold text-slate-500">Cidade de Emissão</label>
+            <input 
+              type="text" 
+              className="w-full border p-2.5 rounded-lg bg-white dark:bg-slate-800 text-xs dark:text-slate-100"
+              value={cidade}
+              onChange={(e) => setCidade(e.target.value)}
+              placeholder="Ex: São Paulo"
+            />
+          </div>
+        </div>
+
+        {/* INFORMAÇÕES DE VALIDAÇÃO DE CONFORMIDADE */}
+        <div className="space-y-4">
+          <div className="bg-emerald-50 dark:bg-slate-800/40 p-4 rounded-xl border border-emerald-100 dark:border-emerald-950 text-xs text-slate-700 dark:text-slate-300 leading-relaxed space-y-2">
+            <span className="font-bold text-emerald-800 dark:text-emerald-400 block text-sm">✓ Recibo 100% Processado no Cliente</span>
+            <p>Seus dados financeiros e documentos inseridos para preenchimento do recibo **nunca saem do seu navegador**. O processamento dos dados e a conversão do valor por extenso ocorrem de forma local no seu computador, em conformidade com as diretrizes da LGPD.</p>
+            <p><strong>Por extenso gerado:</strong></p>
+            <div className="bg-white dark:bg-slate-900 border p-2.5 rounded font-mono text-emerald-700 dark:text-emerald-350 font-bold leading-normal lowercase first-letter:uppercase">
+              {extenso}
+            </div>
+          </div>
+
+          <div className="bg-white p-4 rounded-xl border border-slate-300 shadow-xs space-y-3">
+            <h4 className="text-xs font-extrabold text-slate-900 uppercase">Ações Rápidas</h4>
+            <button 
+              onClick={handlePrint}
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-lg text-xs hover:cursor-pointer flex items-center justify-center gap-2 shadow-sm transition"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+              Imprimir / Salvar como PDF
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ÁREA DE PRÉ-VISUALIZAÇÃO / IMPRESSÃO */}
+      <div className="space-y-4 pt-4 border-t border-slate-200 no-print">
+        <h3 className="text-sm font-semibold text-slate-500 uppercase">Visualização do Recibo</h3>
+      </div>
+
+      <div 
+        id="print-receipt-area"
+        className="bg-white border-2 border-slate-800 p-8 rounded-lg text-slate-800 font-sans shadow-md"
+      >
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-slate-800 pb-4 gap-4">
+          <div className="space-y-1">
+            <span className="text-2xl font-black tracking-tight text-slate-900 uppercase">Recibo de Pagamento</span>
+            <p className="text-[10px] text-slate-500 italic uppercase">Documento de comprovação de recebimento financeiro</p>
+          </div>
+          <div className="bg-slate-100 border border-slate-800 px-4 py-2 text-right rounded font-mono font-bold text-slate-900 shrink-0">
+            VALOR: {formatarMoeda(numValor)}
+          </div>
+        </div>
+
+        <div className="py-6 text-sm text-slate-800 leading-relaxed space-y-4">
+          <p>
+            Recebi(emos) de <strong className="underline decoration-slate-400">{pagadorNome || '________________________________________________'}</strong>, 
+            inscrito(a) sob o CPF/CNPJ nº <strong className="font-mono">{pagadorDoc || '_____________________'}</strong>, 
+            a importância de <strong>{formatarMoeda(numValor)}</strong> 
+            (<span className="italic lowercase first-letter:uppercase">{extenso}</span>) 
+            referente a <strong className="underline decoration-slate-400">{referente || '____________________________________________________________________________________'}</strong>.
+          </p>
+          <p>
+            Para maior clareza, firmo(amos) o presente recibo dando plena, rasa e geral quitação de pago.
+          </p>
+        </div>
+
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 pt-6 border-t border-slate-200">
+          <div className="text-xs text-slate-600 font-semibold font-mono">
+            {cidade || '__________________'}, {formatarData(data)}
+          </div>
+          
+          <div className="space-y-1 text-center w-full sm:w-auto shrink-0 pt-6 sm:pt-0">
+            <div className="border-t border-slate-800 pt-2 min-w-[240px]">
+              <strong className="block text-xs text-slate-900 uppercase">{emissorNome || 'Assinatura do Emissor'}</strong>
+              {emissorDoc && <span className="block text-[10px] text-slate-500 font-mono">Doc: {emissorDoc}</span>}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

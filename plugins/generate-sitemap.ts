@@ -90,6 +90,8 @@ export function generateSitemapPlugin(): Plugin {
         { categoryId: 'calculadoras', slug: 'calculadora-de-idade-canina', priority: 0.8 },
         { categoryId: 'calculadoras', slug: 'calculadora-de-calorias-diarias', priority: 0.8 },
         { categoryId: 'calculadoras', slug: 'calculadora-de-nota-do-enem', priority: 0.8 },
+        { categoryId: 'calculadoras', slug: 'calculadora-clt-vs-pj', priority: 0.8 },
+        { categoryId: 'calculadoras', slug: 'calculadora-move-brasil', priority: 0.8 },
         // Conversores
         { categoryId: 'conversores', slug: 'converter-metros-para-pes', priority: 0.8 },
         { categoryId: 'conversores', slug: 'converter-quilos-para-libras', priority: 0.8 },
@@ -122,6 +124,7 @@ export function generateSitemapPlugin(): Plugin {
         { categoryId: 'geradores', slug: 'gerador-de-placa-mercosul', priority: 0.8 },
         { categoryId: 'geradores', slug: 'gerador-de-cores-aleatorias', priority: 0.8 },
         { categoryId: 'geradores', slug: 'gerador-de-rg', priority: 0.8 },
+        { categoryId: 'geradores', slug: 'gerador-de-recibo-online', priority: 0.8 },
         // Ferramentas Web
         { categoryId: 'ferramentas-web', slug: 'qual-o-meu-ip', priority: 0.9 },
         { categoryId: 'ferramentas-web', slug: 'localizar-endereco-de-ip', priority: 0.8 },

@@ -466,6 +466,20 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 transition-colors duration-300" id="main-root">
       
+      {/* Dynamic JSON-LD Structured Data for SEO / Google Search Console */}
+      {breadcrumbSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+        />
+      )}
+      {webAppSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppSchema) }}
+        />
+      )}
+
       {/* HEADER SECTION */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200" id="app-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
