@@ -24,7 +24,9 @@ import {
   Star,
   Sparkles,
   TrendingUp,
-  RotateCcw
+  RotateCcw,
+  Sun,
+  Moon
 } from 'lucide-react';
 
 // Core data and sub-components
@@ -41,12 +43,25 @@ import Utilitarios from './components/Utilitarios';
 import ProgrammaticPage from './components/ProgrammaticPage';
 import Institucional from './components/Institucional';
 import AdSensePlaceholder from './components/AdSensePlaceholder';
+import SEOAnalyzer from './components/SEOAnalyzer';
 
 
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState(() => parseRoute());
   const [searchQuery, setSearchQuery] = useState('');
   const [faqOpen, setFaqOpen] = useState<{ [key: string]: boolean }>({});
+
+  // Theme state: defaults to 'light', stores selection in localStorage
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    try {
+      const saved = localStorage.getItem('brasil_ferramentas_theme');
+      if (saved === 'dark') return 'dark';
+    } catch (e) {}
+    return 'light';
+  });
+
+  // State to control visibility of SEOAnalyzer panel
+  const [showSEOPanel, setShowSEOPanel] = useState(false);
 
   // Real-time rates state for the homepage ticker
   const [homeRates, setHomeRates] = useState<{ [key: string]: any }>({
@@ -79,11 +94,18 @@ export default function App() {
     };
   });
 
-  // Ensure dark class is always removed from document element (pure light mode)
+  // Manage theme dark class on document element and persist in localStorage
   useEffect(() => {
     const root = window.document.documentElement;
-    root.classList.remove('dark');
-  }, []);
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    try {
+      localStorage.setItem('brasil_ferramentas_theme', theme);
+    } catch (e) {}
+  }, [theme]);
 
   // Fetch API rates from AwesomeAPI specifically for the homepage ticker
   useEffect(() => {
@@ -464,7 +486,7 @@ export default function App() {
   const searchResults = getFilteredTools();
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 transition-colors duration-300" id="main-root">
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300" id="main-root">
       
       {/* Dynamic JSON-LD Structured Data for SEO / Google Search Console */}
       {breadcrumbSchema && (
@@ -481,7 +503,7 @@ export default function App() {
       )}
 
       {/* HEADER SECTION */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200" id="app-header">
+      <header className="sticky top-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300" id="app-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
           
           {/* Logo */}
@@ -494,7 +516,7 @@ export default function App() {
                 <span className="text-lg font-extrabold tracking-tight text-emerald-600 font-bold">
                   Tool Brasil
                 </span>
-                <span className="hidden sm:block text-[9px] text-slate-500 font-bold font-mono uppercase tracking-wider">
+                <span className="hidden sm:block text-[9px] text-slate-500 dark:text-slate-400 font-bold font-mono uppercase tracking-wider">
                   ToolBrasil.com
                 </span>
               </div>
@@ -502,14 +524,14 @@ export default function App() {
           </div>
 
           {/* Category Quick Links for Desktop */}
-          <nav className="hidden lg:flex items-center gap-6 text-xs font-extrabold text-slate-800">
+          <nav className="hidden lg:flex items-center gap-6 text-xs font-extrabold text-slate-800 dark:text-slate-200">
             {CATEGORIES.filter(c => c.id !== 'institucional' && c.id !== 'programatico').map((cat) => {
               const isCatActive = currentRoute.categoryId === cat.id && currentRoute.view === 'category';
               return (
                 <a
                   key={cat.id}
                   href={`/${cat.id}`}
-                  className={`hover:text-emerald-700 transition-colors py-1 ${isCatActive ? 'text-emerald-600 border-b-2 border-emerald-500 font-bold' : ''}`}
+                  className={`hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 ${isCatActive ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-500 font-bold' : ''}`}
                 >
                   {cat.name}
                 </a>
@@ -518,8 +540,18 @@ export default function App() {
           </nav>
 
           {/* Search bar */}
-          <div className="flex items-center gap-4 flex-grow max-w-xs justify-end md:max-w-md">
+          <div className="flex items-center gap-3 flex-grow max-w-xs justify-end md:max-w-md">
             
+            {/* Theme Toggle Button */}
+            <button
+              onClick={() => setTheme(p => p === 'light' ? 'dark' : 'light')}
+              className="p-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-full hover:bg-slate-200 dark:hover:bg-slate-750 hover:cursor-pointer transition-colors shadow-xs"
+              id="theme-toggle-btn"
+              title={theme === 'light' ? 'Ativar Modo Escuro' : 'Ativar Modo Claro'}
+            >
+              {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+            </button>
+
             {/* Header Universal Search Input */}
             <div className="relative w-full max-w-[180px] sm:max-w-[240px] md:max-w-[300px]" id="header-search-wrapper">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
@@ -527,7 +559,7 @@ export default function App() {
               </div>
               <input
                 type="text"
-                className="w-full bg-slate-50 border border-slate-350 rounded-full py-1.5 pl-8 pr-4 text-[11px] outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 transition-all font-semibold"
+                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-350 dark:border-slate-700 rounded-full py-1.5 pl-8 pr-4 text-[11px] outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 dark:text-slate-100 transition-all font-semibold"
                 placeholder="Buscar calculadora ou gerador..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -1185,6 +1217,31 @@ export default function App() {
                 <p className="text-[10px] text-slate-500 mt-3 text-center font-bold">
                   Ajude outras pessoas a descobrirem esta ferramenta! Compartilhe nas suas redes sociais. 💚
                 </p>
+              </div>
+
+              {/* DYNAMIC SEO AUDIT PANEL INTEGRATION */}
+              <div className="border border-slate-300 dark:border-slate-800 rounded-xl p-4 bg-white dark:bg-slate-900 shadow-xs space-y-4" id="tool-seo-audit-wrapper">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-xs font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-wider flex items-center gap-1.5">
+                      📊 Modo Auditor (Otimização SEO)
+                    </h4>
+                    <p className="text-[10.5px] text-slate-500 dark:text-slate-400 mt-0.5">Analise as tags indexáveis, estrutura Schema JSON-LD e pré-visualização de SERP do Google.</p>
+                  </div>
+                  <button
+                    onClick={() => setShowSEOPanel(p => !p)}
+                    className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-bold rounded-lg border border-slate-300 dark:border-slate-750 transition hover:cursor-pointer shadow-xs"
+                    id="btn-toggle-seo-panel"
+                  >
+                    {showSEOPanel ? 'Ocultar Painel ✕' : 'Exibir Painel Auditoria'}
+                  </button>
+                </div>
+
+                {showSEOPanel && (
+                  <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
+                    <SEOAnalyzer tool={activeTool} />
+                  </div>
+                )}
               </div>
 
             </div>
