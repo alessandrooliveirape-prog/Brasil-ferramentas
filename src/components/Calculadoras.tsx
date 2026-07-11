@@ -12,6 +12,9 @@ interface CalculadorasProps {
 export default function Calculadoras({ toolId }: CalculadorasProps) {
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-xl p-6 shadow-sm" id="calculadora-container">
+      {toolId === 'churrasco' && <CalculadoraChurrasco />}
+      {toolId === 'custo-energia' && <CalculadoraEnergia />}
+      {toolId === 'horas-trabalhadas' && <CalculadoraHorasTrabalhadas />}
       {toolId === 'juros-compostos' && <JurosCompostos />}
       {toolId === 'juros-simples' && <JurosSimples />}
       {toolId === 'financiamento' && <Financiamento />}
@@ -2822,6 +2825,205 @@ function CalculadoraCLTvsPJ() {
         <div className="mt-4 text-xs text-slate-400 dark:text-slate-500 text-center">
           <p>* Este cálculo é uma estimativa. Consulte um contador para uma análise personalizada.</p>
           <p className="mt-1">O regime PJ exige reserva para férias, 13° e contingências.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CalculadoraChurrasco() {
+  const [homens, setHomens] = useState<number>(5);
+  const [mulheres, setMulheres] = useState<number>(5);
+  const [criancas, setCriancas] = useState<number>(2);
+  
+  const totalPessoas = homens + mulheres + criancas;
+  
+  const carneH = homens * 0.5; // 500g
+  const carneM = mulheres * 0.4; // 400g
+  const carneC = criancas * 0.25; // 250g
+  const totalCarne = carneH + carneM + carneC;
+  
+  const linguiça = totalPessoas * 0.15;
+  const frango = totalPessoas * 0.10;
+  const bovina = totalCarne - linguiça - frango;
+  
+  const paoAlho = totalPessoas * 2; // unidades
+  const farofa = totalPessoas * 0.05; // 50g por pessoa
+  const carvao = totalCarne * 1.5; // 1.5kg carvão por kg de carne
+  
+  const cerveja = (homens + mulheres) * 4; // 4 latas por adulto
+  const refrigerante = totalPessoas * 0.5; // 500ml por pessoa
+  
+  return (
+    <div className="max-w-2xl mx-auto p-4 sm:p-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+      <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
+        <span>🔥</span> Quantos convidados?
+      </h3>
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Homens</label>
+          <input type="number" min="0" value={homens} onChange={(e) => setHomens(Number(e.target.value))} className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-emerald-500" />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Mulheres</label>
+          <input type="number" min="0" value={mulheres} onChange={(e) => setMulheres(Number(e.target.value))} className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-emerald-500" />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Crianças</label>
+          <input type="number" min="0" value={criancas} onChange={(e) => setCriancas(Number(e.target.value))} className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-emerald-500" />
+        </div>
+      </div>
+      
+      <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-6 border border-emerald-100 dark:border-emerald-800">
+        <h4 className="text-lg font-bold text-emerald-800 dark:text-emerald-400 mb-4 text-center">O que você precisa comprar:</h4>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <h5 className="font-semibold text-slate-700 dark:text-slate-200 mb-2 border-b pb-1">🥩 Carnes ({totalCarne.toFixed(1)}kg)</h5>
+            <ul className="space-y-1 text-sm text-slate-600 dark:text-slate-400">
+              <li>• Bovina: {bovina.toFixed(1)} kg</li>
+              <li>• Linguiça: {linguiça.toFixed(1)} kg</li>
+              <li>• Frango: {frango.toFixed(1)} kg</li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="font-semibold text-slate-700 dark:text-slate-200 mb-2 border-b pb-1">🍻 Bebidas</h5>
+            <ul className="space-y-1 text-sm text-slate-600 dark:text-slate-400">
+              <li>• Cerveja: {cerveja} latas (aprox. {(cerveja*0.35).toFixed(1)} L)</li>
+              <li>• Refri/Água: {refrigerante.toFixed(1)} Litros</li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="font-semibold text-slate-700 dark:text-slate-200 mb-2 border-b pb-1">🥖 Acompanhamentos</h5>
+            <ul className="space-y-1 text-sm text-slate-600 dark:text-slate-400">
+              <li>• Pão de Alho: {paoAlho} unidades</li>
+              <li>• Farofa: {farofa.toFixed(1)} kg</li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="font-semibold text-slate-700 dark:text-slate-200 mb-2 border-b pb-1">🔥 Essenciais</h5>
+            <ul className="space-y-1 text-sm text-slate-600 dark:text-slate-400">
+              <li>• Carvão: {carvao.toFixed(1)} kg</li>
+              <li>• Gelo: 1 a 2 sacos (5kg)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CalculadoraEnergia() {
+  const [potencia, setPotencia] = useState<number>(1000); // W
+  const [horas, setHoras] = useState<number>(8);
+  const [dias, setDias] = useState<number>(20);
+  const [tarifa, setTarifa] = useState<number>(0.85); // R$/kWh
+  
+  const consumoKwh = (potencia * horas * dias) / 1000;
+  const custo = consumoKwh * tarifa;
+  
+  return (
+    <div className="max-w-2xl mx-auto p-4 sm:p-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Potência (Watts)</label>
+          <input type="number" min="0" value={potencia} onChange={(e) => setPotencia(Number(e.target.value))} className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-emerald-500" placeholder="Ex: 1000" />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Tarifa (R$/kWh)</label>
+          <input type="number" step="0.01" min="0" value={tarifa} onChange={(e) => setTarifa(Number(e.target.value))} className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-emerald-500" placeholder="Ex: 0.85" />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Horas por dia</label>
+          <input type="number" min="0" max="24" value={horas} onChange={(e) => setHoras(Number(e.target.value))} className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-emerald-500" />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Dias por mês</label>
+          <input type="number" min="0" max="31" value={dias} onChange={(e) => setDias(Number(e.target.value))} className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-emerald-500" />
+        </div>
+      </div>
+      
+      <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-6 border border-yellow-200 dark:border-yellow-800 text-center">
+        <div className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Custo Estimado Mensal</div>
+        <div className="text-4xl font-black text-yellow-600 dark:text-yellow-400 mb-2">
+          R$ {custo.toFixed(2).replace('.', ',')}
+        </div>
+        <div className="text-sm text-slate-600 dark:text-slate-300">
+          Consumo de <span className="font-bold">{consumoKwh.toFixed(1)} kWh/mês</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CalculadoraHorasTrabalhadas() {
+  const [entrada1, setEntrada1] = useState<string>('08:00');
+  const [saida1, setSaida1] = useState<string>('12:00');
+  const [entrada2, setEntrada2] = useState<string>('13:00');
+  const [saida2, setSaida2] = useState<string>('17:00');
+  
+  const parseTime = (time: string) => {
+    if (!time) return 0;
+    const [h, m] = time.split(':').map(Number);
+    return (h * 60) + m;
+  };
+  
+  const e1 = parseTime(entrada1);
+  const s1 = parseTime(saida1);
+  const e2 = parseTime(entrada2);
+  const s2 = parseTime(saida2);
+  
+  let totalMinutos = 0;
+  if (s1 > e1) totalMinutos += (s1 - e1);
+  if (s2 > e2) totalMinutos += (s2 - e2);
+  
+  const totalHoras = Math.floor(totalMinutos / 60);
+  const restos = totalMinutos % 60;
+  
+  return (
+    <div className="max-w-2xl mx-auto p-4 sm:p-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg">
+          <h4 className="font-semibold text-slate-700 dark:text-slate-200 mb-3">1º Turno (Manhã)</h4>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs font-medium text-slate-500 mb-1">Entrada</label>
+              <input type="time" value={entrada1} onChange={(e) => setEntrada1(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-500 mb-1">Saída (Almoço)</label>
+              <input type="time" value={saida1} onChange={(e) => setSaida1(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800" />
+            </div>
+          </div>
+        </div>
+        
+        <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg">
+          <h4 className="font-semibold text-slate-700 dark:text-slate-200 mb-3">2º Turno (Tarde)</h4>
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs font-medium text-slate-500 mb-1">Retorno (Almoço)</label>
+              <input type="time" value={entrada2} onChange={(e) => setEntrada2(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-500 mb-1">Fim Expediente</label>
+              <input type="time" value={saida2} onChange={(e) => setSaida2(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800" />
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-6 border border-indigo-200 dark:border-indigo-800 flex items-center justify-between">
+        <div>
+          <div className="text-sm font-medium text-slate-600 dark:text-slate-400">Total de Horas Trabalhadas</div>
+          <div className="text-3xl font-black text-indigo-700 dark:text-indigo-400">
+            {totalHoras}h {restos}m
+          </div>
+        </div>
+        <div className="text-right">
+          <div className="text-xs text-slate-500 dark:text-slate-400">Tempo Decimal</div>
+          <div className="font-mono text-lg text-slate-700 dark:text-slate-300">
+            {(totalMinutos / 60).toFixed(2)} hrs
+          </div>
         </div>
       </div>
     </div>

@@ -12,6 +12,7 @@ interface GeradoresProps {
 export default function Geradores({ toolId }: GeradoresProps) {
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 rounded-xl p-6 shadow-sm" id="gerador-container">
+      {toolId === 'gerador-whatsapp' && <GeradorWhatsApp />}
       {toolId === 'cpf' && <CpfGeradorValidador />}
       {toolId === 'cnpj' && <CnpjGeradorValidador />}
       {toolId === 'senha' && <SenhaGerador />}
@@ -1131,6 +1132,80 @@ function GeradorRecibo() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function GeradorWhatsApp() {
+  const [numero, setNumero] = useState('');
+  const [mensagem, setMensagem] = useState('');
+  
+  const linkGerado = numero 
+    ? `https://wa.me/55${numero.replace(/\D/g, '')}${mensagem ? `?text=${encodeURIComponent(mensagem)}` : ''}` 
+    : '';
+
+  const copyToClipboard = () => {
+    if (!linkGerado) return;
+    navigator.clipboard.writeText(linkGerado);
+    alert('Link copiado para a área de transferência!');
+  };
+
+  return (
+    <div className="max-w-xl mx-auto space-y-6">
+      <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Número do WhatsApp (com DDD)</label>
+          <div className="flex bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 focus-within:ring-2 focus-within:ring-emerald-500 overflow-hidden">
+            <span className="flex items-center px-4 bg-slate-100 dark:bg-slate-800 text-slate-500 font-mono border-r border-slate-200 dark:border-slate-700">+55</span>
+            <input 
+              type="tel" 
+              placeholder="Ex: 11999999999"
+              className="w-full px-4 py-3 bg-transparent outline-none"
+              value={numero}
+              onChange={(e) => setNumero(e.target.value)}
+            />
+          </div>
+        </div>
+        
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Mensagem Inicial (opcional)</label>
+          <textarea 
+            rows={3}
+            placeholder="Ex: Olá! Gostaria de mais informações."
+            className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-emerald-500 outline-none"
+            value={mensagem}
+            onChange={(e) => setMensagem(e.target.value)}
+          />
+        </div>
+      </div>
+      
+      {linkGerado && (
+        <div className="bg-emerald-50 dark:bg-emerald-900/20 p-5 rounded-xl border border-emerald-200 dark:border-emerald-800">
+          <h4 className="text-emerald-800 dark:text-emerald-400 font-semibold mb-2">Seu link está pronto:</h4>
+          <div className="flex gap-2">
+            <input 
+              type="text" 
+              readOnly 
+              value={linkGerado} 
+              className="flex-1 bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-800 rounded-lg px-3 py-2 text-sm text-slate-600 dark:text-slate-300 outline-none"
+            />
+            <button 
+              onClick={copyToClipboard}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium transition-colors"
+            >
+              Copiar
+            </button>
+            <a 
+              href={linkGerado} 
+              target="_blank" 
+              rel="noreferrer"
+              className="px-4 py-2 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 rounded-lg font-medium transition-colors flex items-center justify-center"
+            >
+              Testar
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

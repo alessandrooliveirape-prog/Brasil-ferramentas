@@ -58,6 +58,152 @@ export const CATEGORIES: Category[] = [
 ];
 
 export const TOOLS: ToolMetadata[] = [
+  // CALCULADORAS NOVAS
+  {
+    id: 'churrasco',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Churrasco',
+    shortDescription: 'Calcule a quantidade exata de carne, bebidas e acompanhamentos para o seu churrasco perfeito.',
+    longIntro: 'Organizar um churrasco perfeito exige um bom planejamento para evitar o desperdício ou a falta de comida e bebida. A Calculadora de Churrasco automatiza esse processo estimando a quantidade ideal de carnes (bovina, suína, frango, linguiça), bebidas (cerveja, refrigerante, água) e acompanhamentos (pão de alho, farofa, carvão) com base no número de convidados. Basta informar a quantidade de homens, mulheres e crianças que o algoritmo fará a distribuição inteligente considerando o consumo médio de cada perfil. Chega de sobrar carne ou faltar gelo no meio da festa!',
+    howItWorks: 'Informe a quantidade de homens, mulheres e crianças que participarão do evento. Em seguida, selecione os itens que você deseja servir (tipos de carne, bebidas com ou sem álcool). A calculadora utilizará parâmetros gastronômicos padrão para definir o peso exato de proteína e a litragem de bebidas que você precisará comprar.',
+    faqs: [
+      {
+        question: 'Qual é a quantidade de carne por pessoa em um churrasco?',
+        answer: 'Em média, calcula-se 500g a 600g de carne sem osso para homens adultos, 400g para mulheres e cerca de 250g para crianças.'
+      },
+      {
+        question: 'Como calcular a quantidade de cerveja?',
+        answer: 'Para eventos com duração de cerca de 4 a 5 horas, a média é de 4 a 5 latas (ou 1,5 a 2 litros) de cerveja por adulto que consome álcool.'
+      },
+      {
+        question: 'E quanto ao carvão e gelo?',
+        answer: 'Para o carvão, a regra básica é 1kg de carvão para cada 1kg de carne. Para o gelo, considere 1 saco de gelo (5kg) para cada 2 caixas de cerveja, além do gelo para as carnes se não houver refrigeração adequada.'
+      }
+    ],
+    tips: [
+      'Sempre arredonde os cálculos para cima quando o evento durar mais de 5 horas.',
+      'Varie as carnes: linguiças e frangos costumam ser assados primeiro e abrem o apetite para as carnes principais.',
+      'Não se esqueça do pão de alho e da farofa: eles ajudam a equilibrar o consumo de proteínas.'
+    ],
+    relatedToolIds: ['imc', 'calorias-diarias'],
+    slug: 'calculadora-de-churrasco'
+  },
+  {
+    id: 'gerador-whatsapp',
+    categoryId: 'geradores',
+    title: 'Gerador de Link de WhatsApp',
+    shortDescription: 'Crie links curtos (wa.me) personalizados para o seu WhatsApp com uma mensagem inicial pré-definida.',
+    longIntro: 'O Gerador de Link para WhatsApp é uma ferramenta fundamental para empreendedores, afiliados e profissionais autônomos que desejam facilitar o contato de seus clientes. Em vez de forçar o cliente a adicionar seu número na agenda para só então mandar uma mensagem, o link permite iniciar uma conversa imediatamente com um clique. Além disso, você pode pré-configurar uma mensagem padrão (como "Olá, gostaria de um orçamento") para saber exatamente de onde aquele contato veio e acelerar o atendimento.',
+    howItWorks: 'Basta digitar o seu número de telefone com DDD (e o código do país, no caso do Brasil +55) e escrever a mensagem que o cliente enviará ao clicar. A ferramenta formatará a URL oficial da API do WhatsApp (wa.me) e fornecerá um link pronto para ser copiado e compartilhado no Instagram, Facebook ou no seu site.',
+    faqs: [
+      {
+        question: 'O link de WhatsApp funciona no Instagram?',
+        answer: 'Sim! Você pode colocar o link gerado diretamente na biografia do seu Instagram (no campo "Site") para que seus seguidores entrem em contato com apenas um clique.'
+      },
+      {
+        question: 'A criação do link tem algum custo?',
+        answer: 'Não, gerar o link através da API oficial do WhatsApp é totalmente gratuito e ilimitado.'
+      },
+      {
+        question: 'A mensagem pré-definida pode ser alterada pelo cliente?',
+        answer: 'Sim, a mensagem pré-definida apenas preenche a caixa de texto do cliente. Ele pode editá-la antes de apertar o botão de enviar.'
+      }
+    ],
+    tips: [
+      'Use encurtadores (como o Bit.ly) se quiser monitorar a quantidade de cliques que o seu link do WhatsApp recebe.',
+      'Crie mensagens personalizadas para cada rede social (ex: "Vim pelo Instagram") para medir de onde vêm mais clientes.',
+      'Coloque sempre o DDD para evitar que o link seja inválido.'
+    ],
+    relatedToolIds: ['gerador-qrcode'],
+    slug: 'gerador-link-whatsapp'
+  },
+  {
+    id: 'custo-energia',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Custo de Energia Elétrica',
+    shortDescription: 'Descubra quanto um eletrodoméstico gasta de energia (KWh) e qual o impacto dele na sua conta de luz.',
+    longIntro: 'Saber exatamente quanto cada aparelho consome de energia é o primeiro passo para reduzir a conta de luz. A Calculadora de Custo de Energia Elétrica ajuda a estimar o consumo em KWh (Quilowatt-hora) de ar-condicionado, chuveiro elétrico, geladeira, computador ou qualquer outro equipamento. Transforme a potência declarada pelo fabricante no custo real em Reais (R$) no final do mês, baseando-se no tempo de uso diário e na tarifa de energia cobrada pela sua concessionária local.',
+    howItWorks: 'Preencha a potência do aparelho (geralmente medida em Watts, descrita na etiqueta do produto), a quantidade de horas que ele fica ligado por dia, e quantos dias por mês ele é utilizado. Por fim, informe o valor da tarifa de energia (R$/kWh) cobrada na sua região (você encontra este valor na sua conta de luz).',
+    faqs: [
+      {
+        question: 'Onde encontro a potência do meu aparelho?',
+        answer: 'A potência, medida em Watts (W), geralmente está indicada em uma etiqueta colada na parte traseira do aparelho, no manual de instruções ou na caixa original.'
+      },
+      {
+        question: 'O que é kWh (Quilowatt-hora)?',
+        answer: 'O Quilowatt-hora é a unidade de medida padrão das concessionárias de energia. Ele representa a quantidade de energia (1.000 Watts) consumida durante o período de 1 hora.'
+      },
+      {
+        question: 'Como descubro o valor da tarifa na minha cidade?',
+        answer: 'Pegue sua última conta de luz e divida o valor total a pagar (sem multas) pelo total de kWh consumidos no mês. O resultado será o preço médio do kWh já com os impostos inclusos.'
+      }
+    ],
+    tips: [
+      'Chuveiros elétricos e aparelhos de ar-condicionado costumam ser os grandes vilões da conta de luz.',
+      'Para calcular o consumo de uma geladeira, lembre-se que, apesar de ficar ligada 24h na tomada, o motor não trabalha o tempo todo. O manual costuma informar o consumo mensal médio.',
+      'Aparelhos em Standby (aquela luzinha vermelha) também consomem energia ao longo do mês.'
+    ],
+    relatedToolIds: ['regra-de-tres', 'porcentagem'],
+    slug: 'calculadora-de-custo-energia-eletrica'
+  },
+  {
+    id: 'sorteador',
+    categoryId: 'utilitarios',
+    title: 'Sorteador Online (Números e Nomes)',
+    shortDescription: 'Sorteie números aleatórios ou nomes de uma lista de forma justa e instantânea.',
+    longIntro: 'Realizar um sorteio imparcial e transparente nunca foi tão simples. O Sorteador Online é uma ferramenta multifuncional desenhada para promotores de eventos, criadores de conteúdo, professores ou qualquer pessoa que precise de resultados aleatórios. Você pode sortear números dentro de um intervalo específico (perfeito para rifas e bingos) ou colar uma lista de nomes, e-mails ou participantes para escolher os vencedores de uma promoção de Instagram ou brinde corporativo, tudo com algoritmos matemáticos que garantem 100% de aleatoriedade.',
+    howItWorks: 'Escolha entre as abas de "Números" ou "Nomes". Para números, defina o intervalo (ex: sortear entre 1 e 100) e quantos números devem ser sorteados. Para nomes, cole a sua lista (um nome por linha) e clique em sortear. O sistema escolherá aleatoriamente o ganhador.',
+    faqs: [
+      {
+        question: 'O sorteador é realmente aleatório?',
+        answer: 'Sim, nosso sistema utiliza funções criptográficas e de geração de números pseudo-aleatórios do próprio navegador, garantindo que não haja qualquer padrão previsível ou vício nos sorteios.'
+      },
+      {
+        question: 'Posso sortear nomes repetidos?',
+        answer: 'Na aba de nomes, cada linha é tratada como um participante único. Se você colar o mesmo nome duas vezes, ele terá o dobro de chances de ser sorteado.'
+      },
+      {
+        question: 'Existe um limite para a lista de nomes?',
+        answer: 'Para garantir um bom desempenho no seu navegador, recomendamos listas com até 10.000 nomes por sorteio.'
+      }
+    ],
+    tips: [
+      'Para sorteios de rifas, certifique-se de preencher exatamente o intervalo de cotas vendidas (ex: de 1 a 500).',
+      'Use o sorteador para dinâmicas de grupo no trabalho, como escolher quem fará a próxima apresentação ou qual time começará a gincana.',
+      'Na lista de nomes, evite linhas em branco, pois o sistema pode sortear o "vazio".'
+    ],
+    relatedToolIds: ['gerador-nome-aleatorio', 'gerador-senha'],
+    slug: 'sorteador-online-numeros-e-nomes'
+  },
+  {
+    id: 'horas-trabalhadas',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Horas Trabalhadas',
+    shortDescription: 'Some as suas horas no ponto e calcule o total de horas diárias trabalhadas e intervalos.',
+    longIntro: 'Controlar exatamente a sua jornada de trabalho diária é um direito trabalhista e a chave para não sair no prejuízo com horas extras. A Calculadora de Horas Trabalhadas foi desenvolvida para ajudar funcionários CLT, freelancers, estagiários e profissionais liberais a contabilizarem o tempo exato de serviço. Esqueça os cálculos mentais confusos de conversão de minutos em decimais: basta preencher o seu horário de entrada, saída para o almoço, retorno e fim de expediente.',
+    howItWorks: 'Preencha o relógio no formato HH:MM (horas e minutos). O sistema calculará a diferença entre a Entrada e a Saída 1 (primeiro turno), e a diferença entre a Entrada 2 e Saída 2 (segundo turno). Em seguida, ele subtrairá o tempo de almoço/descanso e mostrará o total exato de horas e minutos de trabalho líquido naquele dia.',
+    faqs: [
+      {
+        question: 'Como funciona o cálculo de minutos para horas decimais?',
+        answer: 'Enquanto o relógio marca 60 minutos, as folhas de pagamento usam sistema decimal (100). Por exemplo, 30 minutos equivale a 0,5 horas trabalhadas. Nossa ferramenta já faz a conta correta.'
+      },
+      {
+        question: 'O horário de almoço conta como hora trabalhada?',
+        answer: 'Não, pela legislação CLT padrão, os intervalos intrajornada (almoço/descanso) não são computados como tempo de serviço efetivo, a menos que haja acordo prévio.'
+      },
+      {
+        question: 'E se eu tiver feito hora extra?',
+        answer: 'A calculadora informará o seu tempo total líquido. Se a sua jornada padrão é de 8h e o resultado foi 9h30, você acumulou 1h30 de horas extras naquele dia.'
+      }
+    ],
+    tips: [
+      'Use esta ferramenta para criar um banco de horas pessoal e confrontar com o espelho de ponto fornecido pelo RH no fim do mês.',
+      'Profissionais autônomos ou freelancers podem usar o cálculo para gerar o valor da fatura a ser cobrada do cliente com base na hora técnica (timesheet).',
+      'Lembre-se da tolerância de atraso/adiantamento CLT, que geralmente é de 5 a 10 minutos por dia.'
+    ],
+    relatedToolIds: ['hora-extra', 'salario-liquido', 'ferias-clt', 'rescisao'],
+    slug: 'calculadora-de-horas-trabalhadas'
+  },
   // CALCULADORAS
   {
     id: 'juros-compostos',

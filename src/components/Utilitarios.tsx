@@ -17,6 +17,7 @@ interface UtilitariosProps {
 export default function Utilitarios({ toolId }: UtilitariosProps) {
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm animate-fade-in" id="utilitarios-container">
+      {toolId === 'sorteador' && <SorteadorOnline />}
       {(toolId === 'contador-caracteres' || toolId === 'contador-palavras') && <ContadorTexto />}
       {toolId === 'removedor-espacos' && <RemovedorEspacos />}
       {(toolId === 'formatador-json' || toolId === 'beautify-json') && <JsonFormatter />}
@@ -726,6 +727,158 @@ function ValidadorCartao() {
             <div className="p-2.5 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200">Bandeira: <strong>{resultado.bandeira}</strong></div>
             <div className="p-2.5 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200">Final: <strong className="font-mono">{resultado.digito}</strong></div>
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SorteadorOnline() {
+  const [aba, setAba] = useState<'numeros' | 'nomes'>('numeros');
+  
+  // State Numeros
+  const [min, setMin] = useState(1);
+  const [max, setMax] = useState(100);
+  const [quantidade, setQuantidade] = useState(1);
+  const [numerosSorteados, setNumerosSorteados] = useState<number[]>([]);
+  
+  // State Nomes
+  const [listaNomes, setListaNomes] = useState('');
+  const [quantidadeNomes, setQuantidadeNomes] = useState(1);
+  const [nomesSorteados, setNomesSorteados] = useState<string[]>([]);
+  
+  const sortearNumeros = () => {
+    if (min >= max) {
+      alert('O número mínimo deve ser menor que o máximo.');
+      return;
+    }
+    const sorteados = [];
+    for (let i = 0; i < quantidade; i++) {
+      const num = Math.floor(Math.random() * (max - min + 1)) + min;
+      sorteados.push(num);
+    }
+    setNumerosSorteados(sorteados);
+  };
+  
+  const sortearNomes = () => {
+    const nomes = listaNomes.split('\n').map(n => n.trim()).filter(n => n !== '');
+    if (nomes.length === 0) {
+      alert('Insira pelo menos um nome na lista.');
+      return;
+    }
+    if (quantidadeNomes > nomes.length) {
+      alert('A quantidade de sorteados não pode ser maior que a lista.');
+      return;
+    }
+    
+    // Fisher-Yates shuffle para aleatoriedade
+    const shuffled = [...nomes];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    setNomesSorteados(shuffled.slice(0, quantidadeNomes));
+  };
+  
+  return (
+    <div className="max-w-3xl mx-auto p-4 sm:p-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl space-y-6">
+      
+      {/* Abas */}
+      <div className="flex border-b border-slate-200 dark:border-slate-700">
+        <button 
+          onClick={() => setAba('numeros')}
+          className={`flex-1 py-3 text-center font-semibold text-sm transition-colors ${aba === 'numeros' ? 'border-b-2 border-emerald-500 text-emerald-600 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'}`}
+        >
+          Sortear Números
+        </button>
+        <button 
+          onClick={() => setAba('nomes')}
+          className={`flex-1 py-3 text-center font-semibold text-sm transition-colors ${aba === 'nomes' ? 'border-b-2 border-emerald-500 text-emerald-600 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'}`}
+        >
+          Sortear Nomes
+        </button>
+      </div>
+      
+      {/* Aba de Números */}
+      {aba === 'numeros' && (
+        <div className="space-y-6">
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Mínimo</label>
+              <input type="number" value={min} onChange={(e) => setMin(Number(e.target.value))} className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-emerald-500" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Máximo</label>
+              <input type="number" value={max} onChange={(e) => setMax(Number(e.target.value))} className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-emerald-500" />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Quantidade</label>
+              <input type="number" min="1" max="1000" value={quantidade} onChange={(e) => setQuantidade(Number(e.target.value))} className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-emerald-500" />
+            </div>
+          </div>
+          
+          <button onClick={sortearNumeros} className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold text-lg transition-colors shadow-lg shadow-emerald-600/20">
+            SORTEAR AGORA
+          </button>
+          
+          {numerosSorteados.length > 0 && (
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-emerald-100 dark:border-emerald-900/50 text-center animate-fade-in">
+              <h3 className="text-sm font-semibold text-slate-500 mb-4 uppercase tracking-widest">Resultados</h3>
+              <div className="flex flex-wrap justify-center gap-3">
+                {numerosSorteados.map((n, i) => (
+                  <span key={i} className="inline-flex items-center justify-center w-14 h-14 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-400 font-black text-2xl rounded-full border-2 border-emerald-200 dark:border-emerald-800">
+                    {n}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+      
+      {/* Aba de Nomes */}
+      {aba === 'nomes' && (
+        <div className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">Cole a lista de nomes (um por linha)</label>
+            <textarea 
+              rows={8}
+              value={listaNomes}
+              onChange={(e) => setListaNomes(e.target.value)}
+              placeholder="Maria&#10;João&#10;Pedro&#10;Ana"
+              className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-emerald-500 resize-none"
+            />
+            <div className="text-xs text-slate-500 mt-2 text-right">
+              Total de nomes identificados: {listaNomes.split('\n').filter(n => n.trim() !== '').length}
+            </div>
+          </div>
+          
+          <div className="flex gap-4 items-end">
+            <div className="w-1/3">
+              <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Qtd de ganhadores</label>
+              <input type="number" min="1" value={quantidadeNomes} onChange={(e) => setQuantidadeNomes(Number(e.target.value))} className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:ring-2 focus:ring-emerald-500" />
+            </div>
+            <button onClick={sortearNomes} className="w-2/3 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold transition-colors shadow-lg shadow-emerald-600/20">
+              SORTEAR NOMES
+            </button>
+          </div>
+          
+          {nomesSorteados.length > 0 && (
+            <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-emerald-100 dark:border-emerald-900/50 animate-fade-in">
+              <h3 className="text-sm font-semibold text-slate-500 mb-4 uppercase tracking-widest text-center">Ganhadores</h3>
+              <ul className="space-y-2">
+                {nomesSorteados.map((nome, i) => (
+                  <li key={i} className="flex items-center gap-3 p-3 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-800 dark:text-emerald-300 rounded-lg font-semibold border border-emerald-100 dark:border-emerald-800/50">
+                    <span className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-emerald-200 dark:bg-emerald-800 rounded-full text-emerald-900 dark:text-emerald-100 text-xs">
+                      #{i + 1}
+                    </span>
+                    {nome}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       )}
     </div>
