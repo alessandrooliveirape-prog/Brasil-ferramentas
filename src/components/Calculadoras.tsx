@@ -53,10 +53,261 @@ export default function Calculadoras({ toolId }: CalculadorasProps) {
       {toolId === 'nota-enem' && <CalculadoraNotaEnem />}
       {toolId === 'move-brasil' && <CalculadoraMoveBrasil />}
       {toolId === 'clt-vs-pj' && <CalculadoraCLTvsPJ />}
-    
+      {toolId === 'emprestimo-consignado' && <CalculadoraConsignado />}
+      {toolId === 'financiamento-veiculos' && <SimuladorVeiculos />}
     </div>
   );
 }
+
+// 42. CALCULADORA DE EMPRÉSTIMO CONSIGNADO
+function CalculadoraConsignado() {
+  const [salarioLiquido, setSalarioLiquido] = useState<number>(3000);
+  const [valorEmprestimo, setValorEmprestimo] = useState<number>(10000);
+  const [taxaJurosMensal, setTaxaJurosMensal] = useState<number>(1.66);
+  const [meses, setMeses] = useState<number>(84);
+
+  const i = (taxaJurosMensal || 0) / 100;
+  const n = meses || 84;
+  const P = valorEmprestimo || 0;
+
+  // Formula PMT: P * [i*(1+i)^n] / [(1+i)^n - 1]
+  let pmt = 0;
+  if (i > 0 && n > 0 && P > 0) {
+    pmt = P * (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
+  }
+
+  const totalPago = pmt * n;
+  const totalJuros = totalPago - P;
+  const margemConsignavel35 = salarioLiquido * 0.35;
+  const margemUltrapassada = pmt > margemConsignavel35;
+  const taxaEfetivaAnual = (Math.pow(1 + i, 12) - 1) * 100;
+
+  return (
+    <div className="space-y-6" id="calc-consignado">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Calculadora de Empréstimo Consignado</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Simule o valor da parcela mensal, margem consignável (35%) e total de juros pagos.</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Renda Líquida / Benefício INSS (R$)</label>
+          <input 
+            type="number" 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-mono" 
+            value={salarioLiquido} 
+            onChange={(e) => setSalarioLiquido(Number(e.target.value))} 
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Valor do Empréstimo Desejado (R$)</label>
+          <input 
+            type="number" 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-mono" 
+            value={valorEmprestimo} 
+            onChange={(e) => setValorEmprestimo(Number(e.target.value))} 
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Taxa de Juros Mensal (% a.m.)</label>
+          <input 
+            type="number" 
+            step="0.01" 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-mono" 
+            value={taxaJurosMensal} 
+            onChange={(e) => setTaxaJurosMensal(Number(e.target.value))} 
+          />
+          <span className="text-[10px] text-slate-500 block mt-0.5">Teto INSS atual: ~1.66% a.m.</span>
+        </div>
+
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Prazo de Pagamento</label>
+          <select 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold"
+            value={meses}
+            onChange={(e) => setMeses(Number(e.target.value))}
+          >
+            <option value={12}>12 parcelas (1 ano)</option>
+            <option value={24}>24 parcelas (2 anos)</option>
+            <option value={36}>36 parcelas (3 anos)</option>
+            <option value={48}>48 parcelas (4 anos)</option>
+            <option value={60}>60 parcelas (5 anos)</option>
+            <option value={72}>72 parcelas (6 anos)</option>
+            <option value={84}>84 parcelas (7 anos - Teto INSS)</option>
+          </select>
+        </div>
+      </div>
+
+      {/* PAINEL DE RESULTADOS */}
+      <div className={`p-5 rounded-xl border transition-all ${margemUltrapassada ? 'bg-red-50/50 dark:bg-red-950/20 border-red-200 dark:border-red-900/50' : 'bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/50'}`}>
+        <div className="flex items-center justify-between flex-wrap gap-2 mb-4 pb-3 border-b border-slate-200/60 dark:border-slate-800">
+          <div>
+            <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">Valor Estimado da Parcela Mensal</span>
+            <span className="text-3xl font-black font-mono text-emerald-700 dark:text-emerald-400">
+              R$ {pmt.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} / mês
+            </span>
+          </div>
+          <div className="text-right">
+            <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">Margem Permitida (35%)</span>
+            <span className="text-lg font-bold font-mono text-slate-800 dark:text-slate-200">
+              R$ {margemConsignavel35.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </span>
+          </div>
+        </div>
+
+        {margemUltrapassada && (
+          <div className="p-3 bg-red-100/70 dark:bg-red-900/40 border border-red-300 text-red-800 dark:text-red-200 text-xs font-semibold rounded-lg mb-4">
+            ⚠️ <strong>Atenção:</strong> A parcela mensal (R$ {pmt.toFixed(2)}) ultrapassa a sua margem consignável máxima de 35% (R$ {margemConsignavel35.toFixed(2)}). Reduza o valor solicitado ou aumente o número de parcelas.
+          </div>
+        )}
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs font-mono">
+          <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+            <span className="text-slate-500 block text-[10px] uppercase font-bold font-sans">Total de Juros:</span>
+            <strong className="text-slate-900 dark:text-slate-100 text-sm">R$ {totalJuros.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+          </div>
+          <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+            <span className="text-slate-500 block text-[10px] uppercase font-bold font-sans">Montante Total Pago:</span>
+            <strong className="text-slate-900 dark:text-slate-100 text-sm">R$ {totalPago.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+          </div>
+          <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+            <span className="text-slate-500 block text-[10px] uppercase font-bold font-sans">Taxa Efetiva Anual:</span>
+            <strong className="text-emerald-700 dark:text-emerald-400 text-sm">{taxaEfetivaAnual.toFixed(2)}% a.a.</strong>
+          </div>
+          <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+            <span className="text-slate-500 block text-[10px] uppercase font-bold font-sans">Nº de Prestações:</span>
+            <strong className="text-slate-900 dark:text-slate-100 text-sm">{n}x fixas</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 43. SIMULADOR DE FINANCIAMENTO DE VEÍCULOS
+function SimuladorVeiculos() {
+  const [valorVeiculo, setValorVeiculo] = useState<number>(60000);
+  const [valorEntrada, setValorEntrada] = useState<number>(15000);
+  const [taxaJurosMensal, setTaxaJurosMensal] = useState<number>(1.49);
+  const [meses, setMeses] = useState<number>(48);
+
+  const valorFinanciado = Math.max(0, valorVeiculo - valorEntrada);
+  const i = (taxaJurosMensal || 0) / 100;
+  const n = meses || 48;
+
+  // IOF Estimado (~ 1.5% do saldo financiado)
+  const iofEstimado = valorFinanciado * 0.0175;
+  const saldoComIof = valorFinanciado + iofEstimado;
+
+  let pmt = 0;
+  if (i > 0 && n > 0 && saldoComIof > 0) {
+    pmt = saldoComIof * (i * Math.pow(1 + i, n)) / (Math.pow(1 + i, n) - 1);
+  }
+
+  const totalFinanciamento = pmt * n;
+  const totalPagoComEntrada = totalFinanciamento + valorEntrada;
+  const totalJurosEImpostos = totalPagoComEntrada - valorVeiculo;
+  const pctEntrada = valorVeiculo > 0 ? (valorEntrada / valorVeiculo) * 100 : 0;
+
+  return (
+    <div className="space-y-6" id="sim-veiculos">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Simulador de Financiamento de Veículos</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Calcule o valor das parcelas do seu carro ou moto, entrada recomendada, IOF e juros acumulados.</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Valor do Veículo (R$)</label>
+          <input 
+            type="number" 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-mono" 
+            value={valorVeiculo} 
+            onChange={(e) => setValorVeiculo(Number(e.target.value))} 
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Valor da Entrada (R$)</label>
+          <input 
+            type="number" 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-mono" 
+            value={valorEntrada} 
+            onChange={(e) => setValorEntrada(Number(e.target.value))} 
+          />
+          <span className="text-[10px] text-slate-500 block mt-0.5">Equivale a {pctEntrada.toFixed(1)}% do veículo</span>
+        </div>
+
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Taxa de Juros Mensal (% a.m.)</label>
+          <input 
+            type="number" 
+            step="0.01" 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-mono" 
+            value={taxaJurosMensal} 
+            onChange={(e) => setTaxaJurosMensal(Number(e.target.value))} 
+          />
+          <span className="text-[10px] text-slate-500 block mt-0.5">Média de mercado: 1.30% a 1.80% a.m.</span>
+        </div>
+
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Prazo de Parcelamento</label>
+          <select 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold"
+            value={meses}
+            onChange={(e) => setMeses(Number(e.target.value))}
+          >
+            <option value={12}>12 parcelas (1 ano)</option>
+            <option value={24}>24 parcelas (2 anos)</option>
+            <option value={36}>36 parcelas (3 anos)</option>
+            <option value={48}>48 parcelas (4 anos)</option>
+            <option value={60}>60 parcelas (5 anos)</option>
+          </select>
+        </div>
+      </div>
+
+      {/* PAINEL DE RESULTADOS */}
+      <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-200 dark:border-emerald-900/50 space-y-4">
+        <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-slate-200/60 dark:border-slate-800">
+          <div>
+            <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">Valor Estimado por Parcela ({n}x)</span>
+            <span className="text-3xl font-black font-mono text-emerald-700 dark:text-emerald-400">
+              R$ {pmt.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </span>
+          </div>
+          <div className="text-right">
+            <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">Saldo Financiado</span>
+            <span className="text-lg font-bold font-mono text-slate-800 dark:text-slate-200">
+              R$ {valorFinanciado.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs font-mono">
+          <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+            <span className="text-slate-500 block text-[10px] uppercase font-bold font-sans">Total de Juros e IOF:</span>
+            <strong className="text-slate-900 dark:text-slate-100 text-sm">R$ {totalJurosEImpostos.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+          </div>
+          <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+            <span className="text-slate-500 block text-[10px] uppercase font-bold font-sans">Custo Total Final:</span>
+            <strong className="text-slate-900 dark:text-slate-100 text-sm">R$ {totalPagoComEntrada.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+          </div>
+          <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+            <span className="text-slate-500 block text-[10px] uppercase font-bold font-sans">IOF Estimado:</span>
+            <strong className="text-emerald-700 dark:text-emerald-400 text-sm">R$ {iofEstimado.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+          </div>
+          <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+            <span className="text-slate-500 block text-[10px] uppercase font-bold font-sans">% da Entrada:</span>
+            <strong className="text-slate-900 dark:text-slate-100 text-sm">{pctEntrada.toFixed(1)}%</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 // 1. JUROS COMPOSTOS
 function JurosCompostos() {

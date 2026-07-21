@@ -28,9 +28,140 @@ export default function Geradores({ toolId }: GeradoresProps) {
       {toolId === 'cores-aleatorias' && <CoresAleatorias />}
       {toolId === 'gerador-rg' && <GeradorRG />}
       {toolId === 'recibo' && <GeradorRecibo />}
+      {toolId === 'gerador-assinatura-email' && <GeradorAssinaturaEmail />}
     </div>
   );
 }
+
+// 17. GERADOR DE ASSINATURA DE E-MAIL HTML
+function GeradorAssinaturaEmail() {
+  const [nome, setNome] = useState('Dra. Ana Paula Souza');
+  const [cargo, setCargo] = useState('Diretora de Operações');
+  const [empresa, setEmpresa] = useState('TechBrasil Soluções');
+  const [telefone, setTelefone] = useState('(11) 98765-4321');
+  const [email, setEmail] = useState('ana.souza@techbrasil.com.br');
+  const [website, setWebsite] = useState('www.techbrasil.com.br');
+  const [fotoUrl, setFotoUrl] = useState('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80');
+  const [corPrimaria, setCorPrimaria] = useState('#059669'); // Emerald-600
+  const [copiado, setCopiado] = useState(false);
+
+  const htmlGerado = `<table cellpadding="0" cellspacing="0" border="0" style="font-family: Arial, sans-serif; font-size: 13px; color: #334155; line-height: 1.4;">
+  <tr>
+    ${fotoUrl ? `<td style="padding-right: 15px; vertical-align: middle;">
+      <img src="${fotoUrl}" alt="${nome}" width="70" height="70" style="border-radius: 50%; object-fit: cover; border: 2px solid ${corPrimaria}; display: block;" />
+    </td>` : ''}
+    <td style="border-left: 3px solid ${corPrimaria}; padding-left: 12px; vertical-align: middle;">
+      <strong style="font-size: 15px; color: #0f172a; display: block;">${nome}</strong>
+      <span style="color: ${corPrimaria}; font-weight: bold; font-size: 12px; display: block; margin-bottom: 4px;">${cargo} ${empresa ? `| ${empresa}` : ''}</span>
+      ${telefone ? `<span style="display: block; font-size: 11px; color: #475569;">📞 ${telefone}</span>` : ''}
+      ${email ? `<span style="display: block; font-size: 11px; color: #475569;">✉️ <a href="mailto:${email}" style="color: #475569; text-decoration: none;">${email}</a></span>` : ''}
+      ${website ? `<span style="display: block; font-size: 11px; color: #475569;">🌐 <a href="https://${website.replace('https://', '').replace('http://', '')}" target="_blank" style="color: ${corPrimaria}; text-decoration: none; font-weight: bold;">${website}</a></span>` : ''}
+    </td>
+  </tr>
+</table>`;
+
+  const handleCopiarHtml = () => {
+    navigator.clipboard.writeText(htmlGerado);
+    setCopiado(true);
+    setTimeout(() => setCopiado(false), 2000);
+  };
+
+  return (
+    <div className="space-y-6" id="ger-assinatura">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Gerador de Assinatura de E-mail HTML</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Crie assinaturas profissionais responsivas e compatíveis com Gmail, Outlook, Apple Mail e Thunderbird.</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* FORMULÁRIO DE DADOS */}
+        <div className="space-y-3">
+          <h3 className="text-xs font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider">1. Dados da Assinatura</h3>
+          
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Nome Completo</label>
+            <input type="text" className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs" value={nome} onChange={(e) => setNome(e.target.value)} />
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Cargo / Título</label>
+              <input type="text" className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs" value={cargo} onChange={(e) => setCargo(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Empresa</label>
+              <input type="text" className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs" value={empresa} onChange={(e) => setEmpresa(e.target.value)} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Telefone / WhatsApp</label>
+              <input type="text" className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs" value={telefone} onChange={(e) => setTelefone(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">E-mail Comercial</label>
+              <input type="text" className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs" value={email} onChange={(e) => setEmail(e.target.value)} />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Website / Domínio</label>
+            <input type="text" className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs" value={website} onChange={(e) => setWebsite(e.target.value)} />
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">URL da Foto ou Logo</label>
+            <input type="text" className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs" value={fotoUrl} onChange={(e) => setFotoUrl(e.target.value)} placeholder="https://..." />
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Cor da Marca</label>
+            <div className="flex items-center gap-2">
+              {['#059669', '#2563eb', '#7c3aed', '#dc2626', '#d97706', '#0f172a'].map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => setCorPrimaria(c)}
+                  className={`w-6 h-6 rounded-full border-2 transition ${corPrimaria === c ? 'border-slate-900 dark:border-white scale-110' : 'border-transparent'}`}
+                  style={{ backgroundColor: c }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* PRÉ-VISUALIZAÇÃO E CÓDIGO HTML */}
+        <div className="space-y-3">
+          <h3 className="text-xs font-extrabold text-slate-800 dark:text-slate-200 uppercase tracking-wider">2. Pré-Visualização da Assinatura</h3>
+          
+          <div className="p-4 bg-white rounded-xl border border-slate-300 shadow-xs min-h-[140px] flex items-center justify-center">
+            <div dangerouslySetInnerHTML={{ __html: htmlGerado }} />
+          </div>
+
+          <div className="flex items-center gap-2 pt-2">
+            <button
+              onClick={handleCopiarHtml}
+              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-4 rounded-lg transition hover:cursor-pointer shadow-xs"
+            >
+              {copiado ? '✓ Código HTML Copiado!' : '📋 Copiar Código HTML'}
+            </button>
+          </div>
+
+          <div className="space-y-1">
+            <label className="block text-[10px] font-bold text-slate-500 uppercase">Código HTML Limpo (para exportação):</label>
+            <textarea
+              readOnly
+              className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-slate-950 text-emerald-400 font-mono text-[10px] h-28 outline-none"
+              value={htmlGerado}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 // HELPERS DE CPF
 function gerarCPFValido(): string {

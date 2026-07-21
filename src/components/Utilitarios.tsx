@@ -31,9 +31,382 @@ export default function Utilitarios({ toolId }: UtilitariosProps) {
       {toolId === 'extrator-email' && <ExtratorEmail />}
       {toolId === 'comparador-textos' && <ComparadorTextos />}
       {toolId === 'validador-cartao' && <ValidadorCartao />}
+      {toolId === 'texto-para-voz' && <TextoParaVoz />}
+      {toolId === 'teste-digitacao' && <TesteDigitacao />}
     </div>
   );
 }
+
+// 15. CONVERSOR DE TEXTO EM VOZ (TEXT TO SPEECH)
+function TextoParaVoz() {
+  const [texto, setTexto] = useState<string>(
+    'Bem-vindo ao Tool Brasil. Esta é uma demonstração de conversão de texto em áudio e voz em tempo real. Você pode personalizar a velocidade e o tom da narração.'
+  );
+  const [velocidade, setVelocidade] = useState<number>(1);
+  const [tom, setTom] = useState<number>(1);
+  const [vozes, setVozes] = useState<SpeechSynthesisVoice[]>([]);
+  const [vozIndex, setVozIndex] = useState<number>(0);
+  const [falando, setFalando] = useState<boolean>(false);
+  const [pausado, setPausado] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      const carregarVozes = () => {
+        const disponiveis = window.speechSynthesis.getVoices();
+        setVozes(disponiveis);
+        // Preferir voz em Português
+        const ptIndex = disponiveis.findIndex(v => v.lang.includes('pt') || v.lang.includes('PT'));
+        if (ptIndex !== -1) setVozIndex(ptIndex);
+      };
+      carregarVozes();
+      window.speechSynthesis.onvoiceschanged = carregarVozes;
+    }
+  }, []);
+
+  const falar = () => {
+    if (!('speechSynthesis' in window)) {
+      alert('Seu navegador não suporta a API de síntese de voz nativa.');
+      return;
+    }
+
+    if (pausado) {
+      window.speechSynthesis.resume();
+      setPausado(false);
+      setFalando(true);
+      return;
+    }
+
+    window.speechSynthesis.cancel(); // Limpar áudios anteriores
+
+    if (!texto.trim()) return;
+
+    const utterance = new SpeechSynthesisUtterance(texto);
+    if (vozes[vozIndex]) utterance.voice = vozes[vozIndex];
+    utterance.rate = velocidade;
+    utterance.pitch = tom;
+
+    utterance.onstart = () => {
+      setFalando(true);
+      setPausado(false);
+    };
+
+    utterance.onend = () => {
+      setFalando(false);
+      setPausado(false);
+    };
+
+    utterance.onerror = () => {
+      setFalando(false);
+      setPausado(false);
+    };
+
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const pausar = () => {
+    if (window.speechSynthesis.speaking && !window.speechSynthesis.paused) {
+      window.speechSynthesis.pause();
+      setPausado(true);
+      setFalando(false);
+    }
+  };
+
+  const parar = () => {
+    window.speechSynthesis.cancel();
+    setFalando(false);
+    setPausado(false);
+  };
+
+  return (
+    <div className="space-y-6" id="util-tts">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Conversor de Texto em Voz (Text to Speech)</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Converta qualquer texto em narração de áudio com síntese de voz nativa em português.</p>
+      </div>
+
+      <div className="space-y-3">
+        <label className="block text-xs font-bold text-slate-700 dark:text-slate-300">Digite ou cole o texto para narração:</label>
+        <textarea
+          rows={6}
+          className="w-full border border-slate-300 dark:border-slate-700 rounded-xl p-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-sans outline-none focus:ring-2 focus:ring-emerald-500"
+          value={texto}
+          onChange={(e) => setTexto(e.target.value)}
+          placeholder="Digite o texto aqui..."
+        />
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Voz do Narrador</label>
+            <select
+              className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-xs font-semibold"
+              value={vozIndex}
+              onChange={(e) => setVozIndex(Number(e.target.value))}
+            >
+              {vozes.length > 0 ? (
+                vozes.map((v, idx) => (
+                  <option key={idx} value={idx}>
+                    {v.name} ({v.lang})
+                  </option>
+                ))
+              ) : (
+                <option value={0}>Voz Padrão do Sistema</option>
+              )}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Velocidade: {velocidade}x</label>
+            <input
+              type="range"
+              min="0.5"
+              max="2"
+              step="0.1"
+              className="w-full accent-emerald-600 cursor-pointer"
+              value={velocidade}
+              onChange={(e) => setVelocidade(Number(e.target.value))}
+            />
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1">Tom de Voz (Pitch): {tom}</label>
+            <input
+              type="range"
+              min="0.5"
+              max="1.5"
+              step="0.1"
+              className="w-full accent-emerald-600 cursor-pointer"
+              value={tom}
+              onChange={(e) => setTom(Number(e.target.value))}
+            />
+          </div>
+        </div>
+
+        {/* CONTROLES DE REPRODUÇÃO */}
+        <div className="flex items-center gap-3 pt-3">
+          <button
+            onClick={falar}
+            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm py-3 px-6 rounded-xl transition flex items-center justify-center gap-2 hover:cursor-pointer shadow-xs"
+          >
+            {falando ? '🔊 Lendo Texto...' : pausado ? '▶ Retomar Leitura' : '▶ Ouvir Texto'}
+          </button>
+
+          {falando && (
+            <button
+              onClick={pausar}
+              className="bg-amber-500 hover:bg-amber-600 text-white font-bold text-sm py-3 px-5 rounded-xl transition hover:cursor-pointer"
+            >
+              ⏸ Pausar
+            </button>
+          )}
+
+          {(falando || pausado) && (
+            <button
+              onClick={parar}
+              className="bg-slate-700 hover:bg-slate-800 text-white font-bold text-sm py-3 px-5 rounded-xl transition hover:cursor-pointer"
+            >
+              ⏹ Parar
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 16. TESTE DE VELOCIDADE DE DIGITAÇÃO (WPM)
+function TesteDigitacao() {
+  const textosDisponiveis = [
+    "A tecnologia transforma a maneira como trabalhamos e aprendemos todos os dias. Desenvolver boas habilidades de digitação no teclado é fundamental para aumentar a produtividade e a precisão no trabalho.",
+    "O planejamento financeiro pessoal permite conquistar a estabilidade e alcançar metas de longo prazo. Controlar gastos e investir com disciplina faz toda a diferença para o futuro.",
+    "A internet conecta pessoas e empresas em velocidade impressionante. Ferramentas online gratuitas facilitam tarefas diárias e otimizam a gestão de tempo em qualquer profissão."
+  ];
+
+  const [textoAlvoIndex, setTextoAlvoIndex] = useState(0);
+  const [duracaoSegundos, setDuracaoSegundos] = useState(30);
+  const [tempoRestante, setTempoRestante] = useState(30);
+  const [testando, setTestando] = useState(false);
+  const [concluido, setConcluido] = useState(false);
+  const [textoDigitado, setTextoDigitado] = useState('');
+  const [wpm, setWpm] = useState(0);
+  const [cpm, setCpm] = useState(0);
+  const [precisao, setPrecisao] = useState(100);
+  const [errosCount, setErrosCount] = useState(0);
+
+  const textoAlvo = textosDisponiveis[textoAlvoIndex];
+
+  // Efeito do Cronômetro do Teste
+  useEffect(() => {
+    let timer: any = null;
+    if (testando && tempoRestante > 0) {
+      timer = setInterval(() => {
+        setTempoRestante((prev) => prev - 1);
+      }, 1000);
+    } else if (tempoRestante === 0 && testando) {
+      finalizarTeste();
+    }
+    return () => clearInterval(timer);
+  }, [testando, tempoRestante]);
+
+  const iniciarTeste = () => {
+    setTextoDigitado('');
+    setTempoRestante(duracaoSegundos);
+    setTestando(true);
+    setConcluido(false);
+    setWpm(0);
+    setCpm(0);
+    setPrecisao(100);
+    setErrosCount(0);
+  };
+
+  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = e.target.value;
+    if (!testando && !concluido) {
+      iniciarTeste();
+    }
+    setTextoDigitado(val);
+
+    // Calcular estatísticas em tempo real
+    let erros = 0;
+    for (let i = 0; i < val.length; i++) {
+      if (val[i] !== textoAlvo[i]) {
+        erros++;
+      }
+    }
+    setErrosCount(erros);
+
+    const caracteresCorretos = Math.max(0, val.length - erros);
+    const perc = val.length > 0 ? Math.round((caracteresCorretos / val.length) * 100) : 100;
+    setPrecisao(perc);
+
+    if (val.length >= textoAlvo.length) {
+      finalizarTeste();
+    }
+  };
+
+  const finalizarTeste = () => {
+    setTestando(false);
+    setConcluido(true);
+
+    const tempoDecorridoMin = (duracaoSegundos - tempoRestante) / 60 || 1 / 60;
+    const totalCaracteres = textoDigitado.length;
+    const erros = errosCount;
+    const caracteresValidos = Math.max(0, totalCaracteres - erros);
+
+    // WPM padronizado (1 palavra = 5 caracteres)
+    const palavrasLiquidas = caracteresValidos / 5;
+    const calcWpm = Math.round(palavrasLiquidas / tempoDecorridoMin);
+    const calcCpm = Math.round(totalCaracteres / tempoDecorridoMin);
+
+    setWpm(Math.max(0, calcWpm));
+    setCpm(Math.max(0, calcCpm));
+  };
+
+  const trocarTexto = () => {
+    setTextoAlvoIndex((prev) => (prev + 1) % textosDisponiveis.length);
+    iniciarTeste();
+  };
+
+  return (
+    <div className="space-y-6" id="util-digitacao">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Teste de Velocidade de Digitação (WPM)</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Descubra quantas Palavras Por Minuto (WPM) você digita e meça sua precisão no teclado.</p>
+      </div>
+
+      {/* PAINEL DE CONTROLE DE TEMPO */}
+      <div className="flex items-center justify-between flex-wrap gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
+        <div className="flex items-center gap-2 text-xs font-bold text-slate-700 dark:text-slate-200">
+          <span>Tempo do Teste:</span>
+          {[30, 60].map((t) => (
+            <button
+              key={t}
+              onClick={() => { setDuracaoSegundos(t); setTempoRestante(t); setConcluido(false); setTestando(false); }}
+              className={`px-3 py-1 rounded-lg border transition ${duracaoSegundos === t ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700'}`}
+            >
+              {t} Segundos
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-mono font-black text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1 rounded-lg border border-emerald-200 dark:border-emerald-800">
+            ⏱ Tempo: {tempoRestante}s
+          </span>
+          <button
+            onClick={trocarTexto}
+            className="text-xs text-slate-600 dark:text-slate-300 hover:text-emerald-600 font-bold underline cursor-pointer"
+          >
+            Trocar Frase 🔄
+          </button>
+        </div>
+      </div>
+
+      {/* TEXTO GUIA */}
+      <div className="p-4 bg-slate-100 dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 text-sm font-mono leading-relaxed select-none">
+        {textoAlvo.split('').map((char, idx) => {
+          let colorClass = 'text-slate-500 dark:text-slate-400';
+          if (idx < textoDigitado.length) {
+            colorClass = textoDigitado[idx] === char ? 'text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-100/50 dark:bg-emerald-950/50' : 'text-red-600 bg-red-100 dark:bg-red-950/50 font-bold';
+          }
+          return (
+            <span key={idx} className={colorClass}>
+              {char}
+            </span>
+          );
+        })}
+      </div>
+
+      {/* CAMPO DE DIGITAÇÃO */}
+      <div>
+        <textarea
+          rows={3}
+          disabled={concluido}
+          className="w-full border-2 border-slate-300 dark:border-slate-700 rounded-xl p-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-mono outline-none focus:border-emerald-500 disabled:opacity-60"
+          value={textoDigitado}
+          onChange={handleInput}
+          placeholder="Comece a digitar aqui para iniciar o cronômetro..."
+        />
+      </div>
+
+      {/* RESULTADO FINAL */}
+      {concluido && (
+        <div className="p-5 bg-emerald-50 dark:bg-emerald-950/20 border-2 border-emerald-300 dark:border-emerald-900 rounded-xl text-center space-y-4 animate-fade-in">
+          <h3 className="text-sm font-black uppercase text-emerald-800 dark:text-emerald-400 tracking-wider">🎉 Teste Concluído com Sucesso!</h3>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-mono">
+            <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+              <span className="text-[10px] text-slate-500 uppercase font-bold block">Velocidade WPM</span>
+              <strong className="text-2xl font-black text-emerald-700 dark:text-emerald-400">{wpm} PPM</strong>
+            </div>
+
+            <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+              <span className="text-[10px] text-slate-500 uppercase font-bold block">Precisão</span>
+              <strong className="text-2xl font-black text-slate-800 dark:text-slate-200">{precisao}%</strong>
+            </div>
+
+            <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+              <span className="text-[10px] text-slate-500 uppercase font-bold block">Caracteres CPM</span>
+              <strong className="text-xl font-bold text-slate-800 dark:text-slate-200">{cpm} CPM</strong>
+            </div>
+
+            <div className="bg-white dark:bg-slate-900 p-3 rounded-lg border border-slate-200 dark:border-slate-800">
+              <span className="text-[10px] text-slate-500 uppercase font-bold block">Total de Erros</span>
+              <strong className="text-xl font-bold text-red-600">{errosCount}</strong>
+            </div>
+          </div>
+
+          <button
+            onClick={iniciarTeste}
+            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-6 rounded-lg transition hover:cursor-pointer"
+          >
+            🔄 Tentar Novamente
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 // 1. CONTADOR DE CARACTERES E PALAVRAS (WITH DENSITY)
 function ContadorTexto() {

@@ -2405,6 +2405,106 @@ export const TOOLS: ToolMetadata[] = [
     relatedToolIds: ['preco-por-km', 'consumo-combustivel', 'ipva', 'financiamento'],
     slug: 'calculadora-move-brasil'
   },
+  {
+    id: 'emprestimo-consignado',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Empréstimo Consignado',
+    shortDescription: 'Simule o valor da parcela, taxa de juros e custo total do empréstimo consignado do INSS, servidores e trabalhadores CLT.',
+    longIntro: 'O Empréstimo Consignado é uma das modalidades de crédito com as menores taxas de juros do mercado brasileiro, pois o valor das parcelas é descontado diretamente da folha de pagamento ou do benefício do INSS. Esta calculadora permite simular o valor exato das parcelas mensais, o valor total a ser pago e o impacto da margem consignável (35% a 45% do salário líquido). É ideal para aposentados, pensionistas do INSS, servidores públicos e trabalhadores com carteira assinada (CLT) que desejam planejar a tomada de crédito com segurança e transparência.',
+    howItWorks: 'Informe o valor do empréstimo desejado, a taxa de juros mensal cobrada pela instituição financeira e o prazo em meses (de 12 a 84 meses). A ferramenta utiliza a Tabela Price (sistema de amortização com parcelas fixas) para calcular o valor da prestação mensal, a taxa efetiva anual, o montante total de juros pagos e o Custo Efetivo Total (CET) estimado.',
+    faqs: [
+      { question: 'Qual é a margem consignável atual?', answer: 'Para aposentados e pensionistas do INSS, a margem consignável é de até 35% da renda líquida para o empréstimo convencional, mais 5% para cartão de crédito consignado e 5% para cartão benefício, totalizando 45%.' },
+      { question: 'Qual é o prazo máximo de pagamento no INSS?', answer: 'O prazo máximo estabelecido pelo Governo Federal para empréstimos consignados a beneficiários do INSS é de 84 parcelas (7 anos).' },
+      { question: 'Qual a diferença entre taxa de juros e CET?', answer: 'A taxa de juros é apenas o custo do dinheiro prestado. O Custo Efetivo Total (CET) inclui a taxa de juros mais tarifas administrativas, seguro e impostos (IOF). Sempre compare as propostas pelo CET.' }
+    ],
+    tips: [
+      'Nunca comprometa mais de 30% do seu salário líquido com parcelas para manter sua estabilidade financeira.',
+      'Pesquise as taxas de juros teto fixadas pelo Conselho Nacional de Previdência Social (CNPS) antes de contratar.',
+      'Você pode solicitar a portabilidade do seu consignado para outro banco caso encontre taxas mais baixas.'
+    ],
+    relatedToolIds: ['inss', 'salario-liquido', 'financiamento', 'fgts'],
+    slug: 'calculadora-de-emprestimo-consignado'
+  },
+  {
+    id: 'financiamento-veiculos',
+    categoryId: 'calculadoras',
+    title: 'Simulador de Financiamento de Veículos',
+    shortDescription: 'Simule as parcelas do financiamento de carros e motos com valor de entrada, taxa de juros e estimativa de IOF.',
+    longIntro: 'Comprar um carro ou moto financiado exige planejamento detalhado para que o custo das parcelas não comprometa o orçamento familiar. O Simulador de Financiamento de Veículos da Tool Brasil calcula o valor das prestações mensais, o total financiado, o montante de juros acumulado e o Custo Efetivo Total (CET). Com esta ferramenta, você pode testar diferentes cenários aumentando o valor da entrada ou alterando o número de parcelas (de 12x a 60x) para encontrar a combinação perfeita para o seu bolso.',
+    howItWorks: 'Insira o valor total do veículo (carro novo ou usado), o valor da entrada em dinheiro, a taxa de juros mensal e o prazo de parcelamento em meses. A calculadora subtrai a entrada, aplica a amortização contratual (Tabela Price) com adição estimada de IOF e exibe o valor fixo de cada parcela, o custo final do veículo e gráficos de proporção entre capital e juros.',
+    faqs: [
+      { question: 'Qual o valor de entrada ideal para financiar um veículo?', answer: 'Recomenda-se dar uma entrada de pelo menos 20% a 30% do valor do veículo. Quanto maior a entrada, menores serão as taxas de juros oferecidas pelas financeiras e menor o saldo devedor.' },
+      { question: 'O que é o IOF no financiamento de carros?', answer: 'O Imposto sobre Operações Financeiras (IOF) é um tributo federal obrigatório cobrado sobre o valor financiado (0,38% alíquota fixa + 0,0082% ao dia para pessoas físicas).' },
+      { question: 'Posso amortizar antecipadamente as parcelas?', answer: 'Sim! De acordo com o Código de Defesa do Consumidor e normas do Banco Central, você tem direito à redução proporcional dos juros ao quitar parcelas de trás para frente.' }
+    ],
+    tips: [
+      'Além das parcelas do financiamento, inclua no orçamento anual os custos de IPVA, licenciamento, seguro auto e combustível.',
+      'Considere financiar em prazos menores (ex: 36x em vez de 60x) para pagar significativamente menos juros ao final do contrato.',
+      'Exija da concessionária ou banco a planilha com o Custo Efetivo Total (CET) detalhado antes de assinar o contrato.'
+    ],
+    relatedToolIds: ['financiamento', 'preco-por-km', 'ipva', 'multa-transito'],
+    slug: 'simulador-de-financiamento-de-veiculos'
+  },
+  {
+    id: 'gerador-assinatura-email',
+    categoryId: 'geradores',
+    title: 'Gerador de Assinatura de E-mail HTML',
+    shortDescription: 'Crie assinaturas de e-mail profissionais e personalizadas com foto, cargo, redes sociais e HTML pronto para copiar.',
+    longIntro: 'Uma assinatura de e-mail profissional transmite credibilidade, fortalece a identidade visual da sua marca e facilita o contato de clientes e parceiros. O Gerador de Assinatura de E-mail HTML da Tool Brasil permite criar assinaturas corporativas elegantes em segundos, sem necessidade de conhecimentos em programação. Você preenche seus dados (nome, cargo, empresa, telefone, e-mail, foto e redes sociais) e a ferramenta gera uma pré-visualização em tempo real e o código HTML otimizado para Gmail, Outlook, Apple Mail e Thunderbird.',
+    howItWorks: 'Preencha os campos com suas informações profissionais e links para redes sociais (LinkedIn, Instagram, WhatsApp, Website). Escolha a cor principal da sua marca e adicione a URL da sua foto ou logotipo. A ferramenta compila um HTML inline responsivo compatível com todos os leitores de e-mail. Basta clicar em "Copiar HTML" ou "Copiar Assinatura Visual" e colar nas configurações do seu leitor de e-mail.',
+    faqs: [
+      { question: 'A assinatura funciona no Gmail e no Outlook?', answer: 'Sim! Nosso código gera tabelas em HTML com estilos inline, garantindo compatibilidade perfeita com Gmail, Outlook Desktop, Outlook Web, Apple Mail, Yahoo e Thunderbird.' },
+      { question: 'Como colocar minha foto na assinatura?', answer: 'Você pode colar o link público da sua foto de perfil do LinkedIn, do seu site ou hospedar a imagem em um serviço gratuito como o Imgur.' },
+      { question: 'Minhas informações ficam salvas no servidor?', answer: 'Não. Todo o processo de geração da assinatura é feito 100% no seu navegador (client-side), respeitando rigorosamente a LGPD.' }
+    ],
+    tips: [
+      'Mantenha a assinatura enxuta e objetiva: nome, cargo, empresa, telefone e uma ou duas redes sociais relevantes.',
+      'Utilize uma foto profissional com fundo neutro e boa iluminação.',
+      'Sempre envie um e-mail de teste para você mesmo após configurar a assinatura para conferir o alinhamento visual.'
+    ],
+    relatedToolIds: ['gerador-whatsapp', 'qr-code', 'lorem-ipsum'],
+    slug: 'gerador-de-assinatura-de-email'
+  },
+  {
+    id: 'texto-para-voz',
+    categoryId: 'utilitarios',
+    title: 'Conversor de Texto em Voz (Text to Speech)',
+    shortDescription: 'Converta qualquer texto em áudio e voz falada em português usando sintetizador nativo direto no seu navegador.',
+    longIntro: 'O Conversor de Texto em Voz (Text-to-Speech) é uma ferramenta versátil de acessibilidade e produtividade que lê qualquer texto escrito em voz alta. É perfeito para estudantes que desejam ouvir resumos e artigos enquanto realizam outras tarefas, profissionais que precisam revisar textos compridos em busca de erros de pontuação, criadores de conteúdo que gravam locuções, e pessoas com deficiência visual ou dislexia. Funciona diretamente no navegador sem necessidade de baixar programas ou extensões.',
+    howItWorks: 'Cole ou digite o texto desejado na caixa de entrada. Escolha a voz falada em Português do Brasil disponível no seu sistema operacional, ajuste a velocidade de leitura (de 0.5x a 2x) e o tom da voz (pitch). Clique em "Ouvir Texto" para iniciar a narração. Você pode pausar, retomar ou parar a leitura a qualquer momento.',
+    faqs: [
+      { question: 'O serviço de narração de voz é gratuito?', answer: 'Sim! A ferramenta utiliza a API nativa de síntese de voz (Web Speech API) integrada no seu próprio navegador e sistema operacional, sem custo ou limite de caracteres.' },
+      { question: 'Posso mudar o idioma ou sotaque da voz?', answer: 'Sim! Se o seu sistema operacional tiver vozes instaladas em outros idiomas (como Inglês ou Espanhol), elas aparecerão no menu de seleção de vozes.' },
+      { question: 'Funciona no celular?', answer: 'Sim! Funciona perfeitamente em smartphones Android (usando o Google Text-to-Speech) e iPhones (usando a Siri Voice nativa do iOS).' }
+    ],
+    tips: [
+      'Use a velocidade de 1.2x a 1.5x para fazer leituras dinâmicas de artigos longos ou materiais de estudo.',
+      'Ouvir seu próprio texto em voz alta é uma excelente técnica de revisão gramatical e de fluência textual.',
+      'Para pausas mais longas na leitura, adicione vírgulas e pontos finais ao longo do texto.'
+    ],
+    relatedToolIds: ['contador-caracteres', 'separador-silabas', 'maiusculas-minusculas'],
+    slug: 'conversor-de-texto-em-voz'
+  },
+  {
+    id: 'teste-digitacao',
+    categoryId: 'utilitarios',
+    title: 'Teste de Velocidade de Digitação (WPM)',
+    shortDescription: 'Meça a sua velocidade de digitação em palavras por minuto (PPM/WPM), precisão e contagem de erros em tempo real.',
+    longIntro: 'Digitar com rapidez e precisão é uma habilidade indispensável no mercado de trabalho moderno, aumentando a produtividade de programadores, redatores, assistentes administrativos e estudantes. O Teste de Velocidade de Digitação da Tool Brasil avalia a sua velocidade em Palavras Por Minuto (WPM / PPM), a quantidade de Caracteres Por Minuto (CPM) e o seu percentual de precisão técnica. Desafie-se diariamente para aprimorar sua digitação sem olhar para o teclado!',
+    howItWorks: 'Selecione a duração do teste (30 segundos ou 60 segundos) e clique em "Iniciar Teste". Digite as palavras que aparecem na tela exatamente como apresentadas em português. O cronômetro começará a contar na primeira tecla pressionada. Ao final do tempo, a ferramenta apresenta um relatório completo com seu WPM líquido, precisão percentual e total de erros cometidos.',
+    faqs: [
+      { question: 'O que significa WPM e qual é uma boa velocidade?', answer: 'WPM significa "Words Per Minute" (Palavras Por Minuto). A média de uma pessoa comum é entre 35 e 45 WPM. Digitadores profissionais e programadores experientes costumam atingir entre 65 e 90+ WPM.' },
+      { question: 'Como o cálculo de WPM é realizado?', answer: 'No padrão internacional de testes de digitação, 1 palavra é contada a cada 5 caracteres digitados corretamente. O WPM líquido subtrai os erros cometidos do tempo total decorrido.' },
+      { question: 'Como posso aumentar minha velocidade de digitação?', answer: 'Pratique o método de digitação ao toque (touch typing), posicionando os dedos indicadores nas teclas guias F e J, mantendo a postura correta das costas e sem olhar para as teclas.' }
+    ],
+    tips: [
+      'Priorize a PRECISÃO antes da velocidade: cometer menos erros faz você digitar muito mais rápido do que tentar correr e ter que apagar.',
+      'Mantenha os pulsos retos e apoiados levemente na mesa para evitar lesões por esforço repetitivo (LER/DORT).',
+      'Faça testes diários de 5 minutos para desenvolver a memória muscular dos seus dedos no teclado.'
+    ],
+    relatedToolIds: ['contador-caracteres', 'cronometro', 'removedor-espacos'],
+    slug: 'teste-de-velocidade-de-digitacao'
+  },
 ];
 
 export const PROGRAMMATIC_PAGES: { [key: string]: { title: string; description: string; content?: any } } = {
