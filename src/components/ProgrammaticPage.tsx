@@ -280,7 +280,7 @@ function DddBrasil() {
         </div>
 
         {inputError && (
-          <p className="text-[11px] text-red-650 dark:text-red-400 font-medium animate-fade-in flex items-center gap-1">
+          <p className="text-[11px] text-red-600 dark:text-red-400 font-medium animate-fade-in flex items-center gap-1">
             <span>⚠️ {inputError}</span>
           </p>
         )}
@@ -296,7 +296,7 @@ function DddBrasil() {
             <button
               key={ddd}
               onClick={() => selectQuickDdd(ddd)}
-              className={`w-12 h-12 rounded-lg font-mono font-bold text-sm border flex items-center justify-center transition hover:cursor-pointer ${selectedDdd === ddd ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm font-extrabold' : 'bg-slate-50 dark:bg-slate-800 text-slate-705 border-slate-200 dark:border-slate-700 hover:bg-slate-100'}`}
+              className={`w-12 h-12 rounded-lg font-mono font-bold text-sm border flex items-center justify-center transition hover:cursor-pointer ${selectedDdd === ddd ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm font-extrabold' : 'bg-slate-50 dark:bg-slate-800 text-slate-700 border-slate-200 dark:border-slate-700 hover:bg-slate-100'}`}
             >
               {ddd}
             </button>
@@ -328,7 +328,7 @@ function DddBrasil() {
 
           <div className="bg-slate-50 dark:bg-slate-850 p-3 rounded-lg border border-slate-100 dark:border-slate-800 text-xs font-sans space-y-1">
             <span className="text-slate-400 block text-[10px] font-mono uppercase font-bold">Principais Cidades e Regiões Assistidas:</span>
-            <p className="text-slate-705 dark:text-slate-300 leading-relaxed font-semibold">
+            <p className="text-slate-700 dark:text-slate-300 leading-relaxed font-semibold">
               {dddDetails[selectedDdd].cidades}
             </p>
           </div>
@@ -476,7 +476,7 @@ function CepBrasil() {
 
       {loading && <div className="text-xs text-slate-400 font-mono animate-pulse">Sincronizando bancos de dados Postais...</div>}
       
-      {errorText && <div className="p-3 bg-red-50 text-red-750 text-xs rounded border">{errorText}</div>}
+      {errorText && <div className="p-3 bg-red-50 text-red-600 text-xs rounded border">{errorText}</div>}
 
       {address && (
         <div className="bg-slate-50 dark:bg-slate-850 p-4 rounded-xl border border-slate-150 animate-fade-in font-mono text-xs text-slate-700 dark:text-slate-300 space-y-2">
@@ -1343,7 +1343,7 @@ function CboConsulta() {
             {filtered.map((c, idx) => (
               <tr key={idx}>
                 <td className="p-2 font-mono text-indigo-600">{c.code}</td>
-                <td className="p-2 font-medium text-slate-850 dark:text-slate-350">{c.title}</td>
+                <td className="p-2 font-medium text-slate-800 dark:text-slate-300">{c.title}</td>
                 <td className="p-2 text-slate-400">{c.category}</td>
               </tr>
             ))}

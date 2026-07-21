@@ -30,7 +30,7 @@ export default function AdSensePlaceholder({ slotId, position, className = '' }:
       data-ad-position={position}
     >
       {/* Google AdSense policy compliant labeling to identify ad spaces */}
-      <span className="text-[9px] font-mono tracking-widest text-slate-400 dark:text-slate-650 uppercase select-none pointer-events-none">
+      <span className="text-[9px] font-mono tracking-widest text-slate-400 dark:text-slate-500 uppercase select-none pointer-events-none">
         Publicidade
       </span>
     </div>

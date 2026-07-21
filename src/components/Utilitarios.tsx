@@ -108,7 +108,7 @@ function ContadorTexto() {
               <span className="text-lg font-bold font-mono text-slate-800 dark:text-slate-100">{stats.par}</span>
             </div>
             <div className="col-span-2 md:col-span-1 bg-emerald-50/50 dark:bg-emerald-950/20 p-3 rounded-lg border border-emerald-100 dark:border-emerald-950/40">
-              <span className="block text-[10px] text-emerald-600 dark:text-emerald-450 uppercase font-bold">Est. Leitura</span>
+              <span className="block text-[10px] text-emerald-600 dark:text-emerald-400 uppercase font-bold">Est. Leitura</span>
               <span className="text-lg font-bold font-mono text-emerald-700 dark:text-emerald-300">~{stats.tempo} min</span>
             </div>
           </div>
@@ -118,7 +118,7 @@ function ContadorTexto() {
               <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Densidade Vocabular (Repetições de Termos Chaves):</h3>
               <div className="flex flex-wrap gap-2 text-xs">
                 {stats.topWords.map(([w, count]: any, i: number) => (
-                  <span key={i} className="bg-slate-105 dark:bg-slate-800 text-slate-800 dark:text-slate-200 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700">
+                  <span key={i} className="bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 px-3 py-1 rounded-full border border-slate-200 dark:border-slate-700">
                     <strong>{w}</strong>: {count}x
                   </span>
                 ))}
@@ -419,20 +419,20 @@ function Cronometro() {
     <div className="space-y-6" id="util-crono">
       <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Cronômetro Online</h2>
       <div className="text-center space-y-4">
-        <div className="text-5xl md:text-7xl font-mono font-extrabold text-emerald-700 dark:text-emerald-400 tracking-widest bg-slate-100/50 dark:bg-slate-955 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
+        <div className="text-5xl md:text-7xl font-mono font-extrabold text-emerald-700 dark:text-emerald-400 tracking-widest bg-slate-100/50 dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800">
           {formatar(tempo)}
         </div>
         <div className="flex gap-2 justify-center">
           <button onClick={() => setAtivo(!ativo)} className={`px-6 py-2 rounded-lg font-bold text-sm ${ativo ? 'bg-red-500 hover:bg-red-600' : 'bg-emerald-600 hover:bg-emerald-700'} text-white transition hover:cursor-pointer`}>
             {ativo ? '⏹ Pausar' : '▶ Iniciar'}
           </button>
-          <button onClick={registrarVolta} disabled={!ativo} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 border border-slate-250 dark:border-slate-700 rounded-lg font-bold text-sm disabled:opacity-50 hover:cursor-pointer transition-colors">⏱ Volta</button>
-          <button onClick={resetar} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 border border-slate-250 dark:border-slate-700 rounded-lg font-bold text-sm hover:cursor-pointer transition-colors">🔄 Resetar</button>
+          <button onClick={registrarVolta} disabled={!ativo} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg font-bold text-sm disabled:opacity-50 hover:cursor-pointer transition-colors">⏱ Volta</button>
+          <button onClick={resetar} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-lg font-bold text-sm hover:cursor-pointer transition-colors">🔄 Resetar</button>
         </div>
         {voltas.length > 0 && (
           <div className="max-h-40 overflow-y-auto space-y-1">
             {voltas.map((v, i) => (
-              <div key={i} className="font-mono text-xs text-slate-605 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800">
+              <div key={i} className="font-mono text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-900 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-800">
                 Volta {voltas.length - i}: {v}
               </div>
             ))}
@@ -547,7 +547,7 @@ function MaiusculasMinusculas() {
           <button 
             key={m} 
             onClick={() => setModo(m)} 
-            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-colors hover:cursor-pointer border ${modo === m ? 'bg-emerald-650 text-white border-emerald-600' : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 border-slate-250 dark:border-slate-700'}`}
+            className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-colors hover:cursor-pointer border ${modo === m ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-700'}`}
           >
             {m === 'maiusculas' ? 'MAIÚSCULAS' : m === 'minusculas' ? 'minúsculas' : m === 'capitalizado' ? 'Capitalizado' : 'aLtErNaDo'}
           </button>
@@ -574,17 +574,17 @@ function ExtratorEmail() {
       <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-200 dark:border-slate-800 pb-3">Filtro e Localizador de E-mails</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">Texto ou Relatório</label>
+          <label className="block text-xs font-bold text-slate-600 dark:text-slate-400">Texto ou Relatório</label>
           <textarea 
-            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-955 text-slate-900 dark:text-slate-100 text-xs font-mono outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 text-xs font-mono outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500" 
             rows={6} 
             value={texto} 
             onChange={e => setTexto(e.target.value)} 
           />
         </div>
         <div className="space-y-2">
-          <label className="block text-xs font-bold text-slate-550 dark:text-slate-400">E-mails Localizados ({emails.length})</label>
-          <div className="border border-slate-300 dark:border-slate-800 rounded-lg p-2.5 bg-slate-950 text-emerald-450 text-xs font-mono min-h-[140px] space-y-1">
+          <label className="block text-xs font-bold text-slate-600 dark:text-slate-400">E-mails Localizados ({emails.length})</label>
+          <div className="border border-slate-300 dark:border-slate-800 rounded-lg p-2.5 bg-slate-950 text-emerald-400 text-xs font-mono min-h-[140px] space-y-1">
             {emails.length > 0 ? emails.map((e, i) => <div key={i}>📧 {e}</div>) : <div className="text-slate-500">Nenhum e-mail localizado</div>}
           </div>
           {emails.length > 0 && (

@@ -121,7 +121,7 @@ function PoliticaPrivacidade() {
     <div className="space-y-6" id="inst-privacidade">
       <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Política de Privacidade</h2>
       <p className="text-xs text-slate-400">Última atualização: Junho de 2026</p>
-      <div className="space-y-4 text-xs text-slate-600 dark:text-slate-350 leading-relaxed">
+      <div className="space-y-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
         <p>No <strong>Tool Brasil</strong>, a sua privacidade é de extrema importância para nós. Elaboramos esta política regulatória em conformidade com a Lei Geral de Proteção de Dados Pessoais (LGPD - Lei nº 13.709/2018) para detalhar quais dados são coletados, armazenados e tratados durante sua navegação em nosso domínio toolbrasil.com.br.</p>
         
         <h3 className="font-bold text-slate-800 dark:text-slate-200">1. Responsável pelo Tratamento de Dados</h3>
@@ -175,7 +175,7 @@ function TermosDeUso() {
     <div className="space-y-6" id="inst-termos">
       <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Termos de Uso</h2>
       <p className="text-xs text-slate-400">Última atualização: Junho de 2026</p>
-      <div className="space-y-4 text-xs text-slate-600 dark:text-slate-350 leading-relaxed">
+      <div className="space-y-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
         <p>Seja bem-vindo ao portal Tool Brasil. Ao acessar ou usar nossos serviços através do domínio toolbrasil.com.br, você concorda em se submeter aos termos e condições descritos abaixo. Caso não concorde com qualquer disposição, recomendamos que não utilize nossos serviços.</p>
         
         <h3 className="font-bold text-slate-800 dark:text-slate-200">1. Aceitação dos Termos</h3>
@@ -254,7 +254,7 @@ function Anunciantes() {
   return (
     <div className="space-y-6" id="inst-anunciantes">
       <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Anuncie na Tool Brasil</h2>
-      <div className="space-y-4 text-xs text-slate-600 dark:text-slate-350 leading-relaxed">
+      <div className="space-y-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
         <p>
           A <strong>Tool Brasil</strong> é um portal de utilidades online que recebe milhares de visitantes todos os meses em busca de calculadoras, conversores, geradores e ferramentas web gratuitas. Nosso tráfego é qualificado e orgânico, vindo majoritariamente de buscadores como Google e Bing.
         </p>
@@ -291,7 +291,7 @@ function TransparenciaAdsense() {
   return (
     <div className="space-y-6" id="inst-ads">
       <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Transparência Google AdSense</h2>
-      <div className="space-y-4 text-xs text-slate-600 dark:text-slate-350 leading-relaxed">
+      <div className="space-y-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
         <p>A <strong>Tool Brasil</strong> é mantida e financiada primordialmente através de receitas obtidas via anúncios programáticos do <strong>Google AdSense</strong>. Isso nos concede fundos para manter a infraestrutura de servidores rápidos e pagar os programadores envolvidos.</p>
 
         <h3 className="font-bold text-slate-800 dark:text-slate-200">Como os Anúncios Funcionam?</h3>

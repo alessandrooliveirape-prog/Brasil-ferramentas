@@ -158,7 +158,7 @@ function CpfGeradorValidador() {
 
           <button
             onClick={handleValidar}
-            className="w-full bg-slate-800 dark:bg-slate-750 hover:bg-slate-900 text-white font-semibold py-2 rounded-lg text-sm hover:cursor-pointer"
+            className="w-full bg-slate-800 dark:bg-slate-700 hover:bg-slate-900 text-white font-semibold py-2 rounded-lg text-sm hover:cursor-pointer"
             id="btn-val-cpf-action"
           >
             Validar
@@ -368,7 +368,7 @@ function QrCodeGerador() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
         <div className="space-y-3">
           <label className="block text-xs font-semibold text-slate-500 mb-1">Insira a URL, texto ou número Pix</label>
-          <textarea className="w-full border dark:border-slate-750 p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 rounded-lg text-sm font-sans focus:outline-emerald-500" rows={4} value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Digite o link aqui..." />
+          <textarea className="w-full border dark:border-slate-700 p-3 bg-slate-50 dark:bg-slate-800 dark:text-slate-100 rounded-lg text-sm font-sans focus:outline-emerald-500" rows={4} value={texto} onChange={(e) => setTexto(e.target.value)} placeholder="Digite o link aqui..." />
         </div>
         <div className="flex flex-col items-center justify-center p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-100 dark:border-slate-850">
           {qrUrl ? (
@@ -1069,7 +1069,7 @@ function GeradorRecibo() {
             <span className="font-bold text-emerald-800 dark:text-emerald-400 block text-sm">✓ Recibo 100% Processado no Cliente</span>
             <p>Seus dados financeiros e documentos inseridos para preenchimento do recibo **nunca saem do seu navegador**. O processamento dos dados e a conversão do valor por extenso ocorrem de forma local no seu computador, em conformidade com as diretrizes da LGPD.</p>
             <p><strong>Por extenso gerado:</strong></p>
-            <div className="bg-white dark:bg-slate-900 border p-2.5 rounded font-mono text-emerald-700 dark:text-emerald-350 font-bold leading-normal lowercase first-letter:uppercase">
+            <div className="bg-white dark:bg-slate-900 border p-2.5 rounded font-mono text-emerald-700 dark:text-emerald-300 font-bold leading-normal lowercase first-letter:uppercase">
               {extenso}
             </div>
           </div>

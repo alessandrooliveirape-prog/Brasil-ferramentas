@@ -226,7 +226,7 @@ function DnsLookupTester() {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full text-xs font-mono text-left text-slate-350 border border-slate-800 bg-slate-950 rounded">
+        <table className="w-full text-xs font-mono text-left text-slate-300 border border-slate-800 bg-slate-950 rounded">
           <thead className="bg-slate-900 text-emerald-400 text-[10px] uppercase">
             <tr>
               <th className="p-2">Tipo</th>

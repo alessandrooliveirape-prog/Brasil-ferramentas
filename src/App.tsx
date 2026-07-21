@@ -940,17 +940,17 @@ export default function App() {
                 {CATEGORIES.filter(c => c.id !== 'institucional' && c.id !== 'programatico').map((cat) => (
                   <div
                     key={cat.id}
-                    className="bg-white border border-slate-300 p-5 rounded-xl space-y-3 shadow-xs hover:shadow-md transition"
+                    className="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 p-5 rounded-xl space-y-3 shadow-xs hover:shadow-md transition"
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className="p-2.5 bg-slate-50 rounded-lg text-emerald-600">
+                      <div className="p-2.5 bg-slate-50 dark:bg-slate-800 rounded-lg text-emerald-600 dark:text-emerald-400">
                         {renderIcon(cat.icon, "w-5 h-5")}
                       </div>
-                      <h3 className="font-black text-base text-slate-900">
+                      <h3 className="font-black text-base text-slate-900 dark:text-slate-100">
                         {cat.name}
                       </h3>
                     </div>
-                    <p className="text-xs text-slate-700 leading-normal font-medium">
+                    <p className="text-xs text-slate-700 dark:text-slate-300 leading-normal font-medium">
                       {cat.description}
                     </p>
                     <div className="pt-2 flex flex-wrap gap-1.5">
@@ -958,7 +958,7 @@ export default function App() {
                         <a
                           key={tool.id}
                           href={`/${cat.id}/${tool.slug}`}
-                          className="text-[11px] bg-slate-105 hover:bg-slate-200 text-slate-905 hover:text-black px-2.5 py-1.5 rounded-lg border border-slate-300 transition font-semibold"
+                          className="text-[11px] bg-slate-100 dark:bg-slate-800 hover:bg-emerald-50 dark:hover:bg-emerald-950/50 text-slate-800 dark:text-slate-200 hover:text-emerald-700 dark:hover:text-emerald-300 px-2.5 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition font-semibold"
                         >
                           {tool.title.replace('Calculadora de ', '').replace('Conversor de ', '')}
                         </a>
@@ -966,7 +966,7 @@ export default function App() {
                     </div>
                     <a
                       href={`/${cat.id}`}
-                      className="text-[11px] text-emerald-705 font-bold block pt-1 hover:underline"
+                      className="text-[11px] text-emerald-700 dark:text-emerald-400 font-bold block pt-1 hover:underline flex items-center gap-1"
                     >
                       Acessar todas →
                     </a>

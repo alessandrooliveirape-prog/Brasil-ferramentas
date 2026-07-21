@@ -11,70 +11,101 @@ body {
   background-color: #f8fafc;
   color: #0f172a;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+html.dark body {
+  background-color: #0f172a;
+  color: #f8fafc;
 }
 
 /* ==========================================
-   COLORIST STYLE OVERRIDES FOR MAXIMUM CONTRAST (LIGHT MODE ONLY)
+   GLOBAL FORM INPUT & COMPONENT CONTRAST FIXES
    ========================================== */
 
-/* 1. Global Input, Textarea & Select Enhancements */
-#main-root input:not([type="checkbox"]):not([type="radio"]),
-#main-root select,
-#main-root textarea {
-  background-color: #ffffff !important;
-  border: 1.5px solid #94a3b8 !important; /* slate-400 (highly visible border) */
-  color: #0f172a !important; /* slate-900 */
-  border-radius: 0.5rem !important; /* rounded-lg */
-  font-weight: 500 !important;
-  transition: all 0.2s ease-in-out !important;
+/* 1. Global Inputs, Selects & Textareas */
+#root input:not([type="checkbox"]):not([type="radio"]),
+#root select,
+#root textarea {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
 }
 
-#main-root input:not([type="checkbox"]):not([type="radio"]):focus,
-#main-root select:focus,
-#main-root textarea:focus {
+/* Light Mode Input Legibility */
+html:not(.dark) #root input:not([type="checkbox"]):not([type="radio"]),
+html:not(.dark) #root select,
+html:not(.dark) #root textarea {
+  background-color: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important; /* slate-300 */
+  color: #0f172a !important; /* slate-900 */
+}
+
+html:not(.dark) #root input:not([type="checkbox"]):not([type="radio"]):focus,
+html:not(.dark) #root select:focus,
+html:not(.dark) #root textarea:focus {
   border-color: #059669 !important; /* emerald-600 */
   box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2) !important;
   background-color: #ffffff !important;
 }
 
-/* 1b. Form Labels & Subtext Legibility Overrides */
-#main-root label {
-  color: #1e293b !important; /* slate-800 */
-  font-weight: 700 !important; /* bold */
+/* Dark Mode Input Legibility */
+html.dark #root input:not([type="checkbox"]):not([type="radio"]),
+html.dark #root select,
+html.dark #root textarea {
+  background-color: #1e293b !important; /* slate-800 */
+  border: 1.5px solid #334155 !important; /* slate-700 */
+  color: #f8fafc !important; /* slate-50 */
 }
 
-#main-root .text-slate-500,
-#main-root .text-slate-600,
-#main-root .text-slate-650 {
-  color: #334155 !important; /* slate-700 (much darker and highly visible) */
+html.dark #root input:not([type="checkbox"]):not([type="radio"]):focus,
+html.dark #root select:focus,
+html.dark #root textarea:focus {
+  border-color: #10b981 !important; /* emerald-500 */
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2) !important;
+  background-color: #1e293b !important;
 }
 
-/* 2. Textareas and inputs placeholder styling */
-#main-root input::placeholder,
-#main-root textarea::placeholder {
-  color: #475569 !important; /* slate-600 (darker placeholder for better readability) */
+/* 2. Form Labels & Subtext Legibility */
+html:not(.dark) #root label {
+  color: #1e293b; /* slate-800 */
+}
+html.dark #root label {
+  color: #e2e8f0; /* slate-200 */
+}
+
+/* 3. Input Placeholders */
+html:not(.dark) #root input::placeholder,
+html:not(.dark) #root textarea::placeholder {
+  color: #64748b !important; /* slate-500 */
+  font-weight: 400;
+}
+html.dark #root input::placeholder,
+html.dark #root textarea::placeholder {
+  color: #94a3b8 !important; /* slate-400 */
   font-weight: 400;
 }
 
-/* 3. Global Card & Block Readability Enhancements */
-#main-root .bg-white {
-  background-color: #ffffff !important;
-  border: 1px solid #cbd5e1 !important; /* slate-300 */
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
+/* 4. Table Cells Legibility */
+html:not(.dark) #root table th {
+  color: #0f172a;
+  background-color: #f1f5f9;
+}
+html.dark #root table th {
+  color: #f8fafc;
+  background-color: #1e293b;
 }
 
-/* 4. Table cell contrast standardizer */
-#main-root table th {
-  color: #0f172a !important; /* slate-900 */
-  font-weight: 800 !important;
-  background-color: #f1f5f9 !important; /* slate-100 */
+html:not(.dark) #root table td {
+  color: #1e293b;
+  border-bottom: 1px solid #e2e8f0;
 }
-#main-root table td {
-  color: #1e293b !important; /* slate-800 */
-  border-bottom: 1px solid #e2e8f0 !important;
+html.dark #root table td {
+  color: #cbd5e1;
+  border-bottom: 1px solid #334155;
 }
 
-/* 5. Clean, custom scrollbars */
+/* 5. Custom scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -86,6 +117,12 @@ body {
   background: #cbd5e1;
   border-radius: 9999px;
 }
+html.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }

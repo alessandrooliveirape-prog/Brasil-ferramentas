@@ -332,7 +332,7 @@ function ConversorMoedasRealTime({ toolId }: { toolId: string }) {
             step={sliderStep}
             value={quantidade > sliderMax ? sliderMax : quantidade}
             onChange={(e) => setQuantidade(parseFloat(e.target.value))}
-            className="w-full h-2 bg-slate-250 rounded-lg appearance-none cursor-pointer accent-emerald-600 mt-2"
+            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600 mt-2"
           />
         </div>
       </div>
@@ -347,7 +347,7 @@ function ConversorMoedasRealTime({ toolId }: { toolId: string }) {
             {quantidade.toLocaleString('pt-BR', { maximumFractionDigits: isBtc ? 6 : 2 })} {fromCurrency}
           </span>
           <span className="text-slate-400 text-lg">⇄</span>
-          <span className="font-mono text-emerald-700 bg-emerald-100/50 px-3.5 py-1.5 rounded-lg border border-emerald-250">
+          <span className="font-mono text-emerald-700 bg-emerald-100/50 px-3.5 py-1.5 rounded-lg border border-emerald-200">
             {toSymbol} {convertedValue.toLocaleString('pt-BR', { minimumFractionDigits: toCurrency === 'BTC' ? 6 : 2, maximumFractionDigits: toCurrency === 'BTC' ? 6 : 2 })} {toCurrency}
           </span>
         </div>
@@ -744,8 +744,8 @@ function KmhMph() {
     <div className="space-y-6" id="conv-kmph">
       <h2 className="text-xl font-black text-slate-900 border-b pb-3">Conversor de Km/h para mph</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-        <div className="relative"><label className="block text-xs font-bold text-slate-700 mb-1">Km/h</label><input type="number" step="any" className="w-full border rounded-lg p-3 bg-white font-mono text-base text-slate-900" value={kmh} onChange={(e) => updateKmh(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-505 font-bold">km/h</span></div>
-        <div className="relative"><label className="block text-xs font-bold text-slate-700 mb-1">mph</label><input type="number" step="any" className="w-full border rounded-lg p-3 bg-white font-mono text-base text-slate-900" value={mph} onChange={(e) => updateMph(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-505 font-bold">mph</span></div>
+        <div className="relative"><label className="block text-xs font-bold text-slate-700 mb-1">Km/h</label><input type="number" step="any" className="w-full border rounded-lg p-3 bg-white font-mono text-base text-slate-900" value={kmh} onChange={(e) => updateKmh(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-500 font-bold">km/h</span></div>
+        <div className="relative"><label className="block text-xs font-bold text-slate-700 mb-1">mph</label><input type="number" step="any" className="w-full border rounded-lg p-3 bg-white font-mono text-base text-slate-900" value={mph} onChange={(e) => updateMph(e.target.value)} /><span className="absolute right-4 bottom-3 text-xs text-slate-500 font-bold">mph</span></div>
       </div>
     </div>
   );

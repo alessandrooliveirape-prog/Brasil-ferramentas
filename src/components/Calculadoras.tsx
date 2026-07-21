@@ -2474,7 +2474,7 @@ function SeguroDesemprego() {
       {resultado && (
         <div className="space-y-4 pt-2">
           {!resultado.elegivel ? (
-            <div className="bg-slate-50 dark:bg-slate-950/20 p-4 rounded-xl border border-slate-100 dark:border-slate-950/50 text-emerald-800 dark:text-emerald-450 text-xs">
+            <div className="bg-slate-50 dark:bg-slate-950/20 p-4 rounded-xl border border-slate-100 dark:border-slate-950/50 text-emerald-800 dark:text-emerald-400 text-xs">
               <strong>⚠ Não Elegível ao Benefício:</strong> {resultado.motivoMsg}
             </div>
           ) : (
@@ -2618,7 +2618,7 @@ function SalarioLiquido() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-slate-50 pt-3">
         <div className="flex items-center gap-2 py-2">
           <input type="checkbox" id="check-vt" className="rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4" checked={valeTransporte} onChange={(e) => setValeTransporte(e.target.checked)} />
-          <label htmlFor="check-vt" className="text-xs font-semibold text-slate-600 dark:text-slate-350 hover:cursor-pointer select-none">Descontar Vale Transporte (6%)</label>
+          <label htmlFor="check-vt" className="text-xs font-semibold text-slate-600 dark:text-slate-300 hover:cursor-pointer select-none">Descontar Vale Transporte (6%)</label>
         </div>
         <div>
           <label className="block text-xs font-semibold text-slate-500 mb-1">Refeição Coparticipação (VR - R$)</label>
