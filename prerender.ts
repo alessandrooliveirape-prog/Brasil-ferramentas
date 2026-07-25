@@ -120,9 +120,39 @@ function getFAQPageSchema(tool: any) {
   };
 }
 
-function buildSchemaTags(crumbs: { name: string; path: string }[], toolObj?: any) {
+function buildSchemaTags(crumbs: { name: string; path: string }[], toolObj?: any, isHome = false) {
   const breadcrumb = getBreadcrumbSchema(crumbs);
   let tags = `<script type="application/ld+json">\n${JSON.stringify(breadcrumb, null, 2)}\n</script>`;
+  
+  if (isHome) {
+    const org = {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Tool Brasil",
+      "alternateName": "ToolBrasil",
+      "url": "https://toolbrasil.com.br/",
+      "logo": "https://toolbrasil.com.br/assets/og-image.jpg"
+    };
+    const website = {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Tool Brasil",
+      "alternateName": "ToolBrasil",
+      "url": "https://toolbrasil.com.br/",
+      "description": "Ferramentas Online Gratuitas para o Dia a Dia. Calculadoras, Conversores, Geradores e Utilitários Web.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://toolbrasil.com.br/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    };
+    tags += `\n<script type="application/ld+json">\n${JSON.stringify(org, null, 2)}\n</script>`;
+    tags += `\n<script type="application/ld+json">\n${JSON.stringify(website, null, 2)}\n</script>`;
+  }
+
   if (toolObj) {
     const webApp = getWebApplicationSchema(toolObj);
     tags += `\n<script type="application/ld+json">\n${JSON.stringify(webApp, null, 2)}\n</script>`;
@@ -131,6 +161,21 @@ function buildSchemaTags(crumbs: { name: string; path: string }[], toolObj?: any
     if (faq) {
       tags += `\n<script type="application/ld+json">\n${JSON.stringify(faq, null, 2)}\n</script>`;
     }
+  } else if (isHome) {
+     const webApp = {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Tool Brasil Engine",
+      "url": "https://toolbrasil.com.br/",
+      "operatingSystem": "All",
+      "applicationCategory": "UtilityApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "BRL"
+      }
+    };
+    tags += `\n<script type="application/ld+json">\n${JSON.stringify(webApp, null, 2)}\n</script>`;
   }
   return tags;
 }
@@ -312,7 +357,7 @@ function generateHomeHtml(template: string): string {
   `;
 
   const crumbs = [{ name: 'Início', path: '/' }];
-  const schemaTags = buildSchemaTags(crumbs);
+  const schemaTags = buildSchemaTags(crumbs, undefined, true);
   return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
 }
 
@@ -531,6 +576,14 @@ function generateInstitutionalHtml(template: string, id: string): string {
           <p>
             <strong>Nossos valores:</strong> Transparência (todas as ferramentas são claras sobre como funcionam), privacidade (processamento local sempre que possível, sem coleta desnecessária de dados), excelência técnica (cálculos precisos e atualizados conforme a legislação brasileira) e compromisso social (ferramentas 100% gratuitas, sem limite de uso).
           </p>
+          <h2 class="font-bold text-sm text-slate-800 pt-4">Nossa Equipe</h2>
+          <p>
+            Somos formados por desenvolvedores independentes, analistas de dados e consultores jurídicos que trabalham em conjunto para garantir que todas as nossas calculadoras (especialmente as trabalhistas e financeiras) estejam sempre alinhadas com as leis e alíquotas mais recentes publicadas pelo Diário Oficial da União (DOU).
+          </p>
+          <h2 class="font-bold text-sm text-slate-800 pt-4">Nosso Compromisso</h2>
+          <p>
+            Não cobramos assinaturas e nunca esconderemos nossas funcionalidades atrás de paywalls. O financiamento da Tool Brasil provém integralmente da publicidade exibida nas páginas. Isso nos permite manter nossos servidores rodando 24 horas por dia, 7 dias por semana, com 99.9% de uptime para que você nunca fique na mão.
+          </p>
         </div>
       </div>
     `;
@@ -569,6 +622,23 @@ function generateInstitutionalHtml(template: string, id: string): string {
 
           <h2 class="font-bold text-sm text-slate-800">3. Cookies e Rastreamento</h2>
           <p>Utilizamos cookies essenciais de sistema, cookies estatísticos do Google Analytics e cookies de anúncio do Google AdSense para exibir publicidade segmentada.</p>
+
+          <h2 class="font-bold text-sm text-slate-800 pt-2">4. Base Legal para o Tratamento (Art. 7º da LGPD)</h2>
+          <p>Tratamos seus dados com base no seu <strong>consentimento expresso</strong> (fornecido ao aceitar nossos cookies) e pelo nosso <strong>legítimo interesse</strong> em garantir a segurança do portal, combater fraudes e exibir publicidade contextual que financia o projeto.</p>
+          
+          <h2 class="font-bold text-sm text-slate-800 pt-2">5. Compartilhamento de Dados com Terceiros</h2>
+          <p>Seus dados de navegação anonimizados podem ser processados por:</p>
+          <ul class="list-disc pl-5">
+             <li><strong>Google Analytics:</strong> Para fins estatísticos e de performance.</li>
+             <li><strong>Google AdSense:</strong> Para personalização de anúncios e medição de resultados.</li>
+             <li><strong>Vercel / Cloudflare:</strong> Nossos provedores de infraestrutura e CDN para garantir segurança e velocidade.</li>
+          </ul>
+
+          <h2 class="font-bold text-sm text-slate-800 pt-2">6. Seus Direitos como Titular (Art. 18 da LGPD)</h2>
+          <p>Você tem o direito de solicitar a confirmação, acesso, correção, anonimização e exclusão dos seus dados coletados pelos nossos servidores. Para exercer qualquer um destes direitos, bem como revogar o consentimento para uso de cookies, entre em contato através de nosso e-mail de suporte em <strong>contato@toolbrasil.com.br</strong>.</p>
+          
+          <h2 class="font-bold text-sm text-slate-800 pt-2">7. Segurança da Informação</h2>
+          <p>Implementamos rigorosas medidas técnicas (criptografia SSL/TLS) e administrativas para proteger os dados pessoais de acessos não autorizados ou situações acidentais de destruição, perda, alteração ou comunicação indevida.</p>
         </div>
       </div>
     `;

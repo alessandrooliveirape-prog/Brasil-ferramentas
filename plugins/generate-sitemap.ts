@@ -209,20 +209,7 @@ export function generateSitemapPlugin(): Plugin {
         { id: 'ibge-pe', priority: 0.5 },
         { id: 'ibge-ce', priority: 0.5 },
         { id: 'ibge-df', priority: 0.5 },
-        { id: 'gerar-senha-forte', priority: 0.6 },
-        { id: 'gerar-cpf-valido', priority: 0.6 },
-        { id: 'calcular-porcentagem-online', priority: 0.6 },
-        { id: 'calcular-inss-salario', priority: 0.6 },
-        { id: 'calcular-imc-gratis', priority: 0.6 },
-        { id: 'simular-aposentadoria-por-idade', priority: 0.6 },
-        { id: 'calcular-13o-salario', priority: 0.6 },
-        { id: 'calcular-rescisao-trabalhista', priority: 0.6 },
-        { id: 'simular-financiamento-casa-propria', priority: 0.6 },
-        { id: 'consultar-cep-correios', priority: 0.6 },
-        { id: 'consultar-ddd-telefone', priority: 0.6 },
-        { id: 'gerar-cnpj-valido', priority: 0.6 },
         { id: 'gerar-qr-code-pix', priority: 0.6 },
-        { id: 'calcular-juros-compostos-mensais', priority: 0.6 },
       ];
 
       programmaticPages.forEach(p => {
@@ -235,8 +222,7 @@ export function generateSitemapPlugin(): Plugin {
         entries.push({ loc: `${host}/institucional/${p}`, changefreq: 'monthly', priority: 0.4, lastmod: today });
       });
 
-      // Sitemap HTML
-      entries.push({ loc: `${host}/sitemap`, changefreq: 'weekly', priority: 0.5, lastmod: today });
+      // Removed /sitemap entry from sitemap.xml
 
       // Gerar XML
       let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';

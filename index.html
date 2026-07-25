@@ -24,14 +24,7 @@
     <!-- Google AdSense Auto Ads -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8160658026927094" crossorigin="anonymous"></script>
 
-    <!-- Google Analytics 4 - Substitua G-XXXXXXXXXX pelo seu ID de medição real -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script>
+    <!-- Google Analytics 4: Insira seu script do GA4 aqui -->
 
     <!-- Preconnect / DNS-Prefetch para performance e anúncios -->
     <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
@@ -66,50 +59,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="application-name" content="Tool Brasil" />
 
-    <!-- Dados Estruturados Schema.org JSON-LD para Google Search Console -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "Tool Brasil",
-        "alternateName": "ToolBrasil",
-        "url": "https://toolbrasil.com.br/",
-        "logo": "https://toolbrasil.com.br/assets/og-image.jpg"
-      }
-    </script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Tool Brasil",
-        "alternateName": "ToolBrasil",
-        "url": "https://toolbrasil.com.br/",
-        "description": "Ferramentas Online Gratuitas para o Dia a Dia. Calculadoras, Conversores, Geradores e Utilitários Web.",
-        "potentialAction": {
-          "@type": "SearchAction",
-          "target": {
-            "@type": "EntryPoint",
-            "urlTemplate": "https://toolbrasil.com.br/?q={search_term_string}"
-          },
-          "query-input": "required name=search_term_string"
-        }
-      }
-    </script>
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "Tool Brasil Engine",
-        "url": "https://toolbrasil.com.br/",
-        "operatingSystem": "All",
-        "applicationCategory": "UtilityApplication",
-        "offers": {
-          "@type": "Offer",
-          "price": "0.00",
-          "priceCurrency": "BRL"
-        }
-      }
-    </script>
+    <!-- Dados Estruturados Schema.org injetados via SSG -->
   </head>
   <body>
     <div id="root"></div>
