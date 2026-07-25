@@ -24,7 +24,5 @@ User-agent: Googlebot
 Allow: /
 Disallow: /api/
 
-# Crawl delay to reduce server load
-Crawl-delay: 1
 
 Sitemap: https://toolbrasil.com.br/sitemap.xml

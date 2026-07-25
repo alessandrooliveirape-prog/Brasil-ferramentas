@@ -157,7 +157,7 @@ export function generateSitemapPlugin(): Plugin {
       ];
 
       toolSlugs.forEach(t => {
-        entries.push({ loc: `${host}/${t.categoryId}/${t.slug}`, changefreq: 'weekly', priority: t.priority });
+        entries.push({ loc: `${host}/${t.categoryId}/${t.slug}`, changefreq: 'weekly', priority: t.priority, lastmod: today });
       });
 
       // Páginas Programáticas
@@ -226,13 +226,13 @@ export function generateSitemapPlugin(): Plugin {
       ];
 
       programmaticPages.forEach(p => {
-        entries.push({ loc: `${host}/programatico/${p.id}`, changefreq: 'weekly', priority: p.priority });
+        entries.push({ loc: `${host}/programatico/${p.id}`, changefreq: 'weekly', priority: p.priority, lastmod: today });
       });
 
       // Páginas Institucionais
       const institutionalPages = ['sobre', 'contato', 'privacidade', 'termos', 'cookies', 'transparencia-adsense'];
       institutionalPages.forEach(p => {
-        entries.push({ loc: `${host}/institucional/${p}`, changefreq: 'monthly', priority: 0.4 });
+        entries.push({ loc: `${host}/institucional/${p}`, changefreq: 'monthly', priority: 0.4, lastmod: today });
       });
 
       // Sitemap HTML
