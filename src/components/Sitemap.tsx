@@ -11,7 +11,7 @@ const ALL_PROGRAMMATIC_PAGES = { ...PROGRAMMATIC_PAGES, ...EXTRA_PROGRAMMATIC_PA
 
 export default function Sitemap() {
   const [downloaded, setDownloaded] = useState<boolean>(false);
-  const host = 'https://toolbrasil.com.br';
+  const host = 'https://www.toolbrasil.com.br';
 
   const generateSitemapXml = (): string => {
     let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;

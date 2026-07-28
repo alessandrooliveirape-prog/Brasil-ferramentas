@@ -32,7 +32,7 @@ export function generateSitemapPlugin(): Plugin {
       outDir = path.resolve(config.root || process.cwd(), resolvedConfig.build?.outDir || 'dist');
     },
     closeBundle() {
-      const host = 'https://toolbrasil.com.br';
+      const host = 'https://www.toolbrasil.com.br';
       const today = new Date().toISOString().split('T')[0];
       const entries: SitemapEntry[] = [];
 

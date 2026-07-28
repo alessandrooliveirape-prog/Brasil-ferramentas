@@ -85,7 +85,7 @@ function getBreadcrumbSchema(crumbs: { name: string; path: string }[]) {
     '@type': 'ListItem',
     position: i + 1,
     name: c.name,
-    item: `https://toolbrasil.com.br${c.path}`
+    item: `https://www.toolbrasil.com.br${c.path}`
   }));
   return {
     '@context': 'https://schema.org',
@@ -99,7 +99,7 @@ function getWebApplicationSchema(tool: any) {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
     name: tool.title,
-    url: `https://toolbrasil.com.br/${tool.categoryId}/${tool.slug}`,
+    url: `https://www.toolbrasil.com.br/${tool.categoryId}/${tool.slug}`,
     description: tool.shortDescription,
     applicationCategory: 'BusinessApplication',
     operatingSystem: 'All',
@@ -130,21 +130,21 @@ function buildSchemaTags(crumbs: { name: string; path: string }[], toolObj?: any
       "@type": "Organization",
       "name": "Tool Brasil",
       "alternateName": "ToolBrasil",
-      "url": "https://toolbrasil.com.br/",
-      "logo": "https://toolbrasil.com.br/assets/og-image.jpg"
+      "url": "https://www.toolbrasil.com.br/",
+      "logo": "https://www.toolbrasil.com.br/assets/og-image.jpg"
     };
     const website = {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Tool Brasil",
       "alternateName": "ToolBrasil",
-      "url": "https://toolbrasil.com.br/",
+      "url": "https://www.toolbrasil.com.br/",
       "description": "Ferramentas Online Gratuitas para o Dia a Dia. Calculadoras, Conversores, Geradores e Utilitários Web.",
       "potentialAction": {
         "@type": "SearchAction",
         "target": {
           "@type": "EntryPoint",
-          "urlTemplate": "https://toolbrasil.com.br/?q={search_term_string}"
+          "urlTemplate": "https://www.toolbrasil.com.br/?q={search_term_string}"
         },
         "query-input": "required name=search_term_string"
       }
@@ -166,7 +166,7 @@ function buildSchemaTags(crumbs: { name: string; path: string }[], toolObj?: any
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "Tool Brasil Engine",
-      "url": "https://toolbrasil.com.br/",
+      "url": "https://www.toolbrasil.com.br/",
       "operatingSystem": "All",
       "applicationCategory": "UtilityApplication",
       "offers": {
@@ -305,7 +305,7 @@ function buildHtmlPage(template: string, title: string, desc: string, canonicalU
 function generateHomeHtml(template: string): string {
   const title = "Tool Brasil | Ferramentas Online Gratuitas";
   const desc = "Acesse calculadoras financeiras, geradores de documentos (CPF/CNPJ), conversores de moedas e unidades. Mais de 40 ferramentas úteis livres de cadastro.";
-  const canonical = "https://toolbrasil.com.br/";
+  const canonical = "https://www.toolbrasil.com.br/";
 
   const content = `
     <div class="space-y-8">
@@ -364,7 +364,7 @@ function generateHomeHtml(template: string): string {
 function generateCategoryHtml(template: string, cat: any): string {
   const title = `${cat.name} | Tool Brasil`;
   const desc = `${cat.description} Acesse ferramentas gratuitas na categoria ${cat.name} na central de utilitários Tool Brasil.`;
-  const canonical = `https://toolbrasil.com.br/${cat.id}`;
+  const canonical = `https://www.toolbrasil.com.br/${cat.id}`;
 
   const catTools = TOOLS.filter(t => t.categoryId === cat.id);
 
@@ -397,7 +397,7 @@ function generateCategoryHtml(template: string, cat: any): string {
 function generateToolHtml(template: string, tool: any): string {
   const title = `${tool.title} | Tool Brasil`;
   const desc = tool.shortDescription;
-  const canonical = `https://toolbrasil.com.br/${tool.categoryId}/${tool.slug}`;
+  const canonical = `https://www.toolbrasil.com.br/${tool.categoryId}/${tool.slug}`;
 
   // Encontra nome da categoria
   const cat = CATEGORIES.find(c => c.id === tool.categoryId);
@@ -513,7 +513,7 @@ function generateToolHtml(template: string, tool: any): string {
 function generateProgrammaticHtml(template: string, id: string, page: any): string {
   const title = `${page.title} | Tool Brasil`;
   const desc = page.description;
-  const canonical = `https://toolbrasil.com.br/programatico/${id}`;
+  const canonical = `https://www.toolbrasil.com.br/programatico/${id}`;
 
   const content = `
     <div class="space-y-6">
@@ -555,7 +555,7 @@ function generateInstitutionalHtml(template: string, id: string): string {
   let desc = '';
   let content = '';
 
-  const canonical = `https://toolbrasil.com.br/institucional/${id}`;
+  const canonical = `https://www.toolbrasil.com.br/institucional/${id}`;
 
   if (id === 'sobre') {
     title = 'Sobre a Tool Brasil';

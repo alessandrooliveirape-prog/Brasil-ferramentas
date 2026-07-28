@@ -11,7 +11,7 @@ interface SEOAnalyzerProps {
   currentHost?: string;
 }
 
-export default function SEOAnalyzer({ tool, currentHost = 'https://toolbrasil.com.br' }: SEOAnalyzerProps) {
+export default function SEOAnalyzer({ tool, currentHost = 'https://www.toolbrasil.com.br' }: SEOAnalyzerProps) {
   const [activeTab, setActiveTab] = useState<'serp' | 'schema' | 'metadata'>('serp');
   
   const canonicalUrl = `${currentHost}/${tool.categoryId}/${tool.slug}`;

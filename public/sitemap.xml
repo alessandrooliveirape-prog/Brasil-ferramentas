@@ -1,845 +1,939 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://toolbrasil.com.br/</loc>
-    <lastmod>2026-06-27</lastmod>
+    <loc>https://www.toolbrasil.com.br/</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>1</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#calculadoras</loc>
-    <lastmod>2026-06-27</lastmod>
+    <loc>https://www.toolbrasil.com.br/calculadoras</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#conversores</loc>
-    <lastmod>2026-06-27</lastmod>
+    <loc>https://www.toolbrasil.com.br/conversores</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores</loc>
-    <lastmod>2026-06-27</lastmod>
+    <loc>https://www.toolbrasil.com.br/geradores</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#ferramentas-web</loc>
-    <lastmod>2026-06-27</lastmod>
+    <loc>https://www.toolbrasil.com.br/ferramentas-web</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios</loc>
-    <lastmod>2026-06-27</lastmod>
+    <loc>https://www.toolbrasil.com.br/utilitarios</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-juros-compostos</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-juros-simples</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/simulador-de-financiamento</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-juros-compostos</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-fgts</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-juros-simples</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-desconto-inss</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-ferias-trabalhista</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-rescisao-trabalhista</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-decimo-terceiro</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-imc</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-consumo-combustivel</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-regra-de-tres</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-porcentagem</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-idade-exata</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-dias-entre-datas</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-hora-extra</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-seguro-desemprego</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-salario-liquido</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-ipva</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-imposto-de-renda</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-multa-de-transito</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-preco-por-km</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-gestacao</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-taxa-metabolica-basal</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-margem-de-lucro</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-gorjeta</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-aposentadoria-inss</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/simulador-de-financiamento</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-pis-pasep</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-fgts</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-icms</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-itbi</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-itcmd</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-preco-de-venda</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-adicional-de-periculosidade</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-adicional-de-insalubridade</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-idade-canina</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-calorias-diarias</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#calculadoras/calculadora-de-nota-do-enem</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-metros-para-pes</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-quilos-para-libras</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-celsius-para-fahrenheit</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-real-para-dolar</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-desconto-inss</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-mb-para-gb</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-ferias-trabalhista</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-kb-para-mb</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-rescisao-trabalhista</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-horas-para-minutos</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-decimo-terceiro</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-dias-para-horas</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-imc</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-polegadas-para-centimetros</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-consumo-combustivel</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-milhas-para-quilometros</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-regra-de-tres</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-kmh-para-mph</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-porcentagem</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-euro-para-real</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-idade-exata</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-bitcoin-para-real</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-dias-entre-datas</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-libra-para-real</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-hora-extra</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#conversores/converter-peso-argentino-para-real</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-seguro-desemprego</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#conversores/conversor-de-numeros-romanos</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-salario-liquido</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores/gerador-de-cpf</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-ipva</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-imposto-de-renda</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-multa-de-transito</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-preco-por-km</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-gestacao</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-taxa-metabolica-basal</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-margem-de-lucro</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-gorjeta</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-aposentadoria-inss</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores/gerador-de-cnpj</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-pis-pasep</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores/gerador-de-senha-segura</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-icms</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores/gerador-de-qr-code</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-itbi</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores/gerador-de-uuid</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-itcmd</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores/gerador-de-lorem-ipsum</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-preco-de-venda</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores/gerador-de-hash-md5</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-adicional-de-periculosidade</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores/gerador-de-hash-sha256</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-adicional-de-insalubridade</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores/gerador-de-nome-aleatorio</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-idade-canina</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores/gerador-de-endereco-brasileiro</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-calorias-diarias</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores/gerador-de-codigo-de-barras</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-de-nota-do-enem</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores/gerador-de-placa-mercosul</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-clt-vs-pj</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores/gerador-de-cores-aleatorias</loc>
+    <loc>https://www.toolbrasil.com.br/calculadoras/calculadora-move-brasil</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#geradores/gerador-de-rg</loc>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-metros-para-pes</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#ferramentas-web/qual-o-meu-ip</loc>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-quilos-para-libras</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-celsius-para-fahrenheit</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-real-para-dolar</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#ferramentas-web/localizar-endereco-de-ip</loc>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-mb-para-gb</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#ferramentas-web/consulta-whois</loc>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-kb-para-mb</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#ferramentas-web/consulta-dns-lookup</loc>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-horas-para-minutos</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#ferramentas-web/verificador-de-certificado-ssl</loc>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-dias-para-horas</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#ferramentas-web/verificador-de-portas-abertas</loc>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-polegadas-para-centimetros</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#ferramentas-web/teste-de-ping-online</loc>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-milhas-para-quilometros</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#ferramentas-web/traceroute-de-rede</loc>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-kmh-para-mph</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#ferramentas-web/verificador-de-headers-http</loc>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-euro-para-real</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#ferramentas-web/verificador-de-status-de-site</loc>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-bitcoin-para-real</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#ferramentas-web/validador-de-url</loc>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-libra-para-real</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#ferramentas-web/verificador-de-titulo-de-eleitor</loc>
+    <loc>https://www.toolbrasil.com.br/conversores/converter-peso-argentino-para-real</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/contador-de-caracteres</loc>
+    <loc>https://www.toolbrasil.com.br/conversores/conversor-de-numeros-romanos</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/contador-de-palavras</loc>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-cpf</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-cnpj</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/removedor-de-espacos-duplicados</loc>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-senha-segura</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/formatador-json</loc>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-qr-code</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/minificador-de-css</loc>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-uuid</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/minificador-de-js</loc>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-lorem-ipsum</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/beautify-json</loc>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-hash-md5</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/codificador-encode-url</loc>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-hash-sha256</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/decodificador-decode-url</loc>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-nome-aleatorio</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/cronometro-online</loc>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-endereco-brasileiro</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/separador-de-silabas</loc>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-codigo-de-barras</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/conversor-maiusculas-minusculas</loc>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-placa-mercosul</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/filtro-de-emails</loc>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-cores-aleatorias</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/comparador-de-textos</loc>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-rg</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#utilitarios/validador-de-cartao-de-credito</loc>
+    <loc>https://www.toolbrasil.com.br/geradores/gerador-de-recibo-online</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ddd-brasil</loc>
+    <loc>https://www.toolbrasil.com.br/ferramentas-web/qual-o-meu-ip</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/ferramentas-web/localizar-endereco-de-ip</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/ferramentas-web/consulta-whois</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/ferramentas-web/consulta-dns-lookup</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/ferramentas-web/verificador-de-certificado-ssl</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/ferramentas-web/verificador-de-portas-abertas</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/ferramentas-web/teste-de-ping-online</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/ferramentas-web/traceroute-de-rede</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/ferramentas-web/verificador-de-headers-http</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/ferramentas-web/verificador-de-status-de-site</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/ferramentas-web/validador-de-url</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/ferramentas-web/verificador-de-titulo-de-eleitor</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/contador-de-caracteres</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/contador-de-palavras</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/removedor-de-espacos-duplicados</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/formatador-json</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/minificador-de-css</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/minificador-de-js</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/beautify-json</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/codificador-encode-url</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/decodificador-decode-url</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/cronometro-online</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/separador-de-silabas</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/conversor-maiusculas-minusculas</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/filtro-de-emails</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/comparador-de-textos</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/utilitarios/validador-de-cartao-de-credito</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.toolbrasil.com.br/programatico/ddd-brasil</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/cep-brasil</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/cep-brasil</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/bancos-brasil</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/bancos-brasil</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/cnae-consulta</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/cnae-consulta</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/cbo-consulta</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/cbo-consulta</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/salario-minimo-historico</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/salario-minimo-historico</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/feriados-nacionais</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/feriados-nacionais</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/selic-historica</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/selic-historica</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/calendario-inss</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/calendario-inss</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/codigos-ncm</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/codigos-ncm</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/codigos-ibge</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/codigos-ibge</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ddd-sp</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ddd-sp</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ddd-rj</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ddd-rj</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ddd-mg</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ddd-mg</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ddd-pr</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ddd-pr</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ddd-sc</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ddd-sc</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ddd-rs</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ddd-rs</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ddd-ba</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ddd-ba</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ddd-ce</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ddd-ce</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ddd-pe</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ddd-pe</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ddd-go</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ddd-go</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ddd-es</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ddd-es</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/salario-minimo-1994</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/salario-minimo-1994</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/salario-minimo-2000</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/salario-minimo-2000</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/salario-minimo-2010</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/salario-minimo-2010</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/salario-minimo-2020</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/salario-minimo-2020</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/salario-minimo-2025</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/salario-minimo-2025</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/tempo-sao-paulo</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/tempo-sao-paulo</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/tempo-rio-de-janeiro</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/tempo-rio-de-janeiro</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/tempo-belo-horizonte</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/tempo-belo-horizonte</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/tempo-salvador</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/tempo-salvador</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/tempo-brasilia</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/tempo-brasilia</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/tempo-fortaleza</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/tempo-fortaleza</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/tempo-recife</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/tempo-recife</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/tempo-curitiba</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/tempo-curitiba</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/tempo-porto-alegre</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/tempo-porto-alegre</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/tempo-manaus</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/tempo-manaus</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ibge-sp</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ibge-sp</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ibge-rj</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ibge-rj</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ibge-mg</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ibge-mg</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ibge-ba</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ibge-ba</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ibge-pr</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ibge-pr</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ibge-rs</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ibge-rs</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ibge-sc</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ibge-sc</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ibge-pe</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ibge-pe</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ibge-ce</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ibge-ce</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/ibge-df</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/ibge-df</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/gerar-senha-forte</loc>
+    <loc>https://www.toolbrasil.com.br/programatico/gerar-qr-code-pix</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#programatico/gerar-cpf-valido</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#programatico/calcular-porcentagem-online</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#programatico/calcular-inss-salario</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#programatico/calcular-imc-gratis</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#programatico/simular-aposentadoria-por-idade</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#programatico/calcular-13o-salario</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#programatico/calcular-rescisao-trabalhista</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#programatico/simular-financiamento-casa-propria</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#programatico/consultar-cep-correios</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#programatico/consultar-ddd-telefone</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#programatico/gerar-cnpj-valido</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#programatico/gerar-qr-code-pix</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#programatico/calcular-juros-compostos-mensais</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#institucional/sobre</loc>
+    <loc>https://www.toolbrasil.com.br/institucional/sobre</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#institucional/contato</loc>
+    <loc>https://www.toolbrasil.com.br/institucional/contato</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#institucional/privacidade</loc>
+    <loc>https://www.toolbrasil.com.br/institucional/privacidade</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#institucional/termos</loc>
+    <loc>https://www.toolbrasil.com.br/institucional/termos</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#institucional/cookies</loc>
+    <loc>https://www.toolbrasil.com.br/institucional/cookies</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://toolbrasil.com.br/#institucional/transparencia-adsense</loc>
+    <loc>https://www.toolbrasil.com.br/institucional/transparencia-adsense</loc>
+    <lastmod>2026-07-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://toolbrasil.com.br/#sitemap</loc>
-    <lastmod>2026-06-27</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
   </url>
 </urlset>

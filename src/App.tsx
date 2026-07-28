@@ -281,7 +281,7 @@ export default function App() {
 
     // Update Canonical URL
     let canonical = document.querySelector('link[rel="canonical"]');
-    const newCanonicalUrl = `https://toolbrasil.com.br/${pathSuffix}`;
+    const newCanonicalUrl = `https://www.toolbrasil.com.br/${pathSuffix}`;
     if (canonical) {
       canonical.setAttribute('href', newCanonicalUrl);
     } else {
@@ -416,7 +416,7 @@ export default function App() {
       '@type': 'ListItem',
       position: i + 1,
       name: c.name,
-      item: `https://toolbrasil.com.br${c.path}`
+      item: `https://www.toolbrasil.com.br${c.path}`
     }));
     return {
       '@context': 'https://schema.org',
@@ -433,7 +433,7 @@ export default function App() {
           {
             '@type': 'WebApplication',
             name: activeTool.title,
-            url: `https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`,
+            url: `https://www.toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`,
             description: activeTool.shortDescription,
             applicationCategory: 'BusinessApplication',
             operatingSystem: 'All',
@@ -1157,7 +1157,7 @@ export default function App() {
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={() => {
-                      const url = encodeURIComponent(`https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
+                      const url = encodeURIComponent(`https://www.toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
                       const text = encodeURIComponent(`${activeTool.title} - Tool Brasil`);
                       window.open(`https://wa.me/?text=${text}%20${url}`, '_blank', 'noopener,noreferrer');
                     }}
@@ -1169,7 +1169,7 @@ export default function App() {
                   </button>
                   <button
                     onClick={() => {
-                      const url = encodeURIComponent(`https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
+                      const url = encodeURIComponent(`https://www.toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
                       window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank', 'noopener,noreferrer');
                     }}
                     className="flex items-center gap-2 px-4 py-2.5 bg-slate-600 hover:bg-slate-700 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-xs"
@@ -1180,7 +1180,7 @@ export default function App() {
                   </button>
                   <button
                     onClick={() => {
-                      const url = encodeURIComponent(`https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
+                      const url = encodeURIComponent(`https://www.toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
                       const text = encodeURIComponent(`${activeTool.title} - Tool Brasil`);
                       window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank', 'noopener,noreferrer');
                     }}
@@ -1192,7 +1192,7 @@ export default function App() {
                   </button>
                   <button
                     onClick={() => {
-                      const url = encodeURIComponent(`https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
+                      const url = encodeURIComponent(`https://www.toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`);
                       window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${url}`, '_blank', 'noopener,noreferrer');
                     }}
                     className="flex items-center gap-2 px-4 py-2.5 bg-slate-700 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-xs"
@@ -1203,7 +1203,7 @@ export default function App() {
                   </button>
                   <button
                     onClick={() => {
-                      const url = `https://toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`;
+                      const url = `https://www.toolbrasil.com.br/${activeTool.categoryId}/${activeTool.slug}`;
                       navigator.clipboard.writeText(url);
                       const btn = document.getElementById('copy-link-btn');
                       if (btn) { btn.textContent = '✅ Copiado!'; setTimeout(() => { if (btn) btn.textContent = '📋 Copiar Link'; }, 2000); }

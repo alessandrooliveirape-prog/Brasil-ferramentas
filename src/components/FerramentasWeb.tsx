@@ -445,7 +445,7 @@ function StatusSite() {
 
 // 11. VALIDADOR DE URL
 function ValidadorUrl() {
-  const [url, setUrl] = useState<string>('https://toolbrasil.com.br/ferramentas?q=calculadora');
+  const [url, setUrl] = useState<string>('https://www.toolbrasil.com.br/ferramentas?q=calculadora');
   const [resultado, setResultado] = useState<any>(null);
 
   const validar = () => {
@@ -552,7 +552,7 @@ function TituloEleitor() {
 
 // 9. HTTP HEADERS TESTER
 function HttpHeadersTester() {
-  const [url, setUrl] = useState<string>('https://toolbrasil.com.br');
+  const [url, setUrl] = useState<string>('https://www.toolbrasil.com.br');
   const [headers, setHeaders] = useState<any[]>([]);
 
   const loadHeaders = () => {

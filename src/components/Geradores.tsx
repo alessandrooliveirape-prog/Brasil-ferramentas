@@ -482,7 +482,7 @@ function SenhaGerador() {
 
 // 4. QR CODE
 function QrCodeGerador() {
-  const [texto, setTexto] = useState<string>('https://toolbrasil.com.br');
+  const [texto, setTexto] = useState<string>('https://www.toolbrasil.com.br');
   const [qrUrl, setQrUrl] = useState<string>('');
 
   useEffect(() => {
