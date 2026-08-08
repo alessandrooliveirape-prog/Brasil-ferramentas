@@ -2,6 +2,8 @@ User-agent: *
 Allow: /
 Disallow: /api/
 Disallow: /src/
+Disallow: /*?*utm_*
+Disallow: /*?*ref=*
 
 # Allow Google AdSense crawler full access
 User-agent: Mediapartners-Google
