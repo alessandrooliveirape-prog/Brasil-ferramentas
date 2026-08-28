@@ -29,6 +29,9 @@ export default function Geradores({ toolId }: GeradoresProps) {
       {toolId === 'gerador-rg' && <GeradorRG />}
       {toolId === 'recibo' && <GeradorRecibo />}
       {toolId === 'gerador-assinatura-email' && <GeradorAssinaturaEmail />}
+      {toolId === 'declaracao-conteudo-correios' && <GeradorDeclaracaoConteudo />}
+      {toolId === 'gerador-pix' && <GeradorPix />}
+      {toolId === 'contrato-locacao' && <GeradorContratoLocacao />}
     </div>
   );
 }
@@ -1340,3 +1343,643 @@ function GeradorWhatsApp() {
     </div>
   );
 }
+
+// 18. GERADOR DE DECLARAÇÃO DE CONTEÚDO CORREIOS (A4 OFICIAL)
+interface ItemDeclaracao {
+  id: number;
+  conteudo: string;
+  quant: number;
+  valor: number;
+}
+
+function GeradorDeclaracaoConteudo() {
+  const [remetente, setRemetente] = useState({
+    nome: 'Carlos Eduardo Santos',
+    doc: '123.456.789-00',
+    endereco: 'Rua das Flores, 120, Apto 42',
+    bairro: 'Jardins',
+    cidade: 'São Paulo',
+    uf: 'SP',
+    cep: '01415-000'
+  });
+
+  const [destinatario, setDestinatario] = useState({
+    nome: 'Mariana Lima Oliveira',
+    doc: '987.654.321-99',
+    endereco: 'Av. Afonso Pena, 1500, Sala 302',
+    bairro: 'Centro',
+    cidade: 'Belo Horizonte',
+    uf: 'MG',
+    cep: '30130-005'
+  });
+
+  const [itens, setItens] = useState<ItemDeclaracao[]>([
+    { id: 1, conteudo: 'Camisetas de algodão usadas', quant: 2, valor: 45.00 },
+    { id: 2, conteudo: 'Livro didático de literatura', quant: 1, valor: 30.00 }
+  ]);
+
+  const [copiado, setCopiado] = useState(false);
+
+  const addItem = () => {
+    setItens([...itens, { id: Date.now(), conteudo: '', quant: 1, valor: 0 }]);
+  };
+
+  const removeItem = (id: number) => {
+    if (itens.length > 1) {
+      setItens(itens.filter(it => it.id !== id));
+    }
+  };
+
+  const updateItem = (id: number, field: keyof ItemDeclaracao, val: any) => {
+    setItens(itens.map(it => it.id === id ? { ...it, [field]: val } : it));
+  };
+
+  const totalValor = itens.reduce((acc, it) => acc + (it.quant * it.valor), 0);
+  const totalQuant = itens.reduce((acc, it) => acc + Number(it.quant || 0), 0);
+
+  const imprimirA4 = () => {
+    window.print();
+  };
+
+  return (
+    <div className="space-y-6" id="ger-declaracao-conteudo">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Gerador de Declaração de Conteúdo Correios</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Formulário oficial padrão ECT/CONFAZ para postagem de encomendas sem nota fiscal.</p>
+        </div>
+        <button 
+          onClick={imprimirA4} 
+          type="button" 
+          className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black tracking-wide shadow-md transition cursor-pointer flex items-center gap-1.5"
+        >
+          🖨️ Imprimir Formulário A4
+        </button>
+      </div>
+
+      {/* Inputs Remetente e Destinatário */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Remetente */}
+        <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 space-y-3">
+          <h3 className="text-xs font-black uppercase tracking-wide text-slate-700 dark:text-slate-200 border-b pb-1.5">
+            📦 1. Identificação do Remetente
+          </h3>
+          <div>
+            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Nome Completo / Razão Social</label>
+            <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={remetente.nome} onChange={(e) => setRemetente({ ...remetente, nome: e.target.value })} />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">CPF / CNPJ</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={remetente.doc} onChange={(e) => setRemetente({ ...remetente, doc: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">CEP</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={remetente.cep} onChange={(e) => setRemetente({ ...remetente, cep: e.target.value })} />
+            </div>
+          </div>
+          <div>
+            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Endereço Completo</label>
+            <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={remetente.endereco} onChange={(e) => setRemetente({ ...remetente, endereco: e.target.value })} />
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Bairro</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={remetente.bairro} onChange={(e) => setRemetente({ ...remetente, bairro: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Cidade</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={remetente.cidade} onChange={(e) => setRemetente({ ...remetente, cidade: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">UF</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs uppercase" maxLength={2} value={remetente.uf} onChange={(e) => setRemetente({ ...remetente, uf: e.target.value })} />
+            </div>
+          </div>
+        </div>
+
+        {/* Destinatário */}
+        <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 space-y-3">
+          <h3 className="text-xs font-black uppercase tracking-wide text-slate-700 dark:text-slate-200 border-b pb-1.5">
+            📬 2. Identificação do Destinatário
+          </h3>
+          <div>
+            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Nome Completo / Razão Social</label>
+            <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={destinatario.nome} onChange={(e) => setDestinatario({ ...destinatario, nome: e.target.value })} />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">CPF / CNPJ</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={destinatario.doc} onChange={(e) => setDestinatario({ ...destinatario, doc: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">CEP</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={destinatario.cep} onChange={(e) => setDestinatario({ ...destinatario, cep: e.target.value })} />
+            </div>
+          </div>
+          <div>
+            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Endereço Completo</label>
+            <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={destinatario.endereco} onChange={(e) => setDestinatario({ ...destinatario, endereco: e.target.value })} />
+          </div>
+          <div className="grid grid-cols-3 gap-2">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Bairro</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={destinatario.bairro} onChange={(e) => setDestinatario({ ...destinatario, bairro: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Cidade</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={destinatario.cidade} onChange={(e) => setDestinatario({ ...destinatario, cidade: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">UF</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs uppercase" maxLength={2} value={destinatario.uf} onChange={(e) => setDestinatario({ ...destinatario, uf: e.target.value })} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Discriminação do Conteúdo */}
+      <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 space-y-3">
+        <div className="flex justify-between items-center border-b pb-2">
+          <h3 className="text-xs font-black uppercase tracking-wide text-slate-700 dark:text-slate-200">
+            📋 3. Discriminação do Conteúdo
+          </h3>
+          <button onClick={addItem} type="button" className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition">
+            + Adicionar Item
+          </button>
+        </div>
+
+        <div className="space-y-2">
+          {itens.map((it, idx) => (
+            <div key={it.id} className="grid grid-cols-12 gap-2 items-center bg-white dark:bg-slate-800 p-2 rounded-lg border border-slate-200 dark:border-slate-700">
+              <div className="col-span-1 text-center font-bold text-xs text-slate-500">{idx + 1}</div>
+              <div className="col-span-6">
+                <input type="text" placeholder="Descrição do Item / Conteúdo" className="w-full border dark:border-slate-600 rounded p-1.5 text-xs bg-transparent" value={it.conteudo} onChange={(e) => updateItem(it.id, 'conteudo', e.target.value)} />
+              </div>
+              <div className="col-span-2">
+                <input type="number" min={1} placeholder="Qtd" className="w-full border dark:border-slate-600 rounded p-1.5 text-xs bg-transparent font-mono" value={it.quant} onChange={(e) => updateItem(it.id, 'quant', Number(e.target.value))} />
+              </div>
+              <div className="col-span-2">
+                <input type="number" step="0.01" placeholder="R$ Unit" className="w-full border dark:border-slate-600 rounded p-1.5 text-xs bg-transparent font-mono" value={it.valor} onChange={(e) => updateItem(it.id, 'valor', Number(e.target.value))} />
+              </div>
+              <div className="col-span-1 text-center">
+                <button onClick={() => removeItem(it.id)} type="button" className="text-rose-500 hover:text-rose-700 font-bold text-xs">✕</button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex justify-between items-center pt-2 font-bold text-xs text-slate-800 dark:text-slate-200">
+          <span>Quantidade Total de Itens: {totalQuant}</span>
+          <span className="text-base text-emerald-600 dark:text-emerald-400 font-black">Valor Total Declarado: R$ {totalValor.toFixed(2)}</span>
+        </div>
+      </div>
+
+      {/* Visualização de Pré-visualização Formatada Padrão Correios */}
+      <div className="bg-white border-2 border-slate-300 rounded-xl p-6 text-slate-900 shadow-sm print:m-0 print:p-0 print:border-none print:shadow-none" id="modelo-a4-correios">
+        <div className="border border-black p-4 space-y-3 font-sans text-xs">
+          <div className="text-center border-b border-black pb-2">
+            <h4 className="font-black text-sm uppercase tracking-wide">DECLARAÇÃO DE CONTEÚDO</h4>
+            <span className="text-[10px] text-slate-600 block">Exigida conforme Protocolo ICMS 32/01 e Portarias do Ministério das Comunicações / ECT</span>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 border-b border-black pb-3">
+            <div className="space-y-1">
+              <strong className="block border-b border-black pb-0.5 text-[11px] uppercase">REMETENTE:</strong>
+              <div><strong>Nome:</strong> {remetente.nome || '__________________________________'}</div>
+              <div><strong>CPF/CNPJ:</strong> {remetente.doc || '__________________'}</div>
+              <div><strong>Endereço:</strong> {remetente.endereco || '___________________________'}</div>
+              <div><strong>Bairro:</strong> {remetente.bairro} - <strong>Cidade:</strong> {remetente.cidade}/{remetente.uf}</div>
+              <div><strong>CEP:</strong> {remetente.cep}</div>
+            </div>
+            <div className="space-y-1">
+              <strong className="block border-b border-black pb-0.5 text-[11px] uppercase">DESTINATÁRIO:</strong>
+              <div><strong>Nome:</strong> {destinatario.nome || '__________________________________'}</div>
+              <div><strong>CPF/CNPJ:</strong> {destinatario.doc || '__________________'}</div>
+              <div><strong>Endereço:</strong> {destinatario.endereco || '___________________________'}</div>
+              <div><strong>Bairro:</strong> {destinatario.bairro} - <strong>Cidade:</strong> {destinatario.cidade}/{destinatario.uf}</div>
+              <div><strong>CEP:</strong> {destinatario.cep}</div>
+            </div>
+          </div>
+
+          <div>
+            <strong className="block mb-1 text-[11px] uppercase">IDENTIFICAÇÃO DOS BENS:</strong>
+            <table className="w-full border-collapse border border-black text-[11px]">
+              <thead>
+                <tr className="bg-slate-100 border-b border-black text-left">
+                  <th className="border-r border-black p-1 w-12 text-center">Item</th>
+                  <th className="border-r border-black p-1">Conteúdo</th>
+                  <th className="border-r border-black p-1 w-16 text-center">Quant.</th>
+                  <th className="p-1 w-24 text-right">Valor (R$)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {itens.map((it, i) => (
+                  <tr key={it.id} className="border-b border-black">
+                    <td className="border-r border-black p-1 text-center">{i + 1}</td>
+                    <td className="border-r border-black p-1">{it.conteudo || '-'}</td>
+                    <td className="border-r border-black p-1 text-center">{it.quant}</td>
+                    <td className="p-1 text-right">R$ {(it.quant * it.valor).toFixed(2)}</td>
+                  </tr>
+                ))}
+                <tr className="font-bold bg-slate-50">
+                  <td colSpan={2} className="border-r border-black p-1 text-right">TOTAL:</td>
+                  <td className="border-r border-black p-1 text-center">{totalQuant}</td>
+                  <td className="p-1 text-right">R$ {totalValor.toFixed(2)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="pt-2 text-[10px] text-slate-600 leading-tight">
+            <p><strong>DECLARAÇÃO:</strong> Declaro que não me enquadro no conceito de contribuinte previsto no art. 4º da Lei Complementar nº 87/1996, e que a presente remessa não constitui ato de mercancia comercial ou habitualidade. Declaro ainda que assumo total responsabilidade pela veracidade das informações prestadas.</p>
+          </div>
+
+          <div className="pt-6 flex justify-between items-end text-center">
+            <div>
+              <span className="block border-t border-black w-48 pt-1 text-[11px]">Data: ____ / ____ / 2026</span>
+            </div>
+            <div>
+              <span className="block border-t border-black w-64 pt-1 text-[11px]">Assinatura do Declarante / Remetente</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 19. GERADOR DE PIX COPIA E COLA & QR CODE ESTÁTICO (PADRÃO BANCO CENTRAL EMVCO)
+function GeradorPix() {
+  const [tipoChave, setTipoChave] = useState<'cpf' | 'cnpj' | 'email' | 'telefone' | 'aleatoria'>('cpf');
+  const [chave, setChave] = useState('12345678900');
+  const [nome, setNome] = useState('MARIA DA SILVA');
+  const [cidade, setCidade] = useState('SAO PAULO');
+  const [valor, setValor] = useState<string>('25.00');
+  const [txId, setTxId] = useState('***');
+  const [pixPayload, setPixPayload] = useState('');
+  const [copiado, setCopiado] = useState(false);
+
+  // Helper TLV Format
+  const emv = (id: string, value: string) => {
+    const len = value.length.toString().padStart(2, '0');
+    return `${id}${len}${value}`;
+  };
+
+  // Algoritmo Oficial CRC16 CCITT (0x1021) do Banco Central
+  const crc16 = (str: string): string => {
+    let crc = 0xFFFF;
+    for (let i = 0; i < str.length; i++) {
+      crc ^= (str.charCodeAt(i) << 8);
+      for (let j = 0; j < 8; j++) {
+        if ((crc & 0x8000) !== 0) {
+          crc = ((crc << 1) ^ 0x1021) & 0xFFFF;
+        } else {
+          crc = (crc << 1) & 0xFFFF;
+        }
+      }
+    }
+    return (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
+  };
+
+  // Normalização de Strings para EMVCo
+  const normalizar = (txt: string, maxLen: number) => {
+    return txt
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9 ]/g, '')
+      .toUpperCase()
+      .trim()
+      .slice(0, maxLen);
+  };
+
+  useEffect(() => {
+    if (!chave.trim() || !nome.trim()) {
+      setPixPayload('');
+      return;
+    }
+
+    const chaveTratada = chave.trim();
+    const nomeTratado = normalizar(nome, 25) || 'RECEBEDOR';
+    const cidadeTratada = normalizar(cidade, 15) || 'BRASIL';
+    const txIdTratado = txId.trim() ? normalizar(txId, 25) : '***';
+
+    // Formatação do Merchant Account Information (Tag 26)
+    const gui = emv('00', 'br.gov.bcb.pix');
+    const chaveEmv = emv('01', chaveTratada);
+    const merchantAccount = emv('26', `${gui}${chaveEmv}`);
+
+    let payload = '';
+    payload += emv('00', '01'); // Payload Format Indicator
+    payload += merchantAccount;
+    payload += emv('52', '0000'); // Merchant Category Code
+    payload += emv('53', '986'); // Transaction Currency (BRL)
+
+    const numVal = parseFloat(valor);
+    if (!isNaN(numVal) && numVal > 0) {
+      payload += emv('54', numVal.toFixed(2));
+    }
+
+    payload += emv('58', 'BR'); // Country Code
+    payload += emv('59', nomeTratado); // Merchant Name
+    payload += emv('60', cidadeTratada); // Merchant City
+
+    // Additional Data Field Template (Tag 62)
+    const txIdEmv = emv('05', txIdTratado);
+    payload += emv('62', txIdEmv);
+
+    // CRC16 Checksum (Tag 63)
+    const payloadSemCrc = `${payload}6304`;
+    const checksum = crc16(payloadSemCrc);
+    setPixPayload(`${payloadSemCrc}${checksum}`);
+  }, [chave, nome, cidade, valor, txId]);
+
+  const copiarPix = () => {
+    if (pixPayload) {
+      navigator.clipboard.writeText(pixPayload);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2500);
+    }
+  };
+
+  const qrCodeUrl = pixPayload 
+    ? `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(pixPayload)}`
+    : '';
+
+  return (
+    <div className="space-y-6" id="ger-pix-oficial">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Gerador de PIX Copia e Cola & QR Code Estático</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Crie cobranças instantâneas no padrão oficial BR Code do Banco Central (EMVCo) de forma 100% segura no seu navegador.</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Tipo de Chave PIX</label>
+              <select className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs font-bold" value={tipoChave} onChange={(e) => setTipoChave(e.target.value as any)}>
+                <option value="cpf">CPF</option>
+                <option value="cnpj">CNPJ</option>
+                <option value="email">E-mail</option>
+                <option value="telefone">Telefone Celular</option>
+                <option value="aleatoria">Chave Aleatória (EVP)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Chave PIX</label>
+              <input type="text" placeholder="Digite sua chave" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs font-mono" value={chave} onChange={(e) => setChave(e.target.value)} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Nome do Titular da Conta</label>
+              <input type="text" placeholder="Ex: JOAO DA SILVA" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs uppercase" value={nome} onChange={(e) => setNome(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Cidade da Conta</label>
+              <input type="text" placeholder="Ex: SAO PAULO" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs uppercase" value={cidade} onChange={(e) => setCidade(e.target.value)} />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Valor da Cobrança em R$ (Opcional)</label>
+              <input type="number" step="0.01" placeholder="0,00 para valor livre" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs font-mono" value={valor} onChange={(e) => setValor(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Identificador TxID (Opcional)</label>
+              <input type="text" placeholder="Ex: FATURA102" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs font-mono" value={txId} onChange={(e) => setTxId(e.target.value)} />
+            </div>
+          </div>
+        </div>
+
+        {/* QR Code e Copia e Cola Display */}
+        <div className="flex flex-col items-center justify-center p-6 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-750 text-center space-y-4">
+          {qrCodeUrl ? (
+            <>
+              <div className="bg-white p-3 rounded-2xl shadow-sm border border-slate-200">
+                <img src={qrCodeUrl} alt="QR Code PIX Banco Central" className="w-48 h-48 rounded" referrerPolicy="no-referrer" />
+              </div>
+              <div className="text-xs text-slate-500 font-bold">
+                {parseFloat(valor) > 0 ? `Cobrança de R$ ${parseFloat(valor).toFixed(2)}` : 'Cobrança com valor aberto (digitado pelo pagador)'}
+              </div>
+            </>
+          ) : (
+            <span className="text-xs text-slate-400">Preencha sua Chave PIX e Nome para gerar o QR Code</span>
+          )}
+        </div>
+      </div>
+
+      {/* Código Copia e Cola */}
+      {pixPayload && (
+        <div className="bg-emerald-50 dark:bg-emerald-950/30 p-5 rounded-2xl border border-emerald-300 dark:border-emerald-800 space-y-2">
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-black uppercase text-emerald-900 dark:text-emerald-300">🔑 Código PIX Copia e Cola (BR Code)</span>
+            <span className="text-[10px] font-mono text-slate-500">CRC16: {pixPayload.slice(-4)}</span>
+          </div>
+          <div className="flex gap-2">
+            <textarea readOnly rows={2} className="flex-1 bg-white dark:bg-slate-900 border border-emerald-300 dark:border-emerald-700 rounded-xl p-2.5 text-xs font-mono text-slate-800 dark:text-slate-200 outline-none" value={pixPayload} />
+            <button onClick={copiarPix} type="button" className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black tracking-wide shadow transition cursor-pointer flex items-center justify-center">
+              {copiado ? 'Copiado! ✅' : 'Copiar'}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 20. GERADOR DE CONTRATO DE LOCAÇÃO RESIDENCIAL SIMPLES
+function GeradorContratoLocacao() {
+  const [locador, setLocador] = useState({
+    nome: 'ANTÔNIO MARCOS DA COSTA',
+    nacionalidade: 'brasileiro',
+    estadoCivil: 'casado',
+    profissao: 'Engenheiro Civil',
+    cpf: '111.222.333-44',
+    rg: '12.345.678-9 SSP/SP',
+    endereco: 'Rua Bela Cintra, 800, Consolação, São Paulo/SP'
+  });
+
+  const [locatario, setLocatario] = useState({
+    nome: 'BEATRIZ NOGUEIRA ALVES',
+    nacionalidade: 'brasileira',
+    estadoCivil: 'solteira',
+    profissao: 'Arquiteta',
+    cpf: '555.666.777-88',
+    rg: '98.765.432-1 SSP/SP'
+  });
+
+  const [imovel, setImovel] = useState('Apartamento nº 104 do Edifício Solar, situado na Rua das Palmeiras, nº 250, Bairro Jardim América, São Paulo/SP, CEP 01410-000');
+  const [aluguel, setAluguel] = useState(2500);
+  const [diaVencimento, setDiaVencimento] = useState(10);
+  const [prazoMeses, setPrazoMeses] = useState(30);
+  const [dataInicio, setDataInicio] = useState(() => new Date().toISOString().split('T')[0]);
+  const [garantiaTipo, setGarantiaTipo] = useState<'caucao' | 'fiador' | 'sem_garantia'>('caucao');
+  const [caucaoMeses, setCaucaoMeses] = useState(3);
+  const [reajuste, setReajuste] = useState('IPCA/IBGE');
+
+  const [copiado, setCopiado] = useState(false);
+
+  const formatDataBr = (dateStr: string) => {
+    if (!dateStr) return '';
+    const [y, m, d] = dateStr.split('-');
+    return `${d}/${m}/${y}`;
+  };
+
+  const textoContrato = `CONTRATO DE LOCAÇÃO DE IMÓVEL RESIDENCIAL
+
+LOCADOR(A): ${locador.nome}, ${locador.nacionalidade}, ${locador.estadoCivil}, ${locador.profissao}, portador(a) do RG nº ${locador.rg} e inscrito(a) no CPF sob o nº ${locador.cpf}, residente e domiciliado(a) na ${locador.endereco}.
+
+LOCATÁRIO(A): ${locatario.nome}, ${locatario.nacionalidade}, ${locatario.estadoCivil}, ${locatario.profissao}, portador(a) do RG nº ${locatario.rg} e inscrito(a) no CPF sob o nº ${locatario.cpf}.
+
+As partes acima qualificadas celebram o presente Contrato de Locação Residencial, regido pela Lei Federal nº 8.245/1991 (Lei do Inquilinato) e Código Civil, mediante as seguintes cláusulas:
+
+CLÁUSULA 1ª - DO OBJETO: O LOCADOR dá em locação ao LOCATÁRIO o imóvel residencial de sua propriedade situado no seguinte endereço: ${imovel}, destinado exclusivamente para fins de moradia do LOCATÁRIO e sua família.
+
+CLÁUSULA 2ª - DO PRAZO: A locação é celebrada pelo prazo determinado de ${prazoMeses} (trinta) meses, iniciando-se em ${formatDataBr(dataInicio)} e terminando de pleno direito ao término do período, oportunidade em que o LOCATÁRIO se obriga a restituir o imóvel desocupado.
+
+CLÁUSULA 3ª - DO VALOR DO ALUGUEL E REAJUSTE: O valor mensal da locação é fixado em R$ ${aluguel.toFixed(2)} (dois mil e quinhentos reais), a ser pago pontualmente até o dia ${diaVencimento} de cada mês subsequente ao vencido.
+Parágrafo Primeiro: O aluguel será reajustado anualmente com base na variação acumulada do índice ${reajuste}, ou na falta deste, pelo índice oficial substituto legal.
+
+CLÁUSULA 4ª - DA MORA E PENALIDADES: O não pagamento do aluguel na data estipulada acarretará a incidência de multa moratória de 10% (dez por cento) sobre o débito, juros de mora de 1% (um por cento) ao mês e correção monetária até a data da efetiva quitação.
+
+CLÁUSULA 5ª - DAS DESPESAS E ENCARGOS: Além do aluguel, caberá ao LOCATÁRIO o pagamento das cotas ordinárias de condomínio, IPTU, consumo de água, energia elétrica, gás e taxas municipais que incidirem sobre o imóvel durante a vigência da locação.
+
+CLÁUSULA 6ª - DA CONSERVAÇÃO E VISTORIA: O LOCATÁRIO declara receber o imóvel em perfeito estado de habitabilidade, conservação, pintura e higiene, conforme Laudo de Vistoria em anexo, comprometendo-se a devolvê-lo nas mesmas condições.
+
+CLÁUSULA 7ª - DA GARANTIA LOCATÍCIA: ${
+  garantiaTipo === 'caucao' 
+    ? `Como garantia do fiel cumprimento das obrigações locatícias, o LOCATÁRIO deposita neste ato em favor do LOCADOR a quantia de R$ ${(aluguel * caucaoMeses).toFixed(2)}, correspondente a ${caucaoMeses} (três) meses de aluguel, a título de CAUÇÃO EM DINHEIRO (Art. 38, § 2º da Lei 8.245/91), a ser restituída corrigida ao final da locação se não houver débitos pendentes.` 
+    : garantiaTipo === 'fiador' 
+    ? `A presente locação é garantida por FIADOR idôneo e solidariamente responsável por todas as obrigações pactuadas até a efetiva devolução das chaves.` 
+    : `A presente locação é contratada SEM MODALIDADE DE GARANTIA, facultando-se ao LOCADOR a cobrança antecipada do aluguel nos termos do Art. 42 da Lei 8.245/91.`
+}
+
+CLÁUSULA 8ª - DO FORO: As partes elegem o Foro da Comarca da situação do imóvel para dirimir quaisquer dúvidas ou litígios oriundos do presente contrato, com renúncia expressa a qualquer outro.
+
+E, por estarem justos e contratados, assinam o presente instrumento em 02 (duas) vias de igual teor e forma, na presença de 02 (duas) testemunhas.
+
+Local e Data: ______________________________, _____ de ____________________ de 2026.
+
+
+_____________________________________________
+LOCADOR(A): ${locador.nome}
+
+
+_____________________________________________
+LOCATÁRIO(A): ${locatario.nome}
+
+
+TESTEMUNHAS:
+
+1. ______________________________________    2. ______________________________________
+   Nome:                                        Nome:
+   CPF:                                         CPF:
+`;
+
+  const copiarTexto = () => {
+    navigator.clipboard.writeText(textoContrato);
+    setCopiado(true);
+    setTimeout(() => setCopiado(false), 2500);
+  };
+
+  const imprimir = () => {
+    window.print();
+  };
+
+  return (
+    <div className="space-y-6" id="ger-contrato-locacao">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Gerador de Contrato de Locação Residencial Simples</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Minuta formal completa baseada na Lei do Inquilinato (Lei nº 8.245/91) e Código Civil.</p>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={copiarTexto} type="button" className="px-3 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-100 rounded-xl text-xs font-bold transition cursor-pointer">
+            {copiado ? 'Texto Copiado! ✅' : '📋 Copiar Texto'}
+          </button>
+          <button onClick={imprimir} type="button" className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black tracking-wide shadow transition cursor-pointer flex items-center gap-1">
+            🖨️ Imprimir A4
+          </button>
+        </div>
+      </div>
+
+      {/* Formulário de Configuração */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 space-y-3">
+          <h3 className="text-xs font-black uppercase tracking-wide text-slate-700 dark:text-slate-200 border-b pb-1">1. Locador (Proprietário)</h3>
+          <div>
+            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Nome do Locador</label>
+            <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={locador.nome} onChange={(e) => setLocador({ ...locador, nome: e.target.value })} />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">CPF do Locador</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={locador.cpf} onChange={(e) => setLocador({ ...locador, cpf: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">RG do Locador</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={locador.rg} onChange={(e) => setLocador({ ...locador, rg: e.target.value })} />
+            </div>
+          </div>
+        </div>
+
+        <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 space-y-3">
+          <h3 className="text-xs font-black uppercase tracking-wide text-slate-700 dark:text-slate-200 border-b pb-1">2. Locatário (Inquilino)</h3>
+          <div>
+            <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Nome do Inquilino</label>
+            <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={locatario.nome} onChange={(e) => setLocatario({ ...locatario, nome: e.target.value })} />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">CPF do Inquilino</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={locatario.cpf} onChange={(e) => setLocatario({ ...locatario, cpf: e.target.value })} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">RG do Inquilino</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={locatario.rg} onChange={(e) => setLocatario({ ...locatario, rg: e.target.value })} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750">
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Valor do Aluguel (R$)</label>
+          <input type="number" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-mono" value={aluguel} onChange={(e) => setAluguel(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Dia do Vencimento</label>
+          <input type="number" min={1} max={31} className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-mono" value={diaVencimento} onChange={(e) => setDiaVencimento(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Prazo de Locação</label>
+          <select className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={prazoMeses} onChange={(e) => setPrazoMeses(Number(e.target.value))}>
+            <option value={12}>12 Meses (1 Ano)</option>
+            <option value={24}>24 Meses (2 Anos)</option>
+            <option value={30}>30 Meses (Padrão Denúncia Vazia)</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Modalidade de Garantia</label>
+          <select className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={garantiaTipo} onChange={(e) => setGarantiaTipo(e.target.value as any)}>
+            <option value="caucao">Caução em Dinheiro (3 meses)</option>
+            <option value="fiador">Fiador Solidário</option>
+            <option value="sem_garantia">Sem Garantia (Pagto Antecipado)</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Visualizador de Contrato */}
+      <div className="bg-white border-2 border-slate-300 rounded-xl p-6 text-slate-900 shadow-sm print:m-0 print:p-0 print:border-none print:shadow-none">
+        <pre className="font-serif text-xs leading-relaxed whitespace-pre-wrap text-slate-800">
+          {textoContrato}
+        </pre>
+      </div>
+    </div>
+  );
+}
+

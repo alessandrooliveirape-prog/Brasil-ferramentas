@@ -2505,6 +2505,312 @@ export const TOOLS: ToolMetadata[] = [
     relatedToolIds: ['contador-caracteres', 'cronometro', 'removedor-espacos'],
     slug: 'teste-de-velocidade-de-digitacao'
   },
+  {
+    id: 'alcool-ou-gasolina',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Álcool ou Gasolina (Simulador Flex)',
+    shortDescription: 'Descubra se vale mais a pena abastecer com etanol ou gasolina pela regra dos 70% ou pelo consumo real (km/l) do seu carro.',
+    longIntro: 'Com a oscilação constante nos preços dos combustíveis nos postos brasileiros, proprietários de veículos Flex precisam tomar decisões rápidas na hora de abastecer. A Calculadora de Álcool ou Gasolina da Tool Brasil analisa o custo por litro, compara a relação percentual entre os combustíveis e permite simular com o consumo real em km/l do seu automóvel para calcular a economia exata no tanque e o custo por quilômetro rodado.',
+    howItWorks: 'Informe o preço do litro do Etanol (álcool) e da Gasolina. Por padrão, a calculadora aplica a regra clássica de paridade energética (70%), onde o etanol é vantajoso se seu preço for inferior a 70% do valor da gasolina. Você também pode ativar o modo de Consumo Real para informar os km/l do seu carro no etanol e na gasolina, obtendo o custo exato em R$/km e a economia real por tanque cheio.',
+    faqs: [
+      { question: 'Por que a regra tradicional usa o percentual de 70%?', answer: 'O etanol hidratado possui cerca de 30% a menos de poder calorífico (energia por litro) que a gasolina comum tipo C. Portanto, quando o preço do álcool for até 70% do preço da gasolina, o custo energético por quilômetro rodado tende a se equiparar.' },
+      { question: 'A regra dos 70% ainda vale para motores modernos e turbo flex?', answer: 'Motores flex modernos com injeção direta e turbocompressor possuem taxa de compressão e gerenciamento eletrônico otimizados que podem elevar a eficiência do etanol para 73% a 75%. Por isso, a simulação por consumo real em km/l é a mais precisa.' },
+      { question: 'Posso misturar álcool e gasolina no tanque?', answer: 'Sim. Em carros com motor bicombustível (Flex), o módulo de injeção eletrônica reconhece qualquer proporção de mistura de combustíveis através da sonda lambda no escapamento.' },
+      { question: 'O etanol limpa os bicos injetores do motor?', answer: 'O etanol possui propriedades solventes que auxiliam a evitar a formação de carbonização na câmara de combustão, mas deve-se sempre utilizar combustível de postos de confiança e certificados pela ANP.' }
+    ],
+    tips: [
+      'Anote a média de consumo real do seu painel (km/l) com tanque cheio de etanol e depois com gasolina na mesma rota para ter a precisão exata.',
+      'Em dias frios abaixo de 15°C, manter um percentual de gasolina no tanque facilita a partida a frio em carros que não possuem pré-aquecimento de bicos.',
+      'Considere também o tempo gasto e paradas extras no posto: como o etanol tem menor autonomia, você visitará o posto com maior frequência.'
+    ],
+    relatedToolIds: ['consumo-combustivel', 'preco-por-km', 'regra-de-tre'],
+    slug: 'calculadora-de-alcool-ou-gasolina'
+  },
+  {
+    id: 'dsr',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de DSR (Descanso Semanal Remunerado)',
+    shortDescription: 'Calcule o reflexo do DSR sobre horas extras, adicional noturno e comissões com base na Lei nº 605/49 e Súmula 172 do TST.',
+    longIntro: 'O Descanso Semanal Remunerado (DSR) é um direito fundamental garantido pela Constituição Federal e pela Lei Federal nº 605/1949 a todos os trabalhadores sob regime CLT. Sempre que o funcionário realiza horas extras, trabalha em horário noturno ou recebe comissões variáveis, esses adicionais geram um reflexo financeiro obrigatório sobre o repouso remunerado semanal (domingos e feriados). A Calculadora de DSR da Tool Brasil automatiza esse cálculo trabalhista de forma rápida e transparente.',
+    howItWorks: 'Informe o total de horas extras em reais (ou informe o salário base e horas trabalhadas), o número de dias úteis do mês (segunda a sábado) e a quantidade de domingos e feriados no período apurado. A fórmula oficial aplicada é: DSR = (Valor Total das Horas Extras / Dias Úteis) x Domingos e Feriados.',
+    faqs: [
+      { question: 'O que é o DSR sobre horas extras?', answer: 'O DSR (Descanso Semanal Remunerado) sobre horas extras é o pagamento proporcional aos dias de repouso remunerado referente às horas suplementares trabalhadas no decorrer do mês, conforme a Súmula nº 172 do Tribunal Superior do Trabalho (TST).' },
+      { question: 'O sábado conta como dia útil no cálculo do DSR?', answer: 'Sim. Pela legislação trabalhista padrão e jurisprudência do TST, o sábado é considerado dia útil não trabalhado para fins de cálculo de DSR, a menos que convenção coletiva determine expressamente o sábado como dia de repouso.' },
+      { question: 'O DSR reflete em outras verbas rescisórias e férias?', answer: 'Sim. O DSR integrará a base de cálculo para a média de 13º salário, férias remuneradas acrescidas de 1/3 constitucional e depósitos do FGTS.' },
+      { question: 'Qual a recente decisão do TST sobre o DSR (Tema Repetitivo nº 9)?', answer: 'O TST decidiu que a majoração do DSR decorrente de horas extras habituais passa a refletir no cálculo de férias, 13º salário, aviso prévio e FGTS para horas extras prestadas a partir de 20 de março de 2023, sem configurar bis in idem.' }
+    ],
+    tips: [
+      'Lembre-se de somar feriados nacionais, estaduais e municipais que caiam entre segunda e sábado na contagem de dias de descanso.',
+      'Se o trabalhador recebe comissões variáveis, o cálculo do DSR sobre as comissões segue a mesma proporção de dias úteis e repousos.',
+      'Sempre confira a convenção coletiva da sua categoria para verificar se há regras específicas de dias úteis e sábados.'
+    ],
+    relatedToolIds: ['hora-extra', 'horas-trabalhadas', 'salario-liquido', 'rescisao'],
+    slug: 'calculadora-de-dsr'
+  },
+  {
+    id: 'adicional-noturno',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Adicional Noturno CLT',
+    shortDescription: 'Simule o adicional noturno urbano (20%) e rural (25%), a redução da hora ficta de 52min30s (Art. 73 CLT) e o reflexo salarial.',
+    longIntro: 'Trabalhar em período noturno exige maior desgaste biológico e adaptação do organismo. Por essa razão, a Consolidação das Leis do Trabalho (CLT) estipula compensações financeiras e temporais específicas através do Adicional Noturno. A Calculadora de Adicional Noturno da Tool Brasil aplica a redução da hora noturna ficta (52 minutos e 30 segundos para trabalhadores urbanos) e calcula com exatidão o acréscimo de 20% (urbano) ou 25% (rural) sobre a hora normal de trabalho.',
+    howItWorks: 'Preencha o salário base mensal, a jornada mensal de trabalho (normalmente 220 horas para regime de 44h semanais) e o número de horas de relógio trabalhadas no período noturno (das 22h às 05h). A calculadora converte as horas de relógio pelo fator multiplicador da hora ficta (60 / 52,5 = 1,142857) e aplica o adicional de 20% ou 25%, exibindo o valor unitário da hora noturna e o total do benefício.',
+    faqs: [
+      { question: 'Qual o horário considerado noturno pela CLT?', answer: 'Para trabalhadores urbanos, o trabalho noturno é aquele realizado entre as 22h de um dia e as 5h do dia seguinte. Na atividade rural de lavoura/agricultura, é das 21h às 5h; na pecuária, é das 20h às 4h.' },
+      { question: 'O que é a hora noturna reduzida (ficta)?', answer: 'No trabalho urbano, a hora noturna é computada como tendo 52 minutos e 30 segundos. Isso significa que 7 horas de relógio (das 22h às 5h) equivalem juridicamente a 8 horas normais de trabalho (fator de 1,142857).' },
+      { question: 'O que acontece se a jornada iniciada à noite se prolongar após as 5h da manhã?', answer: 'Pela Súmula 60, inciso II, do TST, cumprida integralmente a jornada no período noturno e prorrogada esta, devido é também o adicional quanto às horas prorrogadas.' },
+      { question: 'O adicional noturno integra a base de cálculo do FGTS e INSS?', answer: 'Sim. O adicional noturno possui natureza estritamente salarial, incidindo FGTS, INSS, IRRF e refletindo no 13º salário, férias com 1/3 e aviso prévio indenizado.' }
+    ],
+    tips: [
+      'Para saber o valor da sua hora normal, divida o salário bruto pela carga horária mensal (ex: R$ 3.000 / 220 = R$ 13,63/hora).',
+      'Não se esqueça que sobre o adicional noturno também incide o DSR (Descanso Semanal Remunerado).',
+      'Verifique se a convenção coletiva do seu sindicato estipula percentual superior aos 20% mínimos da lei (algumas categorias pagam 25%, 30% ou mais).'
+    ],
+    relatedToolIds: ['dsr', 'hora-extra', 'salario-liquido', 'horas-trabalhadas'],
+    slug: 'calculadora-de-adicional-noturno'
+  },
+  {
+    id: 'salario-proporcional',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Salário Proporcional',
+    shortDescription: 'Calcule o valor exato do salário por dias trabalhados na admissão, demissão ou afastamentos pelo mês comercial ou dias corridos.',
+    longIntro: 'Quando um profissional é admitido na empresa no meio do mês, pede demissão antes do fechamento do período ou tira uma licença/afastamento, a remuneração devida deve ser apurada proporcionalmente aos dias efetivamente trabalhados. A Calculadora de Salário Proporcional da Tool Brasil permite efetuar o cálculo tanto pelo critério do mês comercial de 30 dias (padrão CLT) quanto pelo critério de dias corridos do mês civil (28, 29, 30 ou 31 dias).',
+    howItWorks: 'Informe o salário bruto contratual, o mês e ano de referência e o número de dias trabalhados no período. A ferramenta divide o salário pelo número de dias (30 dias no padrão comercial ou dias reais do mês selecionado) e multiplica pelos dias trabalhados, apresentando também a estimativa de descontos previdenciários (INSS) e o valor líquido a receber.',
+    faqs: [
+      { question: 'Como é calculada a fração de salário proporcional no mês de 31 dias?', answer: 'Conforme o Artigo 64 da CLT, o salário dos mensalistas é baseado em 30 dias para efeitos legais. No entanto, para fins de admissão e demissão em meses com 31 dias ou em fevereiro (28/29 dias), o Ministério do Trabalho e a jurisprudência recomendam utilizar o número real de dias do mês civil para que o empregado não seja prejudicado.' },
+      { question: 'Quem é admitido no dia 1º de um mês com 31 dias recebe por 30 ou 31 dias?', answer: 'Se o empregado trabalhou o mês integral, o mensalista recebe o salário integral fechado pactuado no contrato de trabalho, independentemente de o mês ter 28, 30 ou 31 dias.' },
+      { question: 'O DSR está incluído no salário proporcional do mensalista?', answer: 'Sim. No salário do empregado mensalista, os descansos semanais remunerados (domingos e feriados) já estão embutidos na remuneração mensal e são pagos proporcionalmente aos dias de vínculo.' }
+    ],
+    tips: [
+      'Na rescisão de contrato de trabalho, o aviso prévio proporcional indenizado adiciona 3 dias por ano completo de serviço prestado.',
+      'Sempre confira os comprovantes de ponto e data exata de início anotada na Carteira de Trabalho Digital.',
+      'Para apurar o holerite completo com horas extras e outros adicionais, use nossa Calculadora de Salário Líquido completa.'
+    ],
+    relatedToolIds: ['salario-liquido', 'rescisao', 'inss', 'decimo-terceiro'],
+    slug: 'calculadora-de-salario-proporcional'
+  },
+  {
+    id: 'ovulacao-periodo-fertil',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Ovulação e Período Fértil',
+    shortDescription: 'Descubra a data provável da ovulação, os dias de maior fertilidade para engravidar e a data ideal para realizar o teste de gravidez.',
+    longIntro: 'O planejamento reprodutivo — seja para quem sonha em engravidar ou para quem busca conhecer melhor o funcionamento do próprio corpo — depende do entendimento das fases do ciclo menstrual feminino. A Calculadora de Ovulação e Período Fértil da Tool Brasil utiliza a metodologia do cálculo ginecológico clássico (Ogino-Knaus / FEBRASGO) para prever o dia em que o óvulo é liberado, a janela fértil de alta fecundidade e a data provável do próximo ciclo.',
+    howItWorks: 'Insira a data do primeiro dia da sua última menstruação (DUM) e a duração média do seu ciclo menstrual (geralmente entre 26 e 32 dias, com média de 28 dias). Em um ciclo regular, a ovulação ocorre aproximadamente 14 dias antes da próxima menstruação. A janela fértil abrange os 5 dias que antecedem a ovulação, o próprio dia fértil e o dia seguinte.',
+    faqs: [
+      { question: 'Quanto tempo os espermatozoides e o óvulo sobrevivem no corpo feminino?', answer: 'Os espermatozoides podem sobreviver no muco cervical fértil e trato reprodutivo feminino por até 5 dias (120 horas). O óvulo humano, após ser liberado pelo ovário, sobrevive por apenas 12 a 24 horas. Por isso a janela fértil começa dias antes da ovulação.' },
+      { question: 'Quais são os principais sintomas do período fértil?', answer: 'Os sinais corporais mais comuns incluem presença de muco cervical com textura elástica e transparente (semelhante a clara de ovo), aumento sutil da temperatura corporal basal (cerca de 0,3°C a 0,5°C), aumento da libido e leve pontada abdominal no lado do ovário que ovulou.' },
+      { question: 'A calculadora de ovulação serve como método anticoncepcional (tabelinha)?', answer: 'Não. Variações hormonais, estresse, viagens e alterações de sono podem antecipar ou atrasar a ovulação. A tabelinha isolada possui alta taxa de falha (cerca de 24% ao ano) e não substitui métodos contraceptivos médicos como preservativos, DIU ou pílula.' },
+      { question: 'Quando devo fazer o teste de gravidez (Beta hCG de farmácia)?', answer: 'O momento ideal para realizar o teste de gravidez de urina com alta precisão é a partir do primeiro dia de atraso menstrual da data esperada para a próxima menstruação.' }
+    ],
+    tips: [
+      'Mantenha um registro de pelo menos 3 a 6 meses do seu ciclo menstrual para identificar se ele é regular ou possui variações.',
+      'Acompanhar o muco cervical em conjunto com testes rápidos de ovulação de farmácia (tiras de LH) aumenta a precisão para casais tentantes.',
+      'Consulte sempre seu médico ginecologista e obstetra para exames pré-concepcionais e suplementação de ácido fólico antes de engravidar.'
+    ],
+    relatedToolIds: ['gestacao', 'idade', 'dias-entre-datas'],
+    slug: 'calculadora-de-ovulacao-e-periodo-fertil'
+  },
+  {
+    id: 'calculadora-tinta',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Tinta para Paredes e Teto',
+    shortDescription: 'Calcule a quantidade exata de litros, galões e latas de tinta para sua pintura residencial, descontando portas e janelas.',
+    longIntro: 'Pintar uma sala, quarto ou fachada exige planejamento para evitar comprar tinta em excesso (desperdiçando dinheiro) ou em falta (interrompendo a pintura e correndo o risco de diferença de lote de cor). A Calculadora de Tinta e Pintura da Tool Brasil calcula a metragem quadrada total das superfícies, desconta vãos de portas e janelas e converte os litros necessários para os tamanhos padrão de embalagens vendidos no Brasil.',
+    howItWorks: 'Informe a largura, o comprimento e o pé-direito (altura) do cômodo, selecione se irá pintar o teto e indique a quantidade de portas e janelas existentes. Escolha o número de demãos (geralmente 2 ou 3 para cobertura uniforme) e o rendimento da tinta (padrão de 10 m²/litro por demão para tintas acrílicas/látex standard). A calculadora entrega a metragem líquida e a quantidade sugerida de latas de 18L, galões de 3,6L e quartos de 900ml.',
+    faqs: [
+      { question: 'Quantas demãos de tinta são necessárias para uma boa cobertura?', answer: 'Geralmente são recomendadas 2 demãos para repintura de superfícies com cores semelhantes e 3 demãos para paredes novas ou quando há mudança de cor escura para clara.' },
+      { question: 'Qual a diferença entre lata (18L), galão (3,6L) e quarto (900ml)?', answer: 'No padrão brasileiro da ABNT para embalagens de tintas imobiliárias: Lata = 18 Litros (grandes áreas); Galão = 3,6 Litros (cômodos médios/pequenos); Quarto = 0,9 Litros ou 900ml (retoques e acabamentos).' },
+      { question: 'É necessário aplicar selador ou fundo preparador antes da tinta?', answer: 'Sim. Em paredes novas de reboco ou gesso/drywall, o selador ou fundo preparador uniformiza a absorção da parede, evitando manchas e reduzindo o consumo de tinta em até 30% a 40%.' }
+    ],
+    tips: [
+      'Compre sempre tintas do mesmo lote de fabricação para evitar sutis variações de tonalidade entre as paredes.',
+      'Adicione uma margem de segurança de 10% sobre o volume total calculado para cobrir perdas no rolo, trincha e eventuais retoques futuros.',
+      'Prepare bem a superfície: limpe a poeira, lixe imperfeições e corrija buracos com massa corrida (áreas internas) ou massa acrílica (áreas externas/úmidas).'
+    ],
+    relatedToolIds: ['calculadora-piso', 'regra-de-tre', 'metros-para-pes'],
+    slug: 'calculadora-de-tinta-e-pintura'
+  },
+  {
+    id: 'calculadora-piso',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Piso, Revestimento e Porcelanato',
+    shortDescription: 'Calcule a metragem em m² de pisos e azulejos, a margem técnica de perdas e recortes e a quantidade exata de caixas a comprar.',
+    longIntro: 'Durante reformas e obras de construção civil, o assentamento de pisos cerâmicos, porcelanatos, azulejos e laminados exige o cálculo minucioso da área útil e uma margem técnica de segurança para recortes, rodapés e quebras. A Calculadora de Piso e Revestimento da Tool Brasil informa a área real do ambiente, a área com tolerância de perda e converte o resultado em caixas fechadas segundo a especificação do fabricante.',
+    howItWorks: 'Insira a largura e o comprimento do ambiente (em metros) ou a área total direta em m². Selecione o tipo de assentamento (10% de perda para assentamento reto tradicional, 15% para assentamento diagonal ou peças grandes/retificadas, e 20% para paginações especiais/espinha de peixe). Insira a metragem por caixa informada na embalagem (ex: 1,44 m² ou 2,16 m²) para saber o total exato de caixas.',
+    faqs: [
+      { question: 'Por que é obrigatório comprar uma porcentagem a mais de piso?', answer: 'Durante a instalação ocorrem cortes nas extremidades das paredes, em torno de ralos, portas e quinas, além do risco de quebra no transporte e assentamento. Sem essa sobra, você corre o risco de faltar piso e não encontrar o mesmo lote/tonalidade na loja.' },
+      { question: 'Qual a margem recomendada para porcelanato de grande formato?', answer: 'Para porcelanatos grandes (ex: 80x80cm, 90x90cm ou 120x120cm) ou assentamentos na diagonal, recomenda-se uma margem de perda entre 12% e 15%, devido ao maior desperdício em cada corte.' },
+      { question: 'Como calcular o rodapé com o mesmo piso?', answer: 'Meça o perímetro do ambiente (soma de todas as paredes) menos a largura das portas. Se o rodapé for de 10cm, cada metro linear de piso cortado rende até 5 a 6 tiras de rodapé.' }
+    ],
+    tips: [
+      'Guarde sempre 1 caixa fechada de sobra do mesmo piso em casa após a obra para futuras reformas ou substituição em caso de manutenção hidráulica.',
+      'Verifique se a argamassa e o rejunte escolhidos são adequados ao tipo de piso (AC-I para cerâmicas internas, AC-II para áreas externas/piscinas e AC-III para grandes porcelanatos).',
+      'Confira o nível do contrapiso antes de iniciar o assentamento para economizar no consumo de argamassa colante.'
+    ],
+    relatedToolIds: ['calculadora-tinta', 'regra-de-tre', 'metros-para-pes'],
+    slug: 'calculadora-de-piso-e-revestimento'
+  },
+  {
+    id: 'agua-diaria',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Consumo de Água Diária por Peso',
+    shortDescription: 'Descubra a quantidade ideal de água em litros e copos que você deve beber por dia segundo seu peso, atividade e clima.',
+    longIntro: 'Manter o corpo devidamente hidratado é crucial para o bom funcionamento dos rins, regulação da temperatura corporal, digestão, circulação sanguínea e disposição diária. A regra popular genérica de "tomar 2 litros por dia" não leva em conta o peso corporal, taxa metabólica e o nível de esforço físico de cada indivíduo. A Calculadora de Água Diária da Tool Brasil aplica a recomendação médica da Organização Mundial da Saúde (OMS) adaptada ao seu perfil.',
+    howItWorks: 'Informe seu peso atual em quilogramas (kg), selecione a intensidade das suas atividades físicas diárias e o clima predominante da sua região. A fórmula base da OMS multiplica o peso corporal por 35 ml/kg para adultos saudáveis, ajustando para 40 a 45 ml/kg em praticantes de exercícios ou climas quentes. O resultado detalha a meta diária em litros, mililitros e o equivalente em copos de 200ml, 250ml e garrafas de 500ml.',
+    faqs: [
+      { question: 'Por que o cálculo de água é proporcional ao peso?', answer: 'Cerca de 60% da massa corporal de um adulto é composta por água. Uma pessoa de 50 kg possui demanda metabólica e volume de circulação muito diferente de uma pessoa de 90 kg; portanto, a ingestão hídrica deve ser individualizada.' },
+      { question: 'Café, sucos e chás contam na meta diária de água?', answer: 'Líquidos saudáveis como água de coco e chás claros contribuem para a hidratação, mas a água pura filtrada deve corresponder à maior parte do consumo diário. Bebidas açucaradas ou com cafeína em excesso possuem efeito diurético.' },
+      { question: 'Como saber se estou bem hidratado pela cor da urina?', answer: 'A urina de uma pessoa bem hidratada deve ser clara, límpida e em tom amarelo-palha suave. Se estiver amarelo-escuro ou alaranjada, seu corpo está sinalizando necessidade urgente de água.' }
+    ],
+    tips: [
+      'Tenha uma garrafa reutilizável de 500ml ou 750ml sempre na sua mesa de trabalho para acompanhar o progresso das metas durante o dia.',
+      'Beba um copo de água (250ml) logo ao acordar para reidratar o organismo após as horas de sono e ativar o sistema digestivo.',
+      'Não espere sentir sede para beber água: a sede já é um sinal precoce de que seu corpo iniciou o processo de desidratação celular.'
+    ],
+    relatedToolIds: ['imc', 'tmb', 'calorias-diarias'],
+    slug: 'calculadora-de-consumo-de-agua-diaria'
+  },
+  {
+    id: 'ponto-banco-horas',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Ponto e Banco de Horas Diário',
+    shortDescription: 'Controle os horários de entrada, almoço e saída, calcule o total de horas trabalhadas e apure o saldo diário de horas extras ou negativas.',
+    longIntro: 'O controle rigoroso do registro de ponto é indispensável tanto para trabalhadores acompanharem seus holerites quanto para empresas cumprirem a legislação trabalhista da CLT. A Calculadora de Ponto e Banco de Horas da Tool Brasil permite lançar os 4 horários diários de batida (entrada da manhã, saída para almoço, retorno do almoço e saída da tarde), calculando o total trabalhado, o tempo de intervalo e o saldo (positivo ou negativo) frente à jornada contratada.',
+    howItWorks: 'Preencha as 4 marcações de horário no formato HH:MM (ex: Entrada 08:00, Almoço 12:00, Retorno 13:00, Saída 17:48) e selecione a sua jornada de trabalho diária contratada (ex: 8 horas para regimes de 40h semanais ou 8h48min para regimes de 44h de segunda a sexta). A ferramenta desconta o intervalo, calcula o total de horas líquidas e exibe o saldo de minutos excedentes (horas extras) ou faltantes.',
+    faqs: [
+      { question: 'Qual a tolerância legal de minutos na batida de ponto?', answer: 'De acordo com o Artigo 58, § 1º da CLT, não serão descontadas nem computadas como jornada extraordinária as variações de horário no registro de ponto não excedentes de 5 minutos, observado o limite máximo diário de 10 minutos.' },
+      { question: 'Qual o tempo mínimo obrigatório para o intervalo intrajornada (almoço)?', answer: 'Para qualquer trabalho contínuo cuja duração exceda de 6 horas, é obrigatória a concessão de um intervalo para repouso ou alimentação de, no mínimo, 1 hora e, no máximo, 2 horas (Art. 71 CLT), salvo acordo coletivo.' },
+      { question: 'Como funciona o regime de Banco de Horas?', answer: 'No regime de banco de horas (Art. 59 CLT), as horas extras trabalhadas em um dia são acumuladas em crédito para serem compensadas com folgas ou saídas antecipadas em outro dia, no prazo máximo de 6 meses (acordo individual) ou 1 ano (acordo coletivo).' }
+    ],
+    tips: [
+      'Em jornadas de 44 horas semanais distribuídas de segunda a sexta-feira, a carga diária é de 8 horas e 48 minutos (8h48min).',
+      'Guarde sempre os comprovantes impressos do relógio de ponto ou realize capturas de tela dos aplicativos de ponto digital no final de cada expediente.',
+      'Utilize nossa Calculadora de Hora Extra para converter seu saldo de horas excedentes em valor financeiro a receber.'
+    ],
+    relatedToolIds: ['horas-trabalhadas', 'hora-extra', 'dsr', 'salario-liquido'],
+    slug: 'calculadora-de-ponto-e-banco-de-horas'
+  },
+  {
+    id: 'desconto-vista-parcelado',
+    categoryId: 'calculadoras',
+    title: 'Calculadora: Comprar à Vista com Desconto ou Parcelar?',
+    shortDescription: 'Descubra se compensa pagar à vista com desconto ou parcelar sem juros investindo o dinheiro no CDI (Tesouro Selic/CDB).',
+    longIntro: 'Ao realizar uma compra de valor relevante (eletrodomésticos, viagens, eletrônicos ou veículos), o consumidor frequentemente se depara com o dilema: pagar à vista para obter um desconto ou parcelar em várias vezes "sem juros" e deixar o dinheiro rendendo em uma aplicação financeira segura (como Tesouro Selic, CDB 100% do CDI ou Contas Remuneradas). A Calculadora À Vista vs Parcelado da Tool Brasil calcula a taxa implícita de juros embutida e indica matematicamente a opção mais vantajosa.',
+    howItWorks: 'Informe o valor total do produto parcelado, o percentual ou valor de desconto oferecido para pagamento à vista, o número de parcelas mensais e a rentabilidade líquida da sua aplicação financeira (% ao ano do CDI). A ferramenta calcula a Taxa Interna de Retorno (TIR) embutida na operação e simula o saldo final caso você parcele e saque mês a mês o valor da parcela do seu investimento.',
+    faqs: [
+      { question: 'Por que o parcelamento "sem juros" nem sempre é vantajoso?', answer: 'Quando a loja oferece desconto para pagamento à vista (PIX ou dinheiro), o preço parcelado já inclui uma taxa de juros embutida pelo lojista para cobrir custos de antecipação de cartão. O desconto representa o custo financeiro real dessa transação.' },
+      { question: 'A partir de qual desconto geralmente vale mais a pena pagar à vista?', answer: 'Com a taxa SELIC entre 10% e 13% ao ano, qualquer desconto à vista superior a 3% a 5% em compras parceladas em até 10 ou 12 vezes costuma superar com ampla margem o rendimento financeiro de uma aplicação conservadora de renda fixa.' },
+      { question: 'O imposto de renda da aplicação financeira foi considerado?', answer: 'Sim. Em investimentos de renda fixa incide a tabela regressiva de IR (de 22,5% até 15%). Nossa calculadora permite configurar a taxa líquida real esperada após os descontos tributários.' }
+    ],
+    tips: [
+      'Negocie sempre um desconto adicional para pagamento via PIX ou em 1x antes de fechar qualquer compra relevante.',
+      'Se optar por parcelar, certifique-se de que o dinheiro do valor integral à vista realmente permanecerá investido rendendo juros compostos a seu favor.',
+      'Evite acumular dezenas de parcelas pequenas no cartão de crédito para não comprometer sua margem de renda nos meses subsequentes.'
+    ],
+    relatedToolIds: ['juros-compostos', 'financiamento', 'porcentagem'],
+    slug: 'calculadora-desconto-a-vista-vs-parcelado'
+  },
+  {
+    id: 'declaracao-conteudo-correios',
+    categoryId: 'geradores',
+    title: 'Gerador de Declaração de Conteúdo Correios (A4 Pronto para Imprimir)',
+    shortDescription: 'Gere a Declaração de Conteúdo oficial exigida pelos Correios e transportadoras com formulário formatado no padrão A4 oficial.',
+    longIntro: 'Desde a regulamentação dos órgãos fazendários estaduais (CONFAZ) e dos Correios (Empresa Brasileira de Correios e Telégrafos), todas as encomendas e mercadorias postadas em território nacional sem nota fiscal exigem obrigatoriamente a Declaração de Conteúdo afixada na parte externa da embalagem. O Gerador de Declaração de Conteúdo da Tool Brasil permite preencher os dados do remetente, destinatário e itens com valores, gerando o formulário padrão oficial A4 pronto para imprimir ou salvar em PDF.',
+    howItWorks: 'Preencha os campos obrigatórios do Remetente e do Destinatário (Nome Completo, CPF/CNPJ, Endereço, Cidade, UF e CEP). Na seção de conteúdo, adicione os itens discriminando a descrição, a quantidade e o valor unitário. O valor total declarado é calculado automaticamente. Clique em "Imprimir / Gerar PDF" para visualizar o formulário oficial formatado no padrão de folha A4 exigido pelos Correios.',
+    faqs: [
+      { question: 'Quando é obrigatório utilizar a Declaração de Conteúdo nos Correios?', answer: 'A Declaração de Conteúdo é obrigatória para o envio de encomendas entre pessoas físicas ou remessas de bens não sujeitos a tributação que não possuam Nota Fiscal eletrônica (NF-e).' },
+      { question: 'Onde a declaração deve ser afixada no pacote?', answer: 'O formulário impresso deve ser dobrado e inserido dentro de uma bolsa plástica autoadesiva transparente (porta-documentos / "canguru") e colado na parte externa da caixa ou envelope, com o cabeçalho visível.' },
+      { question: 'Existe limite de valor para mercadorias enviadas com declaração de conteúdo?', answer: 'Os Correios aceitam declaração de conteúdo para envios convencionais, mas para mercadorias de alto valor ou revenda comercial continuada, a legislação exige a emissão de nota fiscal emitida por MEI, ME ou empresa.' },
+      { question: 'Minhas informações ficam salvas no servidor?', answer: 'Não. O processamento do formulário ocorre 100% no seu próprio navegador de forma privada e segura. Nenhum dado pessoal ou endereço é armazenado em nossos servidores.' }
+    ],
+    tips: [
+      'Descreva os itens de forma clara e objetiva (ex: "2 Camisetas de Algodão Usadas", "1 Livro Didático"), evitando termos genéricos como "Objeto" ou "Presente".',
+      'Assine e date o campo do declarante com caneta azul ou preta antes de colar o documento na caixa.',
+      'Utilize papel sulfite tamanho A4 comum para a impressão legível do documento.'
+    ],
+    relatedToolIds: ['recibo', 'cpf', 'cnpj', 'endereco-brasil'],
+    slug: 'gerador-de-declaracao-de-conteudo-para-correios'
+  },
+  {
+    id: 'gerador-pix',
+    categoryId: 'geradores',
+    title: 'Gerador de PIX Copia e Cola & QR Code Estático',
+    shortDescription: 'Crie QR Codes PIX e códigos Copia e Cola oficiais no padrão EMVCo do Banco Central com valor, chave e identificador.',
+    longIntro: 'O PIX revolucionou os pagamentos instantâneos no Brasil pela praticidade e ausência de taxas para pessoas físicas. Para receber cobranças de clientes, vendas pontuais ou doações de forma profissional, você pode gerar um QR Code PIX estático com chave, nome, cidade e valor pré-definido. O Gerador de PIX da Tool Brasil cria o código oficial BR Code (padrão internacional EMVCo com checksum CRC16 CCITT) de forma 100% segura e client-side no seu navegador.',
+    howItWorks: 'Selecione o tipo de chave PIX (CPF, CNPJ, E-mail, Telefone celular ou Chave Aleatória EVP) e digite a sua chave. Informe o nome do titular da conta e a cidade (sem caracteres especiais). Se desejar, insira o valor fixo da cobrança em reais e um código identificador (TxID). A ferramenta gera na hora o QR Code legível por qualquer app bancário e o código alfanumérico Copia e Cola para envio no WhatsApp ou e-mail.',
+    faqs: [
+      { question: 'O que é o padrão BR Code / EMVCo do Banco Central?', answer: 'É a padronização técnica estabelecida pelo Banco Central do Brasil para QR Codes do PIX, utilizando o formato internacional EMVCo com blocos TLV (Tag-Length-Value) e validação de integridade por algoritmo CRC16.' },
+      { question: 'Qual a diferença entre PIX Estático e PIX Dinâmico?', answer: 'O PIX Estático (gerado por esta ferramenta) pode ser utilizado para múltiplas cobranças com valor fixo ou aberto, ideal para autônomos, pequenos comércios e transferências pessoais. O PIX Dinâmico é exclusivo para integrações bancárias via API com controle de liquidação única e expiração.' },
+      { question: 'É seguro gerar meu QR Code PIX neste site?', answer: 'Sim, 100% seguro! Toda a codificação do payload EMVCo e do QR Code é executada localmente no JavaScript do seu navegador. Nenhuma chave, dado bancário ou valor trafega para servidores externos.' },
+      { question: 'O pagador precisa de internet para escanear?', answer: 'Sim. O aplicativo bancário do pagador precisará de conexão com a internet para consultar o Banco Central e autenticar a transferência instantânea.' }
+    ],
+    tips: [
+      'Digite o nome do beneficiário e cidade sem acentos ou caracteres especiais para garantir 100% de compatibilidade com todos os aplicativos bancários.',
+      'Deixe o campo de valor em branco (ou R$ 0,00) caso queira que o cliente/pagador digite o valor livremente no momento do pagamento.',
+      'Envie o código Copia e Cola via WhatsApp para facilitar o pagamento de usuários que estão acessando diretamente pelo celular.'
+    ],
+    relatedToolIds: ['qr-code', 'gerador-whatsapp', 'recibo', 'cpf', 'cnpj'],
+    slug: 'gerador-de-pix-copia-e-cola-e-qr-code'
+  },
+  {
+    id: 'contrato-locacao',
+    categoryId: 'geradores',
+    title: 'Gerador de Contrato de Locação Residencial Simples',
+    shortDescription: 'Gere um contrato de aluguel residencial completo e formal baseado na Lei do Inquilinato (Lei nº 8.245/91) pronto para impressão A4.',
+    longIntro: 'Alugar um imóvel residencial com segurança jurídica exige a formalização dos direitos e deveres do Locador (proprietário) e do Locatário (inquilino) por meio de um contrato de locação claro e alinhado à Lei Federal nº 8.245/1991 (Lei do Inquilinato) e ao Código Civil Brasileiro. O Gerador de Contrato de Locação da Tool Brasil permite preencher os dados essenciais do imóvel, valores, prazos e garantias, gerando um documento formal e personalizável pronto para assinatura e impressão.',
+    howItWorks: 'Preencha as informações das partes (Locador e Locatário), o endereço completo do imóvel, o valor mensal do aluguel, o dia de vencimento, o índice de reajuste anual (IPCA ou IGP-M), o prazo do contrato (ex: 12 ou 30 meses) e a modalidade de garantia (caução, fiador ou sem garantia). O sistema gera em tempo real a minuta contratual completa estruturada em cláusulas jurídicas com botões para cópia de texto ou impressão formatada em A4.',
+    faqs: [
+      { question: 'Qual é o prazo padrão de um contrato de locação residencial?', answer: 'Pela Lei nº 8.245/91, contratos residenciais ajustados por escrito com prazo igual ou superior a 30 meses garantem o direito de retomada do imóvel pelo locador ao término do prazo sem necessidade de justa causa (denúncia vazia). Contratos com prazo inferior a 30 meses são permitidos, mas a retomada exige motivos específicos previstos no Art. 47 da lei.' },
+      { question: 'Qual o valor máximo que o proprietário pode exigir de caução?', answer: 'Pelo Artigo 38, § 2º da Lei do Inquilinato, a garantia por caução em dinheiro não pode exceder o valor equivalente a 3 (três) meses de aluguel e deve ser depositada em conta poupança conjunta.' },
+      { question: 'É obrigatório reconhecer firma do contrato em cartório?', answer: 'O reconhecimento de firma das assinaturas do locador, locatário e testemunhas não é requisito de validade do contrato, mas é altamente recomendado para comprovar a autenticidade das assinaturas perante terceiros e órgãos judiciais.' }
+    ],
+    tips: [
+      'Realize sempre um Laudo de Vistoria Inicial detalhado com fotos do imóvel anexado ao contrato de locação antes de entregar as chaves.',
+      'Exija a assinatura de 2 (duas) testemunhas maiores de idade com CPF para que o contrato tenha força de Título Executivo Extrajudicial (Art. 784, III, do CPC).',
+      'Defina com clareza a responsabilidade pelo pagamento de taxas condominiais ordinárias, IPTU e contas de consumo de energia e água.'
+    ],
+    relatedToolIds: ['recibo', 'cpf', 'cnpj', 'declaracao-conteudo-correios'],
+    slug: 'gerador-de-contrato-de-locacao-residencial'
+  },
+  {
+    id: 'formatador-abnt',
+    categoryId: 'utilitarios',
+    title: 'Formatador de Referências ABNT NBR 6023 (Livros, Artigos e Sites)',
+    shortDescription: 'Gere referências bibliográficas automáticas e citações acadêmicas conforme as normas oficiais da ABNT NBR 6023 e NBR 10520.',
+    longIntro: 'Elaborar a lista de referências bibliográficas de Trabalhos de Conclusão de Curso (TCC), monografias, dissertações de mestrado, teses e artigos acadêmicos costuma ser uma das tarefas mais trabalhosas e minuciosas da vida estudantil e científica. O Formatador de Referências ABNT da Tool Brasil automatiza a estruturação segundo a norma oficial ABNT NBR 6023:2018 (com destaques tipográficos em negrito ou itálico) e gera a citação correspondente no sistema Autor-Data (ABNT NBR 10520:2023).',
+    howItWorks: 'Escolha o tipo de fonte que deseja referenciar (Livro com 1 a 3 autores, Artigo de Periódico/Revista Científica, Página de Website da Internet, TCC/Monografia Acadêmica ou Legislação/Lei). Preencha os campos com os dados da publicação. A ferramenta aplica automaticamente a formatação oficial com sobrenome em caixa alta, pontuação padronizada e links de acesso com data atual formatada.',
+    faqs: [
+      { question: 'Qual elemento deve ficar em destaque (negrito ou itálico) na ABNT NBR 6023?', answer: 'Na norma ABNT NBR 6023, o título da obra deve ser destacado (em negrito ou itálico), enquanto o subtítulo permanece sempre em texto normal. Em artigos de revista/periódico, o destaque vai para o nome da revista, e não para o título do artigo.' },
+      { question: 'Como citar autores com mais de 3 nomes segundo a ABNT?', answer: 'Quando houver mais de 3 autores, a norma permite indicar todos os autores ou indicar apenas o primeiro seguido da expressão latina "et al." (ex: SILVA, João et al.).' },
+      { question: 'Como referenciar artigos ou conteúdos da internet sem data?', answer: 'Quando não houver data explícita de publicação no site, utiliza-se a data provável entre colchetes [2024?] ou a data de acesso ao documento online: "Acesso em: 28 fev. 2026."' }
+    ],
+    tips: [
+      'Mantenha a padronização tipográfica em todo o seu trabalho: se escolheu destacar os títulos das referências em negrito, use negrito em todas elas.',
+      'Ordene a lista final de referências no final do seu TCC em ordem estritamente alfabética por sobrenome do primeiro autor.',
+      'Copie a citação autor-data gerada para incluir diretamente no corpo do seu texto acadêmico (ex: "(SILVA, 2024, p. 45)").'
+    ],
+    relatedToolIds: ['contador-palavras', 'contador-caracteres', 'comparador-textos'],
+    slug: 'formatador-de-referencias-abnt'
+  },
+  {
+    id: 'fuso-horario',
+    categoryId: 'conversores',
+    title: 'Conversor de Fusos Horários Mundial (Horário de Brasília)',
+    shortDescription: 'Converta horários em tempo real entre o Horário Oficial de Brasília (UTC-3) e os principais fusos horários do mundo.',
+    longIntro: 'Em um mundo globalizado com trabalho remoto internacional, reuniões virtuais em diferentes continentes e viagens internacionais, calcular a diferença de horas entre países é uma necessidade frequente. O Conversor de Fusos Horários da Tool Brasil compara instantaneamente qualquer horário com base no Horário Oficial de Brasília (BRT / UTC-3), exibindo a hora correspondente nos principais centros do mundo como Nova York, Londres, Tóquio, Lisboa, Paris e nos demais fusos brasileiros.',
+    howItWorks: 'Selecione uma data e horário de referência (ou clique em "Usar Hora Atual"). A ferramenta calcula simultaneamente a hora exata nos fusos horários globais e nos 4 fusos horários oficiais do território brasileiro (Fernando de Noronha UTC-2, Brasília UTC-3, Amazônia/Cuiabá UTC-4 e Acre UTC-5), indicando a diferença de horas e se o destino já está no dia seguinte ou anterior.',
+    faqs: [
+      { question: 'Quantos fusos horários existem no território brasileiro?', answer: 'O Brasil possui 4 fusos horários oficiais: UTC-2 (Ilhas oceânicas como Fernando de Noronha), UTC-3 (Horário Oficial de Brasília, cobrindo Sul, Sudeste, Nordeste, Centro-Oeste e estados do Pará e Amapá), UTC-4 (Amazonas oriental, Rondônia, Roraima, Mato Grosso e MS) e UTC-5 (Acre e extremo oeste do Amazonas).' },
+      { question: 'O que significa UTC e GMT?', answer: 'UTC (Coordinated Universal Time) é o padrão de tempo universal de referência mundial regulado por relógios atômicos. GMT (Greenwich Mean Time) é o horário solar médio no meridiano de Greenwich em Londres. Na prática cotidiana de horários civis, ambos representam o fuso base zero (UTC+0).' },
+      { question: 'Como o horário de verão internacional afeta a diferença de horas?', answer: 'Países dos Estados Unidos e Europa adotam horário de verão (Daylight Saving Time - DST) entre março e novembro, adiantando seus relógios em 1 hora e alterando a diferença de fuso em relação ao Brasil.' }
+    ],
+    tips: [
+      'Ao agendar reuniões com equipes no exterior, sempre especifique a sigla do fuso horário (ex: 14:00 BRT / 17:00 UTC) para evitar confusões de calendário.',
+      'Lembre-se de que voos internacionais mostram sempre o horário LOCAL de partida e o horário LOCAL de chegada nos bilhetes de passagem.',
+      'O Brasil não adota mais horário de verão desde o Decreto nº 9.772/2019, mantendo o Horário de Brasília fixo em UTC-3 o ano inteiro.'
+    ],
+    relatedToolIds: ['horas-para-minutos', 'dias-para-horas', 'cronometro'],
+    slug: 'conversor-de-fusos-horarios'
+  }
 ];
 
 export const PROGRAMMATIC_PAGES: { [key: string]: { title: string; description: string; content?: any } } = {

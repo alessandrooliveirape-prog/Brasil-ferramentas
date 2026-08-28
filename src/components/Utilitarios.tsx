@@ -33,6 +33,7 @@ export default function Utilitarios({ toolId }: UtilitariosProps) {
       {toolId === 'validador-cartao' && <ValidadorCartao />}
       {toolId === 'texto-para-voz' && <TextoParaVoz />}
       {toolId === 'teste-digitacao' && <TesteDigitacao />}
+      {toolId === 'formatador-abnt' && <FormatadorABNT />}
     </div>
   );
 }
@@ -1257,3 +1258,288 @@ function SorteadorOnline() {
     </div>
   );
 }
+
+// 17. FORMATADOR DE REFERÊNCIAS ABNT NBR 6023 (LIVROS, ARTIGOS E SITES)
+function FormatadorABNT() {
+  const [tipoFonte, setTipoFonte] = useState<'livro' | 'artigo' | 'site' | 'tcc' | 'lei'>('livro');
+
+  // Livro
+  const [autorLivro, setAutorLivro] = useState('SILVA, João da; SANTOS, Maria Clara');
+  const [tituloLivro, setTituloLivro] = useState('Metodologia da Pesquisa Científica');
+  const [subtituloLivro, setSubtituloLivro] = useState('diretrizes práticas para o ensino superior');
+  const [edicaoLivro, setEdicaoLivro] = useState('3. ed.');
+  const [localLivro, setLocalLivro] = useState('São Paulo');
+  const [editoraLivro, setEditoraLivro] = useState('Atlas');
+  const [anoLivro, setAnoLivro] = useState('2024');
+
+  // Artigo de Periódico
+  const [autorArtigo, setAutorArtigo] = useState('OLIVEIRA, Renato Mendes');
+  const [tituloArtigo, setTituloArtigo] = useState('Impactos da inteligência artificial na produtividade');
+  const [revistaArtigo, setRevistaArtigo] = useState('Revista Brasileira de Tecnologia e Gestão');
+  const [localArtigo, setLocalArtigo] = useState('Curitiba');
+  const [volumeArtigo, setVolumeArtigo] = useState('v. 18');
+  const [numeroArtigo, setNumeroArtigo] = useState('n. 2');
+  const [paginasArtigo, setPaginasArtigo] = useState('p. 45-62');
+  const [mesAnoArtigo, setMesAnoArtigo] = useState('maio 2025');
+
+  // Website
+  const [autorSite, setAutorSite] = useState('INSTITUTO BRASILEIRO DE GEOGRAFIA E ESTATÍSTICA (IBGE)');
+  const [tituloPagina, setTituloPagina] = useState('Censo Demográfico 2022: resultados definitivos');
+  const [nomePortal, setNomePortal] = useState('Agência IBGE Notícias');
+  const [anoSite, setAnoSite] = useState('2023');
+  const [urlSite, setUrlSite] = useState('https://agenciadenoticias.ibge.gov.br/censo-2022');
+  const [dataAcesso, setDataAcesso] = useState('28 fev. 2026');
+
+  const [copiadoRef, setCopiadoRef] = useState(false);
+  const [copiadoCit, setCopiadoCit] = useState(false);
+
+  // Geração da Referência Formatada em HTML e Texto
+  let refHtml = '';
+  let refTexto = '';
+  let citacaoIndireta = '';
+  let citacaoDireta = '';
+
+  if (tipoFonte === 'livro') {
+    const autorFmt = autorLivro.trim();
+    const titFmt = tituloLivro.trim();
+    const subFmt = subtituloLivro.trim() ? `: ${subtituloLivro.trim()}` : '';
+    const edFmt = edicaoLivro.trim() ? ` ${edicaoLivro.trim()}` : '';
+    const locFmt = localLivro.trim() ? ` ${localLivro.trim()}:` : '';
+    const editaFmt = editoraLivro.trim() ? ` ${editoraLivro.trim()},` : '';
+    const anoFmt = anoLivro.trim() ? ` ${anoLivro.trim()}.` : '.';
+
+    refHtml = `${autorFmt}. <strong>${titFmt}</strong>${subFmt}.${edFmt}.${locFmt}${editaFmt}${anoFmt}`;
+    refTexto = `${autorFmt}. ${titFmt}${subFmt}.${edFmt}.${locFmt}${editaFmt}${anoFmt}`;
+
+    const primeiroAutor = autorLivro.split(';')[0].split(',')[0].trim().toUpperCase();
+    citacaoIndireta = `(${primeiroAutor}, ${anoLivro})`;
+    citacaoDireta = `Segundo ${primeiroAutor.charAt(0) + primeiroAutor.slice(1).toLowerCase()} (${anoLivro}, p. 15)`;
+  } else if (tipoFonte === 'artigo') {
+    const autorFmt = autorArtigo.trim();
+    const titFmt = tituloArtigo.trim();
+    const revFmt = revistaArtigo.trim();
+    const locFmt = localArtigo.trim() ? `, ${localArtigo.trim()}` : '';
+    const volFmt = volumeArtigo.trim() ? `, ${volumeArtigo.trim()}` : '';
+    const numFmt = numeroArtigo.trim() ? `, ${numeroArtigo.trim()}` : '';
+    const pagFmt = paginasArtigo.trim() ? `, ${paginasArtigo.trim()}` : '';
+    const dataFmt = mesAnoArtigo.trim() ? `, ${mesAnoArtigo.trim()}.` : '.';
+
+    refHtml = `${autorFmt}. ${titFmt}. <strong>${revFmt}</strong>${locFmt}${volFmt}${numFmt}${pagFmt}${dataFmt}`;
+    refTexto = `${autorFmt}. ${titFmt}. ${revFmt}${locFmt}${volFmt}${numFmt}${pagFmt}${dataFmt}`;
+
+    const primeiroAutor = autorArtigo.split(';')[0].split(',')[0].trim().toUpperCase();
+    const anoOnly = mesAnoArtigo.match(/\d{4}/)?.[0] || '2025';
+    citacaoIndireta = `(${primeiroAutor}, ${anoOnly})`;
+    citacaoDireta = `De acordo com ${primeiroAutor.charAt(0) + primeiroAutor.slice(1).toLowerCase()} (${anoOnly}, p. 48)`;
+  } else if (tipoFonte === 'site') {
+    const autFmt = autorSite.trim() ? `${autorSite.trim()}. ` : '';
+    const titFmt = tituloPagina.trim();
+    const portFmt = nomePortal.trim() ? ` <strong>${nomePortal.trim()}</strong>,` : '';
+    const anoFmt = anoSite.trim() ? ` ${anoSite.trim()}.` : '';
+    const urlFmt = urlSite.trim() ? ` Disponível em: <${urlSite.trim()}>.` : '';
+    const acsFmt = dataAcesso.trim() ? ` Acesso em: ${dataAcesso.trim()}.` : '';
+
+    refHtml = `${autFmt}<strong>${titFmt}</strong>.${portFmt}${anoFmt}${urlFmt}${acsFmt}`;
+    refTexto = `${autFmt}${titFmt}.${nomePortal ? ` ${nomePortal},` : ''}${anoFmt}${urlFmt}${acsFmt}`;
+
+    const autorToken = autorSite.split(' ')[0].replace(/[^A-Za-z]/g, '').toUpperCase() || 'DOCUMENTO';
+    citacaoIndireta = `(${autorToken}, ${anoSite})`;
+    citacaoDireta = `Conforme dados do ${autorToken} (${anoSite})`;
+  }
+
+  const copiarRef = () => {
+    navigator.clipboard.writeText(refTexto);
+    setCopiadoRef(true);
+    setTimeout(() => setCopiadoRef(false), 2500);
+  };
+
+  const copiarCit = () => {
+    navigator.clipboard.writeText(citacaoIndireta);
+    setCopiadoCit(true);
+    setTimeout(() => setCopiadoCit(false), 2500);
+  };
+
+  return (
+    <div className="space-y-6" id="util-formatador-abnt">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Formatador de Referências ABNT NBR 6023</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Gere referências bibliográficas automáticas e padronizadas para TCC, artigos e monografias (NBR 6023:2018 e NBR 10520:2023).</p>
+      </div>
+
+      {/* Seletor de Tipo de Documento */}
+      <div className="flex flex-wrap gap-2">
+        <button 
+          onClick={() => setTipoFonte('livro')} 
+          type="button" 
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${tipoFonte === 'livro' ? 'bg-emerald-600 text-white shadow' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}
+        >
+          📖 Livro (Monografia)
+        </button>
+        <button 
+          onClick={() => setTipoFonte('artigo')} 
+          type="button" 
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${tipoFonte === 'artigo' ? 'bg-emerald-600 text-white shadow' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}
+        >
+          📰 Artigo de Revista / Periódico
+        </button>
+        <button 
+          onClick={() => setTipoFonte('site')} 
+          type="button" 
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${tipoFonte === 'site' ? 'bg-emerald-600 text-white shadow' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}
+        >
+          🌐 Página da Web / Artigo Online
+        </button>
+      </div>
+
+      {/* Formulários dinâmicos */}
+      {tipoFonte === 'livro' && (
+        <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 space-y-3">
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Autores (SOBRENOME, Nome - separados por ponto e vírgula)</label>
+            <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs font-mono" value={autorLivro} onChange={(e) => setAutorLivro(e.target.value)} />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Título da Obra (em negrito)</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs font-bold" value={tituloLivro} onChange={(e) => setTituloLivro(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Subtítulo (se houver, texto normal)</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={subtituloLivro} onChange={(e) => setSubtituloLivro(e.target.value)} />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Edição</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={edicaoLivro} onChange={(e) => setEdicaoLivro(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Local / Cidade</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={localLivro} onChange={(e) => setLocalLivro(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Editora</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={editoraLivro} onChange={(e) => setEditoraLivro(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Ano</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs font-mono" value={anoLivro} onChange={(e) => setAnoLivro(e.target.value)} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tipoFonte === 'artigo' && (
+        <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 space-y-3">
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Autores do Artigo</label>
+            <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs font-mono" value={autorArtigo} onChange={(e) => setAutorArtigo(e.target.value)} />
+          </div>
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Título do Artigo</label>
+            <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={tituloArtigo} onChange={(e) => setTituloArtigo(e.target.value)} />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Nome da Revista / Periódico (em negrito)</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs font-bold" value={revistaArtigo} onChange={(e) => setRevistaArtigo(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Local / Cidade da Publicação</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={localArtigo} onChange={(e) => setLocalArtigo(e.target.value)} />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Volume</label>
+              <input type="text" placeholder="v. 18" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={volumeArtigo} onChange={(e) => setVolumeArtigo(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Número / Fascículo</label>
+              <input type="text" placeholder="n. 2" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={numeroArtigo} onChange={(e) => setNumeroArtigo(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Páginas</label>
+              <input type="text" placeholder="p. 45-62" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={paginasArtigo} onChange={(e) => setPaginasArtigo(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Mês e Ano</label>
+              <input type="text" placeholder="maio 2025" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={mesAnoArtigo} onChange={(e) => setMesAnoArtigo(e.target.value)} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {tipoFonte === 'site' && (
+        <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 space-y-3">
+          <div>
+            <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Autor ou Organização Responsável</label>
+            <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs font-mono uppercase" value={autorSite} onChange={(e) => setAutorSite(e.target.value)} />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Título da Página ou Matéria (em negrito)</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs font-bold" value={tituloPagina} onChange={(e) => setTituloPagina(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Nome do Portal / Website</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={nomePortal} onChange={(e) => setNomePortal(e.target.value)} />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="sm:col-span-2">
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">URL Completa</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs font-mono" value={urlSite} onChange={(e) => setUrlSite(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-0.5">Data de Acesso</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-xs" value={dataAcesso} onChange={(e) => setDataAcesso(e.target.value)} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Resultados de Referência e Citação */}
+      <div className="space-y-4">
+        {/* Caixa da Referência */}
+        <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-300 dark:border-emerald-800 rounded-2xl p-5 space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-xs font-black uppercase text-emerald-900 dark:text-emerald-300">
+              📚 Referência Bibliográfica Formatada (NBR 6023)
+            </span>
+            <button onClick={copiarRef} type="button" className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold transition cursor-pointer">
+              {copiadoRef ? 'Copiado! ✅' : 'Copiar Referência'}
+            </button>
+          </div>
+          <div 
+            className="p-4 bg-white dark:bg-slate-900 rounded-xl border border-emerald-200 dark:border-emerald-800 text-xs sm:text-sm text-slate-900 dark:text-slate-100 font-sans leading-relaxed shadow-sm"
+            dangerouslySetInnerHTML={{ __html: refHtml }}
+          />
+        </div>
+
+        {/* Caixa das Citações */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="bg-slate-50 dark:bg-slate-850 p-4 rounded-xl border border-slate-200 dark:border-slate-750 space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-bold text-slate-600 dark:text-slate-400">Citação Indireta (Autor-Data)</span>
+              <button onClick={copiarCit} type="button" className="text-xs font-bold text-emerald-600 hover:text-emerald-700">
+                {copiadoCit ? 'Copiado! ✅' : 'Copiar'}
+              </button>
+            </div>
+            <code className="block p-2.5 bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-800 dark:text-slate-200">
+              {citacaoIndireta}
+            </code>
+          </div>
+
+          <div className="bg-slate-50 dark:bg-slate-850 p-4 rounded-xl border border-slate-200 dark:border-slate-750 space-y-2">
+            <span className="text-xs font-bold text-slate-600 dark:text-slate-400">Citação Direta (no texto)</span>
+            <code className="block p-2.5 bg-white dark:bg-slate-900 rounded border border-slate-200 dark:border-slate-700 text-xs font-mono text-slate-800 dark:text-slate-200">
+              {citacaoDireta}
+            </code>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+

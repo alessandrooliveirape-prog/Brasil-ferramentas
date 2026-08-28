@@ -74,7 +74,47 @@ function run() {
     fs.writeFileSync(path.join(instDir, 'index.html'), instHtml, 'utf-8');
   });
 
+  // 6. Gerar Sitemap.xml unificado e sincronizado
+  console.log(' - Gerando sitemap.xml completo...');
+  const sitemapXml = generateFullSitemapXml(institutionalPageIds);
+  fs.writeFileSync(path.join(DIST_DIR, 'sitemap.xml'), sitemapXml, 'utf-8');
+  const publicSitemap = path.resolve(__dirname, 'public', 'sitemap.xml');
+  fs.writeFileSync(publicSitemap, sitemapXml, 'utf-8');
+
   console.log(`\n✅ Pré-renderização concluída com sucesso!`);
+}
+
+function generateFullSitemapXml(instPages: string[]): string {
+  const host = 'https://www.toolbrasil.com.br';
+  const today = new Date().toISOString().split('T')[0];
+  let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+  xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
+  // Home
+  xml += `  <url>\n    <loc>${host}/</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n`;
+
+  // Categorias
+  CATEGORIES.filter(c => c.id !== 'institucional' && c.id !== 'programatico').forEach(cat => {
+    xml += `  <url>\n    <loc>${host}/${cat.id}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
+  });
+
+  // Ferramentas
+  TOOLS.forEach(tool => {
+    xml += `  <url>\n    <loc>${host}/${tool.categoryId}/${tool.slug}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n`;
+  });
+
+  // Páginas Programáticas
+  Object.keys(ALL_PROGRAMMATIC_PAGES).forEach(id => {
+    xml += `  <url>\n    <loc>${host}/programatico/${id}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+  });
+
+  // Institucionais
+  instPages.forEach(id => {
+    xml += `  <url>\n    <loc>${host}/institucional/${id}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.4</priority>\n  </url>\n`;
+  });
+
+  xml += `</urlset>`;
+  return xml;
 }
 
 /**

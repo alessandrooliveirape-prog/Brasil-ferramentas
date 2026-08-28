@@ -38,6 +38,7 @@ export default function Conversores({ toolId }: ConversoresProps) {
       {toolId === 'milhas-para-quilometros' && <MilhasKm />}
       {toolId === 'kmh-para-mph' && <KmhMph />}
       {toolId === 'numeros-romanos' && <NumerosRomanos />}
+      {toolId === 'fuso-horario' && <ConversorFusoHorario />}
     </div>
   );
 }
@@ -816,3 +817,149 @@ function NumerosRomanos() {
     </div>
   );
 }
+
+// 13. CONVERSOR DE FUSOS HORÁRIOS MUNDIAL (HORÁRIO DE BRASÍLIA)
+interface FusoInfo {
+  cidade: string;
+  pais: string;
+  bandeira: string;
+  offsetHours: number; // Offset em relação ao UTC
+  sigla: string;
+  regiao: string;
+}
+
+const FUSOS_MUNDIAIS: FusoInfo[] = [
+  { cidade: 'Fernando de Noronha', pais: 'Brasil', bandeira: '🇧🇷', offsetHours: -2, sigla: 'FNT (UTC-2)', regiao: 'Brasil (Ilhas)' },
+  { cidade: 'Brasília / São Paulo / Rio', pais: 'Brasil', bandeira: '🇧🇷', offsetHours: -3, sigla: 'BRT (UTC-3)', regiao: 'Brasil (Oficial)' },
+  { cidade: 'Manaus / Cuiabá / Campo Grande', pais: 'Brasil', bandeira: '🇧🇷', offsetHours: -4, sigla: 'AMT (UTC-4)', regiao: 'Brasil (Amazônia)' },
+  { cidade: 'Rio Branco / Cruzeiro do Sul', pais: 'Brasil', bandeira: '🇧🇷', offsetHours: -5, sigla: 'ACT (UTC-5)', regiao: 'Brasil (Acre)' },
+  { cidade: 'Nova York / Miami', pais: 'Estados Unidos', bandeira: '🇺🇸', offsetHours: -5, sigla: 'EST (UTC-5)', regiao: 'América do Norte' },
+  { cidade: 'Los Angeles / San Francisco', pais: 'Estados Unidos', bandeira: '🇺🇸', offsetHours: -8, sigla: 'PST (UTC-8)', regiao: 'América do Norte' },
+  { cidade: 'Londres / Dublin', pais: 'Reino Unido', bandeira: '🇬🇧', offsetHours: 0, sigla: 'GMT (UTC+0)', regiao: 'Europa' },
+  { cidade: 'Lisboa / Porto', pais: 'Portugal', bandeira: '🇵🇹', offsetHours: 0, sigla: 'WET (UTC+0)', regiao: 'Europa' },
+  { cidade: 'Paris / Madri / Roma / Berlim', pais: 'Europa Central', bandeira: '🇪🇺', offsetHours: 1, sigla: 'CET (UTC+1)', regiao: 'Europa' },
+  { cidade: 'Dubai', pais: 'Emirados Árabes', bandeira: '🇦🇪', offsetHours: 4, sigla: 'GST (UTC+4)', regiao: 'Oriente Médio' },
+  { cidade: 'Tóquio', pais: 'Japão', bandeira: '🇯🇵', offsetHours: 9, sigla: 'JST (UTC+9)', regiao: 'Ásia' },
+  { cidade: 'Sydney / Melbourne', pais: 'Austrália', bandeira: '🇦🇺', offsetHours: 10, sigla: 'AEST (UTC+10)', regiao: 'Oceania' }
+];
+
+function ConversorFusoHorario() {
+  const [dataBase, setDataBase] = useState(() => new Date().toISOString().split('T')[0]);
+  const [horaBase, setHoraBase] = useState(() => {
+    const now = new Date();
+    return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+  });
+
+  const usarAgora = () => {
+    const now = new Date();
+    setDataBase(now.toISOString().split('T')[0]);
+    setHoraBase(`${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`);
+  };
+
+  // Objeto Date correspondente ao Horário de Brasília (UTC-3)
+  const [ano, mes, dia] = dataBase.split('-').map(Number);
+  const [hora, minuto] = horaBase.split(':').map(Number);
+
+  // Criar timestamp em UTC considerando que a hora informada é UTC-3 (adiciona 3 horas para chegar em UTC)
+  const utcDate = new Date(Date.UTC(ano, mes - 1, dia, (hora || 0) + 3, minuto || 0));
+
+  return (
+    <div className="space-y-6" id="conv-fuso-horario">
+      <div className="border-b border-slate-200 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h2 className="text-xl font-black text-slate-900">Conversor de Fusos Horários Mundial</h2>
+          <p className="text-xs text-slate-500 mt-1">Converta horários em tempo real entre o Horário Oficial de Brasília (UTC-3) e as principais cidades do planeta.</p>
+        </div>
+        <button 
+          onClick={usarAgora} 
+          type="button" 
+          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black shadow transition cursor-pointer"
+        >
+          🔄 Usar Horário de Agora
+        </button>
+      </div>
+
+      {/* Seletor de Horário Base */}
+      <div className="p-5 bg-emerald-50/70 rounded-2xl border border-emerald-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-black text-emerald-900 uppercase tracking-wide mb-1">
+            📅 Data de Referência
+          </label>
+          <input 
+            type="date" 
+            className="w-full border border-emerald-300 rounded-xl p-2.5 bg-white text-slate-900 text-sm font-semibold"
+            value={dataBase} 
+            onChange={(e) => setDataBase(e.target.value)} 
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-black text-emerald-900 uppercase tracking-wide mb-1">
+            ⏰ Horário de Brasília (BRT / UTC-3)
+          </label>
+          <input 
+            type="time" 
+            className="w-full border border-emerald-300 rounded-xl p-2.5 bg-white text-slate-900 text-sm font-mono font-bold"
+            value={horaBase} 
+            onChange={(e) => setHoraBase(e.target.value)} 
+          />
+        </div>
+      </div>
+
+      {/* Grid de Fusos Horários Globais */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        {FUSOS_MUNDIAIS.map((fuso, idx) => {
+          // Converter data UTC para o fuso destino
+          const targetDate = new Date(utcDate.getTime() + (fuso.offsetHours * 3600000));
+          const targetHours = targetDate.getUTCHours().toString().padStart(2, '0');
+          const targetMinutes = targetDate.getUTCMinutes().toString().padStart(2, '0');
+          const targetDia = targetDate.getUTCDate().toString().padStart(2, '0');
+          const targetMes = (targetDate.getUTCMonth() + 1).toString().padStart(2, '0');
+
+          const diffHoras = fuso.offsetHours - (-3);
+          const diffTexto = diffHoras === 0 
+            ? 'Mesmo horário' 
+            : diffHoras > 0 
+            ? `+${diffHoras} horas à frente` 
+            : `${diffHoras} horas atrás`;
+
+          const isSameDay = targetDate.getUTCDate() === dia;
+          const isNextDay = targetDate.getUTCDate() > dia || (targetDate.getUTCMonth() > mes - 1);
+          const isPrevDay = targetDate.getUTCDate() < dia || (targetDate.getUTCMonth() < mes - 1);
+
+          const isBrasilia = fuso.cidade.includes('Brasília');
+
+          return (
+            <div 
+              key={idx} 
+              className={`p-4 rounded-xl border transition shadow-sm ${isBrasilia ? 'bg-emerald-50 border-emerald-400 ring-2 ring-emerald-500/20' : 'bg-white border-slate-200 hover:border-slate-300'}`}
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <span className="text-base mr-1.5">{fuso.bandeira}</span>
+                  <strong className="text-xs font-black text-slate-900">{fuso.cidade}</strong>
+                  <span className="text-[10px] text-slate-500 block">{fuso.sigla}</span>
+                </div>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isBrasilia ? 'bg-emerald-200 text-emerald-900' : 'bg-slate-100 text-slate-600'}`}>
+                  {diffTexto}
+                </span>
+              </div>
+
+              <div className="mt-3 pt-2 border-t border-slate-100 flex justify-between items-baseline">
+                <div>
+                  <span className="text-2xl font-black font-mono text-slate-900">{targetHours}:{targetMinutes}</span>
+                </div>
+                <div className="text-right">
+                  <span className="text-xs font-bold text-slate-700 block">{targetDia}/{targetMes}</span>
+                  {isNextDay && <span className="text-[10px] font-bold text-amber-600">Dia seguinte ⏩</span>}
+                  {isPrevDay && <span className="text-[10px] font-bold text-blue-600">Dia anterior ⏪</span>}
+                  {isSameDay && !isBrasilia && <span className="text-[10px] text-slate-400">Mesmo dia</span>}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
