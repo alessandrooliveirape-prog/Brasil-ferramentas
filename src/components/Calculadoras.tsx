@@ -25,7 +25,7 @@ export default function Calculadoras({ toolId }: CalculadorasProps) {
       {toolId === 'decimo-terceiro' && <DecimoTerceiro />}
       {toolId === 'imc' && <Imc />}
       {toolId === 'consumo-combustivel' && <ConsumoCombustivel />}
-      {toolId === 'regra-de-tres' && <RegraDeTres />}
+      {(toolId === 'regra-de-tres' || toolId === 'regra-de-tre') && <RegraDeTres />}
       {toolId === 'porcentagem' && <Porcentagem />}
       {toolId === 'idade' && <IdadeExata />}
       {toolId === 'dias-entre-datas' && <DiasEntreDatas />}
@@ -65,6 +65,11 @@ export default function Calculadoras({ toolId }: CalculadorasProps) {
       {toolId === 'agua-diaria' && <CalculadoraAguaDiaria />}
       {toolId === 'ponto-banco-horas' && <CalculadoraPontoBancoHoras />}
       {toolId === 'desconto-vista-parcelado' && <CalculadoraDescontoVistaParcelado />}
+      {toolId === 'calculadora-ferias-proporcionais' && <CalculadoraFeriasProporcionais />}
+      {toolId === 'calculadora-aviso-previo' && <CalculadoraAvisoPrevio />}
+      {toolId === 'calculadora-tijolos-argamassa' && <CalculadoraTijolosArgamassa />}
+      {toolId === 'calculadora-preco-combustivel-viagem' && <CalculadoraCombustivelViagem />}
+      {toolId === 'calculadora-potencia-ar-condicionado' && <CalculadoraBtusArCondicionado />}
     </div>
   );
 }
@@ -4272,5 +4277,392 @@ function CalculadoraDescontoVistaParcelado() {
     </div>
   );
 }
+
+// 51. CALCULADORA DE FÉRIAS PROPORCIONAIS E VENCIDAS CLT
+function CalculadoraFeriasProporcionais() {
+  const [salarioBruto, setSalarioBruto] = useState<number>(3500);
+  const [mediaExtras, setMediaExtras] = useState<number>(0);
+  const [mesesTrabalhados, setMesesTrabalhados] = useState<number>(8);
+  const [diasFerias, setDiasFerias] = useState<number>(30);
+  const [venderAbono, setVenderAbono] = useState<boolean>(false);
+
+  const baseCalculo = (salarioBruto || 0) + (mediaExtras || 0);
+  const avos = Math.min(12, Math.max(1, mesesTrabalhados || 1));
+  const valorProporcionalBase = (baseCalculo / 12) * avos;
+  
+  // Dias a gozar vs abono
+  const diasGozados = venderAbono ? 20 : diasFerias;
+  const diasAbono = venderAbono ? 10 : 0;
+
+  const valorDiasFerias = (valorProporcionalBase / 30) * diasGozados;
+  const valorTercoConstitucional = valorDiasFerias / 3;
+  const valorAbonoPecuniario = (valorProporcionalBase / 30) * diasAbono;
+  const valorTercoAbono = valorAbonoPecuniario / 3;
+
+  const totalBrutoTributavel = valorDiasFerias + valorTercoConstitucional;
+  const totalBrutoIsento = valorAbonoPecuniario + valorTercoAbono;
+  const totalBrutoGeral = totalBrutoTributavel + totalBrutoIsento;
+
+  // INSS Simplificado progressivo estimado sobre a parte tributável
+  let inss = 0;
+  if (totalBrutoTributavel <= 1412) inss = totalBrutoTributavel * 0.075;
+  else if (totalBrutoTributavel <= 2666.68) inss = (1412 * 0.075) + ((totalBrutoTributavel - 1412) * 0.09);
+  else if (totalBrutoTributavel <= 4000.03) inss = (1412 * 0.075) + ((2666.68 - 1412) * 0.09) + ((totalBrutoTributavel - 2666.68) * 0.12);
+  else inss = (1412 * 0.075) + ((2666.68 - 1412) * 0.09) + ((4000.03 - 2666.68) * 0.12) + ((Math.min(totalBrutoTributavel, 7786.02) - 4000.03) * 0.14);
+
+  const totalLiquido = totalBrutoGeral - inss;
+
+  return (
+    <div className="space-y-6" id="calc-ferias-proporcionais">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Calculadora de Férias Proporcionais e Vencidas CLT</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Simule o valor exato das férias, 1/3 constitucional, venda de 10 dias (abono pecuniário) e deduções legais.</p>
+      </div>
+
+      <div className="p-5 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-750 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Salário Bruto Contratual (R$)</label>
+          <input type="number" className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={salarioBruto} onChange={e => setSalarioBruto(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Média de Horas Extras/Comissões (R$)</label>
+          <input type="number" className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={mediaExtras} onChange={e => setMediaExtras(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Meses Trabalhados (Avos)</label>
+          <select className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-semibold" value={mesesTrabalhados} onChange={e => setMesesTrabalhados(Number(e.target.value))}>
+            {Array.from({ length: 12 }, (_, i) => (
+              <option key={i + 1} value={i + 1}>{i + 1} / 12 avos {i === 11 ? '(Férias Integrais)' : ''}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Venda de 1/3 (Abono 10 dias)?</label>
+          <div className="flex gap-2">
+            <button onClick={() => setVenderAbono(false)} type="button" className={`flex-1 py-2 rounded-xl text-xs font-bold ${!venderAbono ? 'bg-emerald-600 text-white' : 'bg-white dark:bg-slate-800 border'}`}>
+              Não (Gozar 30d)
+            </button>
+            <button onClick={() => setVenderAbono(true)} type="button" className={`flex-1 py-2 rounded-xl text-xs font-bold ${venderAbono ? 'bg-emerald-600 text-white' : 'bg-white dark:bg-slate-800 border'}`}>
+              Sim (Vender 10d)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Resultados Detalhados */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+          <span className="text-xs font-bold text-slate-500 uppercase block">1. Remuneração de Férias ({diasGozados} dias)</span>
+          <span className="text-2xl font-black text-slate-900 dark:text-slate-100 font-mono">R$ {valorDiasFerias.toFixed(2)}</span>
+          <span className="text-xs text-slate-500 block">+ 1/3 Constitucional: <strong>R$ {valorTercoConstitucional.toFixed(2)}</strong></span>
+        </div>
+
+        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+          <span className="text-xs font-bold text-slate-500 uppercase block">2. Abono Pecuniário (Isento)</span>
+          <span className="text-2xl font-black text-slate-900 dark:text-slate-100 font-mono">R$ {totalBrutoIsento.toFixed(2)}</span>
+          <span className="text-xs text-emerald-600 font-semibold block">{venderAbono ? '10 dias vendidos + 1/3 isento de INSS/IR' : 'Nenhum dia vendido'}</span>
+        </div>
+
+        <div className="p-5 bg-emerald-50 dark:bg-emerald-950/40 rounded-2xl border border-emerald-300 dark:border-emerald-800 space-y-2">
+          <span className="text-xs font-black text-emerald-900 dark:text-emerald-300 uppercase block">3. Total Líquido Estimado</span>
+          <span className="text-3xl font-black text-emerald-700 dark:text-emerald-400 font-mono">R$ {totalLiquido.toFixed(2)}</span>
+          <span className="text-xs text-slate-500 block">Total Bruto: R$ {totalBrutoGeral.toFixed(2)} | INSS: -R$ {inss.toFixed(2)}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 52. CALCULADORA DE AVISO PRÉVIO PROPORCIONAL (LEI 12.506/11)
+function CalculadoraAvisoPrevio() {
+  const [salarioBase, setSalarioBase] = useState<number>(3000);
+  const [anosCompletos, setAnosCompletos] = useState<number>(3);
+  const [tipoDemissao, setTipoDemissao] = useState<'sem_justa_causa' | 'pedido_demissao'>('sem_justa_causa');
+  const [modalidadeAviso, setModalidadeAviso] = useState<'indenizado' | 'trabalhado'>('indenizado');
+
+  // Cálculo da Lei 12.506/11: 30 dias + 3 dias por ano completo (máximo de 90 dias)
+  const diasAdicionais = tipoDemissao === 'sem_justa_causa' ? Math.min(60, (anosCompletos || 0) * 3) : 0;
+  const totalDiasAviso = 30 + diasAdicionais;
+
+  const valorDiaSalario = (salarioBase || 0) / 30;
+  const valorAvisoPrevio = valorDiaSalario * totalDiasAviso;
+
+  return (
+    <div className="space-y-6" id="calc-aviso-previo">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Calculadora de Aviso Prévio Proporcional (Lei 12.506/11)</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Calcule a quantidade exata de dias de aviso prévio (de 30 a 90 dias) e o valor rescisório por tempo de empresa.</p>
+      </div>
+
+      <div className="p-5 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-750 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Último Salário Base (R$)</label>
+          <input type="number" className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={salarioBase} onChange={e => setSalarioBase(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Anos Completos de Empresa</label>
+          <input type="number" min={0} max={30} className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={anosCompletos} onChange={e => setAnosCompletos(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Tipo de Rescisão</label>
+          <select className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-semibold" value={tipoDemissao} onChange={e => setTipoDemissao(e.target.value as any)}>
+            <option value="sem_justa_causa">Demissão sem Justa Causa (Pelo Empregador)</option>
+            <option value="pedido_demissao">Pedido de Demissão (Pelo Empregado)</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Resultados */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+          <span className="text-xs font-bold text-slate-500 uppercase block">Duração do Aviso Prévio</span>
+          <span className="text-3xl font-black text-slate-900 dark:text-slate-100 font-mono">{totalDiasAviso} dias</span>
+          <span className="text-xs text-slate-500 block">
+            {tipoDemissao === 'sem_justa_causa' ? `30 dias base + ${diasAdicionais} dias adicionais (${anosCompletos} anos x 3 dias)` : '30 dias fixos (pedido de demissão não confere proporcionalidade)'}
+          </span>
+        </div>
+
+        <div className="p-5 bg-emerald-50 dark:bg-emerald-950/40 rounded-2xl border border-emerald-300 dark:border-emerald-800 space-y-2">
+          <span className="text-xs font-black text-emerald-900 dark:text-emerald-300 uppercase block">Valor Financeiro Bruto</span>
+          <span className="text-3xl font-black text-emerald-700 dark:text-emerald-400 font-mono">R$ {valorAvisoPrevio.toFixed(2)}</span>
+          <span className="text-xs text-slate-500 block">Equivalente a R$ {valorDiaSalario.toFixed(2)} por dia trabalhado/indenizado</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 53. CALCULADORA DE TIJOLOS, BLOCOS E ARGAMASSA
+function CalculadoraTijolosArgamassa() {
+  const [comprimento, setComprimento] = useState<number>(10);
+  const [altura, setAltura] = useState<number>(2.8);
+  const [descontoVaos, setDescontoVaos] = useState<number>(4); // Portas e janelas m²
+  const [tipoBloco, setTipoBloco] = useState<'8furos' | '6furos' | '9furos' | 'concreto'>('8furos');
+
+  const areaTotal = Math.max(0, (comprimento || 0) * (altura || 0));
+  const areaLiquida = Math.max(0, areaTotal - (descontoVaos || 0));
+
+  // Rendimento por m²
+  let tijolosPorM2 = 25; // Padrão 8 furos 9x19x19 cm
+  let argamassaKgM2 = 18; // kg por m²
+
+  if (tipoBloco === '6furos') {
+    tijolosPorM2 = 33;
+    argamassaKgM2 = 20;
+  } else if (tipoBloco === '9furos') {
+    tijolosPorM2 = 25;
+    argamassaKgM2 = 22;
+  } else if (tipoBloco === 'concreto') {
+    tijolosPorM2 = 12.5;
+    argamassaKgM2 = 15;
+  }
+
+  const tijolosExatos = Math.ceil(areaLiquida * tijolosPorM2);
+  const tijolosComPerda = Math.ceil(tijolosExatos * 1.10); // +10% de perda
+  const totalArgamassaKg = Math.ceil(areaLiquida * argamassaKgM2);
+  const sacosArgamassa20kg = Math.ceil(totalArgamassaKg / 20);
+
+  return (
+    <div className="space-y-6" id="calc-tijolos-argamassa">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Calculadora de Tijolos, Blocos e Argamassa</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Calcule a quantidade exata de blocos cerâmicos ou de concreto e sacos de argamassa para paredes.</p>
+      </div>
+
+      <div className="p-5 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-750 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Comprimento da Parede (m)</label>
+          <input type="number" step="0.1" className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={comprimento} onChange={e => setComprimento(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Altura / Pé-direito (m)</label>
+          <input type="number" step="0.1" className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={altura} onChange={e => setAltura(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Desconto de Portas/Janelas (m²)</label>
+          <input type="number" step="0.1" className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={descontoVaos} onChange={e => setDescontoVaos(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Tipo de Tijolo / Bloco</label>
+          <select className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-semibold" value={tipoBloco} onChange={e => setTipoBloco(e.target.value as any)}>
+            <option value="8furos">Tijolo Baiano 8 Furos (9x19x19 cm)</option>
+            <option value="6furos">Tijolo Baiano 6 Furos (9x14x19 cm)</option>
+            <option value="9furos">Tijolo Baiano 9 Furos (14x19x19 cm)</option>
+            <option value="concreto">Bloco de Concreto (14x19x39 cm)</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Resultados */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+          <span className="text-xs font-bold text-slate-500 uppercase block">Área Líquida da Alvenaria</span>
+          <span className="text-3xl font-black text-slate-900 dark:text-slate-100 font-mono">{areaLiquida.toFixed(1)} m²</span>
+          <span className="text-xs text-slate-500 block">Total bruto: {areaTotal.toFixed(1)} m² (-{descontoVaos} m² de vãos)</span>
+        </div>
+
+        <div className="p-5 bg-emerald-50 dark:bg-emerald-950/40 rounded-2xl border border-emerald-300 dark:border-emerald-800 space-y-2">
+          <span className="text-xs font-black text-emerald-900 dark:text-emerald-300 uppercase block">Tijolos Recomendados (+10% perda)</span>
+          <span className="text-3xl font-black text-emerald-700 dark:text-emerald-400 font-mono">{tijolosComPerda} unid.</span>
+          <span className="text-xs text-slate-500 block">Quantidade exata: {tijolosExatos} tijolos</span>
+        </div>
+
+        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+          <span className="text-xs font-bold text-slate-500 uppercase block">Argamassa de Assentamento</span>
+          <span className="text-3xl font-black text-slate-900 dark:text-slate-100 font-mono">{sacosArgamassa20kg} sacos</span>
+          <span className="text-xs text-slate-500 block">Aprox. {totalArgamassaKg} kg (sacos de 20 kg)</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 54. CALCULADORA DE COMBUSTÍVEL E PEDÁGIO PARA VIAGEM
+function CalculadoraCombustivelViagem() {
+  const [distanciaKm, setDistanciaKm] = useState<number>(350);
+  const [idaEVolta, setIdaEVolta] = useState<boolean>(true);
+  const [consumoKmL, setConsumoKmL] = useState<number>(12);
+  const [precoCombustivel, setPrecoCombustivel] = useState<number>(5.89);
+  const [pedagioTotal, setPedagioTotal] = useState<number>(45);
+  const [numPassageiros, setNumPassageiros] = useState<number>(4);
+
+  const kmFinal = idaEVolta ? (distanciaKm || 0) * 2 : (distanciaKm || 0);
+  const litrosGastos = (consumoKmL || 1) > 0 ? kmFinal / (consumoKmL || 1) : 0;
+  const custoCombustivel = litrosGastos * (precoCombustivel || 0);
+  const pedagioFinal = idaEVolta ? (pedagioTotal || 0) * 2 : (pedagioTotal || 0);
+  const custoTotalViagem = custoCombustivel + pedagioFinal;
+  const custoPorPassageiro = (numPassageiros || 1) > 0 ? custoTotalViagem / (numPassageiros || 1) : custoTotalViagem;
+
+  return (
+    <div className="space-y-6" id="calc-combustivel-viagem">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Calculadora de Combustível e Pedágio para Viagem</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Calcule os gastos totais de estrada (combustível e tarifas de pedágio) e divida por passageiro.</p>
+      </div>
+
+      <div className="p-5 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-750 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Distância do Trecho (km)</label>
+          <div className="flex gap-2">
+            <input type="number" className="flex-1 border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={distanciaKm} onChange={e => setDistanciaKm(Number(e.target.value))} />
+            <button onClick={() => setIdaEVolta(!idaEVolta)} type="button" className={`px-3 py-2 rounded-xl text-xs font-bold ${idaEVolta ? 'bg-emerald-600 text-white' : 'bg-white dark:bg-slate-800 border'}`}>
+              {idaEVolta ? 'Ida e Volta 🔄' : 'Só Ida ➡️'}
+            </button>
+          </div>
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Consumo Médio (km/l)</label>
+          <input type="number" step="0.5" className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={consumoKmL} onChange={e => setConsumoKmL(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Preço do Litro (R$)</label>
+          <input type="number" step="0.01" className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={precoCombustivel} onChange={e => setPrecoCombustivel(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Pedágios do Trecho (R$)</label>
+          <input type="number" step="1" className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={pedagioTotal} onChange={e => setPedagioTotal(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Número de Passageiros para Rateio</label>
+          <input type="number" min={1} max={10} className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={numPassageiros} onChange={e => setNumPassageiros(Number(e.target.value))} />
+        </div>
+      </div>
+
+      {/* Resultados */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+          <span className="text-xs font-bold text-slate-500 uppercase block">Consumo da Rota ({kmFinal} km)</span>
+          <span className="text-3xl font-black text-slate-900 dark:text-slate-100 font-mono">{litrosGastos.toFixed(1)} L</span>
+          <span className="text-xs text-slate-500 block">Custo combustível: R$ {custoCombustivel.toFixed(2)}</span>
+        </div>
+
+        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+          <span className="text-xs font-bold text-slate-500 uppercase block">Custo Total da Viagem</span>
+          <span className="text-3xl font-black text-slate-900 dark:text-slate-100 font-mono">R$ {custoTotalViagem.toFixed(2)}</span>
+          <span className="text-xs text-slate-500 block">Combustível + R$ {pedagioFinal.toFixed(2)} de pedágio</span>
+        </div>
+
+        <div className="p-5 bg-emerald-50 dark:bg-emerald-950/40 rounded-2xl border border-emerald-300 dark:border-emerald-800 space-y-2">
+          <span className="text-xs font-black text-emerald-900 dark:text-emerald-300 uppercase block">Valor por Pessoa ({numPassageiros} pess.)</span>
+          <span className="text-3xl font-black text-emerald-700 dark:text-emerald-400 font-mono">R$ {custoPorPassageiro.toFixed(2)}</span>
+          <span className="text-xs text-emerald-600 font-semibold block">Divisão justa de despesas</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// 55. CALCULADORA DE BTUS PARA AR-CONDICIONADO
+function CalculadoraBtusArCondicionado() {
+  const [areaM2, setAreaM2] = useState<number>(18);
+  const [solIntenso, setSolIntenso] = useState<boolean>(false);
+  const [numPessoas, setNumPessoas] = useState<number>(2);
+  const [numAparelhos, setNumAparelhos] = useState<number>(2);
+
+  // Fórmula técnica: 600 BTUs/m² (sol moderado) ou 800 BTUs/m² (sol da tarde)
+  // + 600/800 BTUs por pessoa extra (além da 1ª)
+  // + 600/800 BTUs por eletrônico
+  const baseBtuM2 = solIntenso ? 800 : 600;
+  const adicionalItem = solIntenso ? 800 : 600;
+
+  const pessoasExtras = Math.max(0, (numPessoas || 1) - 1);
+  const btusCalculados = ((areaM2 || 1) * baseBtuM2) + (pessoasExtras * adicionalItem) + ((numAparelhos || 0) * adicionalItem);
+
+  // Capacidade comercial recomendada
+  let capacidadeComercial = 9000;
+  if (btusCalculados <= 9000) capacidadeComercial = 9000;
+  else if (btusCalculados <= 12000) capacidadeComercial = 12000;
+  else if (btusCalculados <= 18000) capacidadeComercial = 18000;
+  else if (btusCalculados <= 24000) capacidadeComercial = 24000;
+  else if (btusCalculados <= 30000) capacidadeComercial = 30000;
+  else capacidadeComercial = 36000;
+
+  return (
+    <div className="space-y-6" id="calc-btus-ar">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Calculadora de BTUs para Ar-Condicionado</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Descubra a capacidade térmica exata em BTUs/h para climatizar seu quarto, sala ou escritório com economia.</p>
+      </div>
+
+      <div className="p-5 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-750 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Área do Cômodo (m²)</label>
+          <input type="number" min={1} className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={areaM2} onChange={e => setAreaM2(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Incidência de Sol</label>
+          <select className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-semibold" value={solIntenso ? 'tarde' : 'manha'} onChange={e => setSolIntenso(e.target.value === 'tarde')}>
+            <option value="manha">Sol apenas pela manhã (Moderado)</option>
+            <option value="tarde">Sol intenso durante a tarde</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Pessoas no Ambiente</label>
+          <input type="number" min={1} max={30} className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={numPessoas} onChange={e => setNumPessoas(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Aparelhos Eletrônicos (TVs, PCs)</label>
+          <input type="number" min={0} max={20} className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono" value={numAparelhos} onChange={e => setNumAparelhos(Number(e.target.value))} />
+        </div>
+      </div>
+
+      {/* Resultados */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
+          <span className="text-xs font-bold text-slate-500 uppercase block">Carga Térmica Exata</span>
+          <span className="text-3xl font-black text-slate-900 dark:text-slate-100 font-mono">{btusCalculados.toLocaleString('pt-BR')} BTUs/h</span>
+          <span className="text-xs text-slate-500 block">Cálculo por área + dissipação de calor de pessoas e eletrônicos</span>
+        </div>
+
+        <div className="p-5 bg-emerald-50 dark:bg-emerald-950/40 rounded-2xl border border-emerald-300 dark:border-emerald-800 space-y-2">
+          <span className="text-xs font-black text-emerald-900 dark:text-emerald-300 uppercase block">Modelo Comercial Recomendado</span>
+          <span className="text-3xl font-black text-emerald-700 dark:text-emerald-400 font-mono">{capacidadeComercial.toLocaleString('pt-BR')} BTUs</span>
+          <span className="text-xs text-emerald-600 font-semibold block">Dica: Prefira modelos com tecnologia Inverter (até 60% de economia)</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 

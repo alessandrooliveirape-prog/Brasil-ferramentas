@@ -32,6 +32,11 @@ export default function Geradores({ toolId }: GeradoresProps) {
       {toolId === 'declaracao-conteudo-correios' && <GeradorDeclaracaoConteudo />}
       {toolId === 'gerador-pix' && <GeradorPix />}
       {toolId === 'contrato-locacao' && <GeradorContratoLocacao />}
+      {toolId === 'declaracao-residencia' && <GeradorDeclaracaoResidencia />}
+      {toolId === 'procuracao-simples' && <GeradorProcuracaoSimples />}
+      {toolId === 'carta-demissao' && <GeradorCartaDemissao />}
+      {toolId === 'nota-promissoria' && <GeradorNotaPromissoria />}
+      {toolId === 'recibo-compra-venda-veiculo' && <GeradorReciboVeiculo />}
     </div>
   );
 }
@@ -1982,4 +1987,636 @@ TESTEMUNHAS:
     </div>
   );
 }
+
+// 21. GERADOR DE DECLARAÇÃO DE RESIDÊNCIA (LEI 7.115/83)
+function GeradorDeclaracaoResidencia() {
+  const [tipoDeclaracao, setTipoDeclaracao] = useState<'propria' | 'terceiro'>('propria');
+  const [nome, setNome] = useState('Carlos Eduardo Silva');
+  const [nacionalidade, setNacionalidade] = useState('Brasileiro(a)');
+  const [estadoCivil, setEstadoCivil] = useState('Solteiro(a)');
+  const [profissao, setProfissao] = useState('Analista de Sistemas');
+  const [rg, setRg] = useState('12.345.678-9');
+  const [orgaoRg, setOrgaoRg] = useState('SSP/SP');
+  const [cpf, setCpf] = useState('123.456.789-00');
+
+  const [logradouro, setLogradouro] = useState('Rua das Flores, nº 120, Apto 42');
+  const [bairro, setBairro] = useState('Jardim Paulista');
+  const [cidade, setCidade] = useState('São Paulo');
+  const [uf, setUf] = useState('SP');
+  const [cep, setCep] = useState('01400-000');
+
+  // Dados do Terceiro (Proprietário/Titular)
+  const [nomeProprietario, setNomeProprietario] = useState('Maria Aparecida Santos');
+  const [cpfProprietario, setCpfProprietario] = useState('987.654.321-11');
+  const [rgProprietario, setRgProprietario] = useState('98.765.432-1 SSP/SP');
+  const [parentesco, setParentesco] = useState('Locador / Proprietário do Imóvel');
+
+  const [copiado, setCopiado] = useState(false);
+
+  const hoje = new Date();
+  const dataExtenso = `${cidade} - ${uf}, ${hoje.getDate()} de ${['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'][hoje.getMonth()]} de ${hoje.getFullYear()}`;
+
+  let textoDeclaracao = '';
+  if (tipoDeclaracao === 'propria') {
+    textoDeclaracao = `DECLARAÇÃO DE RESIDÊNCIA
+
+Eu, ${nome.toUpperCase()}, de nacionalidade ${nacionalidade.toLowerCase()}, estado civil ${estadoCivil.toLowerCase()}, profissão ${profissao.toLowerCase()}, portador(a) da Carteira de Identidade RG nº ${rg} expedida por ${orgaoRg}, e inscrito(a) no Cadastro de Pessoas Físicas (CPF) sob o nº ${cpf},
+
+DECLARO para os devidos fins de direito e comprovação perante órgãos públicos, instituições bancárias, estabelecimentos de ensino e empresas privadas, sob as penas da Lei Federal nº 7.115, de 29 de agosto de 1983, e do Artigo 299 do Código Penal Brasileiro (Falsidade Ideológica), que RESIDO e sou domiciliado(a) no seguinte endereço:
+
+Logradouro: ${logradouro}
+Bairro: ${bairro}
+Cidade/UF: ${cidade}/${uf}
+CEP: ${cep}
+
+Declaro ainda estar ciente de que prestar declaração falsa em documento público ou particular constitui crime de falsidade ideológica, sujeitando o declarante às sanções cíveis, administrativas e criminais cabíveis.
+
+Por ser a expressão fiel da verdade, firmo a presente declaração para que produza seus efeitos legais.
+
+
+${dataExtenso}.
+
+
+_______________________________________________________________
+${nome.toUpperCase()}
+CPF: ${cpf}`;
+  } else {
+    textoDeclaracao = `DECLARAÇÃO DE RESIDÊNCIA POR TERCEIRO
+
+Eu, ${nomeProprietario.toUpperCase()}, inscrito(a) no CPF nº ${cpfProprietario}, portador(a) do RG nº ${rgProprietario}, na qualidade de ${parentesco},
+
+DECLARO para os devidos fins de direito, sob as penas da Lei Federal nº 7.115/1983 e do Art. 299 do Código Penal, que o(a) Sr.(a) ${nome.toUpperCase()}, de nacionalidade ${nacionalidade.toLowerCase()}, estado civil ${estadoCivil.toLowerCase()}, profissão ${profissao.toLowerCase()}, portador(a) do RG nº ${rg} (${orgaoRg}) e inscrito(a) no CPF nº ${cpf}, RESIDE e tem seu domicílio no imóvel de minha titularidade/responsabilidade, situado no seguinte endereço:
+
+Logradouro: ${logradouro}
+Bairro: ${bairro}
+Cidade/UF: ${cidade}/${uf}
+CEP: ${cep}
+
+Por ser a expressão da verdade, firmo a presente declaração.
+
+
+${dataExtenso}.
+
+
+_______________________________________________________________
+${nomeProprietario.toUpperCase()} (Declarante / Titular)
+CPF: ${cpfProprietario}
+
+
+_______________________________________________________________
+${nome.toUpperCase()} (Morador / Interessado)
+CPF: ${cpf}`;
+  }
+
+  const copiarTexto = () => {
+    navigator.clipboard.writeText(textoDeclaracao);
+    setCopiado(true);
+    setTimeout(() => setCopiado(false), 2500);
+  };
+
+  const imprimir = () => {
+    window.print();
+  };
+
+  return (
+    <div className="space-y-6" id="gerador-decl-residencia">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Gerador de Declaração de Residência (Lei 7.115/83)</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Crie o documento formal de comprovante de residência pronto para imprimir em folha A4 com validade legal.</p>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={copiarTexto} type="button" className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold transition hover:bg-slate-200">
+            {copiado ? 'Copiado! ✅' : 'Copiar Texto'}
+          </button>
+          <button onClick={imprimir} type="button" className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-black shadow transition">
+            🖨️ Imprimir A4
+          </button>
+        </div>
+      </div>
+
+      {/* Tipo de Declaração */}
+      <div className="flex gap-3">
+        <button 
+          onClick={() => setTipoDeclaracao('propria')} 
+          type="button" 
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${tipoDeclaracao === 'propria' ? 'bg-emerald-600 text-white shadow' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}
+        >
+          👤 Declaração em Nome Próprio
+        </button>
+        <button 
+          onClick={() => setTipoDeclaracao('terceiro')} 
+          type="button" 
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${tipoDeclaracao === 'terceiro' ? 'bg-emerald-600 text-white shadow' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}
+        >
+          👥 Declaração por Terceiro (Locador / Parente)
+        </button>
+      </div>
+
+      {/* Formulário */}
+      <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+        {tipoDeclaracao === 'terceiro' && (
+          <>
+            <div className="sm:col-span-2 md:col-span-3 pb-2 border-b border-slate-200 dark:border-slate-700 font-bold text-xs text-emerald-700 dark:text-emerald-400">
+              Dados do Titular / Proprietário do Imóvel:
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Nome do Titular</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={nomeProprietario} onChange={(e) => setNomeProprietario(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">CPF do Titular</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-mono" value={cpfProprietario} onChange={(e) => setCpfProprietario(e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Vínculo / Parentesco</label>
+              <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={parentesco} onChange={(e) => setParentesco(e.target.value)} />
+            </div>
+          </>
+        )}
+
+        <div className="sm:col-span-2 md:col-span-3 pb-2 border-b border-slate-200 dark:border-slate-700 font-bold text-xs text-emerald-700 dark:text-emerald-400">
+          Dados do Morador / Declarante:
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Nome Completo</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={nome} onChange={(e) => setNome(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">CPF</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-mono" value={cpf} onChange={(e) => setCpf(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">RG e Órgão Emissor</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={rg} onChange={(e) => setRg(e.target.value)} />
+        </div>
+
+        <div className="sm:col-span-2">
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Endereço (Rua, Número, Complemento)</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={logradouro} onChange={(e) => setLogradouro(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Bairro</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={bairro} onChange={(e) => setBairro(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Cidade</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={cidade} onChange={(e) => setCidade(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">UF</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-mono uppercase" value={uf} onChange={(e) => setUf(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">CEP</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-mono" value={cep} onChange={(e) => setCep(e.target.value)} />
+        </div>
+      </div>
+
+      {/* Visualização de Impressão */}
+      <div className="bg-white border-2 border-slate-300 rounded-xl p-8 text-slate-900 shadow-sm print:m-0 print:p-0 print:border-none print:shadow-none">
+        <pre className="font-serif text-xs sm:text-sm leading-relaxed whitespace-pre-wrap text-slate-800">
+          {textoDeclaracao}
+        </pre>
+      </div>
+    </div>
+  );
+}
+
+// 22. GERADOR DE PROCURAÇÃO SIMPLES
+function GeradorProcuracaoSimples() {
+  const [outorganteNome, setOutorganteNome] = useState('Juliana Ferreira Lima');
+  const [outorganteCpf, setOutorganteCpf] = useState('234.567.890-12');
+  const [outorganteRg, setOutorganteRg] = useState('23.456.789-0 SSP/MG');
+  const [outorganteEndereco, setOutorganteEndereco] = useState('Av. Amazonas, nº 500, Belo Horizonte - MG');
+
+  const [outorgadoNome, setOutorgadoNome] = useState('Marcos Vinícius Costa');
+  const [outorgadoCpf, setOutorgadoCpf] = useState('345.678.901-23');
+  const [outorgadoRg, setOutorgadoRg] = useState('34.567.890-1 SSP/MG');
+  const [outorgadoEndereco, setOutorgadoEndereco] = useState('Rua da Bahia, nº 1000, Belo Horizonte - MG');
+
+  const [tipoPoderes, setTipoPoderes] = useState<'geral' | 'banco' | 'detran' | 'inss'>('banco');
+  const [cidadeData, setCidadeData] = useState('Belo Horizonte - MG');
+
+  const [copiado, setCopiado] = useState(false);
+
+  const hoje = new Date();
+  const dataHoje = `${hoje.getDate()} de ${['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'][hoje.getMonth()]} de ${hoje.getFullYear()}`;
+
+  let textoPoderes = '';
+  if (tipoPoderes === 'banco') {
+    textoPoderes = `amplos poderes para representar o(a) Outorgante perante quaisquer instituições bancárias públicas ou privadas (Banco do Brasil, Caixa Econômica Federal, Bradesco, Itaú, Santander, etc.), podendo abrir, movimentar e encerrar contas correntes e poupanças, solicitar cartões e senhas, emitir e endossar cheques, efetuar saques, transferências (PIX/TED), consultar saldos e extratos, assinar contratos de serviços financeiros e praticar todos os atos necessários à boa e fiel administração bancária.`;
+  } else if (tipoPoderes === 'detran') {
+    textoPoderes = `poderes específicos para representar o(a) Outorgante perante o Departamento Estadual de Trânsito (DETRAN) e órgãos correlatos, podendo solicitar emissão de 2ª via de CRLV/CRV, transferência de propriedade de veículos, requerer certidões, efetuar vistorias, recorrer de autos de infração e multas, assinar ATPV-e e praticar todos os atos atinentes à regularização veicular.`;
+  } else if (tipoPoderes === 'inss') {
+    textoPoderes = `poderes especiais para representar o(a) Outorgante perante o Instituto Nacional do Seguro Social (INSS), podendo requerer benefícios previdenciários e assistenciais (aposentadorias, auxílios, pensões), acompanhar perícias médicas, protocolar recursos administrativos, consultar extratos de CNIS, requerer certidões e assinar termos pertinentes.`;
+  } else {
+    textoPoderes = `amplos, gerais e ilimitados poderes para administrar, gerir e defender os negócios e interesses do(a) Outorgante, podendo assinar contratos, requerer certidões, dar e receber quitação, representá-lo(a) perante órgãos públicos federais, estaduais e municipais, concessionárias de serviços públicos e empresas privadas.`;
+  }
+
+  const textoProcuracao = `PROCURAÇÃO POR INSTRUMENTO PARTICULAR
+
+OUTORGANTE: ${outorganteNome.toUpperCase()}, brasileiro(a), portador(a) do RG nº ${outorganteRg} e inscrito(a) no CPF nº ${outorganteCpf}, residente e domiciliado(a) em ${outorganteEndereco}.
+
+OUTORGADO: ${outorgadoNome.toUpperCase()}, brasileiro(a), portador(a) do RG nº ${outorgadoRg} e inscrito(a) no CPF nº ${outorgadoCpf}, residente e domiciliado(a) em ${outorgadoEndereco}.
+
+PODERES: Pelo presente instrumento particular de procuração, o(a) Outorgante nomeia e constitui seu bastante procurador o(a) Outorgado(a), a quem confere ${textoPoderes}
+
+O presente mandato é válido por prazo indeterminado (ou até expressa revogação por escrito), sendo vedado o substabelecimento sem expressa anuência do Outorgante.
+
+
+${cidadeData}, ${dataHoje}.
+
+
+_______________________________________________________________
+${outorganteNome.toUpperCase()} (Outorgante)
+CPF: ${outorganteCpf}`;
+
+  const copiar = () => {
+    navigator.clipboard.writeText(textoProcuracao);
+    setCopiado(true);
+    setTimeout(() => setCopiado(false), 2500);
+  };
+
+  return (
+    <div className="space-y-6" id="gerador-procuracao">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Gerador de Procuração Simples</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Crie procurações particulares para bancos, Detran, INSS e negócios em geral (Art. 653 do Código Civil).</p>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={copiar} type="button" className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold transition hover:bg-slate-200">
+            {copiado ? 'Copiado! ✅' : 'Copiar Texto'}
+          </button>
+          <button onClick={() => window.print()} type="button" className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-black shadow transition">
+            🖨️ Imprimir A4
+          </button>
+        </div>
+      </div>
+
+      {/* Seleção de Finalidade */}
+      <div className="flex flex-wrap gap-2">
+        <button onClick={() => setTipoPoderes('banco')} type="button" className={`px-4 py-2 rounded-xl text-xs font-bold transition ${tipoPoderes === 'banco' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}>
+          🏦 Bancos e Contas
+        </button>
+        <button onClick={() => setTipoPoderes('detran')} type="button" className={`px-4 py-2 rounded-xl text-xs font-bold transition ${tipoPoderes === 'detran' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}>
+          🚗 DETRAN e Veículos
+        </button>
+        <button onClick={() => setTipoPoderes('inss')} type="button" className={`px-4 py-2 rounded-xl text-xs font-bold transition ${tipoPoderes === 'inss' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}>
+          📋 INSS e Previdência
+        </button>
+        <button onClick={() => setTipoPoderes('geral')} type="button" className={`px-4 py-2 rounded-xl text-xs font-bold transition ${tipoPoderes === 'geral' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300'}`}>
+          ⚖️ Plenos Poderes Gerais
+        </button>
+      </div>
+
+      {/* Form */}
+      <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="sm:col-span-2 font-bold text-xs text-emerald-700 dark:text-emerald-400">Outorgante (Quem concede):</div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Nome do Outorgante</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={outorganteNome} onChange={e => setOutorganteNome(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">CPF do Outorgante</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-mono" value={outorganteCpf} onChange={e => setOutorganteCpf(e.target.value)} />
+        </div>
+
+        <div className="sm:col-span-2 font-bold text-xs text-emerald-700 dark:text-emerald-400 pt-2 border-t border-slate-200 dark:border-slate-700">Outorgado (Procurador):</div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Nome do Outorgado</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={outorgadoNome} onChange={e => setOutorgadoNome(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">CPF do Outorgado</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-mono" value={outorgadoCpf} onChange={e => setOutorgadoCpf(e.target.value)} />
+        </div>
+      </div>
+
+      {/* Visualização de Impressão */}
+      <div className="bg-white border-2 border-slate-300 rounded-xl p-8 text-slate-900 shadow-sm print:m-0 print:p-0 print:border-none print:shadow-none">
+        <pre className="font-serif text-xs sm:text-sm leading-relaxed whitespace-pre-wrap text-slate-800">
+          {textoProcuracao}
+        </pre>
+      </div>
+    </div>
+  );
+}
+
+// 23. GERADOR DE CARTA DE PEDIDO DE DEMISSÃO
+function GeradorCartaDemissao() {
+  const [empresa, setEmpresa] = useState('Empresa Comercial Exemplo Ltda');
+  const [nome, setNome] = useState('Fernando Henrique de Souza');
+  const [cargo, setCargo] = useState('Assistente Administrativo');
+  const [ctps, setCtps] = useState('1234567 série 001-0 SP');
+  const [tipoAviso, setTipoAviso] = useState<'cumprir' | 'dispensa'>('cumprir');
+  const [cidade, setCidade] = useState('São Paulo - SP');
+
+  const [copiado, setCopiado] = useState(false);
+  const hoje = new Date();
+  const dataHoje = `${hoje.getDate()} de ${['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'][hoje.getMonth()]} de ${hoje.getFullYear()}`;
+
+  let textoAviso = '';
+  if (tipoAviso === 'cumprir') {
+    textoAviso = `Informo que cumprirei regularmente o período de Aviso Prévio de 30 (trinta) dias previsto em lei, trabalhando no período compreendido entre ${hoje.toLocaleDateString('pt-BR')} e ${(new Date(hoje.getTime() + 30*86400000)).toLocaleDateString('pt-BR')}, data em que ocorrerá o encerramento definitivo das minhas atividades na empresa.`;
+  } else {
+    textoAviso = `Solicito a V. Sa. a dispensa do cumprimento do Aviso Prévio, tendo em vista motivos estritamente particulares (e/ou início imediato em novo compromisso profissional), requerendo o encerramento do contrato de trabalho nesta data e a realização do acerto das verbas rescisórias nos termos legais.`;
+  }
+
+  const textoCarta = `À
+${empresa.toUpperCase()}
+A/C: Departamento de Recursos Humanos / Diretoria
+
+Prezados Senhores,
+
+Venho por meio desta comunicar formalmente a minha decisão de me DESLIGAR do quadro de funcionários desta empresa, renunciando ao cargo de ${cargo} que ocupo desde minha admissão.
+
+${textoAviso}
+
+Agradeço a oportunidade de trabalho e aprendizado que me foram concedidos ao longo do período em que fiz parte desta organização.
+
+
+${cidade}, ${dataHoje}.
+
+
+_______________________________________________________________
+${nome.toUpperCase()}
+Cargo: ${cargo}
+CTPS: ${ctps}
+
+
+
+_______________________________________________________________
+CIENTE DA EMPRESA (Recebido em: ____/____/________)
+Assinatura e Carimbo do Responsável`;
+
+  const copiar = () => {
+    navigator.clipboard.writeText(textoCarta);
+    setCopiado(true);
+    setTimeout(() => setCopiado(false), 2500);
+  };
+
+  return (
+    <div className="space-y-6" id="gerador-carta-demissao">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Gerador de Carta de Pedido de Demissão</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Gere o documento formal para entrega ao RH com cumprimento de aviso ou pedido de dispensa imediata.</p>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={copiar} type="button" className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold transition hover:bg-slate-200">
+            {copiado ? 'Copiado! ✅' : 'Copiar'}
+          </button>
+          <button onClick={() => window.print()} type="button" className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-black shadow transition">
+            🖨️ Imprimir A4
+          </button>
+        </div>
+      </div>
+
+      <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Nome da Empresa Empregadora</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={empresa} onChange={e => setEmpresa(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Seu Nome Completo</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={nome} onChange={e => setNome(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Seu Cargo / Função</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={cargo} onChange={e => setCargo(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Opção do Aviso Prévio</label>
+          <select className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={tipoAviso} onChange={e => setTipoAviso(e.target.value as any)}>
+            <option value="cumprir">Cumprir os 30 dias de aviso prévio trabalhado</option>
+            <option value="dispensa">Solicitar dispensa imediata do cumprimento</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="bg-white border-2 border-slate-300 rounded-xl p-8 text-slate-900 shadow-sm print:m-0 print:p-0 print:border-none print:shadow-none">
+        <pre className="font-serif text-xs sm:text-sm leading-relaxed whitespace-pre-wrap text-slate-800">
+          {textoCarta}
+        </pre>
+      </div>
+    </div>
+  );
+}
+
+// 24. GERADOR DE NOTA PROMISSÓRIA ONLINE
+function GeradorNotaPromissoria() {
+  const [numero, setNumero] = useState('01/01');
+  const [valor, setValor] = useState(1500);
+  const [vencimento, setVencimento] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 30);
+    return d.toISOString().split('T')[0];
+  });
+  const [credorNome, setCredorNome] = useState('João Pedro Martins');
+  const [credorCpf, setCredorCpf] = useState('111.222.333-44');
+  const [emitenteNome, setEmitenteNome] = useState('Roberto Alves Guimarães');
+  const [emitenteCpf, setEmitenteCpf] = useState('555.666.777-88');
+  const [emitenteEndereco, setEmitenteEndereco] = useState('Rua XV de Novembro, 100, Curitiba - PR');
+  const [cidade, setCidade] = useState('Curitiba - PR');
+
+  const [copiado, setCopiado] = useState(false);
+
+  // Conversão de valor para reais por extenso
+  const valorFormatado = Number(valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const extenso = `${valorFormatado} (Um mil e quinhentos reais)`; // Representação clássica
+
+  const textoPromissoria = `NOTA PROMISSÓRIA Nº ${numero}
+VENCIMENTO: ${vencimento.split('-').reverse().join('/')}
+VALOR: ${valorFormatado}
+
+No dia ${vencimento.split('-').reverse().join('/')}, pagarei(emos) por esta única via de NOTA PROMISSÓRIA ao Sr.(a) ${credorNome.toUpperCase()} (CPF/CNPJ: ${credorCpf}), ou à sua ordem, a quantia de:
+
+${extenso.toUpperCase()}
+
+em moeda corrente deste país, pagável na praça de ${cidade}.
+
+
+EMITENTE (Devedor):
+Nome: ${emitenteNome.toUpperCase()}
+CPF/CNPJ: ${emitenteCpf}
+Endereço: ${emitenteEndereco}
+
+Data de Emissão: ${new Date().toLocaleDateString('pt-BR')}
+
+
+_______________________________________________________________
+ASSINATURA DO EMITENTE`;
+
+  const copiar = () => {
+    navigator.clipboard.writeText(textoPromissoria);
+    setCopiado(true);
+    setTimeout(() => setCopiado(false), 2500);
+  };
+
+  return (
+    <div className="space-y-6" id="gerador-nota-promissoria">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Gerador de Nota Promissória Online</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Emissão de notas promissórias formais nos termos da Lei Uniforme de Genebra pronta para impressão A4.</p>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={copiar} type="button" className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold transition hover:bg-slate-200">
+            {copiado ? 'Copiado! ✅' : 'Copiar'}
+          </button>
+          <button onClick={() => window.print()} type="button" className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-black shadow transition">
+            🖨️ Imprimir A4
+          </button>
+        </div>
+      </div>
+
+      <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Nº da Nota</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-mono" value={numero} onChange={e => setNumero(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Valor (R$)</label>
+          <input type="number" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-bold" value={valor} onChange={e => setValor(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Data de Vencimento</label>
+          <input type="date" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-bold" value={vencimento} onChange={e => setVencimento(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Nome do Credor (Favorecido)</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={credorNome} onChange={e => setCredorNome(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Nome do Emitente (Devedor)</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={emitenteNome} onChange={e => setEmitenteNome(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">CPF do Devedor</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-mono" value={emitenteCpf} onChange={e => setEmitenteCpf(e.target.value)} />
+        </div>
+      </div>
+
+      {/* Caixa clássica de Promissória */}
+      <div className="bg-amber-50/50 border-2 border-dashed border-amber-400 rounded-2xl p-6 text-slate-900 shadow-sm print:m-0 print:p-0 print:border-solid">
+        <pre className="font-mono text-xs leading-relaxed whitespace-pre-wrap text-slate-800">
+          {textoPromissoria}
+        </pre>
+      </div>
+    </div>
+  );
+}
+
+// 25. GERADOR DE RECIBO DE COMPRA E VENDA DE VEÍCULO
+function GeradorReciboVeiculo() {
+  const [vendedorNome, setVendedorNome] = useState('Lucas Gabriel Ribeiro');
+  const [vendedorCpf, setVendedorCpf] = useState('789.012.345-67');
+  const [compradorNome, setCompradorNome] = useState('Patrícia Helena Mendes');
+  const [compradorCpf, setCompradorCpf] = useState('890.123.456-78');
+
+  const [veiculoModelo, setVeiculoModelo] = useState('Chevrolet Onix 1.0 Flex Manual');
+  const [placa, setPlaca] = useState('BRA2E19');
+  const [renavam, setRenavam] = useState('00123456789');
+  const [chassi, setChassi] = useState('9BG11234567890123');
+  const [ano, setAno] = useState('2022/2023');
+  const [km, setKm] = useState('35.400 km');
+  const [valor, setValor] = useState(65000);
+  const [cidade, setCidade] = useState('Campinas - SP');
+
+  const [copiado, setCopiado] = useState(false);
+
+  const valorFormatado = Number(valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const hoje = new Date().toLocaleDateString('pt-BR');
+
+  const textoRecibo = `TERMO E RECIBO DE COMPRA E VENDA DE VEÍCULO
+
+VENDEDOR: ${vendedorNome.toUpperCase()}, inscrito(a) no CPF nº ${vendedorCpf}.
+COMPRADOR: ${compradorNome.toUpperCase()}, inscrito(a) no CPF nº ${compradorCpf}.
+
+DADOS DO VEÍCULO:
+- Marca/Modelo: ${veiculoModelo}
+- Placa: ${placa.toUpperCase()} | Renavam: ${renavam}
+- Chassi: ${chassi.toUpperCase()}
+- Ano Fab/Modelo: ${ano} | Quilometragem: ${km}
+
+VALOR E QUITAÇÃO:
+Pelo presente instrumento, o Vendedor declara ter recebido do Comprador a quantia de ${valorFormatado} em moeda corrente/transferência bancária, conferindo plena, geral e irrevogável QUITAÇÃO financeira referente à venda do veículo acima descrito.
+
+CLÁUSULAS E RESPONSABILIDADES:
+1. O Comprador declara que vistoriou o veículo, aceitando-o nas condições mecânicas, elétricas e de funilaria em que se encontra.
+2. O Vendedor responde por quaisquer débitos tributários (IPVA, Licenciamento) e multas de trânsito ocorridas até a data e hora desta entrega.
+3. O Comprador assume a responsabilidade civil, criminal e por infrações de trânsito a partir desta data, comprometendo-se a efetuar a transferência do veículo perante o DETRAN no prazo legal de 30 (trinta) dias (Art. 123 do CTB).
+
+
+${cidade}, ${hoje}.
+
+
+_______________________________________________________________
+${vendedorNome.toUpperCase()} (Vendedor)
+
+
+_______________________________________________________________
+${compradorNome.toUpperCase()} (Comprador)`;
+
+  const copiar = () => {
+    navigator.clipboard.writeText(textoRecibo);
+    setCopiado(true);
+    setTimeout(() => setCopiado(false), 2500);
+  };
+
+  return (
+    <div className="space-y-6" id="gerador-recibo-veiculo">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Gerador de Recibo de Compra e Venda de Veículo</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Gere o recibo e termo de transferência e quitação de automóvel/moto com cláusula de responsabilidade de multas.</p>
+        </div>
+        <div className="flex gap-2">
+          <button onClick={copiar} type="button" className="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-bold transition hover:bg-slate-200">
+            {copiado ? 'Copiado! ✅' : 'Copiar'}
+          </button>
+          <button onClick={() => window.print()} type="button" className="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-black shadow transition">
+            🖨️ Imprimir A4
+          </button>
+        </div>
+      </div>
+
+      <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Veículo (Marca/Modelo)</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-bold" value={veiculoModelo} onChange={e => setVeiculoModelo(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Placa</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-mono uppercase" value={placa} onChange={e => setPlaca(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Valor Negociado (R$)</label>
+          <input type="number" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-bold" value={valor} onChange={e => setValor(Number(e.target.value))} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Renavam</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-mono" value={renavam} onChange={e => setRenavam(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">Chassi</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-mono" value={chassi} onChange={e => setChassi(e.target.value)} />
+        </div>
+        <div>
+          <label className="block text-[11px] font-bold text-slate-600 dark:text-slate-400 mb-0.5">KM Atual</label>
+          <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={km} onChange={e => setKm(e.target.value)} />
+        </div>
+      </div>
+
+      <div className="bg-white border-2 border-slate-300 rounded-xl p-8 text-slate-900 shadow-sm print:m-0 print:p-0 print:border-none print:shadow-none">
+        <pre className="font-serif text-xs sm:text-sm leading-relaxed whitespace-pre-wrap text-slate-800">
+          {textoRecibo}
+        </pre>
+      </div>
+    </div>
+  );
+}
+
 

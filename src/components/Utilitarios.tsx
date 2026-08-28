@@ -34,6 +34,11 @@ export default function Utilitarios({ toolId }: UtilitariosProps) {
       {toolId === 'texto-para-voz' && <TextoParaVoz />}
       {toolId === 'teste-digitacao' && <TesteDigitacao />}
       {toolId === 'formatador-abnt' && <FormatadorABNT />}
+      {toolId === 'compressor-imagens' && <CompressorImagens />}
+      {toolId === 'conversor-imagens' && <ConversorFormatoImagens />}
+      {toolId === 'editor-imagens' && <EditorImagensRapido />}
+      {toolId === 'imagem-para-pdf' && <ConversorImagemPdf />}
+      {toolId === 'imagem-para-base64' && <ConversorImagemBase64 />}
     </div>
   );
 }
@@ -1542,4 +1547,610 @@ function FormatadorABNT() {
     </div>
   );
 }
+
+// 18. COMPRESSOR DE IMAGENS ONLINE (JPG, PNG, WEBP)
+function CompressorImagens() {
+  const [qualidade, setQualidade] = useState<number>(80);
+  const [formatoSaida, setFormatoSaida] = useState<'image/jpeg' | 'image/webp' | 'image/png'>('image/jpeg');
+  const [origImgUrl, setOrigImgUrl] = useState<string | null>(null);
+  const [origTamanho, setOrigTamanho] = useState<number>(0);
+  const [nomeArquivo, setNomeArquivo] = useState<string>('imagem');
+  
+  const [compImgUrl, setCompImgUrl] = useState<string | null>(null);
+  const [compTamanho, setCompTamanho] = useState<number>(0);
+  const [carregando, setCarregando] = useState<boolean>(false);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setNomeArquivo(file.name.replace(/\.[^/.]+$/, ''));
+    setOrigTamanho(file.size);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const url = event.target?.result as string;
+      setOrigImgUrl(url);
+      processarCompressao(url, qualidade, formatoSaida);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const processarCompressao = (dataUrl: string, qual: number, fmt: string) => {
+    setCarregando(true);
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      // Fundo branco caso converta PNG transparente para JPG
+      if (fmt === 'image/jpeg') {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      ctx.drawImage(img, 0, 0);
+
+      canvas.toBlob(
+        (blob) => {
+          if (blob) {
+            setCompTamanho(blob.size);
+            const blobUrl = URL.createObjectURL(blob);
+            setCompImgUrl(blobUrl);
+          }
+          setCarregando(false);
+        },
+        fmt,
+        qual / 100
+      );
+    };
+    img.src = dataUrl;
+  };
+
+  const reprocessar = (novaQual: number, novoFmt: 'image/jpeg' | 'image/webp' | 'image/png') => {
+    setQualidade(novaQual);
+    setFormatoSaida(novoFmt);
+    if (origImgUrl) {
+      processarCompressao(origImgUrl, novaQual, novoFmt);
+    }
+  };
+
+  const formatarBytes = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const percentualEconomia = origTamanho > 0 && compTamanho > 0
+    ? Math.max(0, Math.round(((origTamanho - compTamanho) / origTamanho) * 100))
+    : 0;
+
+  return (
+    <div className="space-y-6" id="util-compressor-imagens">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Compressor de Imagens Online</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Reduza o tamanho em KB/MB de fotos JPG, PNG e WebP diretamente no navegador com privacidade 100% garantida.</p>
+      </div>
+
+      {/* Upload Zone */}
+      <div className="border-2 border-dashed border-emerald-300 dark:border-emerald-700/60 rounded-2xl p-6 text-center bg-emerald-50/40 dark:bg-emerald-950/20 hover:bg-emerald-50 transition">
+        <input type="file" accept="image/jpeg,image/png,image/webp" onChange={handleFileUpload} className="hidden" id="upload-compressor" />
+        <label htmlFor="upload-compressor" className="cursor-pointer block space-y-2">
+          <div className="w-12 h-12 mx-auto bg-emerald-100 dark:bg-emerald-800/60 rounded-full flex items-center justify-center text-2xl text-emerald-600 dark:text-emerald-300">
+            🖼️
+          </div>
+          <span className="text-sm font-bold text-slate-800 dark:text-slate-200 block">Clique para selecionar ou arraste uma imagem</span>
+          <span className="text-xs text-slate-400 block">Formatos suportados: JPG, PNG, WebP (sem limite de resolução)</span>
+        </label>
+      </div>
+
+      {origImgUrl && (
+        <div className="space-y-6">
+          {/* Controles de Qualidade e Formato */}
+          <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <div className="flex justify-between items-center mb-1">
+                <label className="text-xs font-bold text-slate-700 dark:text-slate-300">Nível de Qualidade: {qualidade}%</label>
+                <span className="text-[10px] text-slate-400 font-mono">{qualidade < 50 ? 'Baixa (Muito Leve)' : qualidade < 85 ? 'Equilibrada (Recomendada)' : 'Alta Fidelidade'}</span>
+              </div>
+              <input 
+                type="range" 
+                min="10" 
+                max="100" 
+                step="5" 
+                value={qualidade} 
+                onChange={(e) => reprocessar(Number(e.target.value), formatoSaida)} 
+                className="w-full accent-emerald-600" 
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Formato de Saída</label>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => reprocessar(qualidade, 'image/jpeg')} 
+                  type="button" 
+                  className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition ${formatoSaida === 'image/jpeg' ? 'bg-emerald-600 text-white' : 'bg-white dark:bg-slate-800 border'}`}
+                >
+                  JPG
+                </button>
+                <button 
+                  onClick={() => reprocessar(qualidade, 'image/webp')} 
+                  type="button" 
+                  className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition ${formatoSaida === 'image/webp' ? 'bg-emerald-600 text-white' : 'bg-white dark:bg-slate-800 border'}`}
+                >
+                  WebP (Super Leve)
+                </button>
+                <button 
+                  onClick={() => reprocessar(qualidade, 'image/png')} 
+                  type="button" 
+                  className={`flex-1 py-1.5 rounded-lg text-xs font-bold transition ${formatoSaida === 'image/png' ? 'bg-emerald-600 text-white' : 'bg-white dark:bg-slate-800 border'}`}
+                >
+                  PNG
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Comparativo de Tamanhos e Download */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border border-slate-200 dark:border-slate-750 text-center space-y-2">
+              <span className="text-xs font-bold text-slate-500 uppercase block">Imagem Original</span>
+              <span className="text-2xl font-black text-slate-800 dark:text-slate-200 font-mono">{formatarBytes(origTamanho)}</span>
+              <img src={origImgUrl} alt="Original" className="max-h-48 mx-auto rounded-lg object-contain border shadow-sm" />
+            </div>
+
+            <div className="p-4 bg-emerald-50 dark:bg-emerald-950/30 rounded-xl border border-emerald-300 dark:border-emerald-800 text-center space-y-2">
+              <div className="flex justify-between items-center px-2">
+                <span className="text-xs font-black text-emerald-800 dark:text-emerald-300 uppercase">Imagem Otimizada</span>
+                {percentualEconomia > 0 && (
+                  <span className="px-2 py-0.5 bg-emerald-600 text-white text-xs font-black rounded-full shadow-sm animate-pulse">
+                    -{percentualEconomia}% de economia
+                  </span>
+                )}
+              </div>
+              <span className="text-2xl font-black text-emerald-800 dark:text-emerald-300 font-mono block">
+                {carregando ? 'Otimizando...' : formatarBytes(compTamanho)}
+              </span>
+              {compImgUrl && (
+                <>
+                  <img src={compImgUrl} alt="Comprimida" className="max-h-48 mx-auto rounded-lg object-contain border shadow-sm" />
+                  <a 
+                    href={compImgUrl} 
+                    download={`${nomeArquivo}-otimizada.${formatoSaida === 'image/jpeg' ? 'jpg' : formatoSaida === 'image/webp' ? 'webp' : 'png'}`}
+                    className="inline-block w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black shadow-md transition"
+                  >
+                    ⬇️ Baixar Imagem Comprimida
+                  </a>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 19. CONVERSOR DE FORMATOS DE IMAGEM (PNG, JPG, WEBP)
+function ConversorFormatoImagens() {
+  const [formato, setFormato] = useState<'image/jpeg' | 'image/png' | 'image/webp'>('image/png');
+  const [imgUrl, setImgUrl] = useState<string | null>(null);
+  const [convertedUrl, setConvertedUrl] = useState<string | null>(null);
+  const [fileName, setFileName] = useState('imagem-convertida');
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setFileName(file.name.replace(/\.[^/.]+$/, ''));
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const url = ev.target?.result as string;
+      setImgUrl(url);
+      converter(url, formato);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const converter = (dataUrl: string, targetFormat: string) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      if (targetFormat === 'image/jpeg') {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+      ctx.drawImage(img, 0, 0);
+
+      canvas.toBlob((blob) => {
+        if (blob) {
+          setConvertedUrl(URL.createObjectURL(blob));
+        }
+      }, targetFormat, 0.92);
+    };
+    img.src = dataUrl;
+  };
+
+  const alterarFormato = (novoFmt: 'image/jpeg' | 'image/png' | 'image/webp') => {
+    setFormato(novoFmt);
+    if (imgUrl) converter(imgUrl, novoFmt);
+  };
+
+  return (
+    <div className="space-y-6" id="util-conversor-imagens">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Conversor de Formatos de Imagem</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Converta fotos instantaneamente entre PNG, JPG e WebP no navegador com total fidelidade.</p>
+      </div>
+
+      <div className="border-2 border-dashed border-emerald-300 dark:border-emerald-700/60 rounded-2xl p-6 text-center bg-emerald-50/40 dark:bg-emerald-950/20">
+        <input type="file" accept="image/*" onChange={handleUpload} className="hidden" id="upload-conversor-img" />
+        <label htmlFor="upload-conversor-img" className="cursor-pointer block space-y-2">
+          <div className="w-12 h-12 mx-auto bg-emerald-100 dark:bg-emerald-800/60 rounded-full flex items-center justify-center text-2xl text-emerald-600 dark:text-emerald-300">
+            🔄
+          </div>
+          <span className="text-sm font-bold text-slate-800 dark:text-slate-200 block">Carregar Imagem para Converter</span>
+          <span className="text-xs text-slate-400 block">PNG, JPG, WebP, GIF, SVG</span>
+        </label>
+      </div>
+
+      {imgUrl && (
+        <div className="space-y-4">
+          <div className="flex justify-center gap-2">
+            <button onClick={() => alterarFormato('image/png')} type="button" className={`px-5 py-2 rounded-xl text-xs font-bold transition ${formato === 'image/png' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800'}`}>
+              Para PNG
+            </button>
+            <button onClick={() => alterarFormato('image/jpeg')} type="button" className={`px-5 py-2 rounded-xl text-xs font-bold transition ${formato === 'image/jpeg' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800'}`}>
+              Para JPG
+            </button>
+            <button onClick={() => alterarFormato('image/webp')} type="button" className={`px-5 py-2 rounded-xl text-xs font-bold transition ${formato === 'image/webp' ? 'bg-emerald-600 text-white' : 'bg-slate-100 dark:bg-slate-800'}`}>
+              Para WebP
+            </button>
+          </div>
+
+          {convertedUrl && (
+            <div className="p-6 bg-slate-50 dark:bg-slate-850 rounded-2xl border text-center space-y-4 max-w-md mx-auto">
+              <img src={convertedUrl} alt="Convertida" className="max-h-56 mx-auto rounded-lg shadow-sm" />
+              <a 
+                href={convertedUrl} 
+                download={`${fileName}.${formato === 'image/jpeg' ? 'jpg' : formato === 'image/webp' ? 'webp' : 'png'}`}
+                className="inline-block w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow transition"
+              >
+                ⬇️ Baixar Arquivo Convertido
+              </a>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 20. EDITOR DE IMAGENS RÁPIDO ONLINE
+function EditorImagensRapido() {
+  const [imgSrc, setImgSrc] = useState<string | null>(null);
+  const [brilho, setBrilho] = useState(100);
+  const [contraste, setContraste] = useState(100);
+  const [saturacao, setSaturacao] = useState(100);
+  const [pb, setPb] = useState(0);
+  const [sepia, setSepia] = useState(0);
+  const [rotacao, setRotacao] = useState(0);
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setImgSrc(ev.target?.result as string);
+      resetar();
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const resetar = () => {
+    setBrilho(100);
+    setContraste(100);
+    setSaturacao(100);
+    setPb(0);
+    setSepia(0);
+    setRotacao(0);
+  };
+
+  const girarHorario = () => setRotacao((prev) => (prev + 90) % 360);
+
+  const baixarEditada = () => {
+    if (!imgSrc) return;
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const rad = (rotacao * Math.PI) / 180;
+      const is90or270 = rotacao === 90 || rotacao === 270;
+      canvas.width = is90or270 ? img.naturalHeight : img.naturalWidth;
+      canvas.height = is90or270 ? img.naturalWidth : img.naturalHeight;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      ctx.filter = `brightness(${brilho}%) contrast(${contraste}%) saturate(${saturacao}%) grayscale(${pb}%) sepia(${sepia}%)`;
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate(rad);
+      ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+
+      const link = document.createElement('a');
+      link.download = 'imagem-editada.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    };
+    img.src = imgSrc;
+  };
+
+  return (
+    <div className="space-y-6" id="util-editor-imagens">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex justify-between items-center">
+        <div>
+          <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Editor de Imagens Rápido Online</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Gire, ajuste brilho, contraste e aplique filtros nas suas fotos em tempo real.</p>
+        </div>
+        {imgSrc && (
+          <button onClick={resetar} type="button" className="px-3 py-1 bg-slate-100 text-slate-600 rounded text-xs font-bold">
+            Restaurar
+          </button>
+        )}
+      </div>
+
+      {!imgSrc ? (
+        <div className="border-2 border-dashed border-emerald-300 dark:border-emerald-700/60 rounded-2xl p-8 text-center bg-emerald-50/40 dark:bg-emerald-950/20">
+          <input type="file" accept="image/*" onChange={handleUpload} className="hidden" id="upload-editor-img" />
+          <label htmlFor="upload-editor-img" className="cursor-pointer block space-y-2">
+            <div className="w-12 h-12 mx-auto bg-emerald-100 dark:bg-emerald-800/60 rounded-full flex items-center justify-center text-2xl text-emerald-600 dark:text-emerald-300">
+              🎨
+            </div>
+            <span className="text-sm font-bold text-slate-800 dark:text-slate-200 block">Carregar Foto para Edição</span>
+            <span className="text-xs text-slate-400 block">Ajustes de cores, rotação e filtros</span>
+          </label>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Painel de Controles */}
+          <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-2xl border space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Rotação: {rotacao}°</label>
+              <button onClick={girarHorario} type="button" className="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold">
+                🔄 Girar 90°
+              </button>
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Brilho: {brilho}%</label>
+              <input type="range" min="0" max="200" value={brilho} onChange={(e) => setBrilho(Number(e.target.value))} className="w-full accent-emerald-600" />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Contraste: {contraste}%</label>
+              <input type="range" min="0" max="200" value={contraste} onChange={(e) => setContraste(Number(e.target.value))} className="w-full accent-emerald-600" />
+            </div>
+
+            <div>
+              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Saturação: {saturacao}%</label>
+              <input type="range" min="0" max="200" value={saturacao} onChange={(e) => setSaturacao(Number(e.target.value))} className="w-full accent-emerald-600" />
+            </div>
+
+            <div className="flex gap-2 pt-2 border-t">
+              <button onClick={() => setPb(pb === 100 ? 0 : 100)} type="button" className={`flex-1 py-1.5 rounded text-xs font-bold ${pb === 100 ? 'bg-slate-900 text-white' : 'bg-white border'}`}>
+                P&B
+              </button>
+              <button onClick={() => setSepia(sepia === 100 ? 0 : 100)} type="button" className={`flex-1 py-1.5 rounded text-xs font-bold ${sepia === 100 ? 'bg-amber-700 text-white' : 'bg-white border'}`}>
+                Sépia
+              </button>
+            </div>
+
+            <button onClick={baixarEditada} type="button" className="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-black shadow transition">
+              ⬇️ Baixar Imagem Editada
+            </button>
+          </div>
+
+          {/* Visualizador */}
+          <div className="lg:col-span-2 p-6 bg-slate-100 dark:bg-slate-900 rounded-2xl flex items-center justify-center overflow-hidden min-h-[350px]">
+            <img 
+              src={imgSrc} 
+              alt="Preview" 
+              style={{
+                filter: `brightness(${brilho}%) contrast(${contraste}%) saturate(${saturacao}%) grayscale(${pb}%) sepia(${sepia}%)`,
+                transform: `rotate(${rotacao}deg)`,
+                maxHeight: '400px',
+                objectFit: 'contain'
+              }}
+              className="rounded-lg shadow-md transition-transform"
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 21. CONVERSOR DE IMAGENS PARA PDF (JUNTAR FOTOS)
+function ConversorImagemPdf() {
+  const [imagens, setImagens] = useState<string[]>([]);
+  const [orientacao, setOrientacao] = useState<'retrato' | 'paisagem'>('retrato');
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []) as File[];
+    files.forEach((file: File) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        if (ev.target?.result) {
+          setImagens(prev => [...prev, ev.target!.result as string]);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removerImagem = (index: number) => {
+    setImagens(prev => prev.filter((_, i) => i !== index));
+  };
+
+  return (
+    <div className="space-y-6" id="util-imagem-pdf">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Conversor de Imagens para PDF</h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Agrupe fotos e documentos escaneados em páginas A4 e imprima ou salve em PDF.</p>
+        </div>
+        {imagens.length > 0 && (
+          <button onClick={() => window.print()} type="button" className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow">
+            📄 Gerar / Imprimir PDF ({imagens.length} pág.)
+          </button>
+        )}
+      </div>
+
+      <div className="border-2 border-dashed border-emerald-300 dark:border-emerald-700/60 rounded-2xl p-6 text-center bg-emerald-50/40 dark:bg-emerald-950/20">
+        <input type="file" accept="image/*" multiple onChange={handleUpload} className="hidden" id="upload-img-pdf" />
+        <label htmlFor="upload-img-pdf" className="cursor-pointer block space-y-2">
+          <div className="w-12 h-12 mx-auto bg-emerald-100 dark:bg-emerald-800/60 rounded-full flex items-center justify-center text-2xl text-emerald-600 dark:text-emerald-300">
+            📑
+          </div>
+          <span className="text-sm font-bold text-slate-800 dark:text-slate-200 block">Adicionar Imagens (pode selecionar várias)</span>
+          <span className="text-xs text-slate-400 block">JPG, PNG ou WebP</span>
+        </label>
+      </div>
+
+      {imagens.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex gap-2">
+            <button onClick={() => setOrientacao('retrato')} type="button" className={`px-4 py-1.5 rounded-lg text-xs font-bold ${orientacao === 'retrato' ? 'bg-emerald-600 text-white' : 'bg-slate-100'}`}>
+              📄 Formato Retrato (Vertical)
+            </button>
+            <button onClick={() => setOrientacao('paisagem')} type="button" className={`px-4 py-1.5 rounded-lg text-xs font-bold ${orientacao === 'paisagem' ? 'bg-emerald-600 text-white' : 'bg-slate-100'}`}>
+              📄 Formato Paisagem (Horizontal)
+            </button>
+          </div>
+
+          {/* Grade de Páginas */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 print:block">
+            {imagens.map((img, i) => (
+              <div key={i} className="p-3 bg-white border rounded-xl relative shadow-sm print:m-0 print:p-0 print:border-none print:break-after-page">
+                <div className="flex justify-between items-center mb-2 print:hidden">
+                  <span className="text-xs font-bold text-slate-500">Página {i + 1}</span>
+                  <button onClick={() => removerImagem(i)} type="button" className="text-xs text-red-500 hover:text-red-700 font-bold">
+                    Remover
+                  </button>
+                </div>
+                <img src={img} alt={`Pág ${i + 1}`} className={`w-full ${orientacao === 'paisagem' ? 'aspect-video' : 'aspect-[1/1.41]'} object-contain bg-slate-50 rounded`} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 22. CONVERSOR DE IMAGEM PARA BASE64
+function ConversorImagemBase64() {
+  const [base64Str, setBase64Str] = useState<string>('');
+  const [mimeType, setMimeType] = useState<string>('');
+  const [tamanhoOriginal, setTamanhoOriginal] = useState<number>(0);
+  const [copiadoBase64, setCopiadoBase64] = useState(false);
+  const [copiadoHtml, setCopiadoHtml] = useState(false);
+  const [copiadoCss, setCopiadoCss] = useState(false);
+
+  const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setMimeType(file.type);
+    setTamanhoOriginal(file.size);
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setBase64Str(ev.target?.result as string || '');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const tagHtml = `<img src="${base64Str}" alt="Imagem embutida" />`;
+  const regraCss = `background-image: url("${base64Str}");`;
+
+  return (
+    <div className="space-y-6" id="util-imagem-base64">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Conversor de Imagem para Base64 Data URI</h2>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Transforme fotos em strings de código para inclusão direta em HTML, CSS e JSON.</p>
+      </div>
+
+      <div className="border-2 border-dashed border-emerald-300 dark:border-emerald-700/60 rounded-2xl p-6 text-center bg-emerald-50/40 dark:bg-emerald-950/20">
+        <input type="file" accept="image/*" onChange={handleUpload} className="hidden" id="upload-img-base64" />
+        <label htmlFor="upload-img-base64" className="cursor-pointer block space-y-2">
+          <div className="w-12 h-12 mx-auto bg-emerald-100 dark:bg-emerald-800/60 rounded-full flex items-center justify-center text-2xl text-emerald-600 dark:text-emerald-300">
+            🧬
+          </div>
+          <span className="text-sm font-bold text-slate-800 dark:text-slate-200 block">Carregar Imagem para Gerar Base64</span>
+          <span className="text-xs text-slate-400 block">PNG, JPG, SVG, WebP ou GIF</span>
+        </label>
+      </div>
+
+      {base64Str && (
+        <div className="space-y-4">
+          <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border flex justify-between items-center">
+            <span className="text-xs font-bold text-slate-600 dark:text-slate-400">Tipo: {mimeType}</span>
+            <span className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200">Tamanho string: {(base64Str.length / 1024).toFixed(1)} KB</span>
+          </div>
+
+          <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Data URI / Base64 puro</span>
+              <button 
+                onClick={() => { navigator.clipboard.writeText(base64Str); setCopiadoBase64(true); setTimeout(() => setCopiadoBase64(false), 2000); }} 
+                type="button" 
+                className="text-xs font-bold text-emerald-600 hover:text-emerald-700"
+              >
+                {copiadoBase64 ? 'Copiado! ✅' : 'Copiar Base64'}
+              </button>
+            </div>
+            <textarea readOnly rows={3} value={base64Str} className="w-full text-xs font-mono p-2 border rounded bg-white dark:bg-slate-900 resize-none text-slate-700 dark:text-slate-300" />
+          </div>
+
+          <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Código HTML</span>
+              <button 
+                onClick={() => { navigator.clipboard.writeText(tagHtml); setCopiadoHtml(true); setTimeout(() => setCopiadoHtml(false), 2000); }} 
+                type="button" 
+                className="text-xs font-bold text-emerald-600 hover:text-emerald-700"
+              >
+                {copiadoHtml ? 'Copiado! ✅' : 'Copiar Tag HTML'}
+              </button>
+            </div>
+            <textarea readOnly rows={2} value={tagHtml} className="w-full text-xs font-mono p-2 border rounded bg-white dark:bg-slate-900 resize-none text-slate-700 dark:text-slate-300" />
+          </div>
+
+          <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Código CSS</span>
+              <button 
+                onClick={() => { navigator.clipboard.writeText(regraCss); setCopiadoCss(true); setTimeout(() => setCopiadoCss(false), 2000); }} 
+                type="button" 
+                className="text-xs font-bold text-emerald-600 hover:text-emerald-700"
+              >
+                {copiadoCss ? 'Copiado! ✅' : 'Copiar Regra CSS'}
+              </button>
+            </div>
+            <textarea readOnly rows={2} value={regraCss} className="w-full text-xs font-mono p-2 border rounded bg-white dark:bg-slate-900 resize-none text-slate-700 dark:text-slate-300" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 

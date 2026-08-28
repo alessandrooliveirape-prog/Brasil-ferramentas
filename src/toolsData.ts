@@ -2810,6 +2810,306 @@ export const TOOLS: ToolMetadata[] = [
     ],
     relatedToolIds: ['horas-para-minutos', 'dias-para-horas', 'cronometro'],
     slug: 'conversor-de-fusos-horarios'
+  },
+  {
+    id: 'declaracao-residencia',
+    categoryId: 'geradores',
+    title: 'Gerador de Declaração de Residência (Lei 7.115/83)',
+    shortDescription: 'Gere a Declaração Oficial de Residência para comprovação de endereço quando não houver contas no seu próprio nome.',
+    longIntro: 'Muitos cidadãos brasileiros residem em imóveis alugados informalmente, moram com familiares ou dividem moradia sem ter contas de água, luz ou telefone em seu próprio nome. Para resolver essa situação perante bancos, faculdades, DETRAN, órgãos públicos e empresas, a Lei Federal nº 7.115/1983 autoriza a apresentação da Declaração de Residência firmada pelo próprio titular ou pelo proprietário do imóvel. O Gerador da Tool Brasil cria o documento oficial formatado em padrão A4 com todas as salvaguardas legais.',
+    howItWorks: 'Escolha se a declaração será feita em Nome Próprio (você declara onde mora sob as penas da lei) ou por Terceiro (o proprietário/titular declara que você reside no imóvel dele). Preencha os dados pessoais (nome, CPF, RG, profissão, estado civil) e o endereço completo com CEP. Clique em "Imprimir A4" para gerar o documento formal pronto para assinatura e apresentação.',
+    faqs: [
+      { question: 'A Declaração de Residência tem validade jurídica oficial?', answer: 'Sim. A Lei Federal nº 7.115/1983 estabelece que a declaração firmada pelo interessado ou seu procurador presume-se verdadeira, sujeitando o declarante às sanções civis, administrativas e criminais da falsidade ideológica (Art. 299 do Código Penal) caso preste informações falsas.' },
+      { question: 'É obrigatório reconhecer firma da declaração de residência em cartório?', answer: 'A Lei Federal nº 13.726/2018 (Lei da Desburocratização) dispensou o reconhecimento de firma e autenticação de documentos para órgãos públicos federais, estaduais e municipais, bastando a apresentação de documento de identidade com foto para conferência da assinatura pelo próprio servidor público.' },
+      { question: 'Quais documentos devem acompanhar a declaração?', answer: 'Recomenda-se anexar uma cópia do comprovante de endereço em nome do declarante (se for declaração por terceiro) e uma cópia do RG/CPF do morador.' }
+    ],
+    tips: [
+      'Preencha o CEP com precisão para que o código postal corresponda exatamente ao logradouro informado.',
+      'Se o banco ou órgão exigir, solicite ao titular do comprovante de endereço que assine juntamente com você.',
+      'Imprima em folha de papel sulfite A4 branca e assine com caneta de tinta azul ou preta.'
+    ],
+    relatedToolIds: ['declaracao-conteudo-correios', 'contrato-locacao', 'cpf', 'endereco-brasil'],
+    slug: 'gerador-de-declaracao-de-residencia'
+  },
+  {
+    id: 'procuracao-simples',
+    categoryId: 'geradores',
+    title: 'Gerador de Procuração Simples (Pessoa Física e Jurídica)',
+    shortDescription: 'Crie uma procuração particular com poderes específicos ou plenos para bancos, Detran, INSS, cartórios e representações legais.',
+    longIntro: 'A procuração por instrumento particular é o documento jurídico pelo qual uma pessoa (outorgante) nomeia outra de sua confiança (outorgado/procurador) para agir em seu nome e defender seus interesses em situações onde não pode comparecer pessoalmente. O Gerador de Procuração da Tool Brasil estrutura a minuta nos termos do Artigo 653 e seguintes do Código Civil Brasileiro, com cláusulas de poderes personalizáveis e formato pronto para impressão A4.',
+    howItWorks: 'Preencha a qualificação do Outorgante (quem concede os poderes) e do Outorgado (quem recebe os poderes). Selecione a finalidade da procuração (Plenos Poderes Gerais, Representação perante Bancos/Contas, DETRAN/Veículos, INSS/Previdência Social, Receita Federal ou poderes específicos personalizados). O sistema monta a procuração formal em tempo real com local, data e campos de assinatura.',
+    faqs: [
+      { question: 'Qual a diferença entre procuração particular e procuração pública?', answer: 'A procuração particular pode ser redigida e impressa livremente pelas partes. A procuração pública é lavrada em Livro de Notas por um tabelião em Cartório de Registro Civil e é exigida por lei para atos solenes, como venda de imóveis de valor superior a 30 salários mínimos, casamento ou divórcio por procuração.' },
+      { question: 'A procuração simples perde a validade após quanto tempo?', answer: 'Salvo se constar expressamente um prazo de validade na procuração (ex: válida por 1 ano ou até 31/12/2026), a procuração particular vigora por prazo indeterminado até que seja formalmente revogada pelo outorgante ou ocorra o falecimento de uma das partes (Art. 682 do Código Civil).' },
+      { question: 'Preciso reconhecer firma no cartório?', answer: 'Para órgãos privados como bancos, concessionárias e imobiliárias, é praxe exigir o reconhecimento de firma por autenticidade ou semelhança. Para repartições públicas federais, a Lei nº 13.726/2018 dispensa o reconhecimento de firma mediante apresentação do RG original.' }
+    ],
+    tips: [
+      'Especifique claramente a finalidade dos poderes (ex: "exclusivamente para retirar o Certificado de Registro do Veículo placa ABC-1234 perante o DETRAN/SP") para evitar abusos.',
+      'Defina uma data limite de vigência caso a procuração seja outorgada para um ato específico e temporário.',
+      'Guarde uma via assinada para o outorgante e forneça a via original para o outorgado.'
+    ],
+    relatedToolIds: ['contrato-locacao', 'declaracao-residencia', 'cpf', 'cnpj'],
+    slug: 'gerador-de-procuracao-simples'
+  },
+  {
+    id: 'carta-demissao',
+    categoryId: 'geradores',
+    title: 'Gerador de Carta de Pedido de Demissão',
+    shortDescription: 'Gere a carta formal de pedido de demissão com opção de cumprimento de aviso prévio ou solicitação de dispensa imediata.',
+    longIntro: 'Quando um colaborador decide se desligar voluntariamente da empresa, a legislação trabalhista brasileira (CLT) exige a formalização do pedido de demissão por escrito. O Gerador de Carta de Demissão da Tool Brasil cria o texto padrão formal tanto para quem irá cumprir os 30 dias de aviso prévio trabalhado quanto para quem solicita a dispensa do cumprimento do aviso prévio por motivos pessoais ou início em um novo emprego.',
+    howItWorks: 'Informe o nome da empresa empregadora, seu nome completo, cargo, número da Carteira de Trabalho (CTPS) e a data do pedido. Selecione a opção referente ao aviso prévio: cumprimento regular da jornada ou pedido de dispensa imediata do cumprimento. A ferramenta gera a carta completa nos padrões exigidos pelos departamentos de Recursos Humanos (RH) e homologações sindicais.',
+    faqs: [
+      { question: 'A carta de demissão precisa ser escrita à mão (de próprio punho)?', answer: 'Embora a lei não proíba cartas digitadas, a jurisprudência da Justiça do Trabalho e a maioria dos departamentos de RH recomendam que o funcionário copie o texto gerado de próprio punho (manuscrito) em folha de papel sulfite ou assine a via impressa com firma reconhecida para comprovar que não houve coação da empresa.' },
+      { question: 'Quais verbas rescisórias o trabalhador tem direito ao pedir demissão?', answer: 'Ao pedir demissão, o trabalhador tem direito ao Saldo de Salário dos dias trabalhados, 13º Salário proporcional e Férias vencidas/proporcionais acrescidas de 1/3. Ele não tem direito ao saque do FGTS, à multa rescisória de 40% nem ao Seguro-Desemprego.' },
+      { question: 'A empresa é obrigada a dispensar o aviso prévio se eu tiver um novo emprego?', answer: 'Pela Súmula 276 do TST, o direito ao aviso prévio é irrenunciável pelo empregado, mas a empresa pode dispensar o cumprimento se comprovar a obtenção de novo emprego, dependendo também da convenção coletiva do sindicato da categoria.' }
+    ],
+    tips: [
+      'Imprima ou copie o texto em 2 (duas) vias idênticas: uma para entregar ao RH e outra para colher o protocolo de recebimento assinado e datado pela empresa.',
+      'Utilize nossa Calculadora de Rescisão de Contrato para conferir os valores exatos a receber na data do acerto de contas.',
+      'Mantenha uma postura profissional e cordial na redação da carta para preservar boas referências profissionais futuras.'
+    ],
+    relatedToolIds: ['salario-proporcional', 'rescisao', 'ferias', 'decimo-terceiro'],
+    slug: 'gerador-de-carta-de-demissao'
+  },
+  {
+    id: 'nota-promissoria',
+    categoryId: 'geradores',
+    title: 'Gerador de Nota Promissória Online (Pronta para Imprimir)',
+    shortDescription: 'Gere notas promissórias com valor por extenso automático, dados de emitente, avalista e impressão oficial padrão A4.',
+    longIntro: 'A Nota Promissória é um título de crédito cambial e título executivo extrajudicial regulamentado pelo Decreto nº 2.044/1908 e pela Lei Uniforme de Genebra (Decreto nº 57.663/1966). Ela representa uma promessa direta e incondicional de pagamento em dinheiro de uma quantia líquida e certa. O Gerador de Nota Promissória da Tool Brasil preenche os dados formais obrigatórios, converte os valores em reais por extenso automaticamente e entrega o modelo pronto para impressão.',
+    howItWorks: 'Informe o número da nota promissória, a data de vencimento, o valor em reais, o nome do credor/beneficiário, o local de pagamento e os dados completos do emitente (devedor) e avalista (se houver). O sistema gera o layout clássico da promissória com moldura e campos de assinatura prontos para folha A4.',
+    faqs: [
+      { question: 'Quais são os requisitos essenciais de validade de uma nota promissória?', answer: 'A nota promissória deve conter obrigatoriamente: a denominação "Nota Promissória" expressa no texto, a promessa pura e simples de pagar quantia determinada, o nome da pessoa a quem deve ser paga, a data de emissão, o local de pagamento e a assinatura do emitente.' },
+      { question: 'O que acontece em caso de divergência entre o valor em números e o valor por extenso?', answer: 'Pela Lei Uniforme de Genebra (Art. 6º), havendo divergência entre a quantia escrita em números e a escrita por extenso, prevalece sempre a quantia indicada por extenso.' },
+      { question: 'Qual o prazo de prescrição para cobrar uma nota promissória na Justiça?', answer: 'O prazo prescricional para execução judicial da nota promissória é de 3 (três) anos a contar da data do vencimento. Após esse prazo, o credor ainda dispõe de até 5 anos para propor Ação Monitória (Súmula 504 do STJ).' }
+    ],
+    tips: [
+      'Nunca assine notas promissórias em branco ou com campos essenciais sem preenchimento.',
+      'Sempre guarde o comprovante de quitação ou solicite a devolução da nota promissória original devidamente rasgada ou carimbada como "PAGO" ao quitar o débito.',
+      'A inclusão do CPF e endereço completo do emitente e avalista agiliza eventuais procedimentos de cobrança e protesto em cartório.'
+    ],
+    relatedToolIds: ['recibo', 'recibo-compra-venda-veiculo', 'juros-simples', 'juros-compostos'],
+    slug: 'gerador-de-nota-promissoria'
+  },
+  {
+    id: 'recibo-compra-venda-veiculo',
+    categoryId: 'geradores',
+    title: 'Gerador de Recibo de Compra e Venda de Veículo',
+    shortDescription: 'Gere o termo e recibo de compra e venda de carro ou moto com dados do Renavam, Chassi, placa, valor e quitação formal.',
+    longIntro: 'Comprar ou vender um automóvel, motocicleta ou caminhão entre pessoas físicas exige cautela para resguardar comprador e vendedor contra multas de trânsito futuras, débitos de IPVA anteriores e transferências pendentes. O Gerador de Recibo de Compra e Venda de Veículo da Tool Brasil cria um contrato de compra e venda com recibo de quitação formal, detalhando dados cadastrais do veículo (Placa, Renavam, Chassi, Ano/Modelo, Cor e KM) e estipulando prazos para a transferência perante o DETRAN.',
+    howItWorks: 'Preencha os dados do Vendedor, do Comprador e a identificação completa do Veículo (Marca/Modelo, Placa, Renavam, Chassi, Ano de Fabricação/Modelo e Hodômetro). Informe o valor negociado e a forma de pagamento (à vista via PIX, dinheiro ou financiado). O sistema gera o recibo e termo de responsabilidade com cláusulas de vistoria, quitação e compromisso de transferência dentro do prazo de 30 dias do Art. 123 do CTB.',
+    faqs: [
+      { question: 'Este recibo substitui o DUT / ATPV-e do Detran?', answer: 'Não. Este documento formaliza o contrato de compra, venda e quitação financeira entre as partes. A transferência legal de propriedade do veículo deve ser realizada obrigatoriamente através da Autorização para Transferência de Propriedade do Veículo Digital (ATPV-e) pelo aplicativo Carteira Digital de Trânsito ou em cartório.' },
+      { question: 'Qual o prazo legal para transferir o veículo no DETRAN?', answer: 'Conforme o Artigo 123, § 1º do Código de Trânsito Brasileiro (CTB), o novo proprietário tem o prazo improrrogável de 30 (trinta) dias para adotar as providências de transferência junto ao órgão de trânsito, sob pena de multa e pontuação na CNH.' },
+      { question: 'Como o vendedor se protege de multas cometidas pelo comprador antes da transferência?', answer: 'O vendedor deve realizar a Comunicação de Venda no DETRAN ou em Cartório de Notas imediatamente após assinar a ATPV-e, apresentando cópia autenticada do documento de transferência.' }
+    ],
+    tips: [
+      'Faça uma vistoria cautelar prévia e consulte débitos no portal do DETRAN e Secretaria da Fazenda antes de realizar o pagamento.',
+      'Anote no recibo o horário exato da entrega das chaves e da posse do veículo para delimitar com precisão a responsabilidade por infrações de trânsito.',
+      'Assine em 2 (duas) vias na presença de testemunhas e reconheça firma por autenticidade.'
+    ],
+    relatedToolIds: ['recibo', 'placa-mercosul', 'contrato-locacao', 'ipva'],
+    slug: 'gerador-de-recibo-compra-e-venda-veiculo'
+  },
+  {
+    id: 'compressor-imagens',
+    categoryId: 'utilitarios',
+    title: 'Compressor de Imagens Online (JPG, PNG, WebP)',
+    shortDescription: 'Reduza o tamanho em KB/MB de fotos e imagens JPG, PNG e WebP sem perder qualidade visual de forma 100% rápida e segura no seu navegador.',
+    longIntro: 'Imagens pesadas deixam sites lentos, esgotam o limite de anexos de e-mails, dificultam o envio em plataformas corporativas e ocupam espaço desnecessário no celular e computador. O Compressor de Imagens Online da Tool Brasil utiliza a tecnologia da API Canvas do HTML5 para processar e otimizar imagens diretamente no seu navegador, sem fazer upload dos seus arquivos para servidores externos — garantindo privacidade absoluta e velocidade instantânea.',
+    howItWorks: 'Selecione ou arraste uma ou mais imagens (JPG, PNG ou WebP). Escolha o nível de compressão desejado através do controle deslizante de qualidade (de 10% a 100%) ou selecione uma resolução máxima. A ferramenta exibe em tempo real o tamanho original, o novo tamanho reduzido, o percentual exato de economia de dados e disponibiliza o download imediato da imagem otimizada.',
+    faqs: [
+      { question: 'A compressão de imagens reduz a nitidez da foto?', answer: 'Nossa ferramenta utiliza algoritmos inteligentes de amostragem que removem metadados desnecessários (EXIF) e otimizam a paleta de cores, reduzindo o tamanho do arquivo em até 70% a 90% sem perdas visíveis perceptíveis a olho nu.' },
+      { question: 'Minhas imagens são enviadas para algum servidor?', answer: 'Não! Todo o processamento de compressão e renderização acontece 100% localmente na memória RAM do seu navegador via JavaScript. Seus arquivos nunca saem do seu dispositivo, garantindo total privacidade e segurança.' },
+      { question: 'Qual formato gera o arquivo mais leve: JPG, PNG ou WebP?', answer: 'O formato WebP (desenvolvido pelo Google) costuma gerar arquivos cerca de 25% a 35% mais leves que o JPEG e até 80% menores que o PNG, mantendo excelente fidelidade de imagem e suporte a transparência.' }
+    ],
+    tips: [
+      'Para publicação em sites e blogs, um nível de qualidade entre 75% e 85% oferece o equilíbrio perfeito entre leveza e nitidez visual.',
+      'Se você precisa de fundo transparente, mantenha o formato PNG ou converta para WebP.',
+      'Comprimir imagens antes de anexar em e-mails e processos judiciais (PJe) evita erros de limite de tamanho de anexo.'
+    ],
+    relatedToolIds: ['conversor-imagens', 'editor-imagens', 'imagem-para-pdf', 'imagem-para-base64'],
+    slug: 'compressor-de-imagens-online'
+  },
+  {
+    id: 'conversor-imagens',
+    categoryId: 'utilitarios',
+    title: 'Conversor de Formatos de Imagem (PNG, JPG, WebP)',
+    shortDescription: 'Converta imagens entre PNG, JPG, WebP e GIF instantaneamente no navegador com controle de qualidade e resolução.',
+    longIntro: 'Converter imagens entre extensões é uma rotina comum para designers, desenvolvedores web, estudantes e profissionais de marketing. O Conversor de Imagens da Tool Brasil transforma arquivos de imagem nos principais formatos da web (PNG para JPG, JPG para PNG, WebP para JPG, PNG para WebP) sem necessidade de instalar programas pesados e de forma 100% client-side.',
+    howItWorks: 'Carregue a imagem que deseja converter a partir do seu computador ou celular. Escolha o formato de saída desejado (JPG, PNG ou WebP) e defina a qualidade de renderização. O sistema converte o arquivo via HTML5 Canvas em milissegundos e gera o link de download direto com a nova extensão.',
+    faqs: [
+      { question: 'Quando devo converter PNG para JPG?', answer: 'O formato JPG é ideal para fotografias e imagens complexas com muitas cores e sombras, pois gera arquivos muito mais leves. Já o PNG é ideal para logotipos, ícones e ilustrações que exigem fundo transparente ou bordas nítidas sem artefatos.' },
+      { question: 'O que acontece com a transparência do PNG ao converter para JPG?', answer: 'Como o formato JPEG não possui canal alfa (transparência), os pixels transparentes da imagem PNG serão automaticamente preenchidos com fundo branco na conversão para JPG.' },
+      { question: 'Por que usar o formato WebP?', answer: 'O formato WebP oferece compressão superior com e sem perdas, suporte a transparência e tempos de carregamento muito mais rápidos em todos os navegadores modernos, sendo o formato preferido pelo Google para SEO de páginas.' }
+    ],
+    tips: [
+      'Converta fotos pesadas da câmera do celular (JPG/HEIC) para WebP para economizar armazenamento na nuvem.',
+      'Utilize PNG quando precisar criar logotipos com fundo transparente para sobrepor em apresentações e websites.',
+      'Combine a conversão de formato com nossa ferramenta de Compressão de Imagens para obter a máxima redução de tamanho.'
+    ],
+    relatedToolIds: ['compressor-imagens', 'editor-imagens', 'imagem-para-base64'],
+    slug: 'conversor-de-formato-de-imagens'
+  },
+  {
+    id: 'editor-imagens',
+    categoryId: 'utilitarios',
+    title: 'Editor de Imagens Rápido Online (Corte, Filtros e Brilho)',
+    shortDescription: 'Corte, gire, redimensione e aplique ajustes de brilho, contraste e filtros em fotos diretamente no navegador.',
+    longIntro: 'Fazer edições rápidas em imagens — como cortar bordas desnecessárias, girar fotos tiradas na vertical, ajustar a iluminação ou aplicar filtros monocromáticos — não precisa exigir softwares caros e complexos. O Editor de Imagens Rápido da Tool Brasil disponibiliza uma bancada completa de manipulação visual 100% gratuita, rápida e segura no seu próprio browser.',
+    howItWorks: 'Selecione uma imagem para carregar no canvas interativo. Utilize as ferramentas para girar (90° horário/anti-horário), inverter horizontalmente/verticalmente, ajustar os controles deslizantes de Brilho, Contraste, Saturação e Desfoque (Blur), ou aplicar filtros de escala de cinza e sépia. Visualize as modificações em tempo real e clique em "Baixar Imagem Editada".',
+    faqs: [
+      { question: 'Posso desfazer as alterações na imagem?', answer: 'Sim. A qualquer momento você pode clicar no botão "Restaurar Original" para reverter todos os filtros, rotações e ajustes para o estado inicial do arquivo carregado.' },
+      { question: 'As edições reduzem a resolução original da minha foto?', answer: 'Não. O canvas do editor processa a imagem mantendo a proporção e resolução original de pixels da fotografia carregada.' },
+      { question: 'Existe limite de tamanho para carregar fotos no editor?', answer: 'A ferramenta suporta fotos de alta resolução de smartphones e câmeras profissionais até o limite de memória do seu próprio navegador.' }
+    ],
+    tips: [
+      'Aumentar levemente o contraste (+15%) e a saturação (+10%) costuma realçar as cores de fotos tiradas em dias nublados.',
+      'Utilize o filtro Preto e Branco (Grayscale) com alto contraste para dar um toque artístico elegante aos seus retratos.',
+      'Gire e recorte imagens de documentos escaneados para enquadrar apenas a área legível antes de imprimir ou enviar.'
+    ],
+    relatedToolIds: ['compressor-imagens', 'conversor-imagens', 'imagem-para-pdf'],
+    slug: 'editor-de-imagens-rapido-online'
+  },
+  {
+    id: 'imagem-para-pdf',
+    categoryId: 'utilitarios',
+    title: 'Conversor de Imagens para PDF (Junte Fotos em PDF)',
+    shortDescription: 'Converta fotos JPG, PNG e comprovantes em um documento PDF organizado no padrão A4 pronto para imprimir ou enviar.',
+    longIntro: 'Transformar fotos de documentos, comprovantes, contratos físicos e recibos em arquivos PDF é uma exigência constante de bancos, processos seletivos, órgãos públicos e faculdades. O Conversor de Imagem para PDF da Tool Brasil permite selecionar fotos da sua galeria ou computador, organizá-las e convertê-las em um arquivo PDF leve e perfeitamente dimensionado no padrão de folha A4.',
+    howItWorks: 'Carregue uma ou mais imagens nos formatos JPG ou PNG. Escolha a orientação da página (Retrato ou Paisagem) e as margens desejadas. O sistema compila as fotos em páginas PDF estruturadas e gera o arquivo para download imediato ou visualização prévia de impressão.',
+    faqs: [
+      { question: 'Posso juntar várias fotos em um único arquivo PDF?', answer: 'Sim. Você pode carregar múltiplas fotos de comprovantes ou páginas de um contrato e a ferramenta gerará um PDF consolidado com cada imagem em uma página sequencial.' },
+      { question: 'O documento PDF gerado é aceito em sites do governo e vestibulares?', answer: 'Sim. O PDF gerado segue o padrão internacional ISO de documentos portáteis (PDF standard), sendo 100% legível por leitores Adobe Acrobat, navegadores e sistemas governamentais (como Gov.br, SISU, PROUNI e PJe).' },
+      { question: 'É seguro converter documentos confidenciais nesta ferramenta?', answer: 'Absolutamente seguro. Toda a renderização do PDF é processada localmente pelo motor de scripts do seu navegador sem transmissão para servidores na internet.' }
+    ],
+    tips: [
+      'Tire fotos dos seus documentos em ambiente bem iluminado, sem sombras e com a câmera alinhada paralelamente ao papel.',
+      'Escolha a orientação "Retrato" (vertical) para documentos textuais comuns como RG, CPF e certidões.',
+      'Utilize a compressão prévia de imagens caso o portal de destino possua limite rígido de tamanho de arquivo (ex: até 2 MB).'
+    ],
+    relatedToolIds: ['compressor-imagens', 'editor-imagens', 'declaracao-conteudo-correios'],
+    slug: 'conversor-de-imagem-para-pdf'
+  },
+  {
+    id: 'imagem-para-base64',
+    categoryId: 'utilitarios',
+    title: 'Conversor de Imagem para Base64 e Data URI',
+    shortDescription: 'Converta fotos e arquivos de imagem em strings Base64 com código pronto para inclusão direta em HTML, CSS e JSON.',
+    longIntro: 'Para desenvolvedores web, programadores e designers que precisam embutir imagens diretamente no código-fonte de páginas web, e-mails marketing ou APIs REST sem depender de requisições HTTP adicionais para arquivos externos, o formato Base64 Data URI é uma solução prática e eficiente. O Conversor de Imagem para Base64 da Tool Brasil converte instantaneamente qualquer arquivo gráfico em texto codificado.',
+    howItWorks: 'Selecione uma imagem (PNG, JPG, SVG, GIF ou WebP). A ferramenta lê os bytes do arquivo via FileReader API, calcula o tamanho codificado e disponibiliza o código em três formatos prontos com botões de cópia de um clique: String Base64 pura, Tag HTML (`<img src="data:image/...">`) e Regra CSS (`background-image: url(...)`).',
+    faqs: [
+      { question: 'O que é a codificação Base64?', answer: 'Base64 é um algoritmo de codificação que converte dados binários (como imagens e arquivos) em uma sequência de caracteres alfanuméricos ASCII seguros para transmissão de texto em protocolos como HTTP, JSON e MIME de e-mails.' },
+      { question: 'O arquivo em Base64 fica maior que o arquivo de imagem original?', answer: 'Sim. A codificação Base64 aumenta o tamanho dos dados em aproximadamente 33% em relação ao binário original devido à representação em 6 bits por caractere.' },
+      { question: 'Quando é recomendável usar imagens em Base64?', answer: 'O uso de Base64 é altamente recomendado para pequenos ícones, logotipos leves, assinaturas de e-mail e fontes que evitam requisições HTTP extras e previnem falhas de renderização quando a imagem externa falha.' }
+    ],
+    tips: [
+      'Evite utilizar Base64 para fotos grandes ou arquivos com mais de 100 KB, pois isso pode aumentar o tempo de análise do HTML/CSS pelo navegador.',
+      'Utilize imagens com dimensões reduzidas e passe por um compressor antes de converter para Base64.',
+      'Copie a tag HTML pronta para colar diretamente em templates de newsletters e e-mails transacionais.'
+    ],
+    relatedToolIds: ['conversor-imagens', 'compressor-imagens', 'formatador-json', 'encode-url'],
+    slug: 'conversor-de-imagem-para-base64'
+  },
+  {
+    id: 'calculadora-ferias-proporcionais',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Férias Proporcionais e Vencidas CLT',
+    shortDescription: 'Calcule o valor exato das férias proporcionais, vencidas, 1/3 constitucional, abono pecuniário (venda) e descontos legais.',
+    longIntro: 'O direito constitucional às férias anuais remuneradas com o acréscimo de um terço constitucional (Artigo 7º, XVII da CF/88 e Art. 129 da CLT) é uma das verbas trabalhistas mais importantes do contrato de trabalho. Seja na concessão regular durante o contrato ou no cálculo de rescisão, saber a quantia exata de avos de férias proporcionais acumulados evita erros no holerite. A Calculadora da Tool Brasil simula o período aquisitivo, o valor do 1/3 e a opção de venda de 10 dias (abono pecuniário).',
+    howItWorks: 'Preencha seu salário bruto contratual, a média de horas extras/adicionais dos últimos 12 meses (se houver), a quantidade de meses trabalhados no período aquisitivo (avos de 1 a 12), a quantidade de dias de férias a gozar (ex: 30, 20 ou 15 dias) e se deseja vender 1/3 das férias (10 dias de abono). A ferramenta apura o valor bruto das férias, o 1/3 constitucional, o abono pecuniário isento e os descontos previdenciários e de IRRF.',
+    faqs: [
+      { question: 'Como funciona a contagem dos avos de férias proporcionais?', answer: 'Conforme o Artigo 146 da CLT, a cada mês de trabalho completo (ou fração superior a 14 dias trabalhados no mês civil), o empregado adquire o direito a 1/12 (um doze avos) do período anual de férias.' },
+      { question: 'O que é o Abono Pecuniário de Férias?', answer: 'Pelo Artigo 143 da CLT, é facultado ao empregado converter 1/3 do período de férias a que tiver direito em abono pecuniário (a chamada "venda de 10 dias de férias"), no valor da remuneração que lhe seria devida nos dias correspondentes.' },
+      { question: 'Sobre o abono pecuniário incide desconto de INSS e Imposto de Renda?', answer: 'Não. O valor pago a título de abono pecuniário (venda de 10 dias de férias) e seu respectivo 1/3 constitucional possuem natureza indenizatória e são isentos de retenção de INSS e IRRF (Súmula 125 do STJ).' }
+    ],
+    tips: [
+      'O pagamento da remuneração das férias e do terço constitucional deve ser efetuado pela empresa até 2 dias antes do início do respectivo período de descanso (Art. 145 CLT).',
+      'Se o empregador não conceder as férias dentro do período concessivo (12 meses após o período aquisitivo), deverá pagar a remuneração em dobro (Art. 137 CLT).',
+      'Inclua a média de horas extras e comissões recebidas nos últimos 12 meses para apurar a remuneração real das férias.'
+    ],
+    relatedToolIds: ['ferias', 'salario-liquido', 'decimo-terceiro', 'rescisao'],
+    slug: 'calculadora-de-ferias-proporcionais'
+  },
+  {
+    id: 'calculadora-aviso-previo',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Aviso Prévio Proporcional (Lei 12.506/11)',
+    shortDescription: 'Descubra a quantidade exata de dias de aviso prévio (de 30 a 90 dias) e o valor financeiro a receber com base no tempo de empresa.',
+    longIntro: 'Com a promulgação da Lei Federal nº 12.506/2011, o aviso prévio passou a ser proporcional ao tempo de serviço prestado pelo trabalhador na mesma empresa. Ao período mínimo de 30 dias garantido pela Constituição Federal, são acrescidos 3 (três) dias para cada ano completo de serviço prestado ao mesmo empregador, até o limite máximo de 90 dias (equivalente a 60 dias de acréscimo para 20 anos de trabalho). A Calculadora de Aviso Prévio da Tool Brasil calcula os dias exatos e o valor rescisório correspondente.',
+    howItWorks: 'Insira o seu salário base mensal e a data de admissão e demissão (ou informe a quantidade de anos completos trabalhados na empresa). A calculadora calcula os dias adicionais pela tabela da Lei 12.506/11 e calcula o valor do aviso prévio indenizado ou o período de cumprimento do aviso prévio trabalhado com redução de 2 horas diárias ou 7 dias corridos.',
+    faqs: [
+      { question: 'A regra do aviso prévio proporcional de até 90 dias vale quando o empregado pede demissão?', answer: 'Não. Conforme a Nota Técnica nº 184/2012 do Ministério do Trabalho e jurisprudência pacificada do TST, a proporcionalidade da Lei 12.506/11 é um direito exclusivo do trabalhador demitido sem justa causa. Se o empregado pede demissão, o aviso prévio que ele deve à empresa é de apenas 30 dias fixos.' },
+      { question: 'Como funciona a redução de jornada no aviso prévio trabalhado?', answer: 'Pelo Artigo 488 da CLT, no caso de demissão sem justa causa pelo empregador com cumprimento de aviso trabalhado, o empregado pode optar por sair 2 horas mais cedo todos os dias ou faltar ao serviço durante 7 dias corridos sem prejuízo salarial, para buscar novo emprego.' },
+      { question: 'O aviso prévio indenizado projeta a data de encerramento do contrato de trabalho?', answer: 'Sim. Conforme o Artigo 487, § 1º da CLT e a Orientação Jurisprudencial nº 82 da SDI-1 do TST, o período de aviso prévio (mesmo indenizado) projeta a data de término do contrato para efeito de cálculo de 13º salário proporcional, férias e tempo de serviço.' }
+    ],
+    tips: [
+      'Lembre-se de que anos incompletos (ex: 2 anos e 11 meses) contam apenas como 2 anos para efeito do acréscimo dos 3 dias (gerando 36 dias no total).',
+      'Confira a data de saída projetada na Carteira de Trabalho Digital para garantir que seus direitos de tempo de serviço foram computados integralmente.',
+      'Utilize nossa Calculadora de Rescisão Completa para calcular todos os reflexos do aviso prévio no FGTS e décimo terceiro.'
+    ],
+    relatedToolIds: ['rescisao', 'salario-proporcional', 'carta-demissao', 'fgts'],
+    slug: 'calculadora-de-aviso-previo-proporcional'
+  },
+  {
+    id: 'calculadora-tijolos-argamassa',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Tijolos, Blocos e Argamassa para Paredes',
+    shortDescription: 'Calcule a quantidade exata de tijolos (6, 8 ou 9 furos) ou blocos de concreto e sacos de argamassa por metro quadrado de parede.',
+    longIntro: 'No planejamento e orçamento de reformas e obras residenciais ou comerciais, calcular com exatidão o quantitativo de materiais de alvenaria evita o desperdício de dinheiro com sobras de material ou atrasos na construção por falta de insumos. A Calculadora de Tijolos e Argamassa da Tool Brasil apura a metragem quadrada líquida da alvenaria (descontando portas e janelas), calcula a quantidade de tijolos ou blocos com margem de quebra e estima o volume de cimento e areia para a argamassa de assentamento.',
+    howItWorks: 'Insira o comprimento total e a altura das paredes a serem erguidas. Informe as dimensões ou quantidades de portas e janelas a descontar da área. Selecione o tipo de elemento de alvenaria (Tijolo cerâmico baiano 6 furos, 8 furos, 9 furos ou Bloco de concreto estrutural) e a espessura da junta de assentamento (padrão 1,5 cm). A calculadora apresenta a metragem líquida em m², a quantidade de tijolos recomendada e o número estimado de sacos de cimento/argamassa.',
+    faqs: [
+      { question: 'Quantos tijolos de 8 furos (9x19x19 cm) são necessários por metro quadrado?', answer: 'Com junta de argamassa padrão de 1,5 cm, são necessários aproximadamente 23 a 25 tijolos de 8 furos por m² de parede em assentamento comum (espessura de 9 cm ou 14 cm).' },
+      { question: 'Qual a margem técnica de perda recomendada na compra de tijolos?', answer: 'Recomenda-se adicionar entre 8% e 10% de sobra na compra de tijolos cerâmicos e blocos, devido a quebras no descarregamento, manuseio e cortes nos cantos e quinas de paredes.' },
+      { question: 'Qual o traço de argamassa recomendado para assentamento de alvenaria de vedação?', answer: 'O traço mais utilizado para assentamento é de 1:2:8 (1 parte de cimento, 2 partes de cal e 8 partes de areia média) ou argamassa industrializada pronta para alvenaria.' }
+    ],
+    tips: [
+      'Desconte sempre a área total de portas, janelas e vãos estruturais para não superdimensionar o pedido de tijolos na loja de material de construção.',
+      'Armazene os tijolos sobre paletes ou lonas plásticas para protegê-los da umidade do solo e chuva antes do assentamento.',
+      'Consulte também nossa Calculadora de Tinta e nossa Calculadora de Piso para planejar o acabamento completo da sua obra.'
+    ],
+    relatedToolIds: ['calculadora-tinta', 'calculadora-piso', 'regra-de-tre'],
+    slug: 'calculadora-de-tijolos-e-argamassa'
+  },
+  {
+    id: 'calculadora-preco-combustivel-viagem',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Combustível e Pedágio para Viagem',
+    shortDescription: 'Calcule o custo total de ida e volta de viagens de carro (distância, consumo km/l, combustível e pedágios) e divida por passageiro.',
+    longIntro: 'Planejar os custos de uma viagem de férias, trabalho ou passeio de final de semana exige calcular antecipadamente os gastos com combustível (gasolina, etanol ou diesel), tarifas de pedágio nas rodovias e a divisão proporcional dos custos entre os amigos ou familiares que compartilham o veículo. A Calculadora de Custo de Viagem da Tool Brasil estima o volume de litros necessários, o custo financeiro total e o valor exato por pessoa.',
+    howItWorks: 'Informe a distância total da rota em quilômetros (com opção de calcular automaticamente Ida e Volta), a média de consumo do veículo em km/litro, o preço atual do combustível por litro e o valor estimado de pedágios no percurso. Indique a quantidade de pessoas que irão dividir as despesas. A ferramenta calcula a autonomia necessária, a quantidade de litros, o custo total e o valor individual a ratear.',
+    faqs: [
+      { question: 'O consumo de combustível na estrada é diferente do trânsito urbano?', answer: 'Sim. Em rodovias com velocidade constante e menos paradas, os veículos costumam ter um rendimento entre 15% e 30% superior ao consumo urbano na cidade (ex: um carro que faz 10 km/l na cidade pode fazer 13 a 14 km/l na estrada).' },
+      { question: 'O uso do ar-condicionado aumenta o consumo na viagem?', answer: 'Sim, o ar-condicionado consome em média de 8% a 15% a mais de combustível. No entanto, em velocidades de rodovia acima de 80 km/h, rodar com os vidros abertos gera arrasto aerodinâmico que pode consumir tanto ou mais que o ar-condicionado ligado com os vidros fechados.' },
+      { question: 'Como saber o valor dos pedágios da minha rota?', answer: 'Você pode consultar os sites das concessionárias de rodovias do seu estado (como CCR, Arteris ou EcoRodovias) ou aplicativos de mapas com rotas de pedágio antes de preencher o simulador.' }
+    ],
+    tips: [
+      'Calibre os pneus com a pressão recomendada para carro carregado antes de pegar a estrada: pneus murchos podem aumentar o consumo em até 4%.',
+      'Mantenha uma velocidade estável e utilize o piloto automático (cruise control) em pistas retas para maximizar a economia de combustível.',
+      'Utilize nossa Calculadora de Álcool ou Gasolina para saber qual combustível será mais vantajoso para abastecer antes de sair de viagem.'
+    ],
+    relatedToolIds: ['alcool-ou-gasolina', 'consumo-combustivel', 'preco-por-km'],
+    slug: 'calculadora-de-combustivel-para-viagem'
+  },
+  {
+    id: 'calculadora-potencia-ar-condicionado',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de BTUs para Ar-Condicionado',
+    shortDescription: 'Descubra a potência exata em BTUs necessária para refrigerar seu quarto, sala ou escritório com base na área m², sol e pessoas.',
+    longIntro: 'Comprar um aparelho de ar-condicionado com potência inferior à necessária faz o compressor trabalhar no limite sem refrigerar o ambiente adequadamente e dispara a conta de energia elétrica. Por outro lado, um aparelho superdimensionado desperdiça dinheiro na compra. A Calculadora de BTUs da Tool Brasil aplica as normas técnicas de engenharia térmica para determinar a capacidade exata (em BTUs/h) para quartos, salas, consultórios e escritórios.',
+    howItWorks: 'Informe a área do cômodo em metros quadrados (largura x comprimento), o nível de incidência solar (sol apenas pela manhã ou sol intenso durante a tarde), a quantidade de pessoas que frequentam o ambiente e a quantidade de aparelhos eletrônicos emissores de calor (computadores, TVs, lâmpadas). A fórmula base atribui 600 BTUs/m² (sol moderado) ou 800 BTUs/m² (sol intenso), adicionando 600 a 800 BTUs para cada pessoa e equipamento adicional.',
+    faqs: [
+      { question: 'O que significa a sigla BTU?', answer: 'BTU significa "British Thermal Unit" (Unidade Térmica Britânica). É a unidade padrão utilizada mundialmente para medir a capacidade de refrigeração de sistemas de climatização e ar-condicionado.' },
+      { question: 'Quais são as potências comerciais de ar-condicionado mais comuns no Brasil?', answer: 'As capacidades padronizadas vendidas no mercado brasileiro são: 9.000 BTUs (quartos até 12m²), 12.000 BTUs (quartos e salas até 20m²), 18.000 BTUs (ambientes até 30m²), 24.000 BTUs (até 40m²) e 30.000+ BTUs (grandes espaços comerciais).' },
+      { question: 'Qual a diferença entre o ar-condicionado convencional e o modelo Inverter?', answer: 'O ar-condicionado com tecnologia Inverter modula a velocidade do compressor de forma contínua em vez de ligar e desligar bruscamente, economizando até 40% a 60% de energia elétrica e mantendo a temperatura estável sem oscilações.' }
+    ],
+    tips: [
+      'Se o cálculo resultar em um valor intermediário (ex: 10.500 BTUs), escolha sempre o modelo comercial de capacidade superior mais próximo (neste caso, 12.000 BTUs).',
+      'Instale cortinas blackout ou persianas nas janelas com sol da tarde para reduzir a carga térmica do ambiente em até 20%.',
+      'Mantenha os filtros de ar limpos mensalmente para preservar a eficiência energética e evitar ácaros e bactérias.'
+    ],
+    relatedToolIds: ['custo-energia', 'calculadora-tinta', 'regra-de-tre'],
+    slug: 'calculadora-de-btus-ar-condicionado'
   }
 ];
 
