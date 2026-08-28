@@ -4,6 +4,8 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import ShareBar from './ShareBar';
+import { getParamNumber, getParamString, syncUrlParams } from '../utils/urlParams';
 
 interface GeradoresProps {
   toolId: string;
@@ -1037,13 +1039,25 @@ function valorPorExtenso(valor: number): string {
 
 // 15. GERADOR DE RECIBO ONLINE
 function GeradorRecibo() {
-  const [valor, setValor] = useState<string>('1500.00');
-  const [emissorNome, setEmissorNome] = useState<string>('');
-  const [emissorDoc, setEmissorDoc] = useState<string>('');
-  const [pagadorNome, setPagadorNome] = useState<string>('');
-  const [pagadorDoc, setPagadorDoc] = useState<string>('');
-  const [referente, setReferente] = useState<string>('Prestação de serviços de desenvolvimento de software.');
-  const [cidade, setCidade] = useState<string>('São Paulo');
+  const [valor, setValor] = useState<string>(() => getParamString('v', '1500.00'));
+  const [emissorNome, setEmissorNome] = useState<string>(() => getParamString('emissor', ''));
+  const [emissorDoc, setEmissorDoc] = useState<string>(() => getParamString('edoc', ''));
+  const [pagadorNome, setPagadorNome] = useState<string>(() => getParamString('pagador', ''));
+  const [pagadorDoc, setPagadorDoc] = useState<string>(() => getParamString('pdoc', ''));
+  const [referente, setReferente] = useState<string>(() => getParamString('ref', 'Prestação de serviços de desenvolvimento de software.'));
+  const [cidade, setCidade] = useState<string>(() => getParamString('cid', 'São Paulo'));
+
+  useEffect(() => {
+    syncUrlParams({
+      v: valor,
+      emissor: emissorNome,
+      edoc: emissorDoc,
+      pagador: pagadorNome,
+      pdoc: pagadorDoc,
+      ref: referente,
+      cid: cidade
+    });
+  }, [valor, emissorNome, emissorDoc, pagadorNome, pagadorDoc, referente, cidade]);
   const [data, setData] = useState<string>(() => {
     const today = new Date();
     return today.toISOString().split('T')[0];
@@ -1276,9 +1290,16 @@ function GeradorRecibo() {
 }
 
 function GeradorWhatsApp() {
-  const [numero, setNumero] = useState('');
-  const [mensagem, setMensagem] = useState('');
+  const [numero, setNumero] = useState(() => getParamString('tel', ''));
+  const [mensagem, setMensagem] = useState(() => getParamString('msg', ''));
   
+  useEffect(() => {
+    syncUrlParams({
+      tel: numero,
+      msg: mensagem
+    });
+  }, [numero, mensagem]);
+
   const linkGerado = numero 
     ? `https://wa.me/55${numero.replace(/\D/g, '')}${mensagem ? `?text=${encodeURIComponent(mensagem)}` : ''}` 
     : '';
@@ -1344,6 +1365,13 @@ function GeradorWhatsApp() {
             </a>
           </div>
         </div>
+      )}
+      
+      {linkGerado && (
+        <ShareBar 
+          title="Link Direto WhatsApp" 
+          summaryText={`📲 *Link Direto WhatsApp* (+${numero}):\n${linkGerado}`}
+        />
       )}
     </div>
   );
@@ -1616,12 +1644,23 @@ function GeradorDeclaracaoConteudo() {
 
 // 19. GERADOR DE PIX COPIA E COLA & QR CODE ESTÁTICO (PADRÃO BANCO CENTRAL EMVCO)
 function GeradorPix() {
-  const [tipoChave, setTipoChave] = useState<'cpf' | 'cnpj' | 'email' | 'telefone' | 'aleatoria'>('cpf');
-  const [chave, setChave] = useState('12345678900');
-  const [nome, setNome] = useState('MARIA DA SILVA');
-  const [cidade, setCidade] = useState('SAO PAULO');
-  const [valor, setValor] = useState<string>('25.00');
-  const [txId, setTxId] = useState('***');
+  const [tipoChave, setTipoChave] = useState<'cpf' | 'cnpj' | 'email' | 'telefone' | 'aleatoria'>(() => (getParamString('tipo', 'cpf') as any));
+  const [chave, setChave] = useState(() => getParamString('chave', '12345678900'));
+  const [nome, setNome] = useState(() => getParamString('nome', 'MARIA DA SILVA'));
+  const [cidade, setCidade] = useState(() => getParamString('cidade', 'SAO PAULO'));
+  const [valor, setValor] = useState<string>(() => getParamString('valor', '25.00'));
+  const [txId, setTxId] = useState(() => getParamString('txid', '***'));
+
+  useEffect(() => {
+    syncUrlParams({
+      tipo: tipoChave,
+      chave: chave,
+      nome: nome,
+      cidade: cidade,
+      valor: valor,
+      txid: txId
+    });
+  }, [tipoChave, chave, nome, cidade, valor, txId]);
   const [pixPayload, setPixPayload] = useState('');
   const [copiado, setCopiado] = useState(false);
 
@@ -1791,6 +1830,13 @@ function GeradorPix() {
             </button>
           </div>
         </div>
+      )}
+
+      {pixPayload && (
+        <ShareBar 
+          title="Cobrança PIX Copia e Cola" 
+          summaryText={`💸 *Cobrança PIX*\n👤 *Recebedor*: ${nome}\n🔑 *Chave*: ${chave}\n💵 *Valor*: ${parseFloat(valor) > 0 ? `R$ ${parseFloat(valor).toFixed(2)}` : 'Valor aberto'}\n\n*Código PIX Copia e Cola*:\n${pixPayload}`}
+        />
       )}
     </div>
   );
@@ -1977,6 +2023,12 @@ TESTEMUNHAS:
           </select>
         </div>
       </div>
+
+      <ShareBar 
+        title="Contrato de Locação Residencial" 
+        summaryText={`📑 *Contrato de Locação Residencial*:\n🏠 *Locador*: ${locador.nome}\n🔑 *Locatário*: ${locatario.nome}\n💵 *Aluguel*: R$ ${aluguel.toFixed(2)}/mês (Venc. dia ${diaVencimento})\n📅 *Prazo*: ${prazoMeses} meses`}
+        showPrint={true}
+      />
 
       {/* Visualizador de Contrato */}
       <div className="bg-white border-2 border-slate-300 rounded-xl p-6 text-slate-900 shadow-sm print:m-0 print:p-0 print:border-none print:shadow-none">
@@ -2173,6 +2225,12 @@ CPF: ${cpf}`;
         </div>
       </div>
 
+      <ShareBar 
+        title="Declaração de Residência" 
+        summaryText={`📍 *Declaração de Residência (Lei 7.115/83)*:\n👤 *Declarante*: ${nome}\n🏠 *Endereço*: ${logradouro}, ${bairro} - ${cidade}/${uf}`}
+        showPrint={true}
+      />
+
       {/* Visualização de Impressão */}
       <div className="bg-white border-2 border-slate-300 rounded-xl p-8 text-slate-900 shadow-sm print:m-0 print:p-0 print:border-none print:shadow-none">
         <pre className="font-serif text-xs sm:text-sm leading-relaxed whitespace-pre-wrap text-slate-800">
@@ -2294,6 +2352,12 @@ CPF: ${outorganteCpf}`;
         </div>
       </div>
 
+      <ShareBar 
+        title="Procuração Simples" 
+        summaryText={`⚖️ *Procuração Particular*:\n👤 *Outorgante*: ${outorganteNome}\n🎯 *Outorgado*: ${outorgadoNome}\n📌 *Finalidade*: ${tipoPoderes.toUpperCase()}`}
+        showPrint={true}
+      />
+
       {/* Visualização de Impressão */}
       <div className="bg-white border-2 border-slate-300 rounded-xl p-8 text-slate-900 shadow-sm print:m-0 print:p-0 print:border-none print:shadow-none">
         <pre className="font-serif text-xs sm:text-sm leading-relaxed whitespace-pre-wrap text-slate-800">
@@ -2395,6 +2459,12 @@ Assinatura e Carimbo do Responsável`;
           </select>
         </div>
       </div>
+
+      <ShareBar 
+        title="Carta de Pedido de Demissão" 
+        summaryText={`📝 *Carta de Pedido de Demissão*:\n👤 *Funcionário*: ${nome} (${cargo})\n🏢 *Empresa*: ${empresa}\n📌 *Aviso Prévio*: ${tipoAviso === 'cumprir' ? 'Cumprimento de 30 dias' : 'Pedido de dispensa imediata'}`}
+        showPrint={true}
+      />
 
       <div className="bg-white border-2 border-slate-300 rounded-xl p-8 text-slate-900 shadow-sm print:m-0 print:p-0 print:border-none print:shadow-none">
         <pre className="font-serif text-xs sm:text-sm leading-relaxed whitespace-pre-wrap text-slate-800">
@@ -2498,6 +2568,12 @@ ASSINATURA DO EMITENTE`;
           <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs font-mono" value={emitenteCpf} onChange={e => setEmitenteCpf(e.target.value)} />
         </div>
       </div>
+
+      <ShareBar 
+        title="Nota Promissória" 
+        summaryText={`📜 *Nota Promissória Nº ${numero}*:\n💰 *Valor*: ${valorFormatado}\n📅 *Vencimento*: ${vencimento.split('-').reverse().join('/')}\n👤 *Emitente (Devedor)*: ${emitenteNome}\n🎯 *Credor*: ${credorNome}`}
+        showPrint={true}
+      />
 
       {/* Caixa clássica de Promissória */}
       <div className="bg-amber-50/50 border-2 border-dashed border-amber-400 rounded-2xl p-6 text-slate-900 shadow-sm print:m-0 print:p-0 print:border-solid">
@@ -2609,6 +2685,12 @@ ${compradorNome.toUpperCase()} (Comprador)`;
           <input type="text" className="w-full border dark:border-slate-700 rounded p-1.5 bg-white dark:bg-slate-800 text-xs" value={km} onChange={e => setKm(e.target.value)} />
         </div>
       </div>
+
+      <ShareBar 
+        title="Recibo de Compra e Venda de Veículo" 
+        summaryText={`🚗 *Recibo de Compra e Venda de Veículo*:\n🚙 *Modelo*: ${veiculoModelo} (Placa: ${placa.toUpperCase()})\n💰 *Valor Negociado*: ${valorFormatado}\n👤 *Vendedor*: ${vendedorNome}\n🎯 *Comprador*: ${compradorNome}`}
+        showPrint={true}
+      />
 
       <div className="bg-white border-2 border-slate-300 rounded-xl p-8 text-slate-900 shadow-sm print:m-0 print:p-0 print:border-none print:shadow-none">
         <pre className="font-serif text-xs sm:text-sm leading-relaxed whitespace-pre-wrap text-slate-800">

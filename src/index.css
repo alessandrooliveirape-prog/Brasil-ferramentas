@@ -126,3 +126,90 @@ html.dark ::-webkit-scrollbar-thumb {
 html.dark ::-webkit-scrollbar-thumb:hover {
   background: #475569;
 }
+
+/* ==========================================
+   6. PROFESSIONAL A4 PRINT & PDF EXPORT STYLES
+   ========================================== */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+  }
+
+  body, html, #root {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Ocultar elementos desnecessários na folha impressa / PDF */
+  header, 
+  footer, 
+  nav, 
+  aside,
+  #header-global,
+  #footer-global,
+  #seo-diagnostic-panel,
+  #site-search-bar,
+  #tool-editorial-content,
+  #popular-tools-strip,
+  .no-print,
+  .adsbygoogle,
+  [id^="adsense"],
+  [id^="slot-"] {
+    display: none !important;
+  }
+
+  /* Exibir e formatar o container de documento */
+  #printable-document,
+  .printable-area,
+  #active-tool-workspace {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+
+  /* Garantir que tabelas e bordas mantenham suas cores */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Evitar quebras ruins no meio de seções e tabelas */
+  table, tr, td, th, .print-avoid-break {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  h1, h2, h3, h4 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    color: #0f172a !important;
+  }
+
+  /* Forçar legibilidade em tabelas */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+
+  table th {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    border: 1px solid #94a3b8 !important;
+  }
+
+  table td {
+    border: 1px solid #cbd5e1 !important;
+    color: #1e293b !important;
+  }
+}
+

@@ -4,6 +4,8 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import ShareBar from './ShareBar';
+import { getParamNumber, getParamString, getParamBoolean, syncUrlParams } from '../utils/urlParams';
 
 interface CalculadorasProps {
   toolId: string;
@@ -326,15 +328,24 @@ function SimuladorVeiculos() {
 
 // 1. JUROS COMPOSTOS
 function JurosCompostos() {
-  const [inicial, setInicial] = useState<number>(1000);
-  const [mensal, setMensal] = useState<number>(100);
-  const [taxa, setTaxa] = useState<number>(12);
-  const [periodo, setPeriodo] = useState<number>(5);
-  const [tipoPeriodo, setTipoPeriodo] = useState<'anos' | 'meses'>('anos');
-  const [tipoTaxa, setTipoTaxa] = useState<'anual' | 'mensal'>('anual');
+  const [inicial, setInicial] = useState<number>(() => getParamNumber('ci', 1000));
+  const [mensal, setMensal] = useState<number>(() => getParamNumber('am', 100));
+  const [taxa, setTaxa] = useState<number>(() => getParamNumber('taxa', 12));
+  const [periodo, setPeriodo] = useState<number>(() => getParamNumber('p', 5));
+  const [tipoPeriodo, setTipoPeriodo] = useState<'anos' | 'meses'>(() => (getParamString('tp', 'anos') as any));
+  const [tipoTaxa, setTipoTaxa] = useState<'anual' | 'mensal'>(() => (getParamString('tt', 'anual') as any));
   const [resultado, setResultado] = useState<any>(null);
 
   const calcular = () => {
+    syncUrlParams({
+      ci: inicial,
+      am: mensal,
+      taxa,
+      p: periodo,
+      tp: tipoPeriodo,
+      tt: tipoTaxa
+    });
+
     const totalMeses = tipoPeriodo === 'anos' ? periodo * 12 : periodo;
     const taxaMensal = tipoTaxa === 'anual' ? Math.pow(1 + taxa / 100, 1 / 12) - 1 : taxa / 100;
 
@@ -368,6 +379,8 @@ function JurosCompostos() {
   };
 
   useEffect(() => { calcular(); }, [inicial, mensal, taxa, periodo, tipoPeriodo, tipoTaxa]);
+
+  const summary = resultado ? `📈 *Simulação de Juros Compostos*:\n💰 *Capital Inicial*: R$ ${inicial.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n💵 *Aporte Mensal*: R$ ${mensal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n📅 *Prazo*: ${periodo} ${tipoPeriodo} a ${taxa}% ${tipoTaxa === 'anual' ? 'a.a.' : 'a.m.'}\n\n🏆 *Montante Final Bruto*: *R$ ${resultado.totalFinal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}*\n✨ *Rendimento Puro dos Juros*: R$ ${resultado.totalJuros.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : undefined;
 
   return (
     <div className="space-y-6" id="calc-jc">
@@ -443,6 +456,11 @@ function JurosCompostos() {
               </tbody>
             </table>
           </div>
+
+          <ShareBar 
+            title="Simulação de Juros Compostos" 
+            summaryText={summary}
+          />
         </div>
       )}
     </div>
@@ -2254,12 +2272,13 @@ function ConsumoCombustivel() {
 
 // 11. REGRA DE TRÊS
 function RegraDeTres() {
-  const [valA, setValA] = useState<string>('10');
-  const [valB, setValB] = useState<string>('20');
-  const [valC, setValC] = useState<string>('50');
+  const [valA, setValA] = useState<string>(() => getParamString('a', '10'));
+  const [valB, setValB] = useState<string>(() => getParamString('b', '20'));
+  const [valC, setValC] = useState<string>(() => getParamString('c', '50'));
   const [resultado, setResultado] = useState<string>('?');
 
   const calcular = () => {
+    syncUrlParams({ a: valA, b: valB, c: valC });
     const a = parseFloat(valA);
     const b = parseFloat(valB);
     const c = parseFloat(valC);
@@ -2273,6 +2292,8 @@ function RegraDeTres() {
   };
 
   useEffect(() => { calcular(); }, [valA, valB, valC]);
+
+  const summary = `🔢 *Regra de Três Proporcional*:\n• *${valA}* está para *${valB}*\n• Assim como *${valC}* está para *X*\n\n👉 *Resultado X = ${resultado}*`;
 
   return (
     <div className="space-y-6" id="calc-regra3">
@@ -2308,6 +2329,11 @@ function RegraDeTres() {
           <span className="block text-[10px] text-slate-400 uppercase font-semibold">Resultado X</span>
         </div>
       </div>
+
+      <ShareBar 
+        title="Calculadora de Regra de Três" 
+        summaryText={summary}
+      />
     </div>
   );
 }
@@ -2785,15 +2811,24 @@ function SeguroDesemprego() {
 
 // 17. SALÁRIO LÍQUIDO
 function SalarioLiquido() {
-  const [salarioBruto, setSalarioBruto] = useState<number>(3500);
-  const [dependentes, setDependentes] = useState<number>(0);
-  const [outrasDeducoes, setOutrasDeducoes] = useState<number>(0);
-  const [valeTransporte, setValeTransporte] = useState<boolean>(false);
-  const [vrCopart, setVrCopart] = useState<number>(0);
-  const [planoSaude, setPlanoSaude] = useState<number>(0);
+  const [salarioBruto, setSalarioBruto] = useState<number>(() => getParamNumber('bruto', 3500));
+  const [dependentes, setDependentes] = useState<number>(() => getParamNumber('dep', 0));
+  const [outrasDeducoes, setOutrasDeducoes] = useState<number>(() => getParamNumber('extra', 0));
+  const [valeTransporte, setValeTransporte] = useState<boolean>(() => getParamBoolean('vt', false));
+  const [vrCopart, setVrCopart] = useState<number>(() => getParamNumber('vr', 0));
+  const [planoSaude, setPlanoSaude] = useState<number>(() => getParamNumber('saude', 0));
   const [resultado, setResultado] = useState<any>(null);
 
   useEffect(() => {
+    syncUrlParams({
+      bruto: salarioBruto,
+      dep: dependentes,
+      extra: outrasDeducoes,
+      vt: valeTransporte,
+      vr: vrCopart,
+      saude: planoSaude
+    });
+
     // 1. INSS PROGRESSIVO 2026/VIGENTE
     const faixasINSS = [
       { limite: 1412, aliquota: 0.075 },
@@ -2815,18 +2850,16 @@ function SalarioLiquido() {
       }
     }
 
-    // Limitador ao teto do INSS (Máximo de R$ 908.85 para fins ilustrativos)
+    // Limitador ao teto do INSS
     const tetoINSS = 908.85;
     if (valorINSS > tetoINSS) {
       valorINSS = tetoINSS;
     }
 
     // 2. IRRF PROGRESSIVO 2026
-    // Base de cálculo do IRRF = Salário Bruto - INSS - (Dependentes * 189,59) - Outras deduções
     const descontoDependentes = dependentes * 189.59;
     const baseIRRF = Math.max(0, salarioBruto - valorINSS - descontoDependentes - outrasDeducoes);
 
-    // Alíquotas e Deduções IRRF
     let valorIRRF = 0;
     if (baseIRRF <= 2259.20) {
       valorIRRF = 0;
@@ -2861,6 +2894,8 @@ function SalarioLiquido() {
       pctLiquido: porcenLiquido
     });
   }, [salarioBruto, dependentes, outrasDeducoes, valeTransporte, vrCopart, planoSaude]);
+
+  const summary = resultado ? `💼 *Cálculo de Salário Líquido (CLT)*:\n💵 *Salário Bruto*: R$ ${salarioBruto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n📉 *Desconto INSS*: -R$ ${resultado.inss.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n📉 *Desconto IRRF*: -R$ ${resultado.irrf.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n📉 *Total de Descontos*: -R$ ${resultado.totalDescontos.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} (${resultado.pctDescontos.toFixed(1)}%)\n\n🟢 *Salário Líquido no Bolso*: *R$ ${resultado.liquido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}*` : undefined;
 
   return (
     <div className="space-y-6" id="calc-salario-liquido">
@@ -2958,6 +2993,11 @@ function SalarioLiquido() {
               )}
             </div>
           </div>
+
+          <ShareBar 
+            title="Calculadora de Salário Líquido (CLT)" 
+            summaryText={summary}
+          />
         </div>
       )}
     </div>
@@ -3098,10 +3138,14 @@ function CalculadoraCLTvsPJ() {
 }
 
 function CalculadoraChurrasco() {
-  const [homens, setHomens] = useState<number>(5);
-  const [mulheres, setMulheres] = useState<number>(5);
-  const [criancas, setCriancas] = useState<number>(2);
+  const [homens, setHomens] = useState<number>(() => getParamNumber('homens', 5));
+  const [mulheres, setMulheres] = useState<number>(() => getParamNumber('mulheres', 5));
+  const [criancas, setCriancas] = useState<number>(() => getParamNumber('criancas', 2));
   
+  useEffect(() => {
+    syncUrlParams({ homens, mulheres, criancas });
+  }, [homens, mulheres, criancas]);
+
   const totalPessoas = homens + mulheres + criancas;
   
   const carneH = homens * 0.5; // 500g
@@ -3119,9 +3163,11 @@ function CalculadoraChurrasco() {
   
   const cerveja = (homens + mulheres) * 4; // 4 latas por adulto
   const refrigerante = totalPessoas * 0.5; // 500ml por pessoa
+
+  const summary = `🍖 *Lista de Churrasco para ${totalPessoas} pessoas* (${homens} homens, ${mulheres} mulheres, ${criancas} crianças):\n🥩 *Carnes*: ${totalCarne.toFixed(1)}kg (Bovina: ${bovina.toFixed(1)}kg, Linguiça: ${linguiça.toFixed(1)}kg, Frango: ${frango.toFixed(1)}kg)\n🍻 *Bebidas*: ${cerveja} latas de cerveja (~${(cerveja * 0.35).toFixed(1)}L) + ${refrigerante.toFixed(1)}L refri/água\n🥖 *Acompanhamentos*: ${paoAlho} pães de alho + ${farofa.toFixed(1)}kg farofa\n🔥 *Carvão*: ${carvao.toFixed(1)}kg`;
   
   return (
-    <div className="max-w-2xl mx-auto p-4 sm:p-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+    <div className="max-w-2xl mx-auto p-4 sm:p-6 bg-slate-50 dark:bg-slate-800/50 rounded-xl" id="calc-churrasco">
       <h3 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
         <span>🔥</span> Quantos convidados?
       </h3>
@@ -3140,7 +3186,7 @@ function CalculadoraChurrasco() {
         </div>
       </div>
       
-      <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-6 border border-emerald-100 dark:border-emerald-800">
+      <div className="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-6 border border-emerald-100 dark:border-emerald-800 printable-area">
         <h4 className="text-lg font-bold text-emerald-800 dark:text-emerald-400 mb-4 text-center">O que você precisa comprar:</h4>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -3175,6 +3221,11 @@ function CalculadoraChurrasco() {
           </div>
         </div>
       </div>
+
+      <ShareBar 
+        title="Calculadora de Churrasco" 
+        summaryText={summary}
+      />
     </div>
   );
 }
@@ -3296,14 +3347,17 @@ function CalculadoraHorasTrabalhadas() {
   );
 }
 
-// 43. CALCULADORA DE ÁLCOOL OU GASOLINA (FLEX)
 function CalculadoraFlex() {
-  const [precoEtanol, setPrecoEtanol] = useState<number>(3.89);
-  const [precoGasolina, setPrecoGasolina] = useState<number>(5.79);
-  const [tanqueLitros, setTanqueLitros] = useState<number>(50);
+  const [precoEtanol, setPrecoEtanol] = useState<number>(() => getParamNumber('etanol', 3.89));
+  const [precoGasolina, setPrecoGasolina] = useState<number>(() => getParamNumber('gasolina', 5.79));
+  const [tanqueLitros, setTanqueLitros] = useState<number>(() => getParamNumber('tanque', 50));
   const [modoConsumoReal, setModoConsumoReal] = useState<boolean>(false);
   const [kmLEtanol, setKmLEtanol] = useState<number>(8.5);
   const [kmLGasolina, setKmLGasolina] = useState<number>(12.0);
+
+  useEffect(() => {
+    syncUrlParams({ etanol: precoEtanol, gasolina: precoGasolina, tanque: tanqueLitros });
+  }, [precoEtanol, precoGasolina, tanqueLitros]);
 
   const relacao = precoGasolina > 0 ? (precoEtanol / precoGasolina) * 100 : 0;
   const paridadeLimite = modoConsumoReal && kmLGasolina > 0 ? (kmLEtanol / kmLGasolina) * 100 : 70;
@@ -3317,6 +3371,8 @@ function CalculadoraFlex() {
 
   const economiaPorTanque = Math.abs(custoTanqueGasolina - custoTanqueEtanol);
   const economia1000Km = Math.abs(custoKmGasolina - custoKmEtanol) * 1000;
+
+  const summary = `⛽ *Álcool ou Gasolina?*\n• Gasolina: R$ ${precoGasolina.toFixed(2)}/L\n• Etanol: R$ ${precoEtanol.toFixed(2)}/L\n• Relação: ${relacao.toFixed(1)}%\n\n👉 *Veredito*: ${etanolVantajoso ? '🟢 COMPENSA ABASTECER COM ETANOL (ÁLCOOL)' : '🔵 COMPENSA ABASTECER COM GASOLINA'}\n💰 Economia por tanque (${tanqueLitros}L): R$ ${economiaPorTanque.toFixed(2)}`;
 
   return (
     <div className="space-y-6" id="calc-flex">
@@ -3359,40 +3415,38 @@ function CalculadoraFlex() {
         </div>
       </div>
 
-      {/* Toggle Consumo Real */}
-      <div className="bg-slate-50 dark:bg-slate-800/60 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <span className="text-xs font-bold text-slate-900 dark:text-slate-100">Cálculo Personalizado por Consumo Real (km/l)</span>
-            <p className="text-[11px] text-slate-500">Ative para inserir o consumo específico do computador de bordo do seu carro.</p>
-          </div>
-          <button 
-            type="button" 
-            onClick={() => setModoConsumoReal(!modoConsumoReal)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${modoConsumoReal ? 'bg-emerald-600 text-white' : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'}`}
-          >
-            {modoConsumoReal ? 'Ativado' : 'Usar Padrão 70%'}
-          </button>
-        </div>
+      {/* Opção Avançada de Consumo Real */}
+      <div className="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-xl border border-slate-200 dark:border-slate-700 space-y-3">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input 
+            type="checkbox" 
+            checked={modoConsumoReal} 
+            onChange={(e) => setModoConsumoReal(e.target.checked)} 
+            className="rounded text-emerald-600 focus:ring-emerald-500" 
+          />
+          <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+            Personalizar com as médias de consumo reais do meu carro (km/l)
+          </span>
+        </label>
 
         {modoConsumoReal && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-200 dark:border-slate-700">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-200 dark:border-slate-700">
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Consumo no Etanol (km/l)</label>
+              <label className="block text-xs text-slate-600 dark:text-slate-300 mb-1">Consumo com Etanol (km/l)</label>
               <input 
                 type="number" 
                 step="0.1" 
-                className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-sm font-mono" 
+                className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-mono" 
                 value={kmLEtanol} 
                 onChange={(e) => setKmLEtanol(Number(e.target.value))} 
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">Consumo na Gasolina (km/l)</label>
+              <label className="block text-xs text-slate-600 dark:text-slate-300 mb-1">Consumo com Gasolina (km/l)</label>
               <input 
                 type="number" 
                 step="0.1" 
-                className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-sm font-mono" 
+                className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-mono" 
                 value={kmLGasolina} 
                 onChange={(e) => setKmLGasolina(Number(e.target.value))} 
               />
@@ -3439,6 +3493,11 @@ function CalculadoraFlex() {
           <span className="text-lg font-bold text-emerald-600 dark:text-emerald-400">R$ {economia1000Km.toFixed(2)}</span>
         </div>
       </div>
+
+      <ShareBar 
+        title="Calculadora Álcool ou Gasolina" 
+        summaryText={summary}
+      />
     </div>
   );
 }
@@ -3867,14 +3926,26 @@ function CalculadoraOvulacao() {
 
 // 48. CALCULADORA DE TINTA E PINTURA
 function CalculadoraTinta() {
-  const [largura, setLargura] = useState<number>(4.0);
-  const [comprimento, setComprimento] = useState<number>(5.0);
-  const [altura, setAltura] = useState<number>(2.7);
-  const [incluirTeto, setIncluirTeto] = useState<boolean>(true);
-  const [qtdPortas, setQtdPortas] = useState<number>(1);
-  const [qtdJanelas, setQtdJanelas] = useState<number>(1);
-  const [demaos, setDemaos] = useState<number>(2);
-  const [rendimentoLata, setRendimentoLata] = useState<number>(10); // 10 m²/L padrão
+  const [largura, setLargura] = useState<number>(() => getParamNumber('l', 4.0));
+  const [comprimento, setComprimento] = useState<number>(() => getParamNumber('c', 5.0));
+  const [altura, setAltura] = useState<number>(() => getParamNumber('h', 2.7));
+  const [incluirTeto, setIncluirTeto] = useState<boolean>(() => getParamBoolean('teto', true));
+  const [qtdPortas, setQtdPortas] = useState<number>(() => getParamNumber('portas', 1));
+  const [qtdJanelas, setQtdJanelas] = useState<number>(() => getParamNumber('janelas', 1));
+  const [demaos, setDemaos] = useState<number>(() => getParamNumber('d', 2));
+  const [rendimentoLata, setRendimentoLata] = useState<number>(10);
+
+  useEffect(() => {
+    syncUrlParams({
+      l: largura,
+      c: comprimento,
+      h: altura,
+      teto: incluirTeto,
+      portas: qtdPortas,
+      janelas: qtdJanelas,
+      d: demaos
+    });
+  }, [largura, comprimento, altura, incluirTeto, qtdPortas, qtdJanelas, demaos]);
 
   const areaParedes = 2 * (largura + comprimento) * altura;
   const areaTeto = incluirTeto ? largura * comprimento : 0;
@@ -3891,6 +3962,8 @@ function CalculadoraTinta() {
   const galoes3_6L = Math.floor(restoApos18 / 3.6);
   const restoAposGal = restoApos18 % 3.6;
   const quartos900ml = Math.ceil(restoAposGal / 0.9);
+
+  const summary = `🎨 *Cálculo de Tinta para Pintura*:\n📐 *Área Líquida*: ${areaLiquida.toFixed(1)} m² (${demaos} demãos = ${areaPinturaTotal.toFixed(1)} m²)\n🛢️ *Tinta Necessária*: *${litrosNecessarios.toFixed(1)} Litros*\n🛒 *Sugestão de compra*: ${latas18L > 0 ? `${latas18L}x Lata 18L ` : ''}${galoes3_6L > 0 ? `${galoes3_6L}x Galão 3.6L ` : ''}${quartos900ml > 0 ? `${quartos900ml}x Quarto 900ml` : ''}`;
 
   return (
     <div className="space-y-6" id="calc-tinta">
@@ -3962,23 +4035,40 @@ function CalculadoraTinta() {
           </div>
         </div>
       </div>
+
+      <ShareBar 
+        title="Calculadora de Tinta para Pintura" 
+        summaryText={summary}
+      />
     </div>
   );
 }
 
 // 49. CALCULADORA DE PISO E REVESTIMENTO
 function CalculadoraPiso() {
-  const [largura, setLargura] = useState<number>(5.0);
-  const [comprimento, setComprimento] = useState<number>(6.0);
-  const [margemPerda, setMargemPerda] = useState<number>(10);
-  const [m2PorCaixa, setM2PorCaixa] = useState<number>(2.16);
-  const [precoM2, setPrecoM2] = useState<number>(65.0);
+  const [largura, setLargura] = useState<number>(() => getParamNumber('l', 5.0));
+  const [comprimento, setComprimento] = useState<number>(() => getParamNumber('c', 6.0));
+  const [margemPerda, setMargemPerda] = useState<number>(() => getParamNumber('perda', 10));
+  const [m2PorCaixa, setM2PorCaixa] = useState<number>(() => getParamNumber('caixa', 2.16));
+  const [precoM2, setPrecoM2] = useState<number>(() => getParamNumber('preco', 65.0));
+
+  useEffect(() => {
+    syncUrlParams({
+      l: largura,
+      c: comprimento,
+      perda: margemPerda,
+      caixa: m2PorCaixa,
+      preco: precoM2
+    });
+  }, [largura, comprimento, margemPerda, m2PorCaixa, precoM2]);
 
   const areaUtil = largura * comprimento;
   const areaComPerda = areaUtil * (1 + margemPerda / 100);
   const caixasNecessarias = m2PorCaixa > 0 ? Math.ceil(areaComPerda / m2PorCaixa) : 0;
   const areaTotalFaturada = caixasNecessarias * m2PorCaixa;
   const custoTotalEstimado = areaTotalFaturada * precoM2;
+
+  const summary = `🧱 *Cálculo de Piso e Revestimento*:\n📐 *Área Real*: ${areaUtil.toFixed(2)} m² (+${margemPerda}% perda = ${areaComPerda.toFixed(2)} m²)\n📦 *Caixas a Comprar*: *${caixasNecessarias} caixas* (${areaTotalFaturada.toFixed(2)} m² total)\n💰 *Custo Estimado*: R$ ${custoTotalEstimado.toFixed(2)}`;
 
   return (
     <div className="space-y-6" id="calc-piso">
@@ -4038,15 +4128,31 @@ function CalculadoraPiso() {
           </div>
         </div>
       </div>
+
+      <ShareBar 
+        title="Calculadora de Piso e Revestimento" 
+        summaryText={summary}
+      />
     </div>
   );
 }
 
 // 50. CALCULADORA DE ÁGUA DIÁRIA
+type NivelAtividadeAgua = 'sedentario' | 'moderado' | 'intenso';
+type ClimaAgua = 'ameno' | 'quente';
+
 function CalculadoraAguaDiaria() {
-  const [peso, setPeso] = useState<number>(70);
-  const [nivelAtividade, setNivelAtividade] = useState<'sedentario' | 'moderado' | 'intenso'>('moderado');
-  const [clima, setClima] = useState<'ameno' | 'quente'>('quente');
+  const [peso, setPeso] = useState<number>(() => getParamNumber('peso', 70));
+  const [nivelAtividade, setNivelAtividade] = useState<NivelAtividadeAgua>(() => (getParamString('ativ', 'moderado') as NivelAtividadeAgua));
+  const [clima, setClima] = useState<ClimaAgua>(() => (getParamString('clima', 'quente') as ClimaAgua));
+
+  useEffect(() => {
+    syncUrlParams({
+      peso,
+      ativ: nivelAtividade,
+      clima
+    });
+  }, [peso, nivelAtividade, clima]);
 
   let fatorMlPorKg = 35;
   if (nivelAtividade === 'moderado') fatorMlPorKg = 40;
@@ -4058,6 +4164,8 @@ function CalculadoraAguaDiaria() {
   const copos200ml = Math.round(metaMl / 200);
   const copos250ml = Math.round(metaMl / 250);
   const garrafas500ml = (metaMl / 500).toFixed(1);
+
+  const summary = `💧 *Meta Diária de Hidratação*: *${metaLitros.toFixed(2)} Litros/dia* (${metaMl} ml)\n• Peso: ${peso} kg (${nivelAtividade}, clima ${clima})\n• Equivalente: ~${copos200ml} copos de 200ml ou ${garrafas500ml} garrafas de 500ml`;
 
   return (
     <div className="space-y-6" id="calc-agua">
@@ -4073,7 +4181,7 @@ function CalculadoraAguaDiaria() {
         </div>
         <div>
           <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Nível de Exercício Físico</label>
-          <select className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm" value={nivelAtividade} onChange={(e) => setNivelAtividade(e.target.value as any)}>
+          <select className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm" value={nivelAtividade} onChange={(e) => setNivelAtividade(e.target.value as NivelAtividadeAgua)}>
             <option value="sedentario">Sedentário (35 ml/kg)</option>
             <option value="moderado">Moderado - caminhada/musculação (40 ml/kg)</option>
             <option value="intenso">Intenso / Atleta / Crossfit (45 ml/kg)</option>
@@ -4081,7 +4189,7 @@ function CalculadoraAguaDiaria() {
         </div>
         <div>
           <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Clima da sua Região</label>
-          <select className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm" value={clima} onChange={(e) => setClima(e.target.value as any)}>
+          <select className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm" value={clima} onChange={(e) => setClima(e.target.value as ClimaAgua)}>
             <option value="ameno">Clima Ameno / Frio</option>
             <option value="quente">Clima Quente / Seco (+500ml)</option>
           </select>
@@ -4110,17 +4218,32 @@ function CalculadoraAguaDiaria() {
           </div>
         </div>
       </div>
+
+      <ShareBar 
+        title="Calculadora de Consumo de Água Diária" 
+        summaryText={summary}
+      />
     </div>
   );
 }
 
 // 51. CALCULADORA DE PONTO E BANCO DE HORAS
 function CalculadoraPontoBancoHoras() {
-  const [entrada1, setEntrada1] = useState('08:00');
-  const [saida1, setSaida1] = useState('12:00');
-  const [entrada2, setEntrada2] = useState('13:00');
-  const [saida2, setSaida2] = useState('17:48');
-  const [jornadaMinutos, setJornadaMinutos] = useState(528); // 8h48min padrão CLT (44h seg-sex)
+  const [entrada1, setEntrada1] = useState(() => getParamString('e1', '08:00'));
+  const [saida1, setSaida1] = useState(() => getParamString('s1', '12:00'));
+  const [entrada2, setEntrada2] = useState(() => getParamString('e2', '13:00'));
+  const [saida2, setSaida2] = useState(() => getParamString('s2', '17:48'));
+  const [jornadaMinutos, setJornadaMinutos] = useState(() => getParamNumber('jornada', 528));
+
+  useEffect(() => {
+    syncUrlParams({
+      e1: entrada1,
+      s1: saida1,
+      e2: entrada2,
+      s2: saida2,
+      jornada: jornadaMinutos
+    });
+  }, [entrada1, saida1, entrada2, saida2, jornadaMinutos]);
 
   const toMinutes = (timeStr: string) => {
     if (!timeStr || !timeStr.includes(':')) return 0;
@@ -4140,6 +4263,8 @@ function CalculadoraPontoBancoHoras() {
     const m = absMin % 60;
     return `${h}h ${m.toString().padStart(2, '0')}m`;
   };
+
+  const summary = `⏰ *Apuração de Ponto e Banco de Horas*:\n• Batidas: ${entrada1} ➔ ${saida1} | ${entrada2} ➔ ${saida2}\n• Total Trabalhado: ${formatHorasMin(totalTrabalhado)} (${(totalTrabalhado / 60).toFixed(2)}h)\n• Almoço: ${formatHorasMin(intervaloMin)}\n\n👉 *Saldo*: *${saldoMinutos >= 0 ? `+${formatHorasMin(saldoMinutos)} (Horas Extras)` : `-${formatHorasMin(saldoMinutos)} (A Compensar)`}*`;
 
   return (
     <div className="space-y-6" id="calc-ponto-banco">
@@ -4177,7 +4302,7 @@ function CalculadoraPontoBancoHoras() {
         </select>
       </div>
 
-      <div className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-2xl p-6">
+      <div className="bg-slate-50 dark:bg-slate-850 border border-slate-200 dark:border-slate-700 rounded-2xl p-6">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center sm:text-left">
           <div>
             <span className="text-xs text-slate-500 font-bold uppercase block">Total Trabalhado Efetivo</span>
@@ -4200,16 +4325,30 @@ function CalculadoraPontoBancoHoras() {
           </div>
         </div>
       </div>
+
+      <ShareBar 
+        title="Calculadora de Ponto e Banco de Horas" 
+        summaryText={summary}
+      />
     </div>
   );
 }
 
 // 52. CALCULADORA À VISTA VS PARCELADO COM JUROS
 function CalculadoraDescontoVistaParcelado() {
-  const [precoParcelado, setPrecoParcelado] = useState<number>(2000);
-  const [descontoPercentual, setDescontoPercentual] = useState<number>(10);
-  const [numParcelas, setNumParcelas] = useState<number>(10);
-  const [cdiAnual, setCdiAnual] = useState<number>(12.0);
+  const [precoParcelado, setPrecoParcelado] = useState(() => getParamNumber('total', 2000));
+  const [descontoPercentual, setDescontoPercentual] = useState(() => getParamNumber('desc', 10));
+  const [numParcelas, setNumParcelas] = useState(() => getParamNumber('n', 10));
+  const [cdiAnual, setCdiAnual] = useState(() => getParamNumber('cdi', 12.0));
+
+  useEffect(() => {
+    syncUrlParams({
+      total: precoParcelado,
+      desc: descontoPercentual,
+      n: numParcelas,
+      cdi: cdiAnual
+    });
+  }, [precoParcelado, descontoPercentual, numParcelas, cdiAnual]);
 
   const valorAVista = precoParcelado * (1 - descontoPercentual / 100);
   const valorParcela = precoParcelado / (numParcelas || 1);
@@ -4227,7 +4366,8 @@ function CalculadoraDescontoVistaParcelado() {
   }
 
   const valePenaAVista = saldoAplicado < 0;
-  const economiaReal = Math.abs(saldoAplicado);
+
+  const summary = `💳 *À Vista com Desconto vs Parcelado*:\n• Preço: R$ ${precoParcelado.toFixed(2)} (${numParcelas}x de R$ ${valorParcela.toFixed(2)})\n• À vista (${descontoPercentual}% desc.): R$ ${valorAVista.toFixed(2)}\n• Rendimento CDI líquido: ${cdiMensalLiquido.toFixed(2)}% a.m.\n\n👉 *Veredito*: *${valePenaAVista ? '🟢 COMPENSA PAGAR À VISTA COM DESCONTO' : '🔵 COMPENSA PARCELAR E APLICAR O DINHEIRO'}*`;
 
   return (
     <div className="space-y-6" id="calc-desconto-parcelado">
@@ -4274,17 +4414,32 @@ function CalculadoraDescontoVistaParcelado() {
           </div>
         </div>
       </div>
+
+      <ShareBar 
+        title="Calculadora: À Vista vs Parcelado" 
+        summaryText={summary}
+      />
     </div>
   );
 }
 
 // 51. CALCULADORA DE FÉRIAS PROPORCIONAIS E VENCIDAS CLT
 function CalculadoraFeriasProporcionais() {
-  const [salarioBruto, setSalarioBruto] = useState<number>(3500);
-  const [mediaExtras, setMediaExtras] = useState<number>(0);
-  const [mesesTrabalhados, setMesesTrabalhados] = useState<number>(8);
-  const [diasFerias, setDiasFerias] = useState<number>(30);
-  const [venderAbono, setVenderAbono] = useState<boolean>(false);
+  const [salarioBruto, setSalarioBruto] = useState(() => getParamNumber('bruto', 3500));
+  const [mediaExtras, setMediaExtras] = useState(() => getParamNumber('extras', 0));
+  const [mesesTrabalhados, setMesesTrabalhados] = useState(() => getParamNumber('meses', 8));
+  const [diasFerias, setDiasFerias] = useState(() => getParamNumber('dias', 30));
+  const [venderAbono, setVenderAbono] = useState(() => getParamBoolean('abono', false));
+
+  useEffect(() => {
+    syncUrlParams({
+      bruto: salarioBruto,
+      extras: mediaExtras,
+      meses: mesesTrabalhados,
+      dias: diasFerias,
+      abono: venderAbono
+    });
+  }, [salarioBruto, mediaExtras, mesesTrabalhados, diasFerias, venderAbono]);
 
   const baseCalculo = (salarioBruto || 0) + (mediaExtras || 0);
   const avos = Math.min(12, Math.max(1, mesesTrabalhados || 1));
@@ -4311,6 +4466,8 @@ function CalculadoraFeriasProporcionais() {
   else inss = (1412 * 0.075) + ((2666.68 - 1412) * 0.09) + ((4000.03 - 2666.68) * 0.12) + ((Math.min(totalBrutoTributavel, 7786.02) - 4000.03) * 0.14);
 
   const totalLiquido = totalBrutoGeral - inss;
+
+  const summary = `🏖️ *Cálculo de Férias CLT (${mesesTrabalhados}/12 avos)*:\n💵 *Salário Base*: R$ ${salarioBruto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n🌴 *Férias + 1/3*: R$ ${totalBrutoTributavel.toFixed(2)}\n💰 *Abono 10 dias*: R$ ${totalBrutoIsento.toFixed(2)}\n\n🟢 *Total Líquido a Receber*: *R$ ${totalLiquido.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}*`;
 
   return (
     <div className="space-y-6" id="calc-ferias-proporcionais">
@@ -4369,16 +4526,28 @@ function CalculadoraFeriasProporcionais() {
           <span className="text-xs text-slate-500 block">Total Bruto: R$ {totalBrutoGeral.toFixed(2)} | INSS: -R$ {inss.toFixed(2)}</span>
         </div>
       </div>
+
+      <ShareBar 
+        title="Calculadora de Férias Proporcionais" 
+        summaryText={summary}
+      />
     </div>
   );
 }
 
 // 52. CALCULADORA DE AVISO PRÉVIO PROPORCIONAL (LEI 12.506/11)
 function CalculadoraAvisoPrevio() {
-  const [salarioBase, setSalarioBase] = useState<number>(3000);
-  const [anosCompletos, setAnosCompletos] = useState<number>(3);
-  const [tipoDemissao, setTipoDemissao] = useState<'sem_justa_causa' | 'pedido_demissao'>('sem_justa_causa');
-  const [modalidadeAviso, setModalidadeAviso] = useState<'indenizado' | 'trabalhado'>('indenizado');
+  const [salarioBase, setSalarioBase] = useState(() => getParamNumber('salario', 3000));
+  const [anosCompletos, setAnosCompletos] = useState(() => getParamNumber('anos', 3));
+  const [tipoDemissao, setTipoDemissao] = useState(() => getParamString('tipo', 'sem_justa_causa'));
+
+  useEffect(() => {
+    syncUrlParams({
+      salario: salarioBase,
+      anos: anosCompletos,
+      tipo: tipoDemissao
+    });
+  }, [salarioBase, anosCompletos, tipoDemissao]);
 
   // Cálculo da Lei 12.506/11: 30 dias + 3 dias por ano completo (máximo de 90 dias)
   const diasAdicionais = tipoDemissao === 'sem_justa_causa' ? Math.min(60, (anosCompletos || 0) * 3) : 0;
@@ -4386,6 +4555,8 @@ function CalculadoraAvisoPrevio() {
 
   const valorDiaSalario = (salarioBase || 0) / 30;
   const valorAvisoPrevio = valorDiaSalario * totalDiasAviso;
+
+  const summary = `📄 *Aviso Prévio Proporcional (Lei 12.506/11)*:\n• Salário: R$ ${salarioBase.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n• Tempo de empresa: ${anosCompletos} ano(s)\n• Duração do aviso: *${totalDiasAviso} dias*\n\n👉 *Valor do Aviso Prévio*: *R$ ${valorAvisoPrevio.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}*`;
 
   return (
     <div className="space-y-6" id="calc-aviso-previo">
@@ -4405,7 +4576,7 @@ function CalculadoraAvisoPrevio() {
         </div>
         <div>
           <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Tipo de Rescisão</label>
-          <select className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-semibold" value={tipoDemissao} onChange={e => setTipoDemissao(e.target.value as any)}>
+          <select className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-semibold" value={tipoDemissao} onChange={e => setTipoDemissao(e.target.value)}>
             <option value="sem_justa_causa">Demissão sem Justa Causa (Pelo Empregador)</option>
             <option value="pedido_demissao">Pedido de Demissão (Pelo Empregado)</option>
           </select>
@@ -4428,16 +4599,30 @@ function CalculadoraAvisoPrevio() {
           <span className="text-xs text-slate-500 block">Equivalente a R$ {valorDiaSalario.toFixed(2)} por dia trabalhado/indenizado</span>
         </div>
       </div>
+
+      <ShareBar 
+        title="Calculadora de Aviso Prévio Proporcional" 
+        summaryText={summary}
+      />
     </div>
   );
 }
 
 // 53. CALCULADORA DE TIJOLOS, BLOCOS E ARGAMASSA
 function CalculadoraTijolosArgamassa() {
-  const [comprimento, setComprimento] = useState<number>(10);
-  const [altura, setAltura] = useState<number>(2.8);
-  const [descontoVaos, setDescontoVaos] = useState<number>(4); // Portas e janelas m²
-  const [tipoBloco, setTipoBloco] = useState<'8furos' | '6furos' | '9furos' | 'concreto'>('8furos');
+  const [comprimento, setComprimento] = useState(() => getParamNumber('c', 10));
+  const [altura, setAltura] = useState(() => getParamNumber('h', 2.8));
+  const [descontoVaos, setDescontoVaos] = useState(() => getParamNumber('vaos', 4));
+  const [tipoBloco, setTipoBloco] = useState(() => getParamString('bloco', '8furos'));
+
+  useEffect(() => {
+    syncUrlParams({
+      c: comprimento,
+      h: altura,
+      vaos: descontoVaos,
+      bloco: tipoBloco
+    });
+  }, [comprimento, altura, descontoVaos, tipoBloco]);
 
   const areaTotal = Math.max(0, (comprimento || 0) * (altura || 0));
   const areaLiquida = Math.max(0, areaTotal - (descontoVaos || 0));
@@ -4462,6 +4647,8 @@ function CalculadoraTijolosArgamassa() {
   const totalArgamassaKg = Math.ceil(areaLiquida * argamassaKgM2);
   const sacosArgamassa20kg = Math.ceil(totalArgamassaKg / 20);
 
+  const summary = `🧱 *Quantitativo de Tijolos e Argamassa*:\n📐 *Área Líquida*: ${areaLiquida.toFixed(1)} m²\n🧱 *Tijolos/Blocos (+10% perda)*: *${tijolosComPerda} unidades* (${tipoBloco})\n🧪 *Argamassa de Assentamento*: *${sacosArgamassa20kg} sacos de 20kg* (~${totalArgamassaKg} kg)`;
+
   return (
     <div className="space-y-6" id="calc-tijolos-argamassa">
       <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
@@ -4484,7 +4671,7 @@ function CalculadoraTijolosArgamassa() {
         </div>
         <div>
           <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Tipo de Tijolo / Bloco</label>
-          <select className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-semibold" value={tipoBloco} onChange={e => setTipoBloco(e.target.value as any)}>
+          <select className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-semibold" value={tipoBloco} onChange={e => setTipoBloco(e.target.value)}>
             <option value="8furos">Tijolo Baiano 8 Furos (9x19x19 cm)</option>
             <option value="6furos">Tijolo Baiano 6 Furos (9x14x19 cm)</option>
             <option value="9furos">Tijolo Baiano 9 Furos (14x19x19 cm)</option>
@@ -4513,18 +4700,34 @@ function CalculadoraTijolosArgamassa() {
           <span className="text-xs text-slate-500 block">Aprox. {totalArgamassaKg} kg (sacos de 20 kg)</span>
         </div>
       </div>
+
+      <ShareBar 
+        title="Calculadora de Tijolos e Argamassa" 
+        summaryText={summary}
+      />
     </div>
   );
 }
 
 // 54. CALCULADORA DE COMBUSTÍVEL E PEDÁGIO PARA VIAGEM
 function CalculadoraCombustivelViagem() {
-  const [distanciaKm, setDistanciaKm] = useState<number>(350);
-  const [idaEVolta, setIdaEVolta] = useState<boolean>(true);
-  const [consumoKmL, setConsumoKmL] = useState<number>(12);
-  const [precoCombustivel, setPrecoCombustivel] = useState<number>(5.89);
-  const [pedagioTotal, setPedagioTotal] = useState<number>(45);
-  const [numPassageiros, setNumPassageiros] = useState<number>(4);
+  const [distanciaKm, setDistanciaKm] = useState(() => getParamNumber('km', 350));
+  const [idaEVolta, setIdaEVolta] = useState(() => getParamBoolean('idavolta', true));
+  const [consumoKmL, setConsumoKmL] = useState(() => getParamNumber('consumo', 12));
+  const [precoCombustivel, setPrecoCombustivel] = useState(() => getParamNumber('preco', 5.89));
+  const [pedagioTotal, setPedagioTotal] = useState(() => getParamNumber('pedagio', 45));
+  const [numPassageiros, setNumPassageiros] = useState(() => getParamNumber('pessoas', 4));
+
+  useEffect(() => {
+    syncUrlParams({
+      km: distanciaKm,
+      idavolta: idaEVolta,
+      consumo: consumoKmL,
+      preco: precoCombustivel,
+      pedagio: pedagioTotal,
+      pessoas: numPassageiros
+    });
+  }, [distanciaKm, idaEVolta, consumoKmL, precoCombustivel, pedagioTotal, numPassageiros]);
 
   const kmFinal = idaEVolta ? (distanciaKm || 0) * 2 : (distanciaKm || 0);
   const litrosGastos = (consumoKmL || 1) > 0 ? kmFinal / (consumoKmL || 1) : 0;
@@ -4533,10 +4736,12 @@ function CalculadoraCombustivelViagem() {
   const custoTotalViagem = custoCombustivel + pedagioFinal;
   const custoPorPassageiro = (numPassageiros || 1) > 0 ? custoTotalViagem / (numPassageiros || 1) : custoTotalViagem;
 
+  const summary = `🚗 *Rateio de Viagem (${kmFinal} km ${idaEVolta ? 'Ida e Volta' : 'Só Ida'})*:\n⛽ *Combustível*: ${litrosGastos.toFixed(1)} Litros (R$ ${custoCombustivel.toFixed(2)})\n🛣️ *Pedágios*: R$ ${pedagioFinal.toFixed(2)}\n💰 *Custo Total*: R$ ${custoTotalViagem.toFixed(2)}\n👥 *Divisão por pessoa (${numPassageiros} passageiros)*: *R$ ${custoPorPassageiro.toFixed(2)}*`;
+
   return (
     <div className="space-y-6" id="calc-combustivel-viagem">
       <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
-        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Calculadora de Combustível e Pedágio para Viagem</h2>
+        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Calculadora de Combustivel e Pedágio para Viagem</h2>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Calcule os gastos totais de estrada (combustível e tarifas de pedágio) e divida por passageiro.</p>
       </div>
 
@@ -4578,7 +4783,7 @@ function CalculadoraCombustivelViagem() {
 
         <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2">
           <span className="text-xs font-bold text-slate-500 uppercase block">Custo Total da Viagem</span>
-          <span className="text-3xl font-black text-slate-900 dark:text-slate-100 font-mono">R$ {custoTotalViagem.toFixed(2)}</span>
+          <span className="text-3xl font-black text-slate-900 dark:text-slate-100 font-mono">{custoTotalViagem.toFixed(2)}</span>
           <span className="text-xs text-slate-500 block">Combustível + R$ {pedagioFinal.toFixed(2)} de pedágio</span>
         </div>
 
@@ -4588,20 +4793,31 @@ function CalculadoraCombustivelViagem() {
           <span className="text-xs text-emerald-600 font-semibold block">Divisão justa de despesas</span>
         </div>
       </div>
+
+      <ShareBar 
+        title="Calculadora de Combustível para Viagem" 
+        summaryText={summary}
+      />
     </div>
   );
 }
 
 // 55. CALCULADORA DE BTUS PARA AR-CONDICIONADO
 function CalculadoraBtusArCondicionado() {
-  const [areaM2, setAreaM2] = useState<number>(18);
-  const [solIntenso, setSolIntenso] = useState<boolean>(false);
-  const [numPessoas, setNumPessoas] = useState<number>(2);
-  const [numAparelhos, setNumAparelhos] = useState<number>(2);
+  const [areaM2, setAreaM2] = useState(() => getParamNumber('area', 18));
+  const [solIntenso, setSolIntenso] = useState(() => getParamBoolean('sol', false));
+  const [numPessoas, setNumPessoas] = useState(() => getParamNumber('pessoas', 2));
+  const [numAparelhos, setNumAparelhos] = useState(() => getParamNumber('aparelhos', 2));
 
-  // Fórmula técnica: 600 BTUs/m² (sol moderado) ou 800 BTUs/m² (sol da tarde)
-  // + 600/800 BTUs por pessoa extra (além da 1ª)
-  // + 600/800 BTUs por eletrônico
+  useEffect(() => {
+    syncUrlParams({
+      area: areaM2,
+      sol: solIntenso,
+      pessoas: numPessoas,
+      aparelhos: numAparelhos
+    });
+  }, [areaM2, solIntenso, numPessoas, numAparelhos]);
+
   const baseBtuM2 = solIntenso ? 800 : 600;
   const adicionalItem = solIntenso ? 800 : 600;
 
@@ -4616,6 +4832,8 @@ function CalculadoraBtusArCondicionado() {
   else if (btusCalculados <= 24000) capacidadeComercial = 24000;
   else if (btusCalculados <= 30000) capacidadeComercial = 30000;
   else capacidadeComercial = 36000;
+
+  const summary = `❄️ *Cálculo de BTUs para Ar-Condicionado*:\n📐 *Ambiente*: ${areaM2} m² (${solIntenso ? 'Sol da tarde' : 'Sol da manhã'})\n👥 *Pessoas*: ${numPessoas} | 💻 *Aparelhos*: ${numAparelhos}\n🔥 *Carga Térmica*: ${btusCalculados.toLocaleString('pt-BR')} BTUs/h\n👉 *Modelo Recomendado*: *${capacidadeComercial.toLocaleString('pt-BR')} BTUs* (Preferência Inverter)`;
 
   return (
     <div className="space-y-6" id="calc-btus-ar">
@@ -4660,9 +4878,11 @@ function CalculadoraBtusArCondicionado() {
           <span className="text-xs text-emerald-600 font-semibold block">Dica: Prefira modelos com tecnologia Inverter (até 60% de economia)</span>
         </div>
       </div>
+
+      <ShareBar 
+        title="Calculadora de BTUs para Ar-Condicionado" 
+        summaryText={summary}
+      />
     </div>
   );
 }
-
-
-
