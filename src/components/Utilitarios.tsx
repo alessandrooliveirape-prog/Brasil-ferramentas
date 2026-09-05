@@ -9,12 +9,17 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import DescomplicaContrato from './DescomplicaContrato';
 
 interface UtilitariosProps {
   toolId: string;
 }
 
 export default function Utilitarios({ toolId }: UtilitariosProps) {
+  if (toolId === 'descomplica-contrato') {
+    return <DescomplicaContrato />;
+  }
+
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm animate-fade-in" id="utilitarios-container">
       {toolId === 'sorteador' && <SorteadorOnline />}

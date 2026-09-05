@@ -3110,6 +3110,43 @@ export const TOOLS: ToolMetadata[] = [
     ],
     relatedToolIds: ['custo-energia', 'calculadora-tinta', 'regra-de-tre'],
     slug: 'calculadora-de-btus-ar-condicionado'
+  },
+  {
+    id: 'descomplica-contrato',
+    categoryId: 'utilitarios',
+    title: 'DescomplicaContrato: Analisador de Contratos Gratuito com Áudio em 2 Minutos',
+    shortDescription: 'Analise contratos civis, de aluguel e prestação de serviços em PDF ou texto. Receba um diagnóstico falado em 2 minutos sem juridiquês com inteligência artificial gratuita.',
+    longIntro: 'O DescomplicaContrato é uma tecnologia assistiva educacional do Tool Brasil criada para desmistificar o juridiquês e proteger o cidadão contra abusos contratuais. Utilizando inteligência artificial gratuita e extração de PDF no próprio navegador via pdf.js, a ferramenta examina cláusulas de multas, renovação automática, perdas de sinal e obrigações desproporcionais sob a ótica do Código de Defesa do Consumidor e da Lei do Inquilinato, entregando um resumo falado e direto pelo sintetizador de voz nativo do seu dispositivo.',
+    howItWorks: 'Basta arrastar ou selecionar um arquivo PDF ou colar trechos das cláusulas na caixa de texto. O navegador extrai o texto com privacidade (sem armazenar documentos em servidor) e aplica regex para proteger CPFs e e-mails. A inteligência artificial examina os pontos de desequilíbrio e produz uma resposta em formato de áudio de até dois minutos, classificando o risco em Alto, Médio ou Baixo e apontando qual cláusula exigir alteração antes de assinar.',
+    faqs: [
+      {
+        question: 'É seguro enviar meu contrato para análise no DescomplicaContrato?',
+        answer: 'Sim, é 100% seguro. O processamento de leitura de PDF e mascaramento de dados ocorre localmente no seu próprio navegador através da biblioteca pdf.js. Antes de qualquer requisição à inteligência artificial, CPFs, números de RG, telefones e e-mails são anonimizados. A análise é puramente volátil em memória e nenhum documento é gravado em servidores.'
+      },
+      {
+        question: 'A ferramenta armazena dados pessoais ou documentos?',
+        answer: 'Não. O portal Tool Brasil não possui banco de dados para contratos, cadastros de usuários ou histórico de consultas. Uma vez encerrada a sessão ou atualizada a página, todos os dados são instantaneamente descartados da memória.'
+      },
+      {
+        question: 'Esta análise substitui a consulta com um advogado?',
+        answer: 'Não. O DescomplicaContrato é uma tecnologia assistiva educacional e informativa. Ele serve para apontar riscos evidentes e empoderar o cidadão em negociações prévias, mas não substitui a consulta jurídica formal com um advogado ou defensor público.'
+      },
+      {
+        question: 'Quais formatos de arquivo são aceitos e quais são os limites?',
+        answer: 'Aceitamos arquivos PDF nativos (com camada de texto selecionável) de até 10 páginas, arquivos de texto simples (.txt) e você também pode colar diretamente qualquer trecho de cláusula na área de texto (limite de até 15.000 caracteres).'
+      },
+      {
+        question: 'O que devo fazer caso o contrato receba a classificação de [RISCO ALTO]?',
+        answer: 'Não assine o documento com pressa. Siga a recomendação falada indicada no veredito, solicitando formalmente por e-mail ou mensagem a alteração ou supressão da cláusula abusiva (especialmente multas desproporcionais ou renovação automática silenciosa).'
+      }
+    ],
+    tips: [
+      'Nunca assine contratos sob pressão temporal ou emocional: exija sempre 24 horas para ler o documento com calma.',
+      'Dê atenção especial às cláusulas de Foro de Eleição, Multa Rescisória e Renovação Automática.',
+      'Qualquer promessa feita verbalmente pelo vendedor ou locador deve constar expressamente por escrito no texto do contrato.'
+    ],
+    relatedToolIds: ['contador-caracteres', 'comparador-textos', 'texto-para-voz', 'gerador-contrato-aluguel'],
+    slug: 'descomplica-contrato'
   }
 ];
 

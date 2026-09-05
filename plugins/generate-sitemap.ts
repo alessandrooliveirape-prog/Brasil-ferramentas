@@ -154,6 +154,7 @@ export function generateSitemapPlugin(): Plugin {
         { categoryId: 'utilitarios', slug: 'filtro-de-emails', priority: 0.8 },
         { categoryId: 'utilitarios', slug: 'comparador-de-textos', priority: 0.8 },
         { categoryId: 'utilitarios', slug: 'validador-de-cartao-de-credito', priority: 0.8 },
+        { categoryId: 'utilitarios', slug: 'descomplica-contrato', priority: 0.95 },
       ];
 
       toolSlugs.forEach(t => {

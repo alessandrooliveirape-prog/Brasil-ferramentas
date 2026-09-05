@@ -1050,103 +1050,106 @@ export default function App() {
                 {activeTool.categoryId === 'utilitarios' && <Utilitarios toolId={activeTool.id} />}
               </div>
 
-              {/* ADSENSE MID TOPO */}
-              <AdSensePlaceholder slotId="slot-2" position="meio" />
+              {/* ADSENSE MID TOPO & RICH SEO TEXTUAL CONTENT (apenas para ferramentas que usam layout padrão) */}
+              {activeTool.id !== 'descomplica-contrato' && (
+                <>
+                  <AdSensePlaceholder slotId="slot-2" position="meio" />
 
-              {/* RICH SEO TEXTUAL CONTENT */}
-              <article className="bg-white border border-slate-300 rounded-xl p-6 space-y-6 text-sm" id="tool-editorial-content">
-                
-                {/* Intro */}
-                <div className="space-y-2">
-                  <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-1.5 border-b pb-1.5">
-                    <Info className="w-4 h-4 text-emerald-600" /> Introdução
-                  </h3>
-                  <p className="text-slate-700 leading-relaxed text-sm">
-                    {activeTool.longIntro}
-                  </p>
-                </div>
-
-                {/* How it works */}
-                <div className="space-y-2">
-                  <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-1.5 border-b pb-1.5">
-                    <Wrench className="w-4 h-4 text-emerald-600" /> Como Funciona?
-                  </h3>
-                  <p className="text-slate-700 leading-relaxed text-sm">
-                    {activeTool.howItWorks}
-                  </p>
-                </div>
-
-                {/* Tips */}
-                {activeTool.tips && activeTool.tips.length > 0 && (
-                  <div className="bg-emerald-50 border border-emerald-250 p-4 rounded-lg space-y-2">
-                    <h4 className="text-xs font-black text-emerald-900 uppercase tracking-wide">
-                      💡 Dicas de Uso e Boas Práticas:
-                    </h4>
-                    <ul className="list-disc pl-5 text-slate-800 text-sm space-y-1.5">
-                      {activeTool.tips.map((tip, idx) => (
-                        <li key={idx} className="font-semibold">{tip}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* FAQ Accordions */}
-                {activeTool.faqs && activeTool.faqs.length > 0 && (
-                  <div className="space-y-3 pt-2">
-                    <h3 className="text-xs font-black uppercase text-slate-505 tracking-wider">
-                      Perguntas Frequentes (FAQ)
-                    </h3>
+                  <article className="bg-white border border-slate-300 rounded-xl p-6 space-y-6 text-sm" id="tool-editorial-content">
                     
-                    <div className="divide-y divide-slate-200">
-                      {activeTool.faqs.map((faq, idx) => {
-                        const faqKey = `${activeTool?.id}-${idx}`;
-                        const isOpen = faqOpen[faqKey];
-                        return (
-                          <div key={idx} className="py-2.5">
-                            <button
-                              onClick={() => setFaqOpen(p => ({ ...p, [faqKey]: !isOpen }))}
-                              className="w-full text-left font-bold text-slate-900 text-xs flex justify-between items-center transition hover:text-emerald-700 hover:cursor-pointer"
-                            >
-                              <span>{faq.question}</span>
-                              <span className="text-slate-500">{isOpen ? '−' : '+'}</span>
-                            </button>
-                            {isOpen && (
-                              <p className="text-xs text-slate-700 mt-2 font-medium leading-relaxed animate-fade-in pl-1">
-                                {faq.answer}
-                              </p>
-                            )}
-                          </div>
-                        );
-                      })}
+                    {/* Intro */}
+                    <div className="space-y-2">
+                      <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-1.5 border-b pb-1.5">
+                        <Info className="w-4 h-4 text-emerald-600" /> Introdução
+                      </h3>
+                      <p className="text-slate-700 leading-relaxed text-sm">
+                        {activeTool.longIntro}
+                      </p>
                     </div>
-                  </div>
-                )}
 
-                {/* RELATIVE INTERLINKING SYSTEM */}
-                {activeTool.relatedToolIds && activeTool.relatedToolIds.length > 0 && (
-                  <div className="pt-4 border-t border-slate-200 space-y-2">
-                    <span className="text-[10px] font-extrabold text-slate-505 uppercase tracking-widest block">
-                      🔗 Ferramentas Relacionadas Recomendadas:
-                    </span>
-                    <div className="flex flex-wrap gap-2 pt-1">
-                      {activeTool.relatedToolIds.map((relId) => {
-                        const matched = TOOLS.find(t => t.id === relId);
-                        if (!matched) return null;
-                        return (
-                          <a
-                            key={relId}
-                            href={`/${matched.categoryId}/${matched.slug}`}
-                            className="bg-slate-100 hover:bg-slate-200 text-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold transition"
-                          >
-                            {matched.title}
-                          </a>
-                        );
-                      })}
+                    {/* How it works */}
+                    <div className="space-y-2">
+                      <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-1.5 border-b pb-1.5">
+                        <Wrench className="w-4 h-4 text-emerald-600" /> Como Funciona?
+                      </h3>
+                      <p className="text-slate-700 leading-relaxed text-sm">
+                        {activeTool.howItWorks}
+                      </p>
                     </div>
-                  </div>
-                )}
 
-              </article>
+                    {/* Tips */}
+                    {activeTool.tips && activeTool.tips.length > 0 && (
+                      <div className="bg-emerald-50 border border-emerald-250 p-4 rounded-lg space-y-2">
+                        <h4 className="text-xs font-black text-emerald-900 uppercase tracking-wide">
+                          💡 Dicas de Uso e Boas Práticas:
+                        </h4>
+                        <ul className="list-disc pl-5 text-slate-800 text-sm space-y-1.5">
+                          {activeTool.tips.map((tip, idx) => (
+                            <li key={idx} className="font-semibold">{tip}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {/* FAQ Accordions */}
+                    {activeTool.faqs && activeTool.faqs.length > 0 && (
+                      <div className="space-y-3 pt-2">
+                        <h3 className="text-xs font-black uppercase text-slate-505 tracking-wider">
+                          Perguntas Frequentes (FAQ)
+                        </h3>
+                        
+                        <div className="divide-y divide-slate-200">
+                          {activeTool.faqs.map((faq, idx) => {
+                            const faqKey = `${activeTool?.id}-${idx}`;
+                            const isOpen = faqOpen[faqKey];
+                            return (
+                              <div key={idx} className="py-2.5">
+                                <button
+                                  onClick={() => setFaqOpen(p => ({ ...p, [faqKey]: !isOpen }))}
+                                  className="w-full text-left font-bold text-slate-900 text-xs flex justify-between items-center transition hover:text-emerald-700 hover:cursor-pointer"
+                                >
+                                  <span>{faq.question}</span>
+                                  <span className="text-slate-500">{isOpen ? '−' : '+'}</span>
+                                </button>
+                                {isOpen && (
+                                  <p className="text-xs text-slate-700 mt-2 font-medium leading-relaxed animate-fade-in pl-1">
+                                    {faq.answer}
+                                  </p>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* RELATIVE INTERLINKING SYSTEM */}
+                    {activeTool.relatedToolIds && activeTool.relatedToolIds.length > 0 && (
+                      <div className="pt-4 border-t border-slate-200 space-y-2">
+                        <span className="text-[10px] font-extrabold text-slate-505 uppercase tracking-widest block">
+                          🔗 Ferramentas Relacionadas Recomendadas:
+                        </span>
+                        <div className="flex flex-wrap gap-2 pt-1">
+                          {activeTool.relatedToolIds.map((relId) => {
+                            const matched = TOOLS.find(t => t.id === relId);
+                            if (!matched) return null;
+                            return (
+                              <a
+                                key={relId}
+                                href={`/${matched.categoryId}/${matched.slug}`}
+                                className="bg-slate-100 hover:bg-slate-200 text-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold transition"
+                              >
+                                {matched.title}
+                              </a>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                  </article>
+                </>
+              )}
 
               {/* COMPARTILHAMENTO SOCIAL VIRAL */}
               <div className="bg-white border border-slate-300 rounded-xl p-6" id="share-tool-section">
