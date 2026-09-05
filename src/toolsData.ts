@@ -2390,19 +2390,24 @@ export const TOOLS: ToolMetadata[] = [
   {
     id: 'move-brasil',
     categoryId: 'calculadoras',
-    title: 'Calculadora Move Brasil - Programa Mover Motoristas',
-    shortDescription: 'Simule o financiamento do programa MOVE Brasil para motoristas de aplicativo, taxistas e motoboys.',
-    longIntro: 'O programa MOVE Brasil (Mobilidade Verde e Inovação) é uma iniciativa do Governo Federal que oferece linhas de crédito subsidiadas pelo BNDES para motoristas profissionais adquirirem veículos novos (flex, híbridos ou elétricos) com juros reduzidos. Esta calculadora simula o valor das parcelas, economia total e condições ideais para taxistas, motoristas de app (Uber, 99) e entregadores (motoboys).',
-    howItWorks: 'Informe o valor do veículo desejado (até R$ 150 mil), seu perfil profissional, valor de entrada e prazo de financiamento. A calculadora aplica as taxas do BNDES vigentes e exibe o valor das parcelas, economia total e comparação com financiamento tradicional.',
+    title: 'Calculadora Move Brasil 2026 - Carros, Motos e Caminhões (BB, Caixa e BNDES)',
+    shortDescription: 'Simule o financiamento MOVE Brasil para carros, motos e caminhões (motoristas de app, taxistas e entregadores) pelo Banco do Brasil, Caixa e BNDES.',
+    longIntro: 'O programa MOVE Brasil (Mobilidade Verde e Inovação) é uma iniciativa do Governo Federal que oferece linhas de crédito subsidiadas pelo BNDES para motoristas de aplicativo (Uber, 99), taxistas, motoboys e caminhoneiros adquirirem veículos novos (flex, híbridos, elétricos, motos e caminhões leves/VUC) com juros reduzidos a partir de 1,5% ao ano. Esta calculadora simula o valor das parcelas, economia total e condições praticadas por bancos repassadores credenciados como o Banco do Brasil (BB) e a Caixa Econômica Federal.',
+    howItWorks: 'Informe o tipo de veículo (carro, moto ou caminhão), o valor desejado, seu perfil profissional, valor de entrada e prazo de financiamento. A calculadora aplica as taxas subsidiadas vigentes do BNDES/BB/Caixa e exibe o valor das parcelas, economia total comparada ao mercado tradicional e requisitos de aprovação.',
     faqs: [
-      { question: 'Quem pode participar do MOVE Brasil?', answer: 'Motoristas de aplicativo com cadastro ativo há pelo menos 12 meses e 100 corridas realizadas, taxistas com registro ativo, e entregadores (motoboys) cadastrados há pelo menos 6 meses com 100 entregas ou vínculo CLT.' },
-      { question: 'Qual o valor máximo do veículo?', answer: 'O programa financia veículos novos (flex, híbridos ou elétricos) com valor de até R$ 150 mil.' },
-      { question: 'Quais as taxas de juros do programa?', answer: 'Para mulheres: taxa fixa de 1,5 a.a. (custo final até 11,5 a.a.). Para os demais: taxa fixa de 2,5 a.a. (custo final até 12,6 a.a.). O prazo máximo e de 72 meses com carência de até 6 meses.' },
-      { question: 'Precisa de entrada?', answer: 'O BNDES pode financiar até 100% dos itens elegíveis, mas a exigênciade entrada depende da politica da instituição financeira. O programa é vedado de cobrar tarifa de cadastro.' },
-      { question: 'Ate quando posso solicitar?', answer: 'As instituicoes financeiras devem contratar as operacoes até 15 de setembro de 2026, sujeito a disponibilidade orçamentária.' }
+      { question: 'Quem pode participar do MOVE Brasil?', answer: 'Motoristas de aplicativo com cadastro ativo há pelo menos 12 meses e 100 corridas realizadas, taxistas com registro ativo, entregadores (motoboys) cadastrados há pelo menos 6 meses com 100 entregas ou vínculo CLT, e autônomos do setor de transporte de cargas (VUC/Caminhões leves).' },
+      { question: 'Como simular o Move Brasil pelo Banco do Brasil e Caixa Econômica?', answer: 'Tanto o Banco do Brasil (BB) quanto a Caixa atuam como agentes financeiros repassadores oficiais do BNDES no programa MOVE. Você pode simular as parcelas na nossa calculadora selecionando a instituição correspondente e depois apresentar a elegibilidade aprovada via gov.br diretamente na sua agência ou aplicativo bancário.' },
+      { question: 'Posso financiar moto pelo Move Brasil?', answer: 'Sim! Entregadores e motoboys cadastrados em plataformas de delivery têm linha especial para aquisição de motocicletas novas de baixa emissão com teto de até R$ 35 mil e prazos de até 48 a 60 meses.' },
+      { question: 'Caminhões e VUCs entram no programa?', answer: 'Sim. Caminhoneiros autônomos e empresas de pequeno porte de logística podem financiar veículos utilitários de carga (VUCs) e caminhões leves elegíveis pelo BNDES Finame dentro dos objetivos de descarbonização do programa.' },
+      { question: 'Qual o valor máximo financiado e prazos?', answer: 'Carros têm limite de até R$ 150 mil; motos até R$ 35 mil; e caminhões leves até R$ 400 mil. O prazo máximo é de até 72 meses com carência opcional de até 6 meses.' },
+      { question: 'Quais as taxas de juros do programa?', answer: 'Para mulheres: taxa fixa a partir de 1,5% a.a. (custo final em torno de 11,5% a.a.). Para os demais perfis: taxa fixa a partir de 2,5% a.a. (custo final aproximado de 12,6% a.a., contra 18% a 25% a.a. do mercado tradicional).' }
     ],
-    tips: ['Compare as taxas oferecidas por diferentes bancos credenciados pelo BNDES antes de fechar o contrato.', 'Considere o custo total do veículo incluindo IPVA, seguro e manutenção no planejamento financeiro.', 'Mulheres tem condições especiais com taxas ainda mais baixas - aproveite o benefício!'],
-    relatedToolIds: ['preco-por-km', 'consumo-combustivel', 'ipva', 'financiamento'],
+    tips: [
+      'Compare as taxas oferecidas por diferentes bancos credenciados (Banco do Brasil, Caixa e cooperativas de crédito) antes de fechar o contrato.',
+      'Considere o custo total do veículo incluindo IPVA, seguro obrigatório e custos de manutenção no seu planejamento mensal.',
+      'Mulheres motoristas contam com incentivo governamental adicional e taxas de juros reduzidas no programa.'
+    ],
+    relatedToolIds: ['preco-por-km', 'consumo-combustivel', 'ipva', 'financiamento-veiculos'],
     slug: 'calculadora-move-brasil'
   },
   {
@@ -2428,21 +2433,23 @@ export const TOOLS: ToolMetadata[] = [
   {
     id: 'financiamento-veiculos',
     categoryId: 'calculadoras',
-    title: 'Simulador de Financiamento de Veículos',
-    shortDescription: 'Simule as parcelas do financiamento de carros e motos com valor de entrada, taxa de juros e estimativa de IOF.',
-    longIntro: 'Comprar um carro ou moto financiado exige planejamento detalhado para que o custo das parcelas não comprometa o orçamento familiar. O Simulador de Financiamento de Veículos da Tool Brasil calcula o valor das prestações mensais, o total financiado, o montante de juros acumulado e o Custo Efetivo Total (CET). Com esta ferramenta, você pode testar diferentes cenários aumentando o valor da entrada ou alterando o número de parcelas (de 12x a 60x) para encontrar a combinação perfeita para o seu bolso.',
-    howItWorks: 'Insira o valor total do veículo (carro novo ou usado), o valor da entrada em dinheiro, a taxa de juros mensal e o prazo de parcelamento em meses. A calculadora subtrai a entrada, aplica a amortização contratual (Tabela Price) com adição estimada de IOF e exibe o valor fixo de cada parcela, o custo final do veículo e gráficos de proporção entre capital e juros.',
+    title: 'Simulador de Financiamento de Veículos e CDC 2026: Carros e Motos',
+    shortDescription: 'Simule o financiamento CDC de carros e motos em 2026. Calcule o valor das parcelas fixas, entrada recomendada, taxa de juros e IOF.',
+    longIntro: 'Comprar um carro ou moto financiado pela modalidade CDC (Crédito Direto ao Consumidor) exige planejamento detalhado para que o custo das prestações fixas não comprometa o orçamento familiar. O Simulador de Financiamento de Veículos e CDC 2026 da Tool Brasil calcula o valor exato das prestações mensais (Tabela Price com IOF), o total financiado, o montante de juros acumulado e o Custo Efetivo Total (CET). Com esta ferramenta, você pode testar cenários aumentando o valor da entrada ou alterando o prazo de parcelamento (12x a 60x), além de entender seu direito à redução de juros por amortização antecipada.',
+    howItWorks: 'Insira o valor total do veículo (carro, moto ou caminhonete novo ou usado), o valor da entrada em dinheiro, a taxa de juros mensal praticada pelo banco e o prazo de parcelamento em meses. A calculadora subtrai a entrada, calcula o IOF estimado e aplica a Tabela Price para fornecer o valor exato da parcela mensal, custo total e amortização CDC.',
     faqs: [
-      { question: 'Qual o valor de entrada ideal para financiar um veículo?', answer: 'Recomenda-se dar uma entrada de pelo menos 20% a 30% do valor do veículo. Quanto maior a entrada, menores serão as taxas de juros oferecidas pelas financeiras e menor o saldo devedor.' },
+      { question: 'O que é o financiamento CDC (Crédito Direto ao Consumidor)?', answer: 'O CDC é a modalidade de financiamento veicular mais comum no Brasil. O banco empresta o dinheiro diretamente ao comprador para a aquisição do bem, que fica alienado fiduciariamente à instituição financeira até a quitação da última parcela.' },
+      { question: 'Qual a diferença entre CDC e Leasing?', answer: 'No CDC o veículo sai imediatamente registrado no nome do comprador (com gravame de alienação fiduciária). No Leasing (arrendamento mercantil), o veículo fica no nome do banco arrendador até o final do contrato, quando o cliente pode exercer a opção de compra.' },
+      { question: 'Qual o valor de entrada ideal para financiar um veículo em 2026?', answer: 'Recomenda-se dar uma entrada de pelo menos 20% a 30% do valor do veículo. Quanto maior a entrada, menores serão as taxas de juros oferecidas pelas financeiras e menor o saldo devedor.' },
       { question: 'O que é o IOF no financiamento de carros?', answer: 'O Imposto sobre Operações Financeiras (IOF) é um tributo federal obrigatório cobrado sobre o valor financiado (0,38% alíquota fixa + 0,0082% ao dia para pessoas físicas).' },
-      { question: 'Posso amortizar antecipadamente as parcelas?', answer: 'Sim! De acordo com o Código de Defesa do Consumidor e normas do Banco Central, você tem direito à redução proporcional dos juros ao quitar parcelas de trás para frente.' }
+      { question: 'Posso amortizar antecipadamente as parcelas no CDC com desconto?', answer: 'Sim! De acordo com o Código de Defesa do Consumidor e normas do Banco Central, você tem direito garantido por lei à redução proporcional dos juros futuros ao quitar parcelas antecipadamente (amortização de trás para frente).' }
     ],
     tips: [
       'Além das parcelas do financiamento, inclua no orçamento anual os custos de IPVA, licenciamento, seguro auto e combustível.',
-      'Considere financiar em prazos menores (ex: 36x em vez de 60x) para pagar significativamente menos juros ao final do contrato.',
-      'Exija da concessionária ou banco a planilha com o Custo Efetivo Total (CET) detalhado antes de assinar o contrato.'
+      'Considere financiar em prazos menores (ex: 36x ou 48x em vez de 60x) para pagar significativamente menos juros ao final do contrato.',
+      'Exija da concessionária ou banco a planilha com o Custo Efetivo Total (CET) detalhado antes de assinar o contrato CDC.'
     ],
-    relatedToolIds: ['financiamento', 'preco-por-km', 'ipva', 'multa-transito'],
+    relatedToolIds: ['move-brasil', 'financiamento', 'preco-por-km', 'ipva', 'multa-transito'],
     slug: 'simulador-de-financiamento-de-veiculos'
   },
   {
@@ -3110,6 +3117,27 @@ export const TOOLS: ToolMetadata[] = [
     ],
     relatedToolIds: ['custo-energia', 'calculadora-tinta', 'regra-de-tre'],
     slug: 'calculadora-de-btus-ar-condicionado'
+  },
+  {
+    id: 'faltas-injustificadas',
+    categoryId: 'calculadoras',
+    title: 'Calculadora de Faltas Injustificadas: Desconto no Salário e DSR (CLT 2026)',
+    shortDescription: 'Calcule o desconto de faltas injustificadas no salário, reflexo na perda do DSR e impacto nos dias de férias e 13º salário pela CLT.',
+    longIntro: 'Faltar ao trabalho sem justificativa legal (atestados médicos ou motivos do Artigo 473 da CLT) acarreta descontos financeiros imediatos no holerite do trabalhador. A Calculadora de Faltas Injustificadas e DSR da Tool Brasil apura com rigor jurídico o valor exato do dia descontado (regra do divisor 30 para mensalistas), a perda do Descanso Semanal Remunerado (Lei Federal nº 605/1949), o reflexo progressivo na redução dos dias de férias (Artigo 130 da CLT) e a perda de avos do 13º salário caso o número de faltas supere 15 dias no mês.',
+    howItWorks: 'Informe o salário bruto mensal, a quantidade de faltas injustificadas ocorridas no mês e quantas semanas tiveram faltas registradas. A calculadora calcula o valor do salário-dia, o valor descontado por ausência, a perda de DSRs correspondentes e cruza os dados com a tabela de impacto em férias e gratificação natalina.',
+    faqs: [
+      { question: 'Como é calculado o valor do dia descontado por falta injustificada?', answer: 'Pelo Artigo 64 da CLT, o salário-dia do trabalhador mensalista é calculado dividindo o salário bruto mensal por 30 (mesmo em meses de 28, 29 ou 31 dias). Se o salário for R$ 3.000, cada dia de falta custa R$ 100,00 de desconto.' },
+      { question: 'Por que o trabalhador perde o DSR quando falta sem justificativa?', answer: 'Pelo Artigo 6º da Lei Federal nº 605/1949, para ter direito à remuneração do repouso semanal (DSR), o empregado deve ter trabalhado durante toda a semana anterior com pontualidade e assiduidade integral. Havendo falta injustificada na semana, o empregador tem o direito de descontar o dia da falta mais 1 dia de DSR (domingo ou feriado correspondente).' },
+      { question: 'Quantas faltas injustificadas diminuem as férias do trabalhador?', answer: 'Conforme o Artigo 130 da CLT: até 5 faltas no período aquisitivo (30 dias de férias); de 6 a 14 faltas (24 dias); de 15 a 23 faltas (18 dias); de 24 a 32 faltas (12 dias); mais de 32 faltas (perda total do direito a férias no período).' },
+      { question: 'A falta injustificada pode descontar o 13º salário?', answer: 'Sim. Se o trabalhador acumular mais de 15 dias de faltas injustificadas dentro do mesmo mês civil, ele perde a fração correspondente àquele mês (1/12 avos) no cálculo do seu 13º salário anual.' }
+    ],
+    tips: [
+      'Apresente atestados médicos ou comprovações de comparecimento a consultas em até 48h para evitar descontos no salário e DSR.',
+      'Atestados de doação de sangue garantem 1 dia de folga a cada 12 meses sem qualquer prejuízo salarial (Art. 473, IV da CLT).',
+      'Fique atento ao acúmulo de faltas ao longo do ano para não sofrer redução no período de gozo das suas férias.'
+    ],
+    relatedToolIds: ['dsr', 'salario-liquido', 'hora-extra', 'salario-proporcional'],
+    slug: 'calculadora-de-faltas-injustificadas'
   },
   {
     id: 'descomplica-contrato',

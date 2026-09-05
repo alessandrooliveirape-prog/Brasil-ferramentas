@@ -72,6 +72,7 @@ export default function Calculadoras({ toolId }: CalculadorasProps) {
       {toolId === 'calculadora-tijolos-argamassa' && <CalculadoraTijolosArgamassa />}
       {toolId === 'calculadora-preco-combustivel-viagem' && <CalculadoraCombustivelViagem />}
       {toolId === 'calculadora-potencia-ar-condicionado' && <CalculadoraBtusArCondicionado />}
+      {toolId === 'faltas-injustificadas' && <CalculadoraFaltasInjustificadas />}
     </div>
   );
 }
@@ -203,12 +204,33 @@ function CalculadoraConsignado() {
   );
 }
 
-// 43. SIMULADOR DE FINANCIAMENTO DE VEÍCULOS
+// 43. SIMULADOR DE FINANCIAMENTO DE VEÍCULOS E CDC 2026
 function SimuladorVeiculos() {
-  const [valorVeiculo, setValorVeiculo] = useState<number>(60000);
+  const [tipoVeiculo, setTipoVeiculo] = useState<'carro' | 'moto' | 'suv'>('carro');
+  const [valorVeiculo, setValorVeiculo] = useState<number>(65000);
   const [valorEntrada, setValorEntrada] = useState<number>(15000);
   const [taxaJurosMensal, setTaxaJurosMensal] = useState<number>(1.49);
   const [meses, setMeses] = useState<number>(48);
+
+  const aplicarPreset = (tipo: 'carro' | 'moto' | 'suv') => {
+    setTipoVeiculo(tipo);
+    if (tipo === 'moto') {
+      setValorVeiculo(18000);
+      setValorEntrada(3600);
+      setMeses(36);
+      setTaxaJurosMensal(1.65);
+    } else if (tipo === 'suv') {
+      setValorVeiculo(130000);
+      setValorEntrada(30000);
+      setMeses(48);
+      setTaxaJurosMensal(1.39);
+    } else {
+      setValorVeiculo(65000);
+      setValorEntrada(15000);
+      setMeses(48);
+      setTaxaJurosMensal(1.49);
+    }
+  };
 
   const valorFinanciado = Math.max(0, valorVeiculo - valorEntrada);
   const i = (taxaJurosMensal || 0) / 100;
@@ -227,12 +249,59 @@ function SimuladorVeiculos() {
   const totalPagoComEntrada = totalFinanciamento + valorEntrada;
   const totalJurosEImpostos = totalPagoComEntrada - valorVeiculo;
   const pctEntrada = valorVeiculo > 0 ? (valorEntrada / valorVeiculo) * 100 : 0;
+  // Economia aproximada ao antecipar as ultimas 6 parcelas
+  const economiaAmortizacaoEstimada = pmt * 6 * 0.38;
 
   return (
     <div className="space-y-6" id="sim-veiculos">
-      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
-        <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Simulador de Financiamento de Veículos</h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Calcule o valor das parcelas do seu carro ou moto, entrada recomendada, IOF e juros acumulados.</p>
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3 flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Simulador de Financiamento de Veículos e CDC 2026</h2>
+            <span className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300 font-bold rounded text-[10px] uppercase">CDC Oficial</span>
+          </div>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Simulação de Crédito Direto ao Consumidor (CDC) para carros e motos com parcelas fixas, amortização e IOF.</p>
+        </div>
+      </div>
+
+      {/* SELETORES RÁPIDOS (PRESETS) */}
+      <div>
+        <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-2">Selecione o Tipo de Veículo para Pré-Preencher:</label>
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            type="button"
+            onClick={() => aplicarPreset('carro')}
+            className={`py-2 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+              tipoVeiculo === 'carro'
+                ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-emerald-500'
+            }`}
+          >
+            <span>🚗</span> Carro (R$ 65k)
+          </button>
+          <button
+            type="button"
+            onClick={() => aplicarPreset('moto')}
+            className={`py-2 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+              tipoVeiculo === 'moto'
+                ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-emerald-500'
+            }`}
+          >
+            <span>🏍️</span> Moto (R$ 18k)
+          </button>
+          <button
+            type="button"
+            onClick={() => aplicarPreset('suv')}
+            className={`py-2 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+              tipoVeiculo === 'suv'
+                ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-emerald-500'
+            }`}
+          >
+            <span>🚙</span> SUV / Caminhonete
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -266,14 +335,14 @@ function SimuladorVeiculos() {
             value={taxaJurosMensal} 
             onChange={(e) => setTaxaJurosMensal(Number(e.target.value))} 
           />
-          <span className="text-[10px] text-slate-500 block mt-0.5">Média de mercado: 1.30% a 1.80% a.m.</span>
+          <span className="text-[10px] text-slate-500 block mt-0.5">Média de mercado para CDC: 1.30% a 1.80% a.m.</span>
         </div>
 
         <div>
           <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">Prazo de Parcelamento</label>
           <select 
-            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold"
-            value={meses}
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold" 
+            value={meses} 
             onChange={(e) => setMeses(Number(e.target.value))}
           >
             <option value={12}>12 parcelas (1 ano)</option>
@@ -289,7 +358,7 @@ function SimuladorVeiculos() {
       <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-200 dark:border-emerald-900/50 space-y-4">
         <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-slate-200/60 dark:border-slate-800">
           <div>
-            <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">Valor Estimado por Parcela ({n}x)</span>
+            <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400 block tracking-wider">Parcela Fixa Mensal CDC ({n}x)</span>
             <span className="text-3xl font-black font-mono text-emerald-700 dark:text-emerald-400">
               R$ {pmt.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
@@ -319,6 +388,16 @@ function SimuladorVeiculos() {
             <span className="text-slate-500 block text-[10px] uppercase font-bold font-sans">% da Entrada:</span>
             <strong className="text-slate-900 dark:text-slate-100 text-sm">{pctEntrada.toFixed(1)}%</strong>
           </div>
+        </div>
+
+        {/* BOX AMORTIZAÇÃO ANTECIPADA CDC */}
+        <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="text-emerald-600 font-bold text-sm">💡 Amortização Antecipada CDC (Direito por Lei):</span>
+          </div>
+          <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+            No financiamento CDC, você tem o direito garantido pelo Código de Defesa do Consumidor e Banco Central de abater os juros futuros ao quitar parcelas antecipadas (de trás para frente). Pagando as últimas 6 parcelas antecipadas hoje, você economizaria aproximadamente <strong>R$ {economiaAmortizacaoEstimada.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong> em juros bancários.
+          </p>
         </div>
       </div>
     </div>
@@ -2153,8 +2232,10 @@ function CalculadoraNotaEnem() {
   );
 }
 
-// ===== CALCULADORA MOVE BRASIL =====
+// ===== CALCULADORA MOVE BRASIL 2026 =====
 function CalculadoraMoveBrasil() {
+  const [tipoVeiculo, setTipoVeiculo] = useState<'carro' | 'moto' | 'caminhao'>('carro');
+  const [agente, setAgente] = useState<'bb' | 'caixa' | 'bndes'>('bb');
   const [valorVeiculo, setValorVeiculo] = useState<number>(80000);
   const [entrada, setEntrada] = useState<number>(10000);
   const [prazoMeses, setPrazoMeses] = useState<number>(60);
@@ -2162,21 +2243,44 @@ function CalculadoraMoveBrasil() {
   const [resultado, setResultado] = useState<any>(null);
   const [showDetails, setShowDetails] = useState(false);
 
+  const trocarTipoVeiculo = (tipo: 'carro' | 'moto' | 'caminhao') => {
+    setTipoVeiculo(tipo);
+    if (tipo === 'moto') {
+      setValorVeiculo(18000);
+      setEntrada(2000);
+      setPrazoMeses(48);
+    } else if (tipo === 'caminhao') {
+      setValorVeiculo(220000);
+      setEntrada(30000);
+      setPrazoMeses(72);
+    } else {
+      setValorVeiculo(80000);
+      setEntrada(10000);
+      setPrazoMeses(60);
+    }
+  };
+
   useEffect(() => {
     const valorFinanciado = Math.max(0, valorVeiculo - entrada);
-    // Taxas BNDES Move Brasil - Taxas mensais diretas
-    const taxaMensal = perfil === 'feminino' ? 0.0091 : 0.0099;
     
+    // Taxas BNDES Move Brasil diferenciadas por agente e perfil
+    let taxaBase = perfil === 'feminino' ? 0.0091 : 0.0099;
+    if (agente === 'bb') {
+      taxaBase = perfil === 'feminino' ? 0.0085 : 0.0093;
+    } else if (agente === 'caixa') {
+      taxaBase = perfil === 'feminino' ? 0.0089 : 0.0097;
+    }
+
     // Parcela Price
     const parcela = valorFinanciado > 0 
-      ? (valorFinanciado * taxaMensal) / (1 - Math.pow(1 + taxaMensal, -prazoMeses))
+      ? (valorFinanciado * taxaBase) / (1 - Math.pow(1 + taxaBase, -prazoMeses))
       : 0;
     
     const totalPago = parcela * prazoMeses;
     const totalJuros = totalPago - valorFinanciado;
-    const custoEfetivoAnual = (Math.pow(1 + taxaMensal, 12) - 1) * 100;
+    const custoEfetivoAnual = (Math.pow(1 + taxaBase, 12) - 1) * 100;
     
-    // Simulacao financiamento tradicional (mercado ~18% a.a.)
+    // Simulacao financiamento tradicional de mercado (~18% a.a.)
     const taxaTradicional = 0.18 / 12;
     const parcelaTradicional = valorFinanciado > 0
       ? (valorFinanciado * taxaTradicional) / (1 - Math.pow(1 + taxaTradicional, -prazoMeses))
@@ -2190,60 +2294,163 @@ function CalculadoraMoveBrasil() {
       totalPago,
       totalJuros,
       custoEfetivoAnual,
-      taxaAnual: taxaMensal * 12 * 100,      taxaMensalExibir: (taxaMensal * 100).toFixed(2),
-
+      taxaAnual: taxaBase * 12 * 100,
+      taxaMensalExibir: (taxaBase * 100).toFixed(2),
       parcelaTradicional,
       totalTradicional,
       economiaTotal
     });
-  }, [valorVeiculo, entrada, prazoMeses, perfil]);
+  }, [valorVeiculo, entrada, prazoMeses, perfil, agente, tipoVeiculo]);
+
+  const maxValor = tipoVeiculo === 'moto' ? 35000 : tipoVeiculo === 'caminhao' ? 400000 : 150000;
 
   return (
     <div className="space-y-6" id="calc-move-brasil">
-      <div className="flex items-center gap-3 mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
-        <div className="p-2.5 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
-          <svg className="w-6 h-6 text-emerald-600 dark:text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-700">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl text-emerald-600 dark:text-emerald-400">
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <div>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Calculadora Move Brasil 2026</h2>
+            <p className="text-xs text-slate-500">Carros, Motos e Caminhões leves • Banco do Brasil, Caixa e BNDES</p>
+          </div>
         </div>
-        <div>
-          <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100">Calculadora Move Brasil</h2>
-          <p className="text-xs text-slate-500">Programa Mover - Financiamento Subsidiado BNDES</p>
-        </div>
+        <span className="px-2.5 py-1 bg-emerald-100 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 font-bold rounded-lg text-xs">
+          Gov.br + BNDES Oficial
+        </span>
       </div>
 
-      <div className="bg-gradient-to-br from-emerald-50 to-emerald-50 dark:from-emerald-950/20 dark:to-emerald-950/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/50 mb-4">
-        <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-          <strong>MOVE Brasil</strong> é o programa do Governo Federal que oferece crédito subsidiado pelo BNDES para 
-          motoristas de aplicativo, taxistas e motoboys comprarem veículos novos com juros a partir de <strong>1,5% ao ano</strong>.
+      <div className="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-950/20 dark:to-teal-950/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-900/50">
+        <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
+          <strong>MOVE Brasil (Mobilidade Verde):</strong> Linha de crédito federal com subsídio do BNDES repassado pelo <strong>Banco do Brasil</strong> e <strong>Caixa</strong> para motoristas de aplicativo (Uber/99), taxistas, motoboys e caminhoneiros autônomos comprarem veículos novos com juros subsidiados.
         </p>
       </div>
 
+      {/* SELETORES DE TIPO DE VEÍCULO (PRESETS) */}
+      <div className="space-y-2">
+        <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200">1. Categoria do Veículo:</label>
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            type="button"
+            onClick={() => trocarTipoVeiculo('carro')}
+            className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+              tipoVeiculo === 'carro'
+                ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-emerald-500'
+            }`}
+          >
+            <span>🚗</span> Carro (Uber / Táxi)
+          </button>
+          <button
+            type="button"
+            onClick={() => trocarTipoVeiculo('moto')}
+            className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+              tipoVeiculo === 'moto'
+                ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-emerald-500'
+            }`}
+          >
+            <span>🏍️</span> Moto (Delivery/Motoboy)
+          </button>
+          <button
+            type="button"
+            onClick={() => trocarTipoVeiculo('caminhao')}
+            className={`py-2.5 px-3 rounded-xl border text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer ${
+              tipoVeiculo === 'caminhao'
+                ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700 hover:border-emerald-500'
+            }`}
+          >
+            <span>🚚</span> Caminhão / VUC
+          </button>
+        </div>
+      </div>
+
+      {/* SELETOR DE INSTITUIÇÃO FINANCEIRA */}
+      <div className="space-y-2">
+        <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200">2. Agente Financeiro Repassador:</label>
+        <div className="grid grid-cols-3 gap-2">
+          <button
+            type="button"
+            onClick={() => setAgente('bb')}
+            className={`py-2 px-3 rounded-xl border text-xs font-bold transition cursor-pointer text-center ${
+              agente === 'bb'
+                ? 'bg-yellow-500 text-slate-900 border-yellow-500 font-extrabold shadow-sm'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700'
+            }`}
+          >
+            🏛️ Banco do Brasil
+          </button>
+          <button
+            type="button"
+            onClick={() => setAgente('caixa')}
+            className={`py-2 px-3 rounded-xl border text-xs font-bold transition cursor-pointer text-center ${
+              agente === 'caixa'
+                ? 'bg-blue-600 text-white border-blue-600 font-extrabold shadow-sm'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700'
+            }`}
+          >
+            🟦 Caixa Econômica
+          </button>
+          <button
+            type="button"
+            onClick={() => setAgente('bndes')}
+            className={`py-2 px-3 rounded-xl border text-xs font-bold transition cursor-pointer text-center ${
+              agente === 'bndes'
+                ? 'bg-emerald-700 text-white border-emerald-700 font-extrabold shadow-sm'
+                : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border-slate-300 dark:border-slate-700'
+            }`}
+          >
+            🏦 BNDES / Rede Geral
+          </button>
+        </div>
+      </div>
+
+      {/* FORMULÁRIO DE ENTRADAS */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div>
           <label htmlFor="move-valor" className="block text-xs font-semibold text-slate-500 mb-1">Valor do Veículo (R$)</label>
-          <input id="move-valor" type="number" className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none" 
-            value={valorVeiculo} onChange={e => setValorVeiculo(Number(e.target.value))} />
-          <span className="text-[10px] text-slate-400">Máx: R$ 150.000</span>
+          <input 
+            id="move-valor" 
+            type="number" 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none font-mono" 
+            value={valorVeiculo} 
+            onChange={e => setValorVeiculo(Number(e.target.value))} 
+          />
+          <span className="text-[10px] text-slate-400">Limite Categoria: R$ {maxValor.toLocaleString('pt-BR')}</span>
         </div>
         <div>
           <label htmlFor="move-entrada" className="block text-xs font-semibold text-slate-500 mb-1">Valor de Entrada (R$)</label>
-          <input id="move-entrada" type="number" className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none" 
-            value={entrada} onChange={e => setEntrada(Number(e.target.value))} />
+          <input 
+            id="move-entrada" 
+            type="number" 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none font-mono" 
+            value={entrada} 
+            onChange={e => setEntrada(Number(e.target.value))} 
+          />
         </div>
         <div>
           <label className="block text-xs font-semibold text-slate-500 mb-1">Prazo (meses)</label>
-          <select className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-emerald-500 outline-none" 
-            value={prazoMeses} onChange={e => setPrazoMeses(Number(e.target.value))}>
+          <select 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-emerald-500 outline-none" 
+            value={prazoMeses} 
+            onChange={e => setPrazoMeses(Number(e.target.value))}
+          >
             {[24, 36, 48, 60, 72].map(m => <option key={m} value={m}>{m} meses ({m/12} anos)</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-xs font-semibold text-slate-500 mb-1">Perfil</label>
-          <select className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-emerald-500 outline-none" 
-            value={perfil} onChange={e => setPerfil(e.target.value)}>
-            <option value="masculino">Masculino (0,99% a.m.)</option>
-            <option value="feminino">Feminino (0,91% a.m.)</option>
+          <label className="block text-xs font-semibold text-slate-500 mb-1">Incentivo de Perfil</label>
+          <select 
+            className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 bg-white dark:bg-slate-800 dark:text-slate-100 text-sm focus:ring-2 focus:ring-emerald-500 outline-none" 
+            value={perfil} 
+            onChange={e => setPerfil(e.target.value)}
+          >
+            <option value="masculino">Padrão Geral ({agente === 'bb' ? '0,93%' : agente === 'caixa' ? '0,97%' : '0,99%'} a.m.)</option>
+            <option value="feminino">Mulher Motorista ({agente === 'bb' ? '0,85%' : agente === 'caixa' ? '0,89%' : '0,91%'} a.m.)</option>
           </select>
         </div>
       </div>
@@ -2258,22 +2465,22 @@ function CalculadoraMoveBrasil() {
               </span>
             </div>
             <div className="bg-emerald-50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-200 dark:border-emerald-900 text-center shadow-sm">
-              <span className="block text-xs text-emerald-600 dark:text-emerald-400 mb-1">📅 Parcela Mensal MOVE</span>
+              <span className="block text-xs text-emerald-600 dark:text-emerald-400 mb-1">📅 Parcela MOVE ({agente === 'bb' ? 'Banco do Brasil' : agente === 'caixa' ? 'Caixa' : 'BNDES'})</span>
               <span className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">
                 R$ {resultado.parcela.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </span>
               <span className="block text-[10px] text-emerald-500 mt-1">Taxa: {resultado.taxaMensalExibir}% a.m.</span>
             </div>
             <div className="bg-slate-50 dark:bg-slate-950/20 p-5 rounded-xl border border-slate-200 dark:border-slate-900 text-center shadow-sm">
-              <span className="block text-xs text-emerald-600 dark:text-emerald-400 mb-1">🏦 Parcela Mercado (18% a.a.)</span>
-              <span className="text-2xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">
+              <span className="block text-xs text-slate-500 mb-1">🏦 Parcela Financiamento Comum (~18% a.a.)</span>
+              <span className="text-2xl font-extrabold text-slate-700 dark:text-slate-300 font-mono">
                 R$ {resultado.parcelaTradicional.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
               </span>
             </div>
           </div>
 
           <div className="bg-emerald-50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-200 dark:border-emerald-900 text-center">
-            <span className="block text-xs text-emerald-600 dark:text-emerald-400 mb-1">✅ Economia Total com o MOVE Brasil</span>
+            <span className="block text-xs text-emerald-600 dark:text-emerald-400 mb-1">✅ Economia Total no MOVE Brasil vs Mercado Comum</span>
             <span className="text-3xl font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">
               R$ {resultado.economiaTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
             </span>
@@ -2292,18 +2499,17 @@ function CalculadoraMoveBrasil() {
                 <div className="p-2 bg-white dark:bg-slate-800 rounded"><span className="text-slate-400">Total Pago MOVE</span><br/><strong className="text-emerald-600 font-mono">R$ {resultado.totalPago.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong></div>
                 <div className="p-2 bg-white dark:bg-slate-800 rounded"><span className="text-slate-400">Total Juros MOVE</span><br/><strong className="text-emerald-600 font-mono">R$ {resultado.totalJuros.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong></div>
                 <div className="p-2 bg-white dark:bg-slate-800 rounded"><span className="text-slate-400">Custo Efetivo Total</span><br/><strong className="text-slate-700 font-mono">{resultado.custoEfetivoAnual.toFixed(2)}% a.a.</strong></div>
-                <div className="p-2 bg-white dark:bg-slate-800 rounded"><span className="text-slate-400">Total Mercado</span><br/><strong className="text-emerald-600 font-mono">R$ {resultado.totalTradicional.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong></div>
+                <div className="p-2 bg-white dark:bg-slate-800 rounded"><span className="text-slate-400">Total Mercado</span><br/><strong className="text-slate-700 font-mono">R$ {resultado.totalTradicional.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</strong></div>
               </div>
             </div>
           )}
 
           <div className="bg-slate-50 dark:bg-slate-950/20 p-4 rounded-xl border border-slate-100 dark:border-slate-900/50">
-            <h4 className="text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-2">📋 Como Participar do MOVE Brasil</h4>
+            <h4 className="text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-2">📋 Como Solicitar no Banco do Brasil, Caixa ou Concessionária</h4>
             <ol className="text-xs text-slate-600 dark:text-slate-400 space-y-1.5 list-decimal pl-4">
-              <li><strong>Cadastre-se</strong> no portal oficial <a href="https://www.gov.br/movebrasil" target="_blank" className="text-emerald-600 underline">gov.br/movebrasil</a></li>
-              <li><strong>Aguarde a aprovação</strong> de elegibilidade (até 5 dias via gov.br)</li>
-              <li><strong>Procure uma concessionária</strong> ou banco credenciado pelo BNDES</li>
-              <li><strong>Solicite o crédito</strong> e passe pela análise bancária padrão</li>
+              <li><strong>Cadastre-se no Gov.br:</strong> Acesse o portal oficial e solicite a validação de motorista/entregador profissional.</li>
+              <li><strong>Escolha o Veículo:</strong> Escolha seu carro, moto elétrica/flex ou caminhão leve em uma concessionária credenciada.</li>
+              <li><strong>Apresente ao Banco:</strong> Vá à sua agência ou use o app do <strong>Banco do Brasil</strong> ou <strong>Caixa Econômica</strong> para formalizar a contratação do crédito MOVE com garantia do BNDES.</li>
             </ol>
           </div>
         </div>
@@ -5030,6 +5236,324 @@ function CalculadoraBtusArCondicionado() {
 
       <ShareBar 
         title="Calculadora de BTUs para Ar-Condicionado" 
+        summaryText={summary}
+      />
+    </div>
+  );
+}
+
+// 56. CALCULADORA DE FALTAS INJUSTIFICADAS E DSR (CLT 2026)
+function CalculadoraFaltasInjustificadas() {
+  const [salarioBruto, setSalarioBruto] = useState(() => getParamNumber('salario', 2800));
+  const [diasFaltas, setDiasFaltas] = useState(() => getParamNumber('faltas', 1));
+  const [semanasFaltas, setSemanasFaltas] = useState(() => getParamNumber('semanas', 1));
+  const [faltasAcumuladas, setFaltasAcumuladas] = useState(() => getParamNumber('acumuladas', 2));
+
+  useEffect(() => {
+    syncUrlParams({
+      salario: salarioBruto,
+      faltas: diasFaltas,
+      semanas: semanasFaltas,
+      acumuladas: faltasAcumuladas
+    });
+  }, [salarioBruto, diasFaltas, semanasFaltas, faltasAcumuladas]);
+
+  // Regra CLT Artigo 64: Para mensalistas, divide-se o salário por 30
+  const salarioDia = (salarioBruto || 0) > 0 ? (salarioBruto / 30) : 0;
+  
+  // Desconto dos dias de ausência
+  const descontoFaltas = salarioDia * (diasFaltas || 0);
+
+  // Perda do Descanso Semanal Remunerado (Lei Federal nº 605/1949 Art. 6º): 1 DSR por semana com falta
+  const descontoDsr = salarioDia * (semanasFaltas || 0);
+
+  // Desconto total imediato no contracheque
+  const totalDesconto = descontoFaltas + descontoDsr;
+  const salarioAposDesconto = Math.max(0, (salarioBruto || 0) - totalDesconto);
+  const percentualPerda = (salarioBruto || 0) > 0 ? ((totalDesconto / salarioBruto) * 100) : 0;
+
+  // Tabela de Férias CLT (Artigo 130)
+  let diasFeriasDireito = 30;
+  let diasFeriasPerdidos = 0;
+  let statusFerias = 'Integral (Sem redução de férias)';
+  let badgeColor = 'text-emerald-700 bg-emerald-50 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800';
+
+  if (faltasAcumuladas <= 5) {
+    diasFeriasDireito = 30;
+    diasFeriasPerdidos = 0;
+    statusFerias = '30 dias (Período integral sem redução)';
+    badgeColor = 'text-emerald-700 bg-emerald-50 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800';
+  } else if (faltasAcumuladas <= 14) {
+    diasFeriasDireito = 24;
+    diasFeriasPerdidos = 6;
+    statusFerias = '24 dias (Perda de 6 dias de férias)';
+    badgeColor = 'text-amber-700 bg-amber-50 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800';
+  } else if (faltasAcumuladas <= 23) {
+    diasFeriasDireito = 18;
+    diasFeriasPerdidos = 12;
+    statusFerias = '18 dias (Perda de 12 dias de férias)';
+    badgeColor = 'text-orange-700 bg-orange-50 border-orange-200 dark:bg-orange-950/40 dark:text-orange-300 dark:border-orange-800';
+  } else if (faltasAcumuladas <= 32) {
+    diasFeriasDireito = 12;
+    diasFeriasPerdidos = 18;
+    statusFerias = '12 dias (Perda de 18 dias de férias)';
+    badgeColor = 'text-rose-700 bg-rose-50 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800';
+  } else {
+    diasFeriasDireito = 0;
+    diasFeriasPerdidos = 30;
+    statusFerias = '0 dias (Perda total do direito a férias no período)';
+    badgeColor = 'text-red-700 bg-red-50 border-red-200 dark:bg-red-950/40 dark:text-red-300 dark:border-red-800';
+  }
+
+  // Regra 13º Salário (Lei nº 4.090/1962): Se faltar mais de 15 dias no mesmo mês, perde o avo (1/12)
+  const perdeuAvo13 = (diasFaltas || 0) > 15;
+  const valorAvo13 = (salarioBruto || 0) > 0 ? (salarioBruto / 12) : 0;
+
+  const aplicarPreset = (faltas: number, semanas: number) => {
+    setDiasFaltas(faltas);
+    setSemanasFaltas(semanas);
+  };
+
+  const summary = `📅 *Cálculo de Desconto por Faltas Injustificadas e DSR (CLT)*:\n💰 *Salário Bruto*: R$ ${salarioBruto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n🗓️ *Faltas*: ${diasFaltas} dia(s) | *DSR Descontado*: ${semanasFaltas} semana(s)\n💸 *Salário-dia*: R$ ${salarioDia.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n📉 *Desconto Faltas*: R$ ${descontoFaltas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n📉 *Desconto DSR*: R$ ${descontoDsr.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}\n🚨 *Total Descontado no Mês*: *R$ ${totalDesconto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}* (-${percentualPerda.toFixed(1)}%)\n🏖️ *Direito a Férias*: ${diasFeriasDireito} dias (Art. 130 CLT)`;
+
+  return (
+    <div className="space-y-6" id="calc-faltas-injustificadas">
+      <div className="border-b border-slate-200 dark:border-slate-800 pb-3">
+        <div className="flex flex-wrap items-center gap-2 mb-1">
+          <h2 className="text-xl font-black text-slate-900 dark:text-slate-100">Calculadora de Faltas Injustificadas e DSR</h2>
+          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300">CLT 2026</span>
+          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full bg-slate-150 text-slate-700 dark:bg-slate-800 dark:text-slate-300">Lei 605/49</span>
+        </div>
+        <p className="text-xs text-slate-500 dark:text-slate-400">
+          Calcule com precisão jurídica o desconto de faltas no salário, perda de DSR, impacto na redução de dias de férias e no 13º salário.
+        </p>
+      </div>
+
+      {/* Atalhos Rápidos */}
+      <div>
+        <span className="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Cenários Frequentes:</span>
+        <div className="flex flex-wrap gap-2">
+          <button 
+            type="button" 
+            onClick={() => aplicarPreset(1, 1)} 
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition ${diasFaltas === 1 && semanasFaltas === 1 ? 'bg-blue-600 text-white border-blue-600' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'}`}
+          >
+            1 dia de falta (1 DSR)
+          </button>
+          <button 
+            type="button" 
+            onClick={() => aplicarPreset(2, 1)} 
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition ${diasFaltas === 2 && semanasFaltas === 1 ? 'bg-blue-600 text-white border-blue-600' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'}`}
+          >
+            2 faltas na mesma semana (1 DSR)
+          </button>
+          <button 
+            type="button" 
+            onClick={() => aplicarPreset(2, 2)} 
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition ${diasFaltas === 2 && semanasFaltas === 2 ? 'bg-blue-600 text-white border-blue-600' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'}`}
+          >
+            2 faltas em semanas diferentes (2 DSRs)
+          </button>
+          <button 
+            type="button" 
+            onClick={() => aplicarPreset(5, 1)} 
+            className={`px-3 py-1.5 rounded-lg text-xs font-semibold border transition ${diasFaltas === 5 && semanasFaltas === 1 ? 'bg-blue-600 text-white border-blue-600' : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'}`}
+          >
+            1 semana corrida (5 dias úteis)
+          </button>
+        </div>
+      </div>
+
+      {/* Formulário de Parâmetros */}
+      <div className="p-5 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-750 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">
+            Salário Bruto Mensal (R$)
+          </label>
+          <input 
+            type="number" 
+            min={0} 
+            step={50} 
+            className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono font-bold" 
+            value={salarioBruto} 
+            onChange={e => setSalarioBruto(Number(e.target.value))} 
+          />
+          <span className="text-[11px] text-slate-500 mt-1 block">Salário base do holerite</span>
+        </div>
+
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">
+            Faltas Injustificadas no Mês
+          </label>
+          <input 
+            type="number" 
+            min={0} 
+            max={31} 
+            className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono font-bold" 
+            value={diasFaltas} 
+            onChange={e => setDiasFaltas(Number(e.target.value))} 
+          />
+          <span className="text-[11px] text-slate-500 mt-1 block">Dias úteis não comparecidos</span>
+        </div>
+
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">
+            Semanas com Falta (Perda DSR)
+          </label>
+          <input 
+            type="number" 
+            min={0} 
+            max={5} 
+            className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono font-bold" 
+            value={semanasFaltas} 
+            onChange={e => setSemanasFaltas(Number(e.target.value))} 
+          />
+          <span className="text-[11px] text-slate-500 mt-1 block">Lei 605/49: 1 DSR por semana</span>
+        </div>
+
+        <div>
+          <label className="block text-xs font-extrabold text-slate-700 dark:text-slate-200 mb-1">
+            Faltas Acumuladas no Ano (Férias)
+          </label>
+          <input 
+            type="number" 
+            min={0} 
+            max={100} 
+            className="w-full border dark:border-slate-700 rounded-xl p-2.5 bg-white dark:bg-slate-800 text-sm font-mono font-bold" 
+            value={faltasAcumuladas} 
+            onChange={e => setFaltasAcumuladas(Number(e.target.value))} 
+          />
+          <span className="text-[11px] text-slate-500 mt-1 block">Impacto no Art. 130 CLT</span>
+        </div>
+      </div>
+
+      {/* Resultados em Destaque */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="p-5 bg-rose-50 dark:bg-rose-950/30 rounded-2xl border border-rose-200 dark:border-rose-900 space-y-1">
+          <span className="text-xs font-black text-rose-800 dark:text-rose-300 uppercase block">Total Descontado no Mês</span>
+          <span className="text-2xl font-black text-rose-700 dark:text-rose-400 font-mono">
+            R$ {totalDesconto.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </span>
+          <span className="text-[11px] text-rose-600 font-semibold block">
+            -{percentualPerda.toFixed(1)}% do salário bruto
+          </span>
+        </div>
+
+        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-1">
+          <span className="text-xs font-bold text-slate-500 uppercase block">Salário-Dia (Divisor 30)</span>
+          <span className="text-2xl font-bold text-slate-800 dark:text-slate-200 font-mono">
+            R$ {salarioDia.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </span>
+          <span className="text-[11px] text-slate-500 block">
+            CLT Art. 64 (Mensalista)
+          </span>
+        </div>
+
+        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-1">
+          <span className="text-xs font-bold text-slate-500 uppercase block">Desconto dos Dias ({diasFaltas}d)</span>
+          <span className="text-2xl font-bold text-slate-800 dark:text-slate-200 font-mono">
+            R$ {descontoFaltas.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </span>
+          <span className="text-[11px] text-slate-500 block">
+            {diasFaltas} dia(s) de ausência não justificada
+          </span>
+        </div>
+
+        <div className="p-5 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-1">
+          <span className="text-xs font-bold text-slate-500 uppercase block">Desconto do DSR ({semanasFaltas}x)</span>
+          <span className="text-2xl font-bold text-slate-800 dark:text-slate-200 font-mono">
+            R$ {descontoDsr.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </span>
+          <span className="text-[11px] text-slate-500 block">
+            Perda do repouso semanal remunerado
+          </span>
+        </div>
+      </div>
+
+      {/* Seção de Impactos Legais: Férias e 13º */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Painel de Férias CLT Artigo 130 */}
+        <div className="p-5 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-750 space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-black text-slate-800 dark:text-slate-200">🏖️ Impacto nas Férias (Art. 130 CLT)</h3>
+            <span className={`text-xs px-2.5 py-1 rounded-full font-bold border ${badgeColor}`}>
+              {diasFeriasDireito} dias de férias
+            </span>
+          </div>
+
+          <p className="text-xs text-slate-600 dark:text-slate-300">
+            Com <strong>{faltasAcumuladas} faltas injustificadas</strong> no período aquisitivo:
+          </p>
+
+          <div className="p-3 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs space-y-1.5">
+            <div className="flex justify-between font-semibold">
+              <span className="text-slate-600 dark:text-slate-300">Dias de férias a que tem direito:</span>
+              <span className="font-mono font-bold text-slate-900 dark:text-slate-100">{diasFeriasDireito} dias</span>
+            </div>
+            <div className="flex justify-between font-semibold">
+              <span className="text-slate-600 dark:text-slate-300">Dias perdidos de descanso:</span>
+              <span className="font-mono font-bold text-rose-600">{diasFeriasPerdidos} dias</span>
+            </div>
+            <div className="text-[11px] text-slate-500 pt-1 border-t border-slate-150 dark:border-slate-700">
+              {statusFerias}
+            </div>
+          </div>
+
+          {/* Tabela Progressiva Resumida */}
+          <div className="text-[11px] text-slate-500 dark:text-slate-400 space-y-1 pt-1">
+            <div className="font-bold text-slate-700 dark:text-slate-300">Escala da CLT:</div>
+            <div className="grid grid-cols-2 gap-1 text-[10px]">
+              <div>• Até 5 faltas: 30 dias</div>
+              <div>• 6 a 14 faltas: 24 dias</div>
+              <div>• 15 a 23 faltas: 18 dias</div>
+              <div>• 24 a 32 faltas: 12 dias</div>
+            </div>
+            <div className="text-[10px] text-rose-600 font-semibold">• Mais de 32 faltas: Perda total do direito a férias</div>
+          </div>
+        </div>
+
+        {/* Painel do 13º Salário e Normas */}
+        <div className="p-5 bg-slate-50 dark:bg-slate-850 rounded-2xl border border-slate-200 dark:border-slate-750 space-y-3">
+          <h3 className="text-sm font-black text-slate-800 dark:text-slate-200">🎁 Impacto no 13º Salário (Lei 4.090/62)</h3>
+          
+          {perdeuAvo13 ? (
+            <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-800 space-y-2">
+              <div className="flex items-center gap-2 text-rose-800 dark:text-rose-300 font-bold text-xs">
+                <span>⚠️ ALERTA DE PERDA DE 13º SALÁRIO</span>
+              </div>
+              <p className="text-xs text-rose-700 dark:text-rose-400">
+                Como houve <strong>mais de 15 dias de falta no mês ({diasFaltas} dias)</strong>, o trabalhador trabalhou menos de 15 dias de fração civil e <strong>perde 1/12 avos do 13º salário</strong> correspondente a este mês.
+              </p>
+              <div className="text-xs font-mono font-bold text-rose-800 dark:text-rose-200">
+                Prejuízo no 13º: -R$ {valorAvo13.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              </div>
+            </div>
+          ) : (
+            <div className="p-4 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 space-y-1">
+              <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-bold text-xs">
+                <span>✅ 13º SALÁRIO PRESERVADO NESTE MÊS</span>
+              </div>
+              <p className="text-xs text-emerald-700 dark:text-emerald-400">
+                Com {diasFaltas} falta(s) no mês (menos de 15 dias de ausência), a fração civil de 15 dias trabalhados foi atingida e o direito ao avo (1/12) do 13º deste mês está garantido.
+              </p>
+            </div>
+          )}
+
+          <div className="p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">
+            <h4 className="font-bold text-slate-700 dark:text-slate-300 mb-1">⚖️ Faltas que a Lei NÃO Permite Descontar (Art. 473 CLT):</h4>
+            <ul className="text-[11px] text-slate-600 dark:text-slate-400 space-y-0.5 list-disc pl-4">
+              <li>Falecimento de cônjuge, pais ou filhos (2 dias consecutivos)</li>
+              <li>Casamento (3 dias consecutivos)</li>
+              <li>Nascimento de filho (5 dias de licença-paternidade)</li>
+              <li>Doação voluntária de sangue (1 dia a cada 12 meses)</li>
+              <li>Acompanhar filho até 6 anos ao médico (1 dia por ano)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <ShareBar 
+        title="Calculadora de Faltas Injustificadas e DSR (CLT)" 
         summaryText={summary}
       />
     </div>
