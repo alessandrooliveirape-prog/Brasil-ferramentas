@@ -81,6 +81,15 @@ function run() {
   const publicSitemap = path.resolve(__dirname, 'public', 'sitemap.xml');
   fs.writeFileSync(publicSitemap, sitemapXml, 'utf-8');
 
+  // 7. Garantir cópia da chave de validação do IndexNow
+  const indexNowKeyFile = '3a9f7e8b1c2d4e5f60718293a4b5c6d7.txt';
+  const publicIndexNow = path.resolve(__dirname, 'public', indexNowKeyFile);
+  const distIndexNow = path.resolve(DIST_DIR, indexNowKeyFile);
+  if (fs.existsSync(publicIndexNow)) {
+    fs.copyFileSync(publicIndexNow, distIndexNow);
+    console.log(` - Chave IndexNow copiada para '${distIndexNow}'`);
+  }
+
   console.log(`\n✅ Pré-renderização concluída com sucesso!`);
 }
 
@@ -434,6 +443,307 @@ function generateCategoryHtml(template: string, cat: any): string {
   return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
 }
 
+function getInteractivePreviewCardHtml(tool: any): string {
+  return `
+    <div class="bg-white border border-slate-300 rounded-2xl p-6 shadow-sm space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-150 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800">
+            <span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+            Cálculo Instantâneo Local
+          </span>
+          <span class="text-[11px] font-medium text-slate-500">100% Gratuito & Sem Cadastro</span>
+        </div>
+        <span class="text-xs font-mono text-slate-400">ToolBrasil v2.6</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+        <div class="p-4 bg-slate-50 rounded-xl border border-slate-200/80 space-y-2">
+          <span class="text-xs font-extrabold text-slate-700 uppercase tracking-wider block">Parâmetros da Ferramenta</span>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Insira os dados requeridos no formulário interativo para processamento local imediato pelo seu navegador.
+          </p>
+          <div class="flex flex-wrap gap-1.5 pt-1">
+            <span class="text-[10px] bg-white border border-slate-300 px-2 py-0.5 rounded text-slate-700 font-medium">Dados Seguros</span>
+            <span class="text-[10px] bg-white border border-slate-300 px-2 py-0.5 rounded text-slate-700 font-medium">Privacidade Client-Side</span>
+            <span class="text-[10px] bg-white border border-slate-300 px-2 py-0.5 rounded text-slate-700 font-medium">Precisão Algorítmica</span>
+          </div>
+        </div>
+
+        <div class="p-4 bg-emerald-50/70 rounded-xl border border-emerald-200/80 space-y-2">
+          <span class="text-xs font-extrabold text-emerald-900 uppercase tracking-wider block">Resultado Esperado</span>
+          <p class="text-xs text-slate-700 leading-relaxed">
+            O diagnóstico detalhado, demonstrativo de valores ou dados gerados são exibidos instantaneamente na tela com opção de cópia e impressão em formato A4.
+          </p>
+          <div class="pt-1 flex items-center gap-2 text-[11px] font-bold text-emerald-800">
+            <span>✓ Pronto para exportação</span>
+            <span>•</span>
+            <span>✓ Compartilhamento via WhatsApp</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function getCategoryGuideAndTableHtml(categoryId: string, tool: any): string {
+  if (categoryId === 'calculadoras') {
+    return `
+      <div class="space-y-4 pt-3">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <span>📋</span> Tabela de Referência Oficial e Parâmetros Vigentes (2026)
+        </h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Para garantir máxima precisão e conformidade jurídica em seus cálculos trabalhistas e financeiros, consulte os parâmetros e alíquotas oficiais vigentes no Brasil:
+        </p>
+        
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-xs text-left border border-slate-200 rounded-lg overflow-hidden">
+            <thead class="bg-slate-100 text-slate-800 font-bold uppercase text-[10px] tracking-wider">
+              <tr>
+                <th class="px-3 py-2 border-b border-slate-200">Faixa Salarial / Base de Cálculo</th>
+                <th class="px-3 py-2 border-b border-slate-200">Alíquota Progressiva INSS</th>
+                <th class="px-3 py-2 border-b border-slate-200">Alíquota IRRF</th>
+                <th class="px-3 py-2 border-b border-slate-200">Parcela a Deduzir do IR</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-slate-700">
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Até R$ 1.518,00 (Salário Mínimo)</td>
+                <td class="px-3 py-2 font-semibold text-emerald-700">7,50%</td>
+                <td class="px-3 py-2 text-slate-500">Isento</td>
+                <td class="px-3 py-2 text-slate-500">R$ 0,00</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">De R$ 1.518,01 até R$ 2.793,88</td>
+                <td class="px-3 py-2 font-semibold text-emerald-700">9,00%</td>
+                <td class="px-3 py-2">7,50%</td>
+                <td class="px-3 py-2">R$ 169,44</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">De R$ 2.793,89 até R$ 4.190,83</td>
+                <td class="px-3 py-2 font-semibold text-emerald-700">12,00%</td>
+                <td class="px-3 py-2">15,00%</td>
+                <td class="px-3 py-2">R$ 381,44</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">De R$ 4.190,84 até R$ 8.157,41 (Teto)</td>
+                <td class="px-3 py-2 font-semibold text-emerald-700">14,00%</td>
+                <td class="px-3 py-2">22,50%</td>
+                <td class="px-3 py-2">R$ 662,77</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Acima de R$ 8.157,41</td>
+                <td class="px-3 py-2 font-semibold text-slate-800">Teto Fixo (R$ 951,63)</td>
+                <td class="px-3 py-2 font-bold text-rose-700">27,50%</td>
+                <td class="px-3 py-2 font-semibold">R$ 896,00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700 space-y-2">
+          <span class="font-extrabold text-slate-900 block">📌 Fundamentos Legais e Prazos CLT:</span>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Décimo Terceiro Salário:</strong> 1ª parcela paga impreterivelmente entre 1º de fevereiro e 30 de novembro (50% sem descontos); 2ª parcela paga até 20 de dezembro com deduções de INSS e IRRF.</li>
+            <li><strong>Aviso Prévio Proporcional:</strong> Conforme a Lei nº 12.506/2011, ao período base de 30 dias são acrescidos 3 dias para cada ano completo de trabalho na mesma empresa, até o limite máximo de 90 dias.</li>
+            <li><strong>Multa Rescisória do FGTS:</strong> Em caso de demissão sem justa causa pelo empregador, é devido o adicional de 40% sobre o saldo total dos depósitos acumulados durante o contrato.</li>
+            <li><strong>Cálculo de Juros Compostos:</strong> Fórmula padrão de capitalização: <code class="bg-slate-200 px-1 py-0.5 rounded font-mono text-slate-900">M = C × (1 + i)^t</code>, onde <em>M</em> é o montante acumulado, <em>C</em> é o capital inicial, <em>i</em> é a taxa periódica e <em>t</em> é o número de períodos.</li>
+          </ul>
+        </div>
+      </div>
+    `;
+  }
+
+  if (categoryId === 'conversores') {
+    return `
+      <div class="space-y-4 pt-3">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <span>📐</span> Tabela de Equivalências e Fatores de Conversão Padrão
+        </h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          O sistema de conversão da Tool Brasil utiliza os padrões do Sistema Internacional de Unidades (SI) e normas ISO para assegurar precisão absoluta em conversões métricas, financeiras e digitais:
+        </p>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-xs text-left border border-slate-200 rounded-lg overflow-hidden">
+            <thead class="bg-slate-100 text-slate-800 font-bold uppercase text-[10px] tracking-wider">
+              <tr>
+                <th class="px-3 py-2 border-b border-slate-200">Unidade de Origem</th>
+                <th class="px-3 py-2 border-b border-slate-200">Unidade de Destino</th>
+                <th class="px-3 py-2 border-b border-slate-200">Fator de Multiplicação / Fórmula</th>
+                <th class="px-3 py-2 border-b border-slate-200">Aplicação Comum</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-slate-700">
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Metros (m)</td>
+                <td class="px-3 py-2">Pés (ft)</td>
+                <td class="px-3 py-2 font-mono text-emerald-700">Multiplicar por 3,28084</td>
+                <td class="px-3 py-2 text-slate-500">Engenharia, aviação civil e calçados</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Quilogramas (kg)</td>
+                <td class="px-3 py-2">Libras (lbs)</td>
+                <td class="px-3 py-2 font-mono text-emerald-700">Multiplicar por 2,20462</td>
+                <td class="px-3 py-2 text-slate-500">Cargas, balanças e esportes</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Polegadas (in)</td>
+                <td class="px-3 py-2">Centímetros (cm)</td>
+                <td class="px-3 py-2 font-mono text-emerald-700">Multiplicar por 2,54</td>
+                <td class="px-3 py-2 text-slate-500">Telas, monitores e marcenaria</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Celsius (°C)</td>
+                <td class="px-3 py-2">Fahrenheit (°F)</td>
+                <td class="px-3 py-2 font-mono text-emerald-700">(°C × 9/5) + 32</td>
+                <td class="px-3 py-2 text-slate-500">Climatização e culinária internacional</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Megabytes (MB)</td>
+                <td class="px-3 py-2">Gigabytes (GB)</td>
+                <td class="px-3 py-2 font-mono text-emerald-700">Dividir por 1.024 (Binário) / 1.000 (SI)</td>
+                <td class="px-3 py-2 text-slate-500">Armazenamento em TI e planos de dados</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
+
+  if (categoryId === 'geradores') {
+    return `
+      <div class="space-y-4 pt-3">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <span>🔒</span> Metodologia Algorítmica e Conformidade com a LGPD
+        </h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Todos os documentos, sequências e hashes sintéticos gerados nesta plataforma utilizam algoritmos matemáticos oficiais e estrita conformidade com as diretrizes regulatórias:
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700 space-y-2">
+            <span class="font-extrabold text-slate-900 block">Algoritmo Módulo 11 (CPF e CNPJ):</span>
+            <p class="leading-relaxed">
+              O Cadastro de Pessoas Físicas (CPF) e o Cadastro Nacional da Pessoa Jurídica (CNPJ) adotam a verificação ponderada via Módulo 11. Os 9 primeiros dígitos do CPF (ou 12 do CNPJ) são multiplicados por pesos decrescentes de 10 a 2. O somatório é dividido por 11 para definir os dígitos verificadores (DV).
+            </p>
+          </div>
+
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700 space-y-2">
+            <span class="font-extrabold text-slate-900 block">Segurança de Dados & LGPD:</span>
+            <p class="leading-relaxed">
+              Nossos geradores foram concebidos exclusivamente para <strong>testes de software, homologação de sistemas e preenchimento de mockups</strong>. As combinações numéricas são criadas aleatoriamente em tempo de execução e não possuem vínculo com pessoas reais, em conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018).
+            </p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (categoryId === 'ferramentas-web') {
+    return `
+      <div class="space-y-4 pt-3">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <span>🌐</span> Guia Técnico de Redes, DNS e Diagnóstico Web
+        </h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Diagnósticos de rede e utilitários web operam com base na arquitetura TCP/IP e nas especificações das RFCs da Internet Engineering Task Force (IETF):
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+            <span class="font-bold text-slate-800 block">Portas Padrão</span>
+            <p class="text-slate-600 text-[11px]">Porta 80 (HTTP sem SSL), Porta 443 (HTTPS seguro com TLS), Porta 22 (SSH), Porta 53 (Serviço de DNS).</p>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+            <span class="font-bold text-slate-800 block">IPs Privados (RFC 1918)</span>
+            <p class="text-slate-600 text-[11px]">Faixas reservadas para redes locais: 10.0.0.0/8, 172.16.0.0/12 e 192.168.0.0/16, invisíveis diretamente na web pública.</p>
+          </div>
+          <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+            <span class="font-bold text-slate-800 block">DNS & TTL</span>
+            <p class="text-slate-600 text-[11px]">O Time-To-Live (TTL) dita o tempo em segundos que provedores de internet retêm caches dos registros A, CNAME e MX.</p>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="space-y-4 pt-3">
+      <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+        <span>⚙️</span> Boas Práticas e Diretrizes de Produtividade Digital
+      </h3>
+      <p class="text-xs text-slate-600 leading-relaxed">
+        Os utilitários da Tool Brasil foram projetados para acelerar rotinas de produtividade, tratamento de texto e cálculos diários. O processamento estritamente local garante confidencialidade completa de seus dados sem envio para servidores externos.
+      </p>
+    </div>
+  `;
+}
+
+function getStepByStepExampleHtml(tool: any): string {
+  return `
+    <div class="space-y-3 pt-2">
+      <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+        <span>📖</span> Exemplo Prático de Utilização Passo a Passo
+      </h3>
+      <div class="bg-emerald-50/60 border border-emerald-200 rounded-xl p-4 text-xs space-y-3 text-slate-700 leading-relaxed">
+        <p>
+          <strong>Cenário Simulado:</strong> Imagine que você precise realizar a apuração rápida utilizando a ferramenta <strong>${tool.title}</strong> para tomada de decisão imediata ou conferência de valores.
+        </p>
+        <ol class="list-decimal pl-5 space-y-1.5 font-medium">
+          <li><strong>Etapa 1 (Entrada de Dados):</strong> Preencha os campos principais do formulário com as informações base (valores numéricos, opções de formatação ou parâmetros desejados).</li>
+          <li><strong>Etapa 2 (Processamento Automático):</strong> Nosso motor matemático em JavaScript executa as fórmulas aplicáveis instantaneamente na memória do seu dispositivo.</li>
+          <li><strong>Etapa 3 (Conferência do Resultado):</strong> O resultado discriminado é consolidado em tela, permitindo copiar o valor com 1 clique ou gerar um relatório detalhado.</li>
+        </ol>
+        <p class="text-[11px] text-slate-600 bg-white/80 p-2.5 rounded-lg border border-emerald-200/60">
+          💡 <em>Dica de Ouro:</em> Para resultados recorrentes, salve a página em seus favoritos (<kbd class="px-1.5 py-0.5 bg-slate-200 rounded font-mono text-[10px]">Ctrl+D</kbd>) ou utilize o recurso de compartilhamento rápido para enviar a simulação para clientes ou colegas de trabalho.
+        </p>
+      </div>
+    </div>
+  `;
+}
+
+function getInternalLinkingGridHtml(tool: any): string {
+  const categorySiblings = TOOLS.filter(t => t.categoryId === tool.categoryId && t.id !== tool.id).slice(0, 6);
+  const topGlobalIds = ['juros-compostos', 'cpf', 'rescisao-trabalhista', 'real-para-dolar', 'gerador-whatsapp', 'sorteador'];
+  const topGlobals = TOOLS.filter(t => topGlobalIds.includes(t.id) && t.id !== tool.id).slice(0, 4);
+
+  return `
+    <div class="space-y-6 pt-4">
+      <div class="space-y-3">
+        <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center justify-between">
+          <span>Mais Ferramentas na Categoria</span>
+          <a href="/${tool.categoryId}" class="text-emerald-700 hover:underline font-bold text-[11px]">Ver Todas →</a>
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+          ${categorySiblings.map(t => `
+            <a href="/${t.categoryId}/${t.slug}" class="p-3 bg-slate-50 border border-slate-200/80 rounded-xl hover:border-emerald-600 hover:bg-emerald-50/20 transition block group shadow-2xs">
+              <span class="font-bold text-xs text-slate-900 group-hover:text-emerald-700 block">${t.title}</span>
+              <span class="text-[10px] text-slate-500 block line-clamp-2 mt-0.5">${t.shortDescription}</span>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
+          🔥 Utilitários Mais Acessados na Tool Brasil
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+          ${topGlobals.map(t => `
+            <a href="/${t.categoryId}/${t.slug}" class="p-3 bg-white border border-slate-200 rounded-xl hover:border-emerald-600 transition block group shadow-2xs">
+              <span class="font-bold text-xs text-slate-900 group-hover:text-emerald-700 block">${t.title}</span>
+              <span class="text-[10px] text-slate-500 block truncate mt-0.5">${t.shortDescription}</span>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function generateToolHtml(template: string, tool: any): string {
   const title = `${tool.title} | Tool Brasil`;
   const desc = tool.shortDescription;
@@ -470,26 +780,6 @@ function generateToolHtml(template: string, tool: any): string {
     `
     : '';
 
-  const relatedHtml = tool.relatedToolIds && tool.relatedToolIds.length > 0
-    ? `
-      <div class="space-y-3 pt-2">
-        <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider">Ferramentas Relacionadas</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          ${tool.relatedToolIds.map((rId: string) => {
-            const rTool = TOOLS.find(t => t.id === rId);
-            if (!rTool) return '';
-            return `
-              <a href="/${rTool.categoryId}/${rTool.slug}" class="p-3 bg-slate-50 border rounded-lg text-xs hover:border-emerald-600 transition block">
-                <span class="font-bold text-slate-800 block">${rTool.title}</span>
-                <span class="text-[10px] text-slate-500 block">${rTool.shortDescription.substring(0, 60)}...</span>
-              </a>
-            `;
-          }).join('')}
-        </div>
-      </div>
-    `
-    : '';
-
   const content = `
     <div class="space-y-6">
       <!-- Breadcrumbs -->
@@ -507,35 +797,35 @@ function generateToolHtml(template: string, tool: any): string {
         <p class="text-sm text-slate-700 leading-relaxed font-medium">${tool.shortDescription}</p>
       </div>
 
-      <!-- INTERACTIVE AREA PLACEHOLDER -->
-      <div class="bg-white border border-dashed border-slate-350 p-12 rounded-2xl text-center shadow-xs">
-        <div class="inline-flex p-3 bg-emerald-50 rounded-full text-emerald-600 mb-3">
-          <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
-          </svg>
-        </div>
-        <p class="text-xs font-bold text-slate-700">Carregando Calculadora Interativa Local...</p>
-        <p class="text-[10px] text-slate-400 mt-1 max-w-sm mx-auto">Para utilizar as funções interativas, ative o JavaScript no seu navegador. O processamento dos dados é executado localmente em seu dispositivo.</p>
-      </div>
+      <!-- INTERACTIVE AREA PREVIEW (ANTI-THIN CONTENT) -->
+      ${getInteractivePreviewCardHtml(tool)}
 
       <!-- RICH TEXT CONTENT FOR CRAWLERS -->
       <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-6">
         
         <div class="space-y-3 leading-relaxed">
           <h2 class="text-lg font-black text-slate-900">Sobre a ferramenta</h2>
-          <p class="text-xs text-slate-600">${tool.longIntro}</p>
+          <p class="text-xs text-slate-600 leading-relaxed">${tool.longIntro}</p>
         </div>
 
         <hr class="border-slate-150" />
 
         <div class="space-y-3 leading-relaxed">
           <h2 class="text-lg font-black text-slate-900">Como Funciona?</h2>
-          <p class="text-xs text-slate-600">${tool.howItWorks}</p>
+          <p class="text-xs text-slate-600 leading-relaxed">${tool.howItWorks}</p>
         </div>
+
+        <hr class="border-slate-150" />
+        ${getStepByStepExampleHtml(tool)}
+
+        <hr class="border-slate-150" />
+        ${getCategoryGuideAndTableHtml(tool.categoryId, tool)}
 
         ${tipsHtml ? `<hr class="border-slate-150" />${tipsHtml}` : ''}
         ${faqsHtml ? `<hr class="border-slate-150" />${faqsHtml}` : ''}
-        ${relatedHtml ? `<hr class="border-slate-150" />${relatedHtml}` : ''}
+        
+        <hr class="border-slate-150" />
+        ${getInternalLinkingGridHtml(tool)}
 
       </div>
     </div>
