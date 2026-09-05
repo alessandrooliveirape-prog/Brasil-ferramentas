@@ -44,11 +44,14 @@ import ProgrammaticPage from './components/ProgrammaticPage';
 import Institucional from './components/Institucional';
 import AdSensePlaceholder from './components/AdSensePlaceholder';
 import SEOAnalyzer from './components/SEOAnalyzer';
+import CommandPalette from './components/CommandPalette';
+import MobileCategoryRail from './components/MobileCategoryRail';
 
 
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState(() => parseRoute());
   const [searchQuery, setSearchQuery] = useState('');
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState<{ [key: string]: boolean }>({});
 
   // Theme state: defaults to 'light', stores selection in localStorage
@@ -221,6 +224,25 @@ export default function App() {
       window.removeEventListener('click', handleLinkClick);
     };
   }, []);
+
+  // Global keyboard shortcut (Ctrl+K or Cmd+K) to toggle Command Palette
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setIsCommandPaletteOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Programmatic client-side navigation for Command Palette selections
+  const handleCommandNavigate = (path: string) => {
+    window.history.pushState({}, '', path);
+    setCurrentRoute(parseRoute());
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Determine current active tool if any
   let activeTool = null;
@@ -552,49 +574,62 @@ export default function App() {
               {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
             </button>
 
-            {/* Header Universal Search Input */}
-            <div className="relative w-full max-w-[180px] sm:max-w-[240px] md:max-w-[300px]" id="header-search-wrapper">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
-                <Search className="w-3.5 h-3.5" />
-              </div>
-              <input
-                type="text"
-                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-350 dark:border-slate-700 rounded-full py-1.5 pl-8 pr-4 text-[11px] outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 dark:text-slate-100 transition-all font-semibold"
-                placeholder="Buscar calculadora ou gerador..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
+            {/* Header Universal Search Trigger / Command Palette */}
+            <button
+              type="button"
+              onClick={() => setIsCommandPaletteOpen(true)}
+              className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-500 dark:text-slate-400 rounded-full text-[11px] font-semibold transition-all border border-slate-300 dark:border-slate-700 shadow-2xs cursor-pointer group"
+              id="header-search-wrapper"
+              title="Buscar ferramenta (Ctrl+K)"
+            >
+              <Search className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-500 transition-colors shrink-0" />
+              <span className="hidden sm:inline">Buscar ferramenta...</span>
+              <span className="sm:hidden">Buscar...</span>
+              <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-[9px] font-mono font-bold bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded text-slate-500 dark:text-slate-400 shadow-2xs ml-1">
+                ⌘K
+              </kbd>
+            </button>
           </div>
         </div>
       </header>
 
+      {/* MOBILE HORIZONTAL CATEGORY RAIL */}
+      <MobileCategoryRail currentCategory={currentRoute.categoryId} currentView={currentRoute.view} />
+
       {/* HERO HERO (IF HOME) */}
       {currentRoute.view === 'home' && (
-        <section className="bg-gradient-to-b from-white to-slate-50 border-b border-slate-200 py-12 md:py-16 text-center px-4" id="hero-banner">
+        <section className="bg-gradient-to-b from-white to-slate-50 dark:from-slate-900 dark:to-slate-950 border-b border-slate-200 dark:border-slate-800 py-12 md:py-16 text-center px-4 transition-colors duration-300" id="hero-banner">
           <div className="max-w-4xl mx-auto space-y-6">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 border border-emerald-200 rounded-full text-emerald-800 text-xs font-bold font-mono">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-full text-emerald-800 dark:text-emerald-300 text-xs font-bold font-mono">
               <Award className="w-4 h-4 text-emerald-605" /> 100% Gratuito, Sem Cadastro
             </div>
-            <h1 className="text-3xl md:text-5xl font-black text-slate-900 tracking-tight leading-none">
+            <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
               Ferramentas Online Gratuitas para o Dia a Dia
             </h1>
-            <p className="text-slate-700 text-sm md:text-base max-w-xl mx-auto font-medium">
+            <p className="text-slate-700 dark:text-slate-300 text-sm md:text-base max-w-xl mx-auto font-medium">
               Sua central brasileira de utilitários rápidos para cálculos trabalhistas, segurança de senhas, decodificadores e automação.
             </p>
 
             {/* REAL TIME BUSCADOR (Hero) */}
             <div className="relative max-w-xl mx-auto" id="main-search-wrapper">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                 <Search className="w-5 h-5" />
               </div>
               <input
                 type="text"
-                className="w-full bg-white border border-slate-400 rounded-full py-3.5 pl-12 pr-6 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-xs transition-all font-medium text-slate-900"
+                className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-full py-3.5 pl-12 pr-24 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-xs transition-all font-medium text-slate-900 dark:text-slate-100"
                 placeholder="Pesquise entre 40+ ferramentas ex: Juros Compostos, CPF, CEP..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              <button
+                type="button"
+                onClick={() => setIsCommandPaletteOpen(true)}
+                className="absolute inset-y-1.5 right-1.5 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-full text-xs font-bold flex items-center gap-1 transition-colors cursor-pointer border border-slate-250 dark:border-slate-700"
+                title="Abrir Command Palette (Ctrl+K)"
+              >
+                <kbd className="text-[10px] font-mono">⌘K</kbd>
+              </button>
             </div>
 
             {/* DYNAMIC REAL-TIME CURRENCY TICKER (HOMEPAGE WIDGET) */}
@@ -604,76 +639,76 @@ export default function App() {
                 {/* Dólar Card */}
                 <a 
                   href="/conversores/real-para-dolar"
-                  className="bg-white p-3.5 rounded-xl border border-slate-350 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
+                  className="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">USD ⇄ BRL</span>
-                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${parseFloat(homeRates.USD.pctChange) >= 0 ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'}`}>
+                    <span className="text-[10px] font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider">USD ⇄ BRL</span>
+                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${parseFloat(homeRates.USD.pctChange) >= 0 ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-400' : 'bg-red-50 dark:bg-red-950/50 text-red-800 dark:text-red-400'}`}>
                       {parseFloat(homeRates.USD.pctChange) >= 0 ? '▲' : '▼'} {homeRates.USD.pctChange}%
                     </span>
                   </div>
                   <div className="mt-2.5">
-                    <span className="text-lg font-black text-slate-900 font-mono">
+                    <span className="text-lg font-black text-slate-900 dark:text-white font-mono">
                       R$ {homeRates.USD.bid.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
-                    <span className="block text-[9.5px] text-slate-500 font-bold uppercase mt-0.5">Dólar Comercial</span>
+                    <span className="block text-[9.5px] text-slate-500 dark:text-slate-400 font-bold uppercase mt-0.5">Dólar Comercial</span>
                   </div>
                 </a>
 
                 {/* Euro Card */}
                 <a 
                   href="/conversores/euro-para-real"
-                  className="bg-white p-3.5 rounded-xl border border-slate-350 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
+                  className="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">EUR ⇄ BRL</span>
-                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${parseFloat(homeRates.EUR.pctChange) >= 0 ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'}`}>
+                    <span className="text-[10px] font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider">EUR ⇄ BRL</span>
+                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${parseFloat(homeRates.EUR.pctChange) >= 0 ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-400' : 'bg-red-50 dark:bg-red-950/50 text-red-800 dark:text-red-400'}`}>
                       {parseFloat(homeRates.EUR.pctChange) >= 0 ? '▲' : '▼'} {homeRates.EUR.pctChange}%
                     </span>
                   </div>
                   <div className="mt-2.5">
-                    <span className="text-lg font-black text-slate-900 font-mono">
+                    <span className="text-lg font-black text-slate-900 dark:text-white font-mono">
                       R$ {homeRates.EUR.bid.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
-                    <span className="block text-[9.5px] text-slate-500 font-bold uppercase mt-0.5">Euro Comercial</span>
+                    <span className="block text-[9.5px] text-slate-500 dark:text-slate-400 font-bold uppercase mt-0.5">Euro Comercial</span>
                   </div>
                 </a>
 
                 {/* Libra Card */}
                 <a 
                   href="/conversores/libra-para-real"
-                  className="bg-white p-3.5 rounded-xl border border-slate-350 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
+                  className="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">GBP ⇄ BRL</span>
-                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${parseFloat(homeRates.GBP.pctChange) >= 0 ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'}`}>
+                    <span className="text-[10px] font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider">GBP ⇄ BRL</span>
+                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${parseFloat(homeRates.GBP.pctChange) >= 0 ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-400' : 'bg-red-50 dark:bg-red-950/50 text-red-800 dark:text-red-400'}`}>
                       {parseFloat(homeRates.GBP.pctChange) >= 0 ? '▲' : '▼'} {homeRates.GBP.pctChange}%
                     </span>
                   </div>
                   <div className="mt-2.5">
-                    <span className="text-lg font-black text-slate-900 font-mono">
+                    <span className="text-lg font-black text-slate-900 dark:text-white font-mono">
                       R$ {homeRates.GBP.bid.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
-                    <span className="block text-[9.5px] text-slate-500 font-bold uppercase mt-0.5">Libra Esterlina</span>
+                    <span className="block text-[9.5px] text-slate-500 dark:text-slate-400 font-bold uppercase mt-0.5">Libra Esterlina</span>
                   </div>
                 </a>
 
                 {/* Bitcoin Card */}
                 <a 
                   href="/conversores/bitcoin-para-real"
-                  className="bg-white p-3.5 rounded-xl border border-slate-350 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
+                  className="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-extrabold text-slate-700 uppercase tracking-wider">BTC ⇄ BRL</span>
-                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${parseFloat(homeRates.BTC.pctChange) >= 0 ? 'bg-emerald-50 text-emerald-800' : 'bg-red-50 text-red-800'}`}>
+                    <span className="text-[10px] font-extrabold text-slate-700 dark:text-slate-300 uppercase tracking-wider">BTC ⇄ BRL</span>
+                    <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${parseFloat(homeRates.BTC.pctChange) >= 0 ? 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-400' : 'bg-red-50 dark:bg-red-950/50 text-red-800 dark:text-red-400'}`}>
                       {parseFloat(homeRates.BTC.pctChange) >= 0 ? '▲' : '▼'} {homeRates.BTC.pctChange}%
                     </span>
                   </div>
                   <div className="mt-2.5">
-                    <span className="text-lg font-black text-slate-900 font-mono">
+                    <span className="text-lg font-black text-slate-900 dark:text-white font-mono">
                       R$ {homeRates.BTC.bid.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
                     </span>
-                    <span className="block text-[9.5px] text-slate-500 font-bold uppercase mt-0.5">Bitcoin (BTC)</span>
+                    <span className="block text-[9.5px] text-slate-500 dark:text-slate-400 font-bold uppercase mt-0.5">Bitcoin (BTC)</span>
                   </div>
                 </a>
 
@@ -692,11 +727,11 @@ export default function App() {
       {/* BREADCRUMBS RAIL */}
       {currentRoute.view !== 'home' && (
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-4" id="breadcrumbs-rail">
-          <div className="bg-white px-4 py-2.5 rounded-lg border border-slate-300 flex items-center gap-1.5 flex-wrap text-xs text-slate-800 font-semibold">
+          <div className="bg-white dark:bg-slate-900 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center gap-1.5 flex-wrap text-xs text-slate-800 dark:text-slate-200 font-semibold shadow-2xs">
             {crumbs.map((c, i) => (
               <React.Fragment key={i}>
-                {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-slate-450" />}
-                <a href={c.path} className="hover:text-emerald-700 transition">
+                {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600" />}
+                <a href={c.path} className="hover:text-emerald-700 dark:hover:text-emerald-400 transition">
                   {c.name}
                 </a>
               </React.Fragment>
@@ -708,25 +743,25 @@ export default function App() {
       {/* SEARCH RESULTS BOARD */}
       {searchQuery.trim().length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-6" id="search-results-board">
-          <div className="bg-white p-6 rounded-xl border border-slate-300 space-y-4 shadow-xs animate-fade-in">
-            <h3 className="text-xs font-bold text-slate-855 uppercase tracking-wider flex items-center gap-2">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 space-y-4 shadow-xs animate-fade-in">
+            <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
               🔍 Resultados para "{searchQuery}" ({searchResults.length})
             </h3>
 
             {searchResults.length === 0 ? (
-              <p className="text-xs text-slate-500 font-semibold font-mono">Nenhuma ferramenta foi localizada com estes termos.</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold font-mono">Nenhuma ferramenta foi localizada com estes termos.</p>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {searchResults.map((r: any, idx) => (
                   <a
                     key={idx}
                     href={r.type === 'programatico' ? `/programatico/${r.slug}` : `/${r.categoryId}/${r.slug}`}
-                    className="p-3.5 bg-slate-50 rounded-lg hover:border-emerald-600 border border-slate-300 hover:bg-white transition-all block group"
+                    className="p-3.5 bg-slate-50 dark:bg-slate-800/60 rounded-lg hover:border-emerald-600 border border-slate-200 dark:border-slate-700 hover:bg-white dark:hover:bg-slate-800 transition-all block group"
                   >
-                    <span className="font-extrabold text-sm text-slate-900 flex items-center gap-1.5 group-hover:text-emerald-600">
+                    <span className="font-extrabold text-sm text-slate-900 dark:text-slate-100 flex items-center gap-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400">
                       {r.title} <ArrowRight className="w-3.5 h-3.5 text-slate-500 transition-transform group-hover:translate-x-0.5" />
                     </span>
-                    <p className="text-[11.5px] text-slate-700 mt-1 line-clamp-2 font-medium">{r.shortDescription}</p>
+                    <p className="text-[11.5px] text-slate-600 dark:text-slate-400 mt-1 line-clamp-2 font-medium">{r.shortDescription}</p>
                   </a>
                 ))}
               </div>
@@ -734,7 +769,7 @@ export default function App() {
             
             <button
               onClick={() => setSearchQuery('')}
-              className="text-xs text-emerald-800 font-bold px-3 py-1.5 rounded-lg bg-emerald-50 hover:cursor-pointer hover:bg-emerald-100 transition"
+              className="text-xs text-emerald-800 dark:text-emerald-300 font-bold px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 hover:cursor-pointer hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition"
             >
               Fechar Resultados
             </button>
@@ -748,15 +783,15 @@ export default function App() {
         {/* LEFT NAV SIDEBAR - order-2 renders sidebar below content on mobile, left on desktop */}
         <aside className="order-2 lg:order-1 lg:col-span-1 space-y-4" id="left-sidebar">
           
-          <div className="bg-white p-4 rounded-xl border border-slate-300 shadow-xs space-y-3">
-            <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider">
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-3">
+            <h3 className="text-xs font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-wider">
               Categorias
             </h3>
             
             <nav className="space-y-1">
               <a
                 href="/"
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${currentRoute.view === 'home' ? 'bg-emerald-600 text-white font-bold shadow-xs' : 'text-slate-800 hover:bg-slate-100 hover:text-slate-950'}`}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${currentRoute.view === 'home' ? 'bg-emerald-600 text-white font-bold shadow-xs' : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white'}`}
               >
                 <Home className="w-4 h-4 text-slate-500" /> Início / Home
               </a>
@@ -767,13 +802,13 @@ export default function App() {
                   <a
                     key={cat.id}
                     href={`/${cat.id}`}
-                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold tracking-wide transition-all ${isActive ? 'bg-emerald-50 border border-emerald-300 text-emerald-800 font-bold' : 'text-slate-800 hover:bg-slate-100 hover:text-slate-950'}`}
+                    className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold tracking-wide transition-all ${isActive ? 'bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 font-bold' : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white'}`}
                   >
                     <div className="flex items-center gap-2">
                       {renderIcon(cat.icon, "w-4 h-4 text-slate-500")}
                       <span>{cat.name}</span>
                     </div>
-                    <span className="text-[9.5px] bg-slate-100 text-slate-600 font-extrabold rounded px-1.5 py-0.5">
+                    <span className="text-[9.5px] bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-extrabold rounded px-1.5 py-0.5">
                       {TOOLS.filter(t => t.categoryId === cat.id).length}
                     </span>
                   </a>
@@ -783,19 +818,19 @@ export default function App() {
           </div>
 
           {/* DYNAMIC METRIC DISPATCHER */}
-          <div className="bg-white p-4 rounded-xl border border-slate-300 shadow-xs space-y-2 text-xs">
-            <span className="text-[10px] font-extrabold text-slate-900 uppercase flex items-center gap-1.5">
+          <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-2 text-xs">
+            <span className="text-[10px] font-extrabold text-slate-900 dark:text-slate-100 uppercase flex items-center gap-1.5">
               <FileSearch className="w-3.5 h-3.5 text-slate-500" /> Conteúdo Programático
             </span>
             <div className="grid grid-cols-1 gap-1">
-              <a href="/programatico/ddd-brasil" className="text-slate-700 hover:text-emerald-600 transition-colors font-mono font-semibold">▸ DDD Brasil</a>
-              <a href="/programatico/cep-brasil" className="text-slate-700 hover:text-emerald-600 transition-colors font-mono font-semibold">▸ CEP Correios</a>
-              <a href="/programatico/bancos-brasil" className="text-slate-700 hover:text-emerald-600 transition-colors font-mono font-semibold">▸ Bancos & ISPB</a>
-              <a href="/programatico/salario-minimo-historico" className="text-slate-700 hover:text-emerald-600 transition-colors font-mono font-semibold">▸ Salário Mínimo Histórico</a>
-              <a href="/programatico/feriados-nacionais" className="text-slate-700 hover:text-emerald-600 transition-colors font-mono font-semibold">▸ Feriados Nacionais</a>
-              <a href="/programatico/selic-historica" className="text-slate-700 hover:text-emerald-600 transition-colors font-mono font-semibold">▸ Taxa SELIC Histórica</a>
+              <a href="/programatico/ddd-brasil" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-mono font-semibold">▸ DDD Brasil</a>
+              <a href="/programatico/cep-brasil" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-mono font-semibold">▸ CEP Correios</a>
+              <a href="/programatico/bancos-brasil" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-mono font-semibold">▸ Bancos & ISPB</a>
+              <a href="/programatico/salario-minimo-historico" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-mono font-semibold">▸ Salário Mínimo Histórico</a>
+              <a href="/programatico/feriados-nacionais" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-mono font-semibold">▸ Feriados Nacionais</a>
+              <a href="/programatico/selic-historica" className="text-slate-700 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors font-mono font-semibold">▸ Taxa SELIC Histórica</a>
             </div>
-            <a href="/" className="text-[10px] text-slate-500 hover:text-emerald-600 font-bold block pt-1">
+            <a href="/" className="text-[10px] text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 font-bold block pt-1">
               Ir para o Início →
             </a>
           </div>
@@ -814,22 +849,22 @@ export default function App() {
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 pb-2" id="dashboard-destaques-populares">
                 
                 {/* CURATED FEATURED SECTION */}
-                <div className="bg-white border border-slate-300 rounded-2xl p-5 space-y-4 shadow-xs" id="featured-tools-section">
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-xs" id="featured-tools-section">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="p-2 bg-slate-50 rounded-lg text-emerald-600">
+                      <div className="p-2 bg-slate-50 dark:bg-slate-800 rounded-lg text-emerald-600 dark:text-emerald-400">
                         <Star className="w-4 h-4 fill-emerald-500 text-emerald-500" />
                       </div>
-                      <h2 className="text-sm font-extrabold text-slate-900 uppercase tracking-tight">
+                      <h2 className="text-sm font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-tight">
                         Ferramentas em Destaque
                       </h2>
                     </div>
-                    <span className="text-[10px] bg-slate-100 text-emerald-850 font-mono px-2 py-0.5 rounded font-extrabold border border-slate-300">
+                    <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-emerald-800 dark:text-emerald-400 font-mono px-2 py-0.5 rounded font-extrabold border border-slate-200 dark:border-slate-700">
                       Recomendado
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-700 leading-normal font-medium">
+                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-normal font-medium">
                     Utilitários de alta performance e grande relevância selecionados para otimizar suas atividades diárias.
                   </p>
 
@@ -838,18 +873,18 @@ export default function App() {
                       <a
                         key={tool.id}
                         href={`/${tool.categoryId}/${tool.slug}`}
-                        className="group relative p-3.5 rounded-xl border border-slate-200 bg-slate-50 hover:border-emerald-600 hover:bg-white hover:shadow-xs transition-all duration-300 flex flex-col justify-between space-y-2"
+                        className="group relative p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-emerald-600 hover:bg-white dark:hover:bg-slate-800 hover:shadow-xs transition-all duration-300 flex flex-col justify-between space-y-2"
                       >
                         <div className="space-y-1">
                           <span className={`inline-block text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full ${tool.tagColor}`}>
                             {tool.tag}
                           </span>
-                          <h3 className="font-extrabold text-slate-900 text-xs sm:text-xs group-hover:text-emerald-700 transition-colors flex items-center justify-between gap-1">
+                          <h3 className="font-extrabold text-slate-900 dark:text-slate-100 text-xs sm:text-xs group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors flex items-center justify-between gap-1">
                             <span>{tool.title.replace('Calculadora de ', '').replace('Gerador de ', '').replace('Conversor de ', '')}</span>
                             <ArrowRight className="w-3.5 h-3.5 text-slate-400 shrink-0 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
                           </h3>
                         </div>
-                        <p className="text-[11.5px] text-slate-700 leading-normal line-clamp-2 font-medium">
+                        <p className="text-[11.5px] text-slate-700 dark:text-slate-300 leading-normal line-clamp-2 font-medium">
                           {tool.shortDescription}
                         </p>
                       </a>
@@ -858,20 +893,20 @@ export default function App() {
                 </div>
 
                 {/* DYNAMICAL POPULAR TOOLS SECTION */}
-                <div className="bg-white border border-slate-300 rounded-2xl p-5 space-y-4 shadow-xs" id="popular-tools-section">
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 space-y-4 shadow-xs" id="popular-tools-section">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+                      <div className="p-2 bg-emerald-50 dark:bg-emerald-950/40 rounded-lg text-emerald-600 dark:text-emerald-400">
                         <Flame className="w-4 h-4 fill-emerald-500 text-emerald-500" />
                       </div>
-                      <h2 className="text-sm font-extrabold text-slate-900 uppercase tracking-tight">
+                      <h2 className="text-sm font-extrabold text-slate-900 dark:text-slate-100 uppercase tracking-tight">
                         Ferramentas Mais Acessadas
                       </h2>
                     </div>
                     {popularTools.length > 0 && (
                       <button
                         onClick={handleResetPopularity}
-                        className="p-1 px-2 flex items-center gap-1 text-[10px] text-slate-500 hover:text-emerald-700 border border-slate-300 hover:bg-slate-50 rounded hover:cursor-pointer transition font-bold"
+                        className="p-1 px-2 flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400 hover:text-emerald-700 dark:hover:text-emerald-300 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 rounded hover:cursor-pointer transition font-bold"
                         title="Limpar estatísticas de uso"
                       >
                         <RotateCcw className="w-2.5 h-2.5" /> Zerar Histórico
@@ -879,7 +914,7 @@ export default function App() {
                     )}
                   </div>
 
-                  <p className="text-xs text-slate-700 leading-normal font-medium">
+                  <p className="text-xs text-slate-700 dark:text-slate-300 leading-normal font-medium">
                     Seu ranqueamento de uso local. Atualizado em tempo real à medida que você navega pelas ferramentas.
                   </p>
 
@@ -887,28 +922,28 @@ export default function App() {
                     {displayPopularTools.map((tool, index) => {
                       const visits = useCounts[tool.id] || 0;
                       const rankStyle = index === 0 
-                        ? 'bg-slate-650 border-slate-600 text-white font-bold'
+                        ? 'bg-slate-700 dark:bg-slate-600 border-slate-600 text-white font-bold'
                         : index === 1
-                        ? 'bg-slate-500 border-slate-400 text-white font-bold'
+                        ? 'bg-slate-600 dark:bg-slate-700 border-slate-500 text-white font-bold'
                         : index === 2
-                        ? 'bg-slate-400 border-slate-300 text-white font-bold'
-                        : 'bg-slate-100 border-slate-250 text-slate-700 font-bold';
+                        ? 'bg-slate-500 dark:bg-slate-800 border-slate-400 text-white font-bold'
+                        : 'bg-slate-100 dark:bg-slate-800 border-slate-250 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-bold';
 
                       return (
                         <a
                           key={tool.id}
                           href={`/${tool.categoryId}/${tool.slug}`}
-                          className="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 hover:border-emerald-500 transition-all duration-200 group"
+                          className="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/60 hover:border-emerald-500 transition-all duration-200 group"
                         >
                           <div className="flex items-center gap-3">
                             <span className={`w-6 h-6 rounded-full border text-xs font-mono font-black flex items-center justify-center shrink-0 ${rankStyle}`}>
                               {index + 1}
                             </span>
                             <div className="min-w-0">
-                              <span className="text-[8.5px] font-bold text-slate-500 uppercase tracking-wider block font-mono">
+                              <span className="text-[8.5px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block font-mono">
                                 {CATEGORIES.find(c => c.id === tool.categoryId)?.name || tool.categoryId}
                               </span>
-                              <span className="font-extrabold text-slate-900 text-xs group-hover:text-emerald-700 transition-colors block truncate">
+                              <span className="font-extrabold text-slate-900 dark:text-slate-100 text-xs group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors block truncate">
                                 {tool.title}
                               </span>
                             </div>
@@ -916,16 +951,16 @@ export default function App() {
                           
                           <div className="flex items-center gap-2 pr-0.5 shrink-0">
                             {visits > 0 ? (
-                              <div className="inline-flex items-center gap-1 text-[10px] bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-200 font-mono font-bold">
+                              <div className="inline-flex items-center gap-1 text-[10px] bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800 font-mono font-bold">
                                 <TrendingUp className="w-3 h-3 text-emerald-605" />
                                 <span>{visits} {visits === 1 ? 'visita' : 'visitas'}</span>
                               </div>
                             ) : (
-                              <div className="text-[9px] text-slate-500 font-mono uppercase bg-slate-50 px-2 py-0.5 rounded border border-slate-300">
+                              <div className="text-[9px] text-slate-500 dark:text-slate-400 font-mono uppercase bg-slate-50 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-300 dark:border-slate-700">
                                 Sugerido
                               </div>
                             )}
-                            <ChevronRight className="w-3.5 h-3.5 text-slate-505 group-hover:translate-x-0.5 transition-transform" />
+                            <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
                           </div>
                         </a>
                       );
@@ -975,11 +1010,11 @@ export default function App() {
               </div>
 
               {/* SEARCH SUGGESTIONS - LONG TAIL KEYWORDS */}
-              <div className="bg-emerald-900/5 border border-emerald-200 p-5 rounded-xl space-y-3">
-                <h3 className="text-sm font-black text-emerald-800 flex items-center gap-1.5">
+              <div className="bg-emerald-900/5 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/60 p-5 rounded-xl space-y-3">
+                <h3 className="text-sm font-black text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
                   <BookOpen className="w-4 h-4" /> 🔍 Principais Consultas do Google
                 </h3>
-                <p className="text-[11.5px] text-slate-700 font-medium">As ferramentas mais buscadas pelos brasileiros — todas gratuitas e sem necessidade de cadastro.</p>
+                <p className="text-[11.5px] text-slate-700 dark:text-slate-300 font-medium">As ferramentas mais buscadas pelos brasileiros — todas gratuitas e sem necessidade de cadastro.</p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
                   <a href="/calculadoras/calculadora-de-juros-compostos" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Calcular Juros Compostos</a>
                   <a href="/calculadoras/calculadora-de-emprestimo-consignado" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Simular Consignado INSS</a>
@@ -1009,23 +1044,23 @@ export default function App() {
                 const cat = CATEGORIES.find(c => c.id === currentRoute.categoryId);
                 if (!cat) return null;
                 return (
-                  <div className="bg-white border border-slate-300 p-6 rounded-xl space-y-3">
-                    <h2 className="text-2xl font-black text-slate-900">
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl space-y-3 shadow-xs">
+                    <h2 className="text-2xl font-black text-slate-900 dark:text-white">
                       {cat.name}
                     </h2>
-                    <p className="text-xs text-slate-700 font-semibold">{cat.description}</p>
+                    <p className="text-xs text-slate-700 dark:text-slate-300 font-semibold">{cat.description}</p>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
                       {TOOLS.filter(t => t.categoryId === cat.id).map((tool) => (
                         <a
                           key={tool.id}
                           href={`/${cat.id}/${tool.slug}`}
-                          className="bg-slate-55 hover:bg-white border border-slate-300 p-4 rounded-xl hover:border-emerald-600 transition-all block group"
+                          className="bg-slate-50 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-xl hover:border-emerald-600 transition-all block group"
                         >
-                          <span className="font-extrabold text-base text-slate-900 block group-hover:text-emerald-705 transition-colors">
+                          <span className="font-extrabold text-base text-slate-900 dark:text-slate-100 block group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
                             {tool.title}
                           </span>
-                          <span className="text-[12px] text-slate-750 mt-1 block line-clamp-2 font-semibold">
+                          <span className="text-[12px] text-slate-600 dark:text-slate-400 mt-1 block line-clamp-2 font-semibold">
                             {tool.shortDescription}
                           </span>
                         </a>
@@ -1055,35 +1090,35 @@ export default function App() {
                 <>
                   <AdSensePlaceholder slotId="slot-2" position="meio" />
 
-                  <article className="bg-white border border-slate-300 rounded-xl p-6 space-y-6 text-sm" id="tool-editorial-content">
+                  <article className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 space-y-6 text-sm shadow-xs" id="tool-editorial-content">
                     
                     {/* Intro */}
                     <div className="space-y-2">
-                      <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-1.5 border-b pb-1.5">
-                        <Info className="w-4 h-4 text-emerald-600" /> Introdução
+                      <h3 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5 border-b border-slate-200 dark:border-slate-800 pb-1.5">
+                        <Info className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Introdução
                       </h3>
-                      <p className="text-slate-700 leading-relaxed text-sm">
+                      <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-sm">
                         {activeTool.longIntro}
                       </p>
                     </div>
 
                     {/* How it works */}
                     <div className="space-y-2">
-                      <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-1.5 border-b pb-1.5">
-                        <Wrench className="w-4 h-4 text-emerald-600" /> Como Funciona?
+                      <h3 className="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5 border-b border-slate-200 dark:border-slate-800 pb-1.5">
+                        <Wrench className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Como Funciona?
                       </h3>
-                      <p className="text-slate-700 leading-relaxed text-sm">
+                      <p className="text-slate-700 dark:text-slate-300 leading-relaxed text-sm">
                         {activeTool.howItWorks}
                       </p>
                     </div>
 
                     {/* Tips */}
                     {activeTool.tips && activeTool.tips.length > 0 && (
-                      <div className="bg-emerald-50 border border-emerald-250 p-4 rounded-lg space-y-2">
-                        <h4 className="text-xs font-black text-emerald-900 uppercase tracking-wide">
+                      <div className="bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 p-4 rounded-lg space-y-2">
+                        <h4 className="text-xs font-black text-emerald-900 dark:text-emerald-300 uppercase tracking-wide">
                           💡 Dicas de Uso e Boas Práticas:
                         </h4>
-                        <ul className="list-disc pl-5 text-slate-800 text-sm space-y-1.5">
+                        <ul className="list-disc pl-5 text-slate-800 dark:text-slate-200 text-sm space-y-1.5">
                           {activeTool.tips.map((tip, idx) => (
                             <li key={idx} className="font-semibold">{tip}</li>
                           ))}
@@ -1094,11 +1129,11 @@ export default function App() {
                     {/* FAQ Accordions */}
                     {activeTool.faqs && activeTool.faqs.length > 0 && (
                       <div className="space-y-3 pt-2">
-                        <h3 className="text-xs font-black uppercase text-slate-505 tracking-wider">
+                        <h3 className="text-xs font-black uppercase text-slate-500 dark:text-slate-400 tracking-wider">
                           Perguntas Frequentes (FAQ)
                         </h3>
                         
-                        <div className="divide-y divide-slate-200">
+                        <div className="divide-y divide-slate-200 dark:divide-slate-800">
                           {activeTool.faqs.map((faq, idx) => {
                             const faqKey = `${activeTool?.id}-${idx}`;
                             const isOpen = faqOpen[faqKey];
@@ -1106,13 +1141,13 @@ export default function App() {
                               <div key={idx} className="py-2.5">
                                 <button
                                   onClick={() => setFaqOpen(p => ({ ...p, [faqKey]: !isOpen }))}
-                                  className="w-full text-left font-bold text-slate-900 text-xs flex justify-between items-center transition hover:text-emerald-700 hover:cursor-pointer"
+                                  className="w-full text-left font-bold text-slate-900 dark:text-slate-100 text-xs flex justify-between items-center transition hover:text-emerald-700 dark:hover:text-emerald-400 hover:cursor-pointer"
                                 >
                                   <span>{faq.question}</span>
-                                  <span className="text-slate-500">{isOpen ? '−' : '+'}</span>
+                                  <span className="text-slate-500 dark:text-slate-400">{isOpen ? '−' : '+'}</span>
                                 </button>
                                 {isOpen && (
-                                  <p className="text-xs text-slate-700 mt-2 font-medium leading-relaxed animate-fade-in pl-1">
+                                  <p className="text-xs text-slate-700 dark:text-slate-300 mt-2 font-medium leading-relaxed animate-fade-in pl-1">
                                     {faq.answer}
                                   </p>
                                 )}
@@ -1125,8 +1160,8 @@ export default function App() {
 
                     {/* RELATIVE INTERLINKING SYSTEM */}
                     {activeTool.relatedToolIds && activeTool.relatedToolIds.length > 0 && (
-                      <div className="pt-4 border-t border-slate-200 space-y-2">
-                        <span className="text-[10px] font-extrabold text-slate-505 uppercase tracking-widest block">
+                      <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2">
+                        <span className="text-[10px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">
                           🔗 Ferramentas Relacionadas Recomendadas:
                         </span>
                         <div className="flex flex-wrap gap-2 pt-1">
@@ -1137,7 +1172,7 @@ export default function App() {
                               <a
                                 key={relId}
                                 href={`/${matched.categoryId}/${matched.slug}`}
-                                className="bg-slate-100 hover:bg-slate-200 text-slate-900 px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold transition"
+                                className="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-bold transition"
                               >
                                 {matched.title}
                               </a>
@@ -1152,10 +1187,10 @@ export default function App() {
               )}
 
               {/* COMPARTILHAMENTO SOCIAL VIRAL */}
-              <div className="bg-white border border-slate-300 rounded-xl p-6" id="share-tool-section">
+              <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-xs" id="share-tool-section">
                 <div className="flex items-center gap-2 mb-4">
-                  <Sparkles className="w-4 h-4 text-emerald-600" />
-                  <h3 className="text-xs font-extrabold text-slate-600 uppercase tracking-wider">Compartilhe esta Ferramenta</h3>
+                  <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <h3 className="text-xs font-extrabold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Compartilhe esta Ferramenta</h3>
                 </div>
                 <div className="flex flex-wrap gap-3">
                   <button
@@ -1212,13 +1247,13 @@ export default function App() {
                       if (btn) { btn.textContent = '✅ Copiado!'; setTimeout(() => { if (btn) btn.textContent = '📋 Copiar Link'; }, 2000); }
                     }}
                     id="copy-link-btn"
-                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-xs border border-slate-300"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-bold transition hover:cursor-pointer shadow-xs border border-slate-200 dark:border-slate-700"
                     title="Copiar link"
                   >
                     📋 Copiar Link
                   </button>
                 </div>
-                <p className="text-[10px] text-slate-500 mt-3 text-center font-bold">
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 mt-3 text-center font-bold">
                   Ajude outras pessoas a descobrirem esta ferramenta! Compartilhe nas suas redes sociais. 💚
                 </p>
               </div>
@@ -1257,9 +1292,9 @@ export default function App() {
               <ProgrammaticPage id={currentRoute.id} />
               
               {/* INTERLINKING BACK TO HOME FOR INDEXATION */}
-              <div className="p-4 bg-slate-100 border border-slate-300 rounded-lg text-xs space-y-2 flex justify-between items-center">
-                <span className="text-slate-700 font-semibold">Deseja calcular outros índices corporativos do Brasil?</span>
-                <a href="/" className="bg-emerald-600 text-white font-bold px-3 py-1.5 rounded text-[11px] font-mono">
+              <div className="p-4 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg text-xs space-y-2 flex justify-between items-center">
+                <span className="text-slate-700 dark:text-slate-300 font-semibold">Deseja calcular outros índices corporativos do Brasil?</span>
+                <a href="/" className="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded text-[11px] font-mono transition-colors">
                   Lista de Ferramentas
                 </a>
               </div>
@@ -1367,6 +1402,13 @@ export default function App() {
 
         </div>
       </footer>
+
+      {/* GLOBAL COMMAND PALETTE (CTRL+K / CMD+K) */}
+      <CommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        onNavigate={handleCommandNavigate}
+      />
 
       {/* SCHEMA.ORG STRUCTURED DATA - using dangerouslySetInnerHTML to prevent React escaping */}
       <script type="application/ld+json" id="schema-breadcrumb" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
