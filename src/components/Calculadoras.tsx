@@ -547,11 +547,23 @@ function JurosSimples() {
 
 // 3. FINANCIAMENTO (SAC / PRICE)
 function Financiamento() {
-  const [imovel, setImovel] = useState<number>(200000);
-  const [prazoMeses, setPrazoMeses] = useState<number>(120);
-  const [taxaAnual, setTaxaAnual] = useState<number>(9.5);
-  const [sistemaAmortizacao, setSistemaAmortizacao] = useState<'SAC' | 'PRICE'>('SAC');
+  const [imovel, setImovel] = useState<number>(() => getParamNumber('imovel', 200000));
+  const [prazoMeses, setPrazoMeses] = useState<number>(() => getParamNumber('prazo', 120));
+  const [taxaAnual, setTaxaAnual] = useState<number>(() => getParamNumber('taxa', 9.5));
+  const [sistemaAmortizacao, setSistemaAmortizacao] = useState<'SAC' | 'PRICE'>(() => {
+    const s = getParamString('sistema', 'SAC').toUpperCase();
+    return s === 'PRICE' ? 'PRICE' : 'SAC';
+  });
   const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    syncUrlParams({
+      imovel,
+      prazo: prazoMeses,
+      taxa: taxaAnual,
+      sistema: sistemaAmortizacao
+    });
+  }, [imovel, prazoMeses, taxaAnual, sistemaAmortizacao]);
 
   const calcular = () => {
     const taxaMensal = Math.pow(1 + taxaAnual / 100, 1 / 12) - 1;
@@ -608,6 +620,12 @@ function Financiamento() {
   };
 
   useEffect(() => { calcular(); }, [imovel, prazoMeses, taxaAnual, sistemaAmortizacao]);
+
+  const summary = resultado ? `🏠 *Simulação de Financiamento Imobiliário* (${sistemaAmortizacao})
+💰 *Valor Financiado*: R$ ${imovel.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+📅 *Prazo*: ${prazoMeses} meses (${(prazoMeses / 12).toFixed(1)} anos) | Taxa: ${taxaAnual}% a.a.
+📈 *Total de Juros*: R$ ${resultado.jurosTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+💵 *Custo Total Final*: R$ ${resultado.custoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${resultado.parcelas && resultado.parcelas[0] ? `\n📊 *1ª Parcela*: R$ ${resultado.parcelas[0].parcela.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : ''}` : '';
 
   return (
     <div className="space-y-6" id="calc-financ">
@@ -672,6 +690,11 @@ function Financiamento() {
               </tbody>
             </table>
           </div>
+
+          <ShareBar 
+            title="Simulador de Financiamento Imobiliário" 
+            summaryText={summary}
+          />
         </div>
       )}
     </div>
@@ -680,10 +703,14 @@ function Financiamento() {
 
 // 4. FGTS
 function Fgts() {
-  const [salario, setSalario] = useState<number>(3000);
-  const [meses, setMeses] = useState<number>(24);
-  const [saldoAnterior, setSaldoAnterior] = useState<number>(0);
+  const [salario, setSalario] = useState<number>(() => getParamNumber('salario', 3000));
+  const [meses, setMeses] = useState<number>(() => getParamNumber('meses', 24));
+  const [saldoAnterior, setSaldoAnterior] = useState<number>(() => getParamNumber('saldo', 0));
   const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    syncUrlParams({ salario, meses, saldo: saldoAnterior });
+  }, [salario, meses, saldoAnterior]);
 
   useEffect(() => {
     const depositoMensal = salario * 0.08;
@@ -696,6 +723,13 @@ function Fgts() {
       saldoFinal: saldoFinalEstimado
     });
   }, [salario, meses, saldoAnterior]);
+
+  const summary = resultado ? `💼 *Cálculo de FGTS Acumulado*
+💵 *Salário Bruto*: R$ ${salario.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+⏳ *Período*: ${meses} meses trabalhados
+📥 *Depósito Mensal (8%)*: R$ ${resultado.mensal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+📊 *Total de Depósitos*: R$ ${resultado.totalDepositos.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+💰 *Saldo Estimado c/ Juros/TR*: R$ ${resultado.saldoFinal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : '';
 
   return (
     <div className="space-y-6" id="calc-fgts">
@@ -716,21 +750,28 @@ function Fgts() {
       </div>
 
       {resultado && (
-        <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100 dark:border-emerald-900/50">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-            <div className="p-2 border-r border-emerald-100/30">
-              <span className="block text-xs text-slate-500">Garantia Mensal Obrigatória</span>
-              <span className="text-base font-bold text-slate-800 dark:text-slate-200 font-mono">R$ {resultado.mensal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
-            </div>
-            <div className="p-2 border-r border-emerald-100/30">
-              <span className="block text-xs text-slate-500">Total de Depósitos no Período</span>
-              <span className="text-base font-bold text-slate-800 dark:text-slate-200 font-mono">R$ {resultado.totalDepositos.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
-            </div>
-            <div className="p-2">
-              <span className="block text-xs text-slate-500">Saldo Global Estimado com Juros</span>
-              <span className="text-lg font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.saldoFinal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+        <div className="space-y-4">
+          <div className="bg-emerald-50/50 dark:bg-emerald-950/20 p-5 rounded-xl border border-emerald-100 dark:border-emerald-900/50">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+              <div className="p-2 border-r border-emerald-100/30">
+                <span className="block text-xs text-slate-500">Garantia Mensal Obrigatória</span>
+                <span className="text-base font-bold text-slate-800 dark:text-slate-200 font-mono">R$ {resultado.mensal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="p-2 border-r border-emerald-100/30">
+                <span className="block text-xs text-slate-500">Total de Depósitos no Período</span>
+                <span className="text-base font-bold text-slate-800 dark:text-slate-200 font-mono">R$ {resultado.totalDepositos.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="p-2">
+                <span className="block text-xs text-slate-500">Saldo Global Estimado com Juros</span>
+                <span className="text-lg font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.saldoFinal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+              </div>
             </div>
           </div>
+
+          <ShareBar 
+            title="Cálculo de Saldo FGTS" 
+            summaryText={summary}
+          />
         </div>
       )}
     </div>
@@ -739,8 +780,12 @@ function Fgts() {
 
 // 5. INSS
 function Inss() {
-  const [salario, setSalario] = useState<number>(3500);
+  const [salario, setSalario] = useState<number>(() => getParamNumber('salario', 3500));
   const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    syncUrlParams({ salario });
+  }, [salario]);
 
   useEffect(() => {
     // Alíquotas INSS 2026 Progressiva
@@ -786,6 +831,11 @@ function Inss() {
       detalhes: calculoDetalhado
     });
   }, [salario]);
+
+  const summary = resultado ? `🏛️ *Cálculo INSS Progressivo 2026*
+💼 *Salário Bruto*: R$ ${salario.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+📉 *Desconto INSS*: R$ ${resultado.desconto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} (${resultado.aliquotaEfetiva.toFixed(2)}% efetiva)
+💵 *Salário após INSS*: R$ ${resultado.liquido.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : '';
 
   return (
     <div className="space-y-6" id="calc-inss">
@@ -835,6 +885,11 @@ function Inss() {
               </tbody>
             </table>
           </div>
+
+          <ShareBar 
+            title="Cálculo Previdenciário INSS Progressivo" 
+            summaryText={summary}
+          />
         </div>
       )}
     </div>
@@ -843,10 +898,14 @@ function Inss() {
 
 // 6. FÉRIAS
 function Ferias() {
-  const [salario, setSalario] = useState<number>(4500);
-  const [diasFerias, setDiasFerias] = useState<number>(30);
-  const [venderDias, setVenderDias] = useState<'sim' | 'nao'>('nao');
+  const [salario, setSalario] = useState<number>(() => getParamNumber('salario', 4500));
+  const [diasFerias, setDiasFerias] = useState<number>(() => getParamNumber('dias', 30));
+  const [venderDias, setVenderDias] = useState<'sim' | 'nao'>(() => getParamString('vender', 'nao') === 'sim' ? 'sim' : 'nao');
   const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    syncUrlParams({ salario, dias: diasFerias, vender: venderDias });
+  }, [salario, diasFerias, venderDias]);
 
   useEffect(() => {
     const valorFeriasBruto = (salario / 30) * diasFerias;
@@ -878,6 +937,13 @@ function Ferias() {
       liquidoTotal: totalLiquido
     });
   }, [salario, diasFerias, venderDias]);
+
+  const summary = resultado ? `🏖️ *Cálculo de Férias CLT*
+💼 *Salário-Base*: R$ ${salario.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+📅 *Dias Gozados*: ${diasFerias} dias ${venderDias === 'sim' ? '(+10 dias de abono vendido)' : ''}
+💰 *Total Bruto*: R$ ${resultado.brutoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+📉 *Desconto Estimado*: R$ ${resultado.desconto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+💵 *Líquido a Receber*: R$ ${resultado.liquidoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : '';
 
   return (
     <div className="space-y-6" id="calc-ferias">
@@ -934,6 +1000,11 @@ function Ferias() {
               <span className="font-bold text-emerald-600 dark:text-emerald-400">R$ {resultado.brutoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
             </div>
           </div>
+
+          <ShareBar 
+            title="Cálculo de Férias CLT" 
+            summaryText={summary}
+          />
         </div>
       )}
     </div>
@@ -942,11 +1013,15 @@ function Ferias() {
 
 // 7. RESCISÃO
 function Rescisao() {
-  const [salario, setSalario] = useState<number>(3200);
-  const [motivo, setMotivo] = useState<string>('dispensa-sem-justa-causa');
-  const [mesesTrabalhados, setMesesTrabalhados] = useState<number>(18);
-  const [saldoFgts, setSaldoFgts] = useState<number>(5000);
+  const [salario, setSalario] = useState<number>(() => getParamNumber('salario', 3200));
+  const [motivo, setMotivo] = useState<string>(() => getParamString('motivo', 'dispensa-sem-justa-causa'));
+  const [mesesTrabalhados, setMesesTrabalhados] = useState<number>(() => getParamNumber('meses', 18));
+  const [saldoFgts, setSaldoFgts] = useState<number>(() => getParamNumber('fgts', 5000));
   const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    syncUrlParams({ salario, motivo, meses: mesesTrabalhados, fgts: saldoFgts });
+  }, [salario, motivo, mesesTrabalhados, saldoFgts]);
 
   useEffect(() => {
     const proporcional13 = (salario / 12) * (mesesTrabalhados % 12);
@@ -972,6 +1047,22 @@ function Rescisao() {
       total: indenizacaoTotal
     });
   }, [salario, motivo, mesesTrabalhados, saldoFgts]);
+
+  const motivoLabels: Record<string, string> = {
+    'dispensa-sem-justa-causa': 'Sem Justa Causa (40% FGTS)',
+    'pedido-de-demissao': 'Pedido de Demissão',
+    'acordo-comum': 'Acordo Comum (20% FGTS)'
+  };
+
+  const summary = resultado ? `📋 *Rescisão Trabalhista CLT*
+💼 *Último Salário*: R$ ${salario.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+📄 *Motivo*: ${motivoLabels[motivo] || motivo}
+⏳ *Tempo de Serviço*: ${mesesTrabalhados} meses
+💵 *Saldo de Salário*: R$ ${resultado.saldoSalario.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+🏖️ *Férias*: R$ ${resultado.feriasVencidas.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+🎁 *13º Proporcional*: R$ ${resultado.proporcional13.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+💰 *Multa FGTS*: R$ ${resultado.multaFgts.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+🟢 *Total Estimado da Rescisão*: R$ ${resultado.total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : '';
 
   return (
     <div className="space-y-6" id="calc-rescisao">
@@ -1024,6 +1115,11 @@ function Rescisao() {
               <span className="font-bold text-emerald-600 dark:text-emerald-400">R$ {resultado.multaFgts.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
             </div>
           </div>
+
+          <ShareBar 
+            title="Cálculo de Rescisão Trabalhista CLT" 
+            summaryText={summary}
+          />
         </div>
       )}
     </div>
@@ -1032,9 +1128,13 @@ function Rescisao() {
 
 // 8. DÉCIMO TERCEIRO
 function DecimoTerceiro() {
-  const [salario, setSalario] = useState<number>(3000);
-  const [meses, setMeses] = useState<number>(12);
+  const [salario, setSalario] = useState<number>(() => getParamNumber('salario', 3000));
+  const [meses, setMeses] = useState<number>(() => getParamNumber('meses', 12));
   const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    syncUrlParams({ salario, meses });
+  }, [salario, meses]);
 
   useEffect(() => {
     const valorBrutoTotal = (salario / 12) * meses;
@@ -1050,6 +1150,13 @@ function DecimoTerceiro() {
       liquidoTotal: valorBrutoTotal - descontoInssIr
     });
   }, [salario, meses]);
+
+  const summary = resultado ? `🎁 *Cálculo de 13º Salário*
+💼 *Salário Bruto*: R$ ${salario.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} (${meses}/12 meses)
+💵 *1ª Parcela (Adiantamento)*: R$ ${resultado.pacela1.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+💵 *2ª Parcela (c/ retenções)*: R$ ${resultado.pacela2.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+📉 *Descontos Estimados*: R$ ${resultado.descontos.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+🟢 *Total Líquido do 13º*: R$ ${resultado.liquidoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}` : '';
 
   return (
     <div className="space-y-6" id="calc-decimo">
@@ -1081,6 +1188,11 @@ function DecimoTerceiro() {
               <span className="text-lg font-extrabold text-emerald-700 dark:text-emerald-300 font-mono">R$ {resultado.liquidoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
             </div>
           </div>
+
+          <ShareBar 
+            title="Cálculo do Décimo Terceiro Salário" 
+            summaryText={summary}
+          />
         </div>
       )}
     </div>
@@ -1213,10 +1325,14 @@ function CalculadoraIPVA() {
 
 // 19. CALCULADORA IRPF
 function CalculadoraIRPF() {
-  const [rendimento, setRendimento] = useState<number>(60000);
-  const [dependentes, setDependentes] = useState<number>(0);
-  const [despesasDedutiveis, setDespesasDedutiveis] = useState<number>(10000);
+  const [rendimento, setRendimento] = useState<number>(() => getParamNumber('rendimento', 60000));
+  const [dependentes, setDependentes] = useState<number>(() => getParamNumber('dep', 0));
+  const [despesasDedutiveis, setDespesasDedutiveis] = useState<number>(() => getParamNumber('desp', 10000));
   const [resultado, setResultado] = useState<any>(null);
+
+  useEffect(() => {
+    syncUrlParams({ rendimento, dep: dependentes, desp: despesasDedutiveis });
+  }, [rendimento, dependentes, despesasDedutiveis]);
 
   useEffect(() => {
     const descontoDep = dependentes * 2275.08;
@@ -1232,6 +1348,12 @@ function CalculadoraIRPF() {
     const aliquotaEfetiva = (imposto / rendimento) * 100;
     setResultado({ baseCalculo, imposto, aliquotaEfetiva, rendimento });
   }, [rendimento, dependentes, despesasDedutiveis]);
+
+  const summary = resultado ? `🦁 *Simulação de Imposto de Renda (IRPF)*
+💼 *Rendimento Anual*: R$ ${rendimento.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+👨‍👩‍👧 *Dependentes*: ${dependentes} | Deduções: R$ ${despesasDedutiveis.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+📊 *Base de Cálculo*: R$ ${resultado.baseCalculo.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+🧾 *Imposto Devido*: R$ ${resultado.imposto.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} (${resultado.aliquotaEfetiva.toFixed(2)}% efetiva)${resultado.imposto === 0 ? '\n🎉 *Isento de IRPF*' : ''}` : '';
 
   return (
     <div className="space-y-6" id="calc-irpf">
@@ -1258,6 +1380,11 @@ function CalculadoraIRPF() {
             <div><span className="block text-xs text-slate-500">Alíquota Efetiva</span><span className="text-lg font-bold text-emerald-700 dark:text-emerald-300 font-mono">{resultado.aliquotaEfetiva.toFixed(2)}%</span></div>
           </div>
           {resultado.imposto === 0 && <p className="text-xs text-emerald-600 text-center font-semibold">Você está isento de declarar IRPF! 🎉</p>}
+
+          <ShareBar 
+            title="Simulador de Imposto de Renda (IRPF)" 
+            summaryText={summary}
+          />
         </div>
       )}
     </div>
@@ -3005,13 +3132,25 @@ function SalarioLiquido() {
 }
 
 function CalculadoraCLTvsPJ() {
-  const [salarioCLT, setSalarioCLT] = useState(5000);
-  const [valeTransporte, setValeTransporte] = useState(200);
-  const [valeRefeicao, setValeRefeicao] = useState(800);
-  const [planoSaude, setPlanoSaude] = useState(300);
-  const [valorPJ, setValorPJ] = useState(7500);
-  const [aliquotaSimples, setAliquotaSimples] = useState(11);
-  const [custoContador, setCustoContador] = useState(300);
+  const [salarioCLT, setSalarioCLT] = useState<number>(() => getParamNumber('clt', 5000));
+  const [valeTransporte, setValeTransporte] = useState<number>(() => getParamNumber('vt', 200));
+  const [valeRefeicao, setValeRefeicao] = useState<number>(() => getParamNumber('vr', 800));
+  const [planoSaude, setPlanoSaude] = useState<number>(() => getParamNumber('saude', 300));
+  const [valorPJ, setValorPJ] = useState<number>(() => getParamNumber('pj', 7500));
+  const [aliquotaSimples, setAliquotaSimples] = useState<number>(() => getParamNumber('aliquota', 11));
+  const [custoContador, setCustoContador] = useState<number>(() => getParamNumber('contador', 300));
+
+  useEffect(() => {
+    syncUrlParams({
+      clt: salarioCLT,
+      vt: valeTransporte,
+      vr: valeRefeicao,
+      saude: planoSaude,
+      pj: valorPJ,
+      aliquota: aliquotaSimples,
+      contador: custoContador
+    });
+  }, [salarioCLT, valeTransporte, valeRefeicao, planoSaude, valorPJ, aliquotaSimples, custoContador]);
 
   const cltAnual = salarioCLT * 13 + (salarioCLT / 3); // 13o + ferias 1/3
   const fgtsAnual = salarioCLT * 12 * 0.08 + salarioCLT * 12 * 0.005; // FGTS 8% + multa 0.5%
@@ -3027,7 +3166,12 @@ function CalculadoraCLTvsPJ() {
 
   const diferenca = liquidoPJ - custoTotalCLT;
   const vantagem = diferenca > 0 ? 'PJ' : 'CLT';
-  const percentual = Math.abs(diferenca) / custoTotalCLT * 100;
+  const percentual = (Math.abs(diferenca) / (custoTotalCLT || 1)) * 100;
+
+  const summary = `⚖️ *Comparativo CLT vs PJ*
+👔 *CLT (Salário R$ ${salarioCLT.toLocaleString('pt-BR')})*: Total Anual R$ ${custoTotalCLT.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+💼 *PJ (Mensal R$ ${valorPJ.toLocaleString('pt-BR')})*: Líquido Anual R$ ${liquidoPJ.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+🎯 *Veredito*: ${vantagem} compensa R$ ${Math.abs(diferenca).toLocaleString('pt-BR', { minimumFractionDigits: 2 })} a mais por ano (${percentual.toFixed(1)}% de diferença)`;
 
   return (
     <div className="space-y-6" id="calc-clt-vs-pj">
@@ -3133,6 +3277,11 @@ function CalculadoraCLTvsPJ() {
           <p className="mt-1">O regime PJ exige reserva para férias, 13° e contingências.</p>
         </div>
       </div>
+
+      <ShareBar 
+        title="Comparativo CLT vs PJ" 
+        summaryText={summary}
+      />
     </div>
   );
 }
