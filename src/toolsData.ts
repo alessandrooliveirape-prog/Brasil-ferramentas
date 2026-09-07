@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Category, ToolMetadata } from './types';
+import type { Category, ToolMetadata } from './types.ts';
 
 export const CATEGORIES: Category[] = [
   {

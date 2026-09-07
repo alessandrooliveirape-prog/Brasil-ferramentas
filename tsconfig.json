@@ -22,5 +22,14 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "include": [
+    "src",
+    "prerender.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".vercel"
+  ]
 }

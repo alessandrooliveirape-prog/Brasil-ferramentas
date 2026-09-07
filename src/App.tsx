@@ -1025,9 +1025,9 @@ export default function App() {
                   <a href="/geradores/gerador-de-cpf" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Gerar CPF Válido</a>
                   <a href="/conversores/converter-real-para-dolar" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Real para Dólar Hoje</a>
                   <a href="/programatico/ddd-brasil" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Lista de DDDs Brasil</a>
-                  <a href="/calculadoras/calculadora-de-inss" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Calcular INSS 2026</a>
+                  <a href="/calculadoras/calculadora-desconto-inss" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Calcular INSS 2026</a>
                   <a href="/geradores/gerador-de-senha-segura" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Gerar Senha Segura</a>
-                  <a href="/conversores/converter-real-para-euro" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Real para Euro Hoje</a>
+                  <a href="/conversores/converter-euro-para-real" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Real para Euro Hoje</a>
                   <a href="/utilitarios/meu-ip" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Qual é o Meu IP?</a>
                   <a href="/programatico/cep-brasil" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Buscar CEP Online</a>
                   <a href="/calculadoras/calcular-imc" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Calcular IMC Grátis</a>
@@ -1326,7 +1326,7 @@ export default function App() {
                 <li><a href="/calculadoras/simulador-de-financiamento" className="hover:text-emerald-400">Financiamento SAC/Price</a></li>
                 <li><a href="/calculadoras/calculadora-de-ferias-trabalhista" className="hover:text-emerald-400">Férias CLT</a></li>
                 <li><a href="/calculadoras/calculadora-de-rescisao-trabalhista" className="hover:text-emerald-400">Rescisão Trabalhista</a></li>
-                <li><a href="/calculadoras/calculadora-de-inss" className="hover:text-emerald-400">Calcular INSS 2025</a></li>
+                <li><a href="/calculadoras/calculadora-desconto-inss" className="hover:text-emerald-400">Calcular INSS 2026</a></li>
               </ul>
             </div>
             
@@ -1334,11 +1334,11 @@ export default function App() {
               <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Conversores & Dados</h4>
               <ul className="space-y-1.5 text-xs">
                 <li><a href="/conversores/converter-real-para-dolar" className="hover:text-emerald-400">Real para Dólar</a></li>
-                <li><a href="/conversores/converter-real-para-euro" className="hover:text-emerald-400">Real para Euro</a></li>
+                <li><a href="/conversores/converter-euro-para-real" className="hover:text-emerald-400">Real para Euro</a></li>
                 <li><a href="/conversores/converter-mb-para-gb" className="hover:text-emerald-400">MB para GB</a></li>
                 <li><a href="/conversores/converter-metros-para-pes" className="hover:text-emerald-400">Metros para Pés</a></li>
-                <li><a href="/conversores/libra-real" className="hover:text-emerald-400">Libra para Real</a></li>
-                <li><a href="/conversores/peso-argentino-real" className="hover:text-emerald-400">Peso Argentino</a></li>
+                <li><a href="/conversores/converter-libra-para-real" className="hover:text-emerald-400">Libra para Real</a></li>
+                <li><a href="/conversores/converter-peso-argentino-para-real" className="hover:text-emerald-400">Peso Argentino</a></li>
               </ul>
             </div>
 
@@ -1350,7 +1350,7 @@ export default function App() {
                 <li><a href="/geradores/gerador-de-senha-segura" className="hover:text-emerald-400">Gerar Senha Forte</a></li>
                 <li><a href="/geradores/gerador-de-qr-code" className="hover:text-emerald-400">QR Code Grátis</a></li>
                 <li><a href="/utilitarios/validador-de-cartao-de-credito" className="hover:text-emerald-400">Validar Cartão</a></li>
-                <li><a href="/geradores/gerador-rg" className="hover:text-emerald-400">Gerador RG</a></li>
+                <li><a href="/geradores/gerador-de-rg" className="hover:text-emerald-400">Gerador RG</a></li>
               </ul>
             </div>
 

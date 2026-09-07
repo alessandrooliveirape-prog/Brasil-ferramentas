@@ -10,8 +10,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
-import { CATEGORIES, TOOLS, PROGRAMMATIC_PAGES } from './src/toolsData';
-import { EXTRA_PROGRAMMATIC_PAGES } from './src/programmaticExtra';
+import { CATEGORIES, TOOLS, PROGRAMMATIC_PAGES } from './src/toolsData.ts';
+import { EXTRA_PROGRAMMATIC_PAGES } from './src/programmaticExtra.ts';
 
 const ALL_PROGRAMMATIC_PAGES = { ...PROGRAMMATIC_PAGES, ...EXTRA_PROGRAMMATIC_PAGES };
 
@@ -30,17 +30,21 @@ function run() {
     process.exit(1);
   }
 
-  const templateHtml = fs.readFileSync(TEMPLATE_PATH, 'utf-8');
+    const rawTemplate = fs.readFileSync(TEMPLATE_PATH, 'utf-8');
+  // Extrai um template limpo com <div id="root"></div> sem conteúdo prévio e sem schemas duplicados
+  let cleanTemplate = rawTemplate
+    .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>\s*/gi, '')
+    .replace(/<div id="root">[\s\S]*?<\/body>/i, '<div id="root"></div>\n</body>');
 
-  // 1. Gerar Home Page (substitui o index.html principal para incluir conteúdo inicial)
+  // 1. Gerar Home Page
   console.log(' - Pré-renderizando: Home (/)');
-  const homeHtml = generateHomeHtml(templateHtml);
+  const homeHtml = generateHomeHtml(cleanTemplate);
   fs.writeFileSync(TEMPLATE_PATH, homeHtml, 'utf-8');
 
   // 2. Gerar páginas de Categorias
   CATEGORIES.filter(c => c.id !== 'institucional' && c.id !== 'programatico').forEach(cat => {
     console.log(` - Pré-renderizando categoria: /${cat.id}`);
-    const catHtml = generateCategoryHtml(templateHtml, cat);
+    const catHtml = generateCategoryHtml(cleanTemplate, cat);
     const catDir = path.join(DIST_DIR, cat.id);
     fs.mkdirSync(catDir, { recursive: true });
     fs.writeFileSync(path.join(catDir, 'index.html'), catHtml, 'utf-8');
@@ -49,7 +53,7 @@ function run() {
   // 3. Gerar páginas de Ferramentas
   TOOLS.forEach(tool => {
     console.log(` - Pré-renderizando ferramenta: /${tool.categoryId}/${tool.slug}`);
-    const toolHtml = generateToolHtml(templateHtml, tool);
+    const toolHtml = generateToolHtml(cleanTemplate, tool);
     const toolDir = path.join(DIST_DIR, tool.categoryId, tool.slug);
     fs.mkdirSync(toolDir, { recursive: true });
     fs.writeFileSync(path.join(toolDir, 'index.html'), toolHtml, 'utf-8');
@@ -58,7 +62,7 @@ function run() {
   // 4. Gerar páginas Programáticas
   Object.entries(ALL_PROGRAMMATIC_PAGES).forEach(([id, page]) => {
     console.log(` - Pré-renderizando pág. programática: /programatico/${id}`);
-    const progHtml = generateProgrammaticHtml(templateHtml, id, page);
+    const progHtml = generateProgrammaticHtml(cleanTemplate, id, page);
     const progDir = path.join(DIST_DIR, 'programatico', id);
     fs.mkdirSync(progDir, { recursive: true });
     fs.writeFileSync(path.join(progDir, 'index.html'), progHtml, 'utf-8');
@@ -68,7 +72,7 @@ function run() {
   const institutionalPageIds = ['sobre', 'contato', 'privacidade', 'termos', 'cookies', 'transparencia-adsense', 'anunciantes'];
   institutionalPageIds.forEach(id => {
     console.log(` - Pré-renderizando pág. institucional: /institucional/${id}`);
-    const instHtml = generateInstitutionalHtml(templateHtml, id);
+    const instHtml = generateInstitutionalHtml(cleanTemplate, id);
     const instDir = path.join(DIST_DIR, 'institucional', id);
     fs.mkdirSync(instDir, { recursive: true });
     fs.writeFileSync(path.join(instDir, 'index.html'), instHtml, 'utf-8');
@@ -488,10 +492,258 @@ function getInteractivePreviewCardHtml(tool: any): string {
 
 function getCategoryGuideAndTableHtml(categoryId: string, tool: any): string {
   if (categoryId === 'calculadoras') {
+    const toolId = (tool.id || '').toLowerCase();
+
+    // 1. CHURRASCO E GASTRONOMIA
+    if (toolId.includes('churrasco')) {
+      return `
+      <div class="space-y-4 pt-3">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <span>🥩</span> Tabela de Consumo Recomendado para Churrasco (por Convidado)
+        </h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Para garantir fartura sem desperdício, os parâmetros gastronômicos recomendados por especialistas consideram a duração média de 4 a 6 horas de evento:
+        </p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-xs text-left border border-slate-200 rounded-lg overflow-hidden">
+            <thead class="bg-slate-100 text-slate-800 font-bold uppercase text-[10px] tracking-wider">
+              <tr>
+                <th class="px-3 py-2 border-b border-slate-200">Perfil do Convidado</th>
+                <th class="px-3 py-2 border-b border-slate-200">Carnes (Bovino, Frango, Linguiça)</th>
+                <th class="px-3 py-2 border-b border-slate-200">Cerveja (Estimativa)</th>
+                <th class="px-3 py-2 border-b border-slate-200">Refrigerante / Água</th>
+                <th class="px-3 py-2 border-b border-slate-200">Acompanhamentos</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-slate-700">
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Homem Adulto</td>
+                <td class="px-3 py-2 font-semibold text-emerald-700">450g a 500g</td>
+                <td class="px-3 py-2">4 a 6 latas (350ml)</td>
+                <td class="px-3 py-2">1,0 Litro</td>
+                <td class="px-3 py-2">150g (Pão de alho/Farofa)</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Mulher Adulta</td>
+                <td class="px-3 py-2 font-semibold text-emerald-700">300g a 350g</td>
+                <td class="px-3 py-2">3 a 4 latas (350ml)</td>
+                <td class="px-3 py-2">1,0 Litro</td>
+                <td class="px-3 py-2">150g (Pão de alho/Farofa)</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Criança (até 10 anos)</td>
+                <td class="px-3 py-2 font-semibold text-emerald-700">150g a 200g</td>
+                <td class="px-3 py-2 text-slate-400">Não consome</td>
+                <td class="px-3 py-2">800ml (Sucos/Refrigerante)</td>
+                <td class="px-3 py-2">100g (Pão de alho)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700 space-y-2">
+          <span class="font-extrabold text-slate-900 block">🔥 Insumos Básicos Essenciais:</span>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Carvão:</strong> Calcule 1 saco de 5kg para cada 6kg a 8kg de carnes a serem assadas.</li>
+            <li><strong>Gelo:</strong> Reserve 1 saco de 10kg para cada 25 a 30 litros de bebidas no cooler ou caixa térmica.</li>
+            <li><strong>Sal Grosso:</strong> Adicione sal grosso de granulação média 5 minutos antes de levar os cortes à grelha para preservar a suculência.</li>
+          </ul>
+        </div>
+      </div>`;
+    }
+
+    // 2. VEÍCULOS E COMBUSTÍVEL
+    if (toolId.includes('combustivel') || toolId.includes('veiculo') || toolId.includes('gasolina') || toolId.includes('etanol')) {
+      return `
+      <div class="space-y-4 pt-3">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <span>🚗</span> Parâmetros de Autonomia e Regra dos 70% (Etanol vs. Gasolina)
+        </h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          O cálculo de paridade energética orienta a decisão econômica no posto de combustível considerando o poder calorífico de cada derivado:
+        </p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-xs text-left border border-slate-200 rounded-lg overflow-hidden">
+            <thead class="bg-slate-100 text-slate-800 font-bold uppercase text-[10px] tracking-wider">
+              <tr>
+                <th class="px-3 py-2 border-b border-slate-200">Tipo de Combustível</th>
+                <th class="px-3 py-2 border-b border-slate-200">Rendimento Energético Médio</th>
+                <th class="px-3 py-2 border-b border-slate-200">Relação de Preço Máxima</th>
+                <th class="px-3 py-2 border-b border-slate-200">Quando Compensa</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-slate-700">
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Etanol Hidratado (Álcool)</td>
+                <td class="px-3 py-2 font-semibold text-emerald-700">70% a 73% da Gasolina</td>
+                <td class="px-3 py-2">Preço Etanol / Gasolina ≤ 0,70</td>
+                <td class="px-3 py-2">Mais vantajoso quando a razão ficar abaixo de 70%</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Gasolina Comum / Aditivada</td>
+                <td class="px-3 py-2 font-semibold text-emerald-700">100% (Base de Referência)</td>
+                <td class="px-3 py-2">Preço Etanol / Gasolina &gt; 0,70</td>
+                <td class="px-3 py-2">Mais vantajosa para autonomia em estradas e viagens</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">GNV (Gás Veicular)</td>
+                <td class="px-3 py-2 font-semibold text-emerald-700">Maior km por m³</td>
+                <td class="px-3 py-2">Aproximadamente 60% do custo da gasolina</td>
+                <td class="px-3 py-2">Recomendado para condutores que rodam mais de 80km/dia</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700 space-y-2">
+          <span class="font-extrabold text-slate-900 block">💡 Dicas para Economia de Combustível:</span>
+          <ul class="list-disc pl-5 space-y-1">
+            <li><strong>Calibragem:</strong> Pneus com apenas 3 libras abaixo do recomendado elevam o consumo em até 4%.</li>
+            <li><strong>Trocas de Marcha:</strong> Mantenha a rotação do motor na faixa de torque ideal (geralmente entre 2.000 e 2.500 RPM em motores 1.0 e 1.6).</li>
+            <li><strong>Ar-Condicionado:</strong> Em velocidades abaixo de 60 km/h na cidade, abrir os vidros consome menos do que o ar ligado.</li>
+          </ul>
+        </div>
+      </div>`;
+    }
+
+    // 3. SAÚDE E IMC
+    if (toolId.includes('imc') || toolId.includes('peso') || toolId.includes('caloria') || toolId.includes('saude')) {
+      return `
+      <div class="space-y-4 pt-3">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <span>❤️</span> Classificação Oficial do IMC (Diretrizes da OMS)
+        </h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          O Índice de Massa Corporal (IMC) é a medida padrão internacional adotada pela Organização Mundial da Saúde (OMS) para rastreio do estado nutricional:
+        </p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-xs text-left border border-slate-200 rounded-lg overflow-hidden">
+            <thead class="bg-slate-100 text-slate-800 font-bold uppercase text-[10px] tracking-wider">
+              <tr>
+                <th class="px-3 py-2 border-b border-slate-200">Classificação</th>
+                <th class="px-3 py-2 border-b border-slate-200">Faixa de IMC (kg/m²)</th>
+                <th class="px-3 py-2 border-b border-slate-200">Risco de Comorbidades</th>
+                <th class="px-3 py-2 border-b border-slate-200">Recomendação Geral</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-slate-700">
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium text-blue-700">Abaixo do Peso</td>
+                <td class="px-3 py-2 font-mono">&lt; 18,5</td>
+                <td class="px-3 py-2">Baixo (risco de desnutrição)</td>
+                <td class="px-3 py-2">Acompanhamento nutricional para ganho saudável de massa</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-semibold text-emerald-700">Peso Normal / Saudável</td>
+                <td class="px-3 py-2 font-mono font-bold">18,5 a 24,9</td>
+                <td class="px-3 py-2">Eutrófico (risco basal)</td>
+                <td class="px-3 py-2">Manutenção de dieta equilibrada e atividade física</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium text-amber-700">Sobrepeso (Pré-obesidade)</td>
+                <td class="px-3 py-2 font-mono">25,0 a 29,9</td>
+                <td class="px-3 py-2">Levemente Aumentado</td>
+                <td class="px-3 py-2">Reeducação alimentar e aumento de gasto calórico diário</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium text-rose-600">Obesidade Grau I</td>
+                <td class="px-3 py-2 font-mono">30,0 a 34,9</td>
+                <td class="px-3 py-2">Moderado (pressão e glicose)</td>
+                <td class="px-3 py-2">Avaliação médica preventiva e plano de redução de peso</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium text-rose-800">Obesidade Grau II e III</td>
+                <td class="px-3 py-2 font-mono">&ge; 35,0</td>
+                <td class="px-3 py-2 font-bold text-rose-700">Alto / Muito Alto</td>
+                <td class="px-3 py-2">Acompanhamento clínico multidisciplinar contínuo</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+    }
+
+    // 4. JUROS E FINANÇAS PESSOAIS / INVESTIMENTOS
+    if (toolId.includes('juros') || toolId.includes('investimento') || toolId.includes('financiamento') || toolId.includes('poupanca')) {
+      return `
+      <div class="space-y-4 pt-3">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <span>💰</span> Comparativo de Sistemas Financeiros e Métodos de Amortização
+        </h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Entenda as fórmulas fundamentais que governam empréstimos, financiamentos e investimentos no mercado brasileiro:
+        </p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-xs text-left border border-slate-200 rounded-lg overflow-hidden">
+            <thead class="bg-slate-100 text-slate-800 font-bold uppercase text-[10px] tracking-wider">
+              <tr>
+                <th class="px-3 py-2 border-b border-slate-200">Modalidade / Sistema</th>
+                <th class="px-3 py-2 border-b border-slate-200">Fórmula de Cálculo</th>
+                <th class="px-3 py-2 border-b border-slate-200">Comportamento da Prestação</th>
+                <th class="px-3 py-2 border-b border-slate-200">Aplicação no Mercado</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 text-slate-700">
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Juros Compostos</td>
+                <td class="px-3 py-2 font-mono text-emerald-700">M = C × (1 + i)^t</td>
+                <td class="px-3 py-2">Efeito exponencial de juros sobre juros</td>
+                <td class="px-3 py-2">Tesouro Selic, CDB, LCI/LCA, Ações e FIIs</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Juros Simples</td>
+                <td class="px-3 py-2 font-mono">M = C × (1 + i × t)</td>
+                <td class="px-3 py-2">Crescimento linear sobre o principal inicial</td>
+                <td class="px-3 py-2">Desconto de duplicatas comerciais e cheque pré-datado</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Tabela SAC</td>
+                <td class="px-3 py-2 font-mono">Amortização = Saldo / N</td>
+                <td class="px-3 py-2 text-emerald-700 font-semibold">Decrescente mês a mês</td>
+                <td class="px-3 py-2">Financiamento imobiliário habitacional (Caixa)</td>
+              </tr>
+              <tr class="hover:bg-slate-50">
+                <td class="px-3 py-2 font-medium">Tabela Price (Francês)</td>
+                <td class="px-3 py-2 font-mono">PMT = VP × [i / (1 - (1+i)^-n)]</td>
+                <td class="px-3 py-2">Parcelas fixas e constantes</td>
+                <td class="px-3 py-2">Financiamento de veículos e crédito consignado</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+    }
+
+    // 5. MATEMÁTICA GERAL (Regra de 3, Porcentagem, Médias)
+    if (toolId.includes('regra-de-tres') || toolId.includes('porcentagem') || toolId.includes('media') || toolId.includes('fracao')) {
+      return `
+      <div class="space-y-4 pt-3">
+        <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+          <span>📐</span> Propriedades Matemáticas e Relações de Proporcionalidade
+        </h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Guia rápido das propriedades operatórias fundamentais aplicadas na resolução de proporcionalidades e porcentagens:
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700 space-y-2">
+            <span class="font-extrabold text-slate-900 block">Proporção Direta:</span>
+            <p class="leading-relaxed">
+              Duas grandezas são diretamente proporcionais quando o aumento de uma implica o aumento proporcional da outra na mesma razão (multiplicação cruzada: <em>A × D = B × C</em>).
+            </p>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs text-slate-700 space-y-2">
+            <span class="font-extrabold text-slate-900 block">Proporção Inversa:</span>
+            <p class="leading-relaxed">
+              Ocorre quando o aumento de uma grandeza reduz a outra (ex: mais trabalhadores reduzem o tempo de obra). O produto das variáveis permanece constante: <em>A × B = C × D</em>.
+            </p>
+          </div>
+        </div>
+      </div>`;
+    }
+
+    // 6. TRABALHISTAS E PREVIDENCIÁRIAS (CLT / INSS / IRRF) - Padrão para ferramentas trabalhistas
     return `
       <div class="space-y-4 pt-3">
         <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-          <span>📋</span> Tabela de Referência Oficial e Parâmetros Vigentes (2026)
+          <span>⚖️</span> Tabela de Referência Oficial e Parâmetros Vigentes (2026)
         </h3>
         <p class="text-xs text-slate-600 leading-relaxed">
           Para garantir máxima precisão e conformidade jurídica em seus cálculos trabalhistas e financeiros, consulte os parâmetros e alíquotas oficiais vigentes no Brasil:
@@ -548,11 +800,9 @@ function getCategoryGuideAndTableHtml(categoryId: string, tool: any): string {
             <li><strong>Décimo Terceiro Salário:</strong> 1ª parcela paga impreterivelmente entre 1º de fevereiro e 30 de novembro (50% sem descontos); 2ª parcela paga até 20 de dezembro com deduções de INSS e IRRF.</li>
             <li><strong>Aviso Prévio Proporcional:</strong> Conforme a Lei nº 12.506/2011, ao período base de 30 dias são acrescidos 3 dias para cada ano completo de trabalho na mesma empresa, até o limite máximo de 90 dias.</li>
             <li><strong>Multa Rescisória do FGTS:</strong> Em caso de demissão sem justa causa pelo empregador, é devido o adicional de 40% sobre o saldo total dos depósitos acumulados durante o contrato.</li>
-            <li><strong>Cálculo de Juros Compostos:</strong> Fórmula padrão de capitalização: <code class="bg-slate-200 px-1 py-0.5 rounded font-mono text-slate-900">M = C × (1 + i)^t</code>, onde <em>M</em> é o montante acumulado, <em>C</em> é o capital inicial, <em>i</em> é a taxa periódica e <em>t</em> é o número de períodos.</li>
           </ul>
         </div>
-      </div>
-    `;
+      </div>`;
   }
 
   if (categoryId === 'conversores') {
