@@ -14,7 +14,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const HOST = 'www.toolbrasil.com.br';
-const INDEXNOW_KEY = '3a9f7e8b1c2d4e5f60718293a4b5c6d7';
+const INDEXNOW_KEY = 'antigravityseokey2026';
 const KEY_LOCATION = `https://${HOST}/${INDEXNOW_KEY}.txt`;
 
 async function submitIndexNow() {

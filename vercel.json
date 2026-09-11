@@ -9,6 +9,7 @@
     { "src": "/robots.txt", "dest": "/robots.txt" },
     { "src": "/ads.txt", "dest": "/ads.txt" },
     { "src": "/3a9f7e8b1c2d4e5f60718293a4b5c6d7.txt", "dest": "/3a9f7e8b1c2d4e5f60718293a4b5c6d7.txt" },
+    { "src": "/antigravityseokey2026.txt", "dest": "/antigravityseokey2026.txt" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ],

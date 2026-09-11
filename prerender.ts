@@ -85,14 +85,16 @@ function run() {
   const publicSitemap = path.resolve(__dirname, 'public', 'sitemap.xml');
   fs.writeFileSync(publicSitemap, sitemapXml, 'utf-8');
 
-  // 7. Garantir cópia da chave de validação do IndexNow
-  const indexNowKeyFile = '3a9f7e8b1c2d4e5f60718293a4b5c6d7.txt';
-  const publicIndexNow = path.resolve(__dirname, 'public', indexNowKeyFile);
-  const distIndexNow = path.resolve(DIST_DIR, indexNowKeyFile);
-  if (fs.existsSync(publicIndexNow)) {
-    fs.copyFileSync(publicIndexNow, distIndexNow);
-    console.log(` - Chave IndexNow copiada para '${distIndexNow}'`);
-  }
+  // 7. Garantir cópia das chaves de validação do IndexNow
+  const indexNowKeyFiles = ['antigravityseokey2026.txt', '3a9f7e8b1c2d4e5f60718293a4b5c6d7.txt'];
+  indexNowKeyFiles.forEach(keyFile => {
+    const publicIndexNow = path.resolve(__dirname, 'public', keyFile);
+    const distIndexNow = path.resolve(DIST_DIR, keyFile);
+    if (fs.existsSync(publicIndexNow)) {
+      fs.copyFileSync(publicIndexNow, distIndexNow);
+      console.log(` - Chave IndexNow '${keyFile}' copiada para '${distIndexNow}'`);
+    }
+  });
 
   console.log(`\n✅ Pré-renderização concluída com sucesso!`);
 }
