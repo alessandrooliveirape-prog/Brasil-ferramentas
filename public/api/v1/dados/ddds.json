@@ -1,0 +1,266 @@
+{
+  "status": 200,
+  "fonte": "Tool Brasil - API Pública",
+  "url": "https://www.toolbrasil.com.br",
+  "documentacao": "https://www.toolbrasil.com.br/desenvolvedores",
+  "atualizado_em": "2026-09-16T16:17:25.206Z",
+  "total_estados": 27,
+  "ddds": [
+    {
+      "uf": "SP",
+      "estado": "São Paulo",
+      "codigos": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "capital_ddd": 11
+    },
+    {
+      "uf": "RJ",
+      "estado": "Rio de Janeiro",
+      "codigos": [
+        21,
+        22,
+        24
+      ],
+      "capital_ddd": 21
+    },
+    {
+      "uf": "ES",
+      "estado": "Espírito Santo",
+      "codigos": [
+        27,
+        28
+      ],
+      "capital_ddd": 27
+    },
+    {
+      "uf": "MG",
+      "estado": "Minas Gerais",
+      "codigos": [
+        31,
+        32,
+        33,
+        34,
+        35,
+        37,
+        38
+      ],
+      "capital_ddd": 31
+    },
+    {
+      "uf": "PR",
+      "estado": "Paraná",
+      "codigos": [
+        41,
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "capital_ddd": 41
+    },
+    {
+      "uf": "SC",
+      "estado": "Santa Catarina",
+      "codigos": [
+        47,
+        48,
+        49
+      ],
+      "capital_ddd": 48
+    },
+    {
+      "uf": "RS",
+      "estado": "Rio Grande do Sul",
+      "codigos": [
+        51,
+        53,
+        54,
+        55
+      ],
+      "capital_ddd": 51
+    },
+    {
+      "uf": "DF",
+      "estado": "Distrito Federal",
+      "codigos": [
+        61
+      ],
+      "capital_ddd": 61
+    },
+    {
+      "uf": "GO",
+      "estado": "Goiás",
+      "codigos": [
+        62,
+        64
+      ],
+      "capital_ddd": 62
+    },
+    {
+      "uf": "TO",
+      "estado": "Tocantins",
+      "codigos": [
+        63
+      ],
+      "capital_ddd": 63
+    },
+    {
+      "uf": "MT",
+      "estado": "Mato Grosso",
+      "codigos": [
+        65,
+        66
+      ],
+      "capital_ddd": 65
+    },
+    {
+      "uf": "MS",
+      "estado": "Mato Grosso do Sul",
+      "codigos": [
+        67
+      ],
+      "capital_ddd": 67
+    },
+    {
+      "uf": "AC",
+      "estado": "Acre",
+      "codigos": [
+        68
+      ],
+      "capital_ddd": 68
+    },
+    {
+      "uf": "RO",
+      "estado": "Rondônia",
+      "codigos": [
+        69
+      ],
+      "capital_ddd": 69
+    },
+    {
+      "uf": "BA",
+      "estado": "Bahia",
+      "codigos": [
+        71,
+        73,
+        74,
+        75,
+        77
+      ],
+      "capital_ddd": 71
+    },
+    {
+      "uf": "SE",
+      "estado": "Sergipe",
+      "codigos": [
+        79
+      ],
+      "capital_ddd": 79
+    },
+    {
+      "uf": "PE",
+      "estado": "Pernambuco",
+      "codigos": [
+        81,
+        87
+      ],
+      "capital_ddd": 81
+    },
+    {
+      "uf": "AL",
+      "estado": "Alagoas",
+      "codigos": [
+        82
+      ],
+      "capital_ddd": 82
+    },
+    {
+      "uf": "PB",
+      "estado": "Paraíba",
+      "codigos": [
+        83
+      ],
+      "capital_ddd": 83
+    },
+    {
+      "uf": "RN",
+      "estado": "Rio Grande do Norte",
+      "codigos": [
+        84
+      ],
+      "capital_ddd": 84
+    },
+    {
+      "uf": "CE",
+      "estado": "Ceará",
+      "codigos": [
+        85,
+        88
+      ],
+      "capital_ddd": 85
+    },
+    {
+      "uf": "PI",
+      "estado": "Piauí",
+      "codigos": [
+        86,
+        89
+      ],
+      "capital_ddd": 86
+    },
+    {
+      "uf": "MA",
+      "estado": "Maranhão",
+      "codigos": [
+        98,
+        99
+      ],
+      "capital_ddd": 98
+    },
+    {
+      "uf": "PA",
+      "estado": "Pará",
+      "codigos": [
+        91,
+        93,
+        94
+      ],
+      "capital_ddd": 91
+    },
+    {
+      "uf": "AP",
+      "estado": "Amapá",
+      "codigos": [
+        96
+      ],
+      "capital_ddd": 96
+    },
+    {
+      "uf": "AM",
+      "estado": "Amazonas",
+      "codigos": [
+        92,
+        97
+      ],
+      "capital_ddd": 92
+    },
+    {
+      "uf": "RR",
+      "estado": "Roraima",
+      "codigos": [
+        95
+      ],
+      "capital_ddd": 95
+    }
+  ]
+}

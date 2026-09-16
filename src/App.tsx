@@ -42,6 +42,7 @@ import FerramentasWeb from './components/FerramentasWeb';
 import Utilitarios from './components/Utilitarios';
 import ProgrammaticPage from './components/ProgrammaticPage';
 import Institucional from './components/Institucional';
+import DesenvolvedoresView from './components/DesenvolvedoresView';
 import AdSensePlaceholder from './components/AdSensePlaceholder';
 import SEOAnalyzer from './components/SEOAnalyzer';
 import CommandPalette from './components/CommandPalette';
@@ -171,6 +172,9 @@ export default function App() {
     if (parts[0] === 'institucional') {
       return { view: 'institucional', categoryId: 'institucional', slug: null, id: parts[1] };
     }
+    if (parts[0] === 'desenvolvedores' || parts[0] === 'api' || parts[0] === 'api-publica') {
+      return { view: 'desenvolvedores', categoryId: 'desenvolvedores', slug: null, id: null };
+    }
     if (parts.length === 2) {
       return { view: 'tool', categoryId: parts[0], slug: parts[1], id: null };
     }
@@ -278,6 +282,10 @@ export default function App() {
       title = `${currentRoute.id.toUpperCase()} | Tool Brasil`;
       desc = `Informações institucionais de ${currentRoute.id} da Tool Brasil.`;
       pathSuffix = `institucional/${currentRoute.id}`;
+    } else if (currentRoute.view === 'desenvolvedores') {
+      title = "API Pública & Central de Desenvolvedores | Tool Brasil";
+      desc = "Endpoints estáticos de alta performance e custo zero para desenvolvedores, equipes de QA e contadores. Consuma dados oficiais do Brasil e incorpore widgets gratuitos.";
+      pathSuffix = "desenvolvedores";
     }
 
     document.title = title;
@@ -1308,6 +1316,13 @@ export default function App() {
             </div>
           )}
 
+          {/* 6. DESENVOLVEDORES & API PUBLICA VIEW */}
+          {currentRoute.view === 'desenvolvedores' && (
+            <div id="view-desenvolvedores-module">
+              <DesenvolvedoresView />
+            </div>
+          )}
+
           {/* ADSENSE BOTTOM ANCHOR */}
           <AdSensePlaceholder slotId="slot-4" position="final" />
 
@@ -1367,8 +1382,10 @@ export default function App() {
             </div>
 
             <div>
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Institucional</h4>
+              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">Institucional & API</h4>
               <ul className="space-y-1.5 text-xs">
+                <li><a href="/desenvolvedores" className="hover:text-emerald-400 font-bold text-emerald-400">⚡ API Pública & Docs</a></li>
+                <li><a href="/desenvolvedores#widgets" className="hover:text-emerald-400">Widgets para Sites</a></li>
                 <li><a href="/institucional/sobre" className="hover:text-emerald-400">Sobre Nós</a></li>
                 <li><a href="/institucional/contato" className="hover:text-emerald-400">Contato / Fale Conosco</a></li>
                 <li><a href="/institucional/privacidade" className="hover:text-emerald-400">Política de Privacidade</a></li>

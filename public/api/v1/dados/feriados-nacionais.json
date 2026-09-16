@@ -1,0 +1,70 @@
+{
+  "status": 200,
+  "fonte": "Tool Brasil - API Pública",
+  "url": "https://www.toolbrasil.com.br",
+  "documentacao": "https://www.toolbrasil.com.br/desenvolvedores",
+  "ano_referencia": 2026,
+  "atualizado_em": "2026-09-16T16:17:25.206Z",
+  "feriados": [
+    {
+      "data": "2026-01-01",
+      "nome": "Confraternização Universal (Ano Novo)",
+      "tipo": "Nacional"
+    },
+    {
+      "data": "2026-02-17",
+      "nome": "Carnaval",
+      "tipo": "Ponto Facultativo"
+    },
+    {
+      "data": "2026-04-03",
+      "nome": "Sexta-feira Santa (Paixão de Cristo)",
+      "tipo": "Nacional"
+    },
+    {
+      "data": "2026-04-21",
+      "nome": "Tiradentes",
+      "tipo": "Nacional"
+    },
+    {
+      "data": "2026-05-01",
+      "nome": "Dia Mundial do Trabalho",
+      "tipo": "Nacional"
+    },
+    {
+      "data": "2026-06-04",
+      "nome": "Corpus Christi",
+      "tipo": "Ponto Facultativo"
+    },
+    {
+      "data": "2026-09-07",
+      "nome": "Independência do Brasil",
+      "tipo": "Nacional"
+    },
+    {
+      "data": "2026-10-12",
+      "nome": "Nossa Senhora Aparecida (Padroeira do Brasil)",
+      "tipo": "Nacional"
+    },
+    {
+      "data": "2026-11-02",
+      "nome": "Finados",
+      "tipo": "Nacional"
+    },
+    {
+      "data": "2026-11-15",
+      "nome": "Proclamação da República",
+      "tipo": "Nacional"
+    },
+    {
+      "data": "2026-11-20",
+      "nome": "Dia Nacional de Zumbi e da Consciência Negra",
+      "tipo": "Nacional"
+    },
+    {
+      "data": "2026-12-25",
+      "nome": "Natal",
+      "tipo": "Nacional"
+    }
+  ]
+}

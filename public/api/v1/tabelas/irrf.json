@@ -1,0 +1,53 @@
+{
+  "status": 200,
+  "fonte": "Tool Brasil - API Pública",
+  "url": "https://www.toolbrasil.com.br",
+  "documentacao": "https://www.toolbrasil.com.br/desenvolvedores",
+  "ano_vigencia": 2026,
+  "atualizado_em": "2026-09-16T16:17:25.206Z",
+  "tipo": "Tabela Progressiva IRRF (Imposto de Renda Retido na Fonte)",
+  "deducao_por_dependente_mensal": 189.59,
+  "desconto_simplificado_mensal": 564.8,
+  "faixas": [
+    {
+      "faixa": 1,
+      "base_de": 0,
+      "base_ate": 2259.2,
+      "aliquota_percentual": 0,
+      "parcela_a_deduzir": 0,
+      "descricao": "Isento de retenção"
+    },
+    {
+      "faixa": 2,
+      "base_de": 2259.21,
+      "base_ate": 2826.65,
+      "aliquota_percentual": 7.5,
+      "parcela_a_deduzir": 169.44,
+      "descricao": "Alíquota 7,5%"
+    },
+    {
+      "faixa": 3,
+      "base_de": 2826.66,
+      "base_ate": 3751.05,
+      "aliquota_percentual": 15,
+      "parcela_a_deduzir": 381.44,
+      "descricao": "Alíquota 15%"
+    },
+    {
+      "faixa": 4,
+      "base_de": 3751.06,
+      "base_ate": 4664.68,
+      "aliquota_percentual": 22.5,
+      "parcela_a_deduzir": 662.77,
+      "descricao": "Alíquota 22,5%"
+    },
+    {
+      "faixa": 5,
+      "base_de": 4664.69,
+      "base_ate": null,
+      "aliquota_percentual": 27.5,
+      "parcela_a_deduzir": 896,
+      "descricao": "Alíquota máxima 27,5%"
+    }
+  ]
+}

@@ -1,0 +1,1008 @@
+{
+  "status": 200,
+  "fonte": "Tool Brasil - Catálogo Completo",
+  "url": "https://www.toolbrasil.com.br",
+  "documentacao": "https://www.toolbrasil.com.br/desenvolvedores",
+  "atualizado_em": "2026-09-16T16:17:25.206Z",
+  "total_ferramentas": 138,
+  "categorias": [
+    {
+      "id": "calculadoras",
+      "nome": "Calculadoras",
+      "descricao": "Cálculos financeiros, trabalhistas, matemáticos e de saúde.",
+      "total_ferramentas": 59
+    },
+    {
+      "id": "conversores",
+      "nome": "Conversores",
+      "descricao": "Conversão instantânea de medidas, moedas, dados e tempo.",
+      "total_ferramentas": 17
+    },
+    {
+      "id": "geradores",
+      "nome": "Geradores",
+      "descricao": "Ferramentas de geração de dados, documentos, senhas e textos.",
+      "total_ferramentas": 25
+    },
+    {
+      "id": "ferramentas-web",
+      "nome": "Ferramentas Web",
+      "descricao": "Análise de redes, domínios, conexões e diagnósticos de rede.",
+      "total_ferramentas": 12
+    },
+    {
+      "id": "utilitarios",
+      "nome": "Utilitários",
+      "descricao": "Formatura, contagem de dados, tratamento de texto e codificação.",
+      "total_ferramentas": 25
+    }
+  ],
+  "ferramentas": [
+    {
+      "id": "churrasco",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Churrasco",
+      "descricao": "Calcule a quantidade exata de carne, bebidas e acompanhamentos para o seu churrasco perfeito.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-churrasco"
+    },
+    {
+      "id": "gerador-whatsapp",
+      "categoria": "geradores",
+      "titulo": "Gerador de Link de WhatsApp",
+      "descricao": "Crie links curtos (wa.me) personalizados para o seu WhatsApp com uma mensagem inicial pré-definida.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-link-whatsapp"
+    },
+    {
+      "id": "custo-energia",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Custo de Energia Elétrica",
+      "descricao": "Descubra quanto um eletrodoméstico gasta de energia (KWh) e qual o impacto dele na sua conta de luz.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-custo-energia-eletrica"
+    },
+    {
+      "id": "sorteador",
+      "categoria": "utilitarios",
+      "titulo": "Sorteador Online (Números e Nomes)",
+      "descricao": "Sorteie números aleatórios ou nomes de uma lista de forma justa e instantânea.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/sorteador-online-numeros-e-nomes"
+    },
+    {
+      "id": "horas-trabalhadas",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Horas Trabalhadas",
+      "descricao": "Some as suas horas no ponto e calcule o total de horas diárias trabalhadas e intervalos.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-horas-trabalhadas"
+    },
+    {
+      "id": "juros-compostos",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Juros Compostos",
+      "descricao": "Calcule o crescimento de investimentos ao longo do tempo com aportes mensais e juros acumulados.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-juros-compostos"
+    },
+    {
+      "id": "juros-simples",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Juros Simples",
+      "descricao": "Cálculo fácil de juros lineares sobre capitais tomados ou investidos de forma direta.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-juros-simples"
+    },
+    {
+      "id": "financiamento",
+      "categoria": "calculadoras",
+      "titulo": "Simulador de Financiamento (SAC e Price)",
+      "descricao": "Compare amortizações através das tabelas SAC e Price para planejar a compra da sua casa ou carro.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/simulador-de-financiamento"
+    },
+    {
+      "id": "fgts",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de FGTS",
+      "descricao": "Estime o saldo acumulado do FGTS ao longo do tempo e projete cenários de saques obrigatórios ou aniversário.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-fgts"
+    },
+    {
+      "id": "inss",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Desconto INSS",
+      "descricao": "Calcule a alíquota efetiva e o desconto previdenciário sobre o seu salário bruto de acordo com as regras vigentes.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-desconto-inss"
+    },
+    {
+      "id": "ferias",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Férias CLT",
+      "descricao": "Estime o salário bruto e líquido de férias trabalhistas acrescido do terço constitucional e abonos.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-ferias-trabalhista"
+    },
+    {
+      "id": "rescisao",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Rescisão de Contrato",
+      "descricao": "Antecipe e estude os valores líquidos de rescisões trabalhistas sob regimes CLT em variados formatos.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-rescisao-trabalhista"
+    },
+    {
+      "id": "decimo-terceiro",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de 13º Salário",
+      "descricao": "Calcule as parcelas brutas e líquidas da gratificação de fim de ano de acordo com os meses trabalhados.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-decimo-terceiro"
+    },
+    {
+      "id": "imc",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de IMC",
+      "descricao": "Verifique seu Índice de Massa Corporal e descubra sua classificação nutricional ideal.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-imc"
+    },
+    {
+      "id": "consumo-combustivel",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Consumo de Combustível",
+      "descricao": "Descubra a autonomia, consumo médio por quilômetro e despesas financeiras estimadas para sua rota programada.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-consumo-combustivel"
+    },
+    {
+      "id": "regra-de-tre",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Regra de Três",
+      "descricao": "Resolva proporções matemáticas diretas e inversas de maneira amigável em instantes.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-regra-de-tres"
+    },
+    {
+      "id": "porcentagem",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Porcentagem",
+      "descricao": "Efetue aumentos, descontos, percentuais de proporção e variações em segundos.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-porcentagem"
+    },
+    {
+      "id": "idade",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Idade Exata",
+      "descricao": "Saiba sua idade exata em anos, meses, dias, horas e até os minutos totais de vida.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-idade-exata"
+    },
+    {
+      "id": "dias-entre-datas",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Dias Entre Datas",
+      "descricao": "Calcule a distância exata de dias, semanas e meses entre dois dias determinados do calendário.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-dias-entre-datas"
+    },
+    {
+      "id": "hora-extra",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Hora Extra",
+      "descricao": "Calcule o valor das suas horas extras de trabalho CLT, incluindo adicionais de 50%, 100% e Adicional Noturno.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-hora-extra"
+    },
+    {
+      "id": "seguro-desemprego",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Seguro-Desemprego",
+      "descricao": "Verifique se você tem direito ao benefício, simule o número de parcelas e o valor que irá receber.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-seguro-desemprego"
+    },
+    {
+      "id": "salario-liquido",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Salário Líquido",
+      "descricao": "Preveja seu salário líquido CLT deduzindo INSS, Imposto de Renda (IRRF), vale-transporte e outros descontos.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-salario-liquido"
+    },
+    {
+      "id": "clt-vs-pj",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora CLT vs PJ",
+      "descricao": "Compare quanto você ganha como CLT versus Pessoa Jurídica (PJ) e descubra qual regime compensa mais.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-clt-vs-pj"
+    },
+    {
+      "id": "metros-para-pes",
+      "categoria": "conversores",
+      "titulo": "Conversor de Metros para Pés",
+      "descricao": "Converta facilmente comprimento e altura entre o sistema métrico e imperial.",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-metros-para-pes"
+    },
+    {
+      "id": "quilos-para-libras",
+      "categoria": "conversores",
+      "titulo": "Conversor de Quilos para Libras",
+      "descricao": "Transfira pesos entre kgs e pounds para bagagens, receitas e tabelas internacionais.",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-quilos-para-libras"
+    },
+    {
+      "id": "celsius-para-fahrenheit",
+      "categoria": "conversores",
+      "titulo": "Conversor de Celsius para Fahrenheit",
+      "descricao": "Converta temperaturas instantaneamente para receitas, previsão de tempo internacional ou pesquisas.",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-celsius-para-fahrenheit"
+    },
+    {
+      "id": "real-para-dolar",
+      "categoria": "conversores",
+      "titulo": "Conversor de Real para Dólar",
+      "descricao": "Verifique valores de Real (BRL) convertidos de/para Dólar Americano (USD) com cotação personalizável.",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-real-para-dolar"
+    },
+    {
+      "id": "mb-para-gb",
+      "categoria": "conversores",
+      "titulo": "Conversor de Megabytes para Gigabytes",
+      "descricao": "Calcule a equivalência de arquivos de informática de MB para GB.",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-mb-para-gb"
+    },
+    {
+      "id": "kb-para-mb",
+      "categoria": "conversores",
+      "titulo": "Conversor de Kilobytes para Megabytes",
+      "descricao": "Converta pequenas unidades de armazenamento de computadores digitais.",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-kb-para-mb"
+    },
+    {
+      "id": "horas-para-minutos",
+      "categoria": "conversores",
+      "titulo": "Conversor de Horas para Minutos",
+      "descricao": "Calcule e converta marcações horárias contínuas em frações de minutos totais acumulados.",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-horas-para-minutos"
+    },
+    {
+      "id": "dias-para-horas",
+      "categoria": "conversores",
+      "titulo": "Conversor de Dias para Horas",
+      "descricao": "Converta períodos de duração de dias corridos em horas totais correspondentes.",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-dias-para-horas"
+    },
+    {
+      "id": "cpf",
+      "categoria": "geradores",
+      "titulo": "Gerador e Validador de CPF",
+      "descricao": "Gere códigos de CPF válidos com ou sem pontuação para fins de desenvolvimento de software e testes de sistemas.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-cpf"
+    },
+    {
+      "id": "cnpj",
+      "categoria": "geradores",
+      "titulo": "Gerador e Validador de CNPJ",
+      "descricao": "Gere CNPJ válidos sintéticos formate e valide CNPJ existentes para uso de homologação corporativa de TI.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-cnpj"
+    },
+    {
+      "id": "senha",
+      "categoria": "geradores",
+      "titulo": "Gerador de Senha Segura",
+      "descricao": "Construa credenciais de máxima segurança impedindo hacking ou adivinhações maliciosas.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-senha-segura"
+    },
+    {
+      "id": "qr-code",
+      "categoria": "geradores",
+      "titulo": "Gerador de QR Code",
+      "descricao": "Gere instantaneamente códigos de QR Code para URLs, textos, conexões Wi-Fi ou contatos.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-qr-code"
+    },
+    {
+      "id": "uuid",
+      "categoria": "geradores",
+      "titulo": "Gerador de UUID (v4)",
+      "descricao": "Crie Identificadores Únicos Universais aleatórios de alta entropia para registros de bancos de dados.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-uuid"
+    },
+    {
+      "id": "lorem-ipsum",
+      "categoria": "geradores",
+      "titulo": "Gerador de Lorem Ipsum",
+      "descricao": "Crie textos de marcação simulados para esquemas de diagramação de layouts e designs de interfaces.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-lorem-ipsum"
+    },
+    {
+      "id": "hash-md5",
+      "categoria": "geradores",
+      "titulo": "Gerador de Hash MD5",
+      "descricao": "Gere resumos de criptografia MD5 de 128-bits para checar integridade lógica de arquivos compartilhados.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-hash-md5"
+    },
+    {
+      "id": "hash-sha256",
+      "categoria": "geradores",
+      "titulo": "Gerador de Hash SHA-256",
+      "descricao": "Consiga impressões digitais criptográficas fortes e seguras de arquivos de textos livres.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-hash-sha256"
+    },
+    {
+      "id": "meu-ip",
+      "categoria": "ferramentas-web",
+      "titulo": "Meu IP - Qual o meu IP Atual?",
+      "descricao": "Descubra rapidamente seu endereço de IP de Internet público IPv4 ou IPv6 e dados de geolocalização.",
+      "url": "https://www.toolbrasil.com.br/ferramentas-web/qual-o-meu-ip"
+    },
+    {
+      "id": "localizar-ip",
+      "categoria": "ferramentas-web",
+      "titulo": "Rastreador e Localizador de IP",
+      "descricao": "Consulte detalhes geográficos, conexões autônomas (ASN) e provedores de qualquer IP mundial.",
+      "url": "https://www.toolbrasil.com.br/ferramentas-web/localizar-endereco-de-ip"
+    },
+    {
+      "id": "whois",
+      "categoria": "ferramentas-web",
+      "titulo": "Consulta WHOIS de Domínios",
+      "descricao": "Veja as informações oficiais de registros dos proprietários de domínios nacionais (.br) e estrangeiros.",
+      "url": "https://www.toolbrasil.com.br/ferramentas-web/consulta-whois"
+    },
+    {
+      "id": "dns-lookup",
+      "categoria": "ferramentas-web",
+      "titulo": "DNS Lookup - Consulta de Registros",
+      "descricao": "Consulte os apontamentos A, AAAA, MX, TXT e CNAME de qualquer zona de domínio.",
+      "url": "https://www.toolbrasil.com.br/ferramentas-web/consulta-dns-lookup"
+    },
+    {
+      "id": "ssl-checker",
+      "categoria": "ferramentas-web",
+      "titulo": "Verificador de Certificado SSL",
+      "descricao": "Valide a integridade do certificado SSL HTTPS de domínios e evite alertas de insegurança nos navegadores.",
+      "url": "https://www.toolbrasil.com.br/ferramentas-web/verificador-de-certificado-ssl"
+    },
+    {
+      "id": "port-checker",
+      "categoria": "ferramentas-web",
+      "titulo": "Verificador de Portas de Rede",
+      "descricao": "Verifique se portas de conexões tradicionais (80, 443, 21, 22, 3306) estão abertas e expostas na Internet pública.",
+      "url": "https://www.toolbrasil.com.br/ferramentas-web/verificador-de-portas-abertas"
+    },
+    {
+      "id": "ping",
+      "categoria": "ferramentas-web",
+      "titulo": "Teste de Ping Online",
+      "descricao": "Meça a latência em milissegundos e a saúde da conexão para servidores de hospedagens mundiais.",
+      "url": "https://www.toolbrasil.com.br/ferramentas-web/teste-de-ping-online"
+    },
+    {
+      "id": "traceroute",
+      "categoria": "ferramentas-web",
+      "titulo": "Traceroute - Rota de Rede",
+      "descricao": "Rastreie todos os saltos e roteadores intermediários atravessados pelos pacotes até o servidor final.",
+      "url": "https://www.toolbrasil.com.br/ferramentas-web/traceroute-de-rede"
+    },
+    {
+      "id": "http-headers",
+      "categoria": "ferramentas-web",
+      "titulo": "Verificador de Headers HTTP",
+      "descricao": "Inspecione as respostas de cabeçalhos de servidores Web (Cookies, segurança, cache e redirecionamentos).",
+      "url": "https://www.toolbrasil.com.br/ferramentas-web/verificador-de-headers-http"
+    },
+    {
+      "id": "ipva",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de IPVA",
+      "descricao": "Calcule o valor do IPVA do seu veículo com base no valor venal e alíquota do seu estado.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-ipva"
+    },
+    {
+      "id": "imposto-renda",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Imposto de Renda (IRPF)",
+      "descricao": "Simule o cálculo do Imposto de Renda Pessoa Física com base na tabela progressiva atual.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-imposto-de-renda"
+    },
+    {
+      "id": "multa-transito",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Multa de Trânsito",
+      "descricao": "Calcule o valor de multas de trânsito com descontos e simule infrações gravíssimas, graves, médias e leves.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-multa-de-transito"
+    },
+    {
+      "id": "preco-por-km",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Preço por Km (Motoristas de App)",
+      "descricao": "Calcule quanto você ganha por km rodado em aplicativos como Uber, 99 e outros.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-preco-por-km"
+    },
+    {
+      "id": "gestacao",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Gestação - Idade Gestacional",
+      "descricao": "Calcule a idade gestacional, data provável do parto e acompanhe o trimestre da gravidez.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-gestacao"
+    },
+    {
+      "id": "tmb",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de TMB (Taxa Metabólica Basal)",
+      "descricao": "Descubra quantas calorias seu corpo gasta em repouso para manter funções vitais.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-taxa-metabolica-basal"
+    },
+    {
+      "id": "margem-lucro",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Margem de Lucro",
+      "descricao": "Calcule a margem de lucro, markup e preço de venda ideal para seus produtos.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-margem-de-lucro"
+    },
+    {
+      "id": "gorjeta",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Gorjeta",
+      "descricao": "Calcule gorjeta de 10%, 15% ou qualquer percentual em restaurantes e serviços.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-gorjeta"
+    },
+    {
+      "id": "polegadas-para-centimetros",
+      "categoria": "conversores",
+      "titulo": "Conversor de Polegadas para Centímetros",
+      "descricao": "Converta polegadas (in) para centímetros (cm) e vice-versa instantaneamente.",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-polegadas-para-centimetros"
+    },
+    {
+      "id": "milhas-para-quilometros",
+      "categoria": "conversores",
+      "titulo": "Conversor de Milhas para Quilômetros",
+      "descricao": "Converta distâncias entre milhas e quilômetros para viagens e corridas.",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-milhas-para-quilometros"
+    },
+    {
+      "id": "kmh-para-mph",
+      "categoria": "conversores",
+      "titulo": "Conversor de Km/h para mph",
+      "descricao": "Converta velocidades entre quilômetros por hora e milhas por hora.",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-kmh-para-mph"
+    },
+    {
+      "id": "euro-para-real",
+      "categoria": "conversores",
+      "titulo": "Conversor de Euro para Real",
+      "descricao": "Converta valores entre Euro (EUR) e Real (BRL) com cotação personalizável.",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-euro-para-real"
+    },
+    {
+      "id": "bitcoin-para-real",
+      "categoria": "conversores",
+      "titulo": "Conversor de Bitcoin para Real",
+      "descricao": "Converta Bitcoin (BTC) e outras criptomoedas para Real Brasileiro (BRL).",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-bitcoin-para-real"
+    },
+    {
+      "id": "nome-aleatorio",
+      "categoria": "geradores",
+      "titulo": "Gerador de Nome Aleatório",
+      "descricao": "Gere nomes aleatórios brasileiros com sobrenomes para testes e criações.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-nome-aleatorio"
+    },
+    {
+      "id": "endereco-brasil",
+      "categoria": "geradores",
+      "titulo": "Gerador de Endereço Brasileiro",
+      "descricao": "Gere endereços brasileiros completos com CEP, rua, bairro e cidade para testes.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-endereco-brasileiro"
+    },
+    {
+      "id": "codigo-barras",
+      "categoria": "geradores",
+      "titulo": "Gerador de Código de Barras",
+      "descricao": "Gere códigos de barras EAN-13 para produtos e testes de sistemas.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-codigo-de-barras"
+    },
+    {
+      "id": "placa-mercosul",
+      "categoria": "geradores",
+      "titulo": "Gerador de Placa de Carro Mercosul",
+      "descricao": "Gere placas de veículo no padrão Mercosul para testes e simulações.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-placa-mercosul"
+    },
+    {
+      "id": "cores-aleatorias",
+      "categoria": "geradores",
+      "titulo": "Gerador de Cores Aleatórias",
+      "descricao": "Gere paletas de cores aleatórias com código HEX, RGB e nome da cor.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-cores-aleatorias"
+    },
+    {
+      "id": "status-site",
+      "categoria": "ferramentas-web",
+      "titulo": "Verificador de Status de Site (Up/Down)",
+      "descricao": "Verifique se um site está online ou offline com teste de disponibilidade.",
+      "url": "https://www.toolbrasil.com.br/ferramentas-web/verificador-de-status-de-site"
+    },
+    {
+      "id": "validador-url",
+      "categoria": "ferramentas-web",
+      "titulo": "Validador de URL",
+      "descricao": "Valide se uma URL está corretamente formatada e identifique seus componentes.",
+      "url": "https://www.toolbrasil.com.br/ferramentas-web/validador-de-url"
+    },
+    {
+      "id": "titulo-eleitor",
+      "categoria": "ferramentas-web",
+      "titulo": "Verificador de Título de Eleitor",
+      "descricao": "Valide o número do título de eleitor e consulte informações da zona eleitoral.",
+      "url": "https://www.toolbrasil.com.br/ferramentas-web/verificador-de-titulo-de-eleitor"
+    },
+    {
+      "id": "cronometro",
+      "categoria": "utilitarios",
+      "titulo": "Cronômetro Online",
+      "descricao": "Cronômetro preciso com voltas e controle de tempo para treinos e atividades.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/cronometro-online"
+    },
+    {
+      "id": "separador-silabas",
+      "categoria": "utilitarios",
+      "titulo": "Separador de Sílabas",
+      "descricao": "Separe palavras em sílabas corretamente de acordo com as regras gramaticais.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/separador-de-silabas"
+    },
+    {
+      "id": "maiusculas-minusculas",
+      "categoria": "utilitarios",
+      "titulo": "Conversor de Maiúsculas/Minúsculas",
+      "descricao": "Converta textos entre maiúsculas, minúsculas, capitalizado e alternado rapidamente.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/conversor-maiusculas-minusculas"
+    },
+    {
+      "id": "extrator-email",
+      "categoria": "utilitarios",
+      "titulo": "Filtro e Localizador de E-mails",
+      "descricao": "Filtre, limpe e organize endereços de e-mail a partir de blocos de textos ou relatórios.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/filtro-de-emails"
+    },
+    {
+      "id": "comparador-textos",
+      "categoria": "utilitarios",
+      "titulo": "Comparador de Textos (Diff)",
+      "descricao": "Compare dois textos e veja as diferenças destacadas linha a linha.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/comparador-de-textos"
+    },
+    {
+      "id": "contador-caracteres",
+      "categoria": "utilitarios",
+      "titulo": "Contador de Caracteres e Palavras",
+      "descricao": "Analise o total de letras, espaços, palavras e parágrafos do seu texto dinamicamente em tempo real.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/contador-de-caracteres"
+    },
+    {
+      "id": "contador-palavras",
+      "categoria": "utilitarios",
+      "titulo": "Contador de Palavras Completo",
+      "descricao": "Métricas exatas de volume léxico, frequência de repetições e densidade vocabular.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/contador-de-palavras"
+    },
+    {
+      "id": "removedor-espacos",
+      "categoria": "utilitarios",
+      "titulo": "Removedor de Espaços e Linhas",
+      "descricao": "Limpe textos eliminando tabulações extras, quebras de linhas desnecessárias ou espaços redundantes.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/removedor-de-espacos-duplicados"
+    },
+    {
+      "id": "formatador-json",
+      "categoria": "utilitarios",
+      "titulo": "Formatador e Identador JSON",
+      "descricao": "Valide, idente e embeleze estruturas de dados JSON para facilitar a visualização por desenvolvedores.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/formatador-json"
+    },
+    {
+      "id": "minificador-css",
+      "categoria": "utilitarios",
+      "titulo": "Minificador de Código CSS",
+      "descricao": "Reduza o tamanho físico dos arquivos de folhas de estilo integradas das suas páginas Web.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/minificador-de-css"
+    },
+    {
+      "id": "minificador-js",
+      "categoria": "utilitarios",
+      "titulo": "Minificador de JavaScript",
+      "descricao": "Otimize seus scripts reduzindo espaços em branco e unificando escopos básicos.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/minificador-de-js"
+    },
+    {
+      "id": "beautify-json",
+      "categoria": "utilitarios",
+      "titulo": "Beautify JSON Beautifier",
+      "descricao": "Deixe seus arquivos JSON perfeitamente organizados estruturados e fáceis de ler.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/beautify-json"
+    },
+    {
+      "id": "encode-url",
+      "categoria": "utilitarios",
+      "titulo": "Encode URL - Codificação de URLs",
+      "descricao": "Codifique trechos de textos de parâmetros query strings no formato padrão amigável para envio web centrado.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/codificador-encode-url"
+    },
+    {
+      "id": "decode-url",
+      "categoria": "utilitarios",
+      "titulo": "Decode URL - Decodificação de URLs",
+      "descricao": "Decodifique links e query strings e traduza-os em palavras de linguagem humana legíveis comuns.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/decodificador-decode-url"
+    },
+    {
+      "id": "aposentadoria-inss",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Aposentadoria INSS",
+      "descricao": "Simule sua aposentadoria pelo INSS: descubra o tempo restante, valor do benefício e regras de transição.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-aposentadoria-inss"
+    },
+    {
+      "id": "pis-pasep",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de PIS/PASEP - Abono Salarial",
+      "descricao": "Calcule o valor do PIS/PASEP 2026 e descubra se você tem direito ao abono salarial.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-pis-pasep"
+    },
+    {
+      "id": "icms",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de ICMS",
+      "descricao": "Calcule o ICMS incidente sobre produtos, mercadorias e serviços com alíquotas por estado.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-icms"
+    },
+    {
+      "id": "itbi",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de ITBI - Imposto de Transmissão de Imóveis",
+      "descricao": "Calcule o valor do ITBI para compra e venda de imóveis com alíquota do seu município.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-itbi"
+    },
+    {
+      "id": "itcmd",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de ITCMD - Imposto sobre Herança e Doação",
+      "descricao": "Calcule o ITCMD, imposto estadual sobre heranças, inventários e doações no Brasil.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-itcmd"
+    },
+    {
+      "id": "validador-cartao",
+      "categoria": "utilitarios",
+      "titulo": "Validador de Cartão de Crédito (Algoritmo de Luhn)",
+      "descricao": "Valide números de cartão de crédito e identifique a bandeira (Visa, Mastercard, Elo, Amex).",
+      "url": "https://www.toolbrasil.com.br/utilitarios/validador-de-cartao-de-credito"
+    },
+    {
+      "id": "calorias-diarias",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Calorias Diárias (TMB + Atividade)",
+      "descricao": "Descubra quantas calorias você precisa por dia para manter, perder ou ganhar peso.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-calorias-diarias"
+    },
+    {
+      "id": "recibo",
+      "categoria": "geradores",
+      "titulo": "Gerador de Recibo Online",
+      "descricao": "Gere recibos de pagamento personalizados e prontos para impressão ou download em PDF.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-recibo-online"
+    },
+    {
+      "id": "libra-para-real",
+      "categoria": "conversores",
+      "titulo": "Conversor de Libra Esterlina para Real",
+      "descricao": "Converta valores entre Libra Esterlina (GBP) e Real Brasileiro (BRL).",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-libra-para-real"
+    },
+    {
+      "id": "nota-enem",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Nota do ENEM - Média Simples e Ponderada",
+      "descricao": "Calcule sua média do ENEM com pesos por universidade e descubra suas chances no SISU.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-nota-do-enem"
+    },
+    {
+      "id": "gerador-rg",
+      "categoria": "geradores",
+      "titulo": "Gerador de RG (Registro Geral)",
+      "descricao": "Gere números de RG válidos para testes de sistemas e cadastros.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-rg"
+    },
+    {
+      "id": "numeros-romanos",
+      "categoria": "conversores",
+      "titulo": "Conversor de Números Romanos",
+      "descricao": "Converta números arábicos para romanos e vice-versa facilmente.",
+      "url": "https://www.toolbrasil.com.br/conversores/conversor-de-numeros-romanos"
+    },
+    {
+      "id": "periculosidade",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Adicional de Periculosidade",
+      "descricao": "Calcule o adicional de periculosidade de 30% sobre o salário para trabalhadores CLT.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-adicional-de-periculosidade"
+    },
+    {
+      "id": "insalubridade",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Adicional de Insalubridade",
+      "descricao": "Calcule o adicional de insalubridade de 10%, 20% ou 40% sobre o salário mínimo.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-adicional-de-insalubridade"
+    },
+    {
+      "id": "preco-venda",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Preço de Venda (Markup + Margem)",
+      "descricao": "Calcule o preço de venda ideal dos seus produtos com markup e margem de contribuição.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-preco-de-venda"
+    },
+    {
+      "id": "idade-canina",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Idade Canina (Humana)",
+      "descricao": "Descubra a idade do seu cachorro em anos humanos com base no porte e raça.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-idade-canina"
+    },
+    {
+      "id": "peso-argentino-para-real",
+      "categoria": "conversores",
+      "titulo": "Conversor de Peso Argentino para Real",
+      "descricao": "Converta valores entre Peso Argentino (ARS) e Real Brasileiro (BRL) com cotação personalizável.",
+      "url": "https://www.toolbrasil.com.br/conversores/converter-peso-argentino-para-real"
+    },
+    {
+      "id": "move-brasil",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora Move Brasil 2026 - Carros, Motos e Caminhões (BB, Caixa e BNDES)",
+      "descricao": "Simule o financiamento MOVE Brasil para carros, motos e caminhões (motoristas de app, taxistas e entregadores) pelo Banco do Brasil, Caixa e BNDES.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-move-brasil"
+    },
+    {
+      "id": "emprestimo-consignado",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Empréstimo Consignado",
+      "descricao": "Simule o valor da parcela, taxa de juros e custo total do empréstimo consignado do INSS, servidores e trabalhadores CLT.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-emprestimo-consignado"
+    },
+    {
+      "id": "financiamento-veiculos",
+      "categoria": "calculadoras",
+      "titulo": "Simulador de Financiamento de Veículos e CDC 2026: Carros e Motos",
+      "descricao": "Simule o financiamento CDC de carros e motos em 2026. Calcule o valor das parcelas fixas, entrada recomendada, taxa de juros e IOF.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/simulador-de-financiamento-de-veiculos"
+    },
+    {
+      "id": "gerador-assinatura-email",
+      "categoria": "geradores",
+      "titulo": "Gerador de Assinatura de E-mail HTML",
+      "descricao": "Crie assinaturas de e-mail profissionais e personalizadas com foto, cargo, redes sociais e HTML pronto para copiar.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-assinatura-de-email"
+    },
+    {
+      "id": "texto-para-voz",
+      "categoria": "utilitarios",
+      "titulo": "Conversor de Texto em Voz (Text to Speech)",
+      "descricao": "Converta qualquer texto em áudio e voz falada em português usando sintetizador nativo direto no seu navegador.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/conversor-de-texto-em-voz"
+    },
+    {
+      "id": "teste-digitacao",
+      "categoria": "utilitarios",
+      "titulo": "Teste de Velocidade de Digitação (WPM)",
+      "descricao": "Meça a sua velocidade de digitação em palavras por minuto (PPM/WPM), precisão e contagem de erros em tempo real.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/teste-de-velocidade-de-digitacao"
+    },
+    {
+      "id": "alcool-ou-gasolina",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Álcool ou Gasolina (Simulador Flex)",
+      "descricao": "Descubra se vale mais a pena abastecer com etanol ou gasolina pela regra dos 70% ou pelo consumo real (km/l) do seu carro.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-alcool-ou-gasolina"
+    },
+    {
+      "id": "dsr",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de DSR (Descanso Semanal Remunerado)",
+      "descricao": "Calcule o reflexo do DSR sobre horas extras, adicional noturno e comissões com base na Lei nº 605/49 e Súmula 172 do TST.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-dsr"
+    },
+    {
+      "id": "adicional-noturno",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Adicional Noturno CLT",
+      "descricao": "Simule o adicional noturno urbano (20%) e rural (25%), a redução da hora ficta de 52min30s (Art. 73 CLT) e o reflexo salarial.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-adicional-noturno"
+    },
+    {
+      "id": "salario-proporcional",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Salário Proporcional",
+      "descricao": "Calcule o valor exato do salário por dias trabalhados na admissão, demissão ou afastamentos pelo mês comercial ou dias corridos.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-salario-proporcional"
+    },
+    {
+      "id": "ovulacao-periodo-fertil",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Ovulação e Período Fértil",
+      "descricao": "Descubra a data provável da ovulação, os dias de maior fertilidade para engravidar e a data ideal para realizar o teste de gravidez.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-ovulacao-e-periodo-fertil"
+    },
+    {
+      "id": "calculadora-tinta",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Tinta para Paredes e Teto",
+      "descricao": "Calcule a quantidade exata de litros, galões e latas de tinta para sua pintura residencial, descontando portas e janelas.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-tinta-e-pintura"
+    },
+    {
+      "id": "calculadora-piso",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Piso, Revestimento e Porcelanato",
+      "descricao": "Calcule a metragem em m² de pisos e azulejos, a margem técnica de perdas e recortes e a quantidade exata de caixas a comprar.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-piso-e-revestimento"
+    },
+    {
+      "id": "agua-diaria",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Consumo de Água Diária por Peso",
+      "descricao": "Descubra a quantidade ideal de água em litros e copos que você deve beber por dia segundo seu peso, atividade e clima.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-consumo-de-agua-diaria"
+    },
+    {
+      "id": "ponto-banco-horas",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Ponto e Banco de Horas Diário",
+      "descricao": "Controle os horários de entrada, almoço e saída, calcule o total de horas trabalhadas e apure o saldo diário de horas extras ou negativas.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-ponto-e-banco-de-horas"
+    },
+    {
+      "id": "desconto-vista-parcelado",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora: Comprar à Vista com Desconto ou Parcelar?",
+      "descricao": "Descubra se compensa pagar à vista com desconto ou parcelar sem juros investindo o dinheiro no CDI (Tesouro Selic/CDB).",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-desconto-a-vista-vs-parcelado"
+    },
+    {
+      "id": "declaracao-conteudo-correios",
+      "categoria": "geradores",
+      "titulo": "Gerador de Declaração de Conteúdo Correios (A4 Pronto para Imprimir)",
+      "descricao": "Gere a Declaração de Conteúdo oficial exigida pelos Correios e transportadoras com formulário formatado no padrão A4 oficial.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-declaracao-de-conteudo-para-correios"
+    },
+    {
+      "id": "gerador-pix",
+      "categoria": "geradores",
+      "titulo": "Gerador de PIX Copia e Cola & QR Code Estático",
+      "descricao": "Crie QR Codes PIX e códigos Copia e Cola oficiais no padrão EMVCo do Banco Central com valor, chave e identificador.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-pix-copia-e-cola-e-qr-code"
+    },
+    {
+      "id": "contrato-locacao",
+      "categoria": "geradores",
+      "titulo": "Gerador de Contrato de Locação Residencial Simples",
+      "descricao": "Gere um contrato de aluguel residencial completo e formal baseado na Lei do Inquilinato (Lei nº 8.245/91) pronto para impressão A4.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-contrato-de-locacao-residencial"
+    },
+    {
+      "id": "formatador-abnt",
+      "categoria": "utilitarios",
+      "titulo": "Formatador de Referências ABNT NBR 6023 (Livros, Artigos e Sites)",
+      "descricao": "Gere referências bibliográficas automáticas e citações acadêmicas conforme as normas oficiais da ABNT NBR 6023 e NBR 10520.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/formatador-de-referencias-abnt"
+    },
+    {
+      "id": "fuso-horario",
+      "categoria": "conversores",
+      "titulo": "Conversor de Fusos Horários Mundial (Horário de Brasília)",
+      "descricao": "Converta horários em tempo real entre o Horário Oficial de Brasília (UTC-3) e os principais fusos horários do mundo.",
+      "url": "https://www.toolbrasil.com.br/conversores/conversor-de-fusos-horarios"
+    },
+    {
+      "id": "declaracao-residencia",
+      "categoria": "geradores",
+      "titulo": "Gerador de Declaração de Residência (Lei 7.115/83)",
+      "descricao": "Gere a Declaração Oficial de Residência para comprovação de endereço quando não houver contas no seu próprio nome.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-declaracao-de-residencia"
+    },
+    {
+      "id": "procuracao-simples",
+      "categoria": "geradores",
+      "titulo": "Gerador de Procuração Simples (Pessoa Física e Jurídica)",
+      "descricao": "Crie uma procuração particular com poderes específicos ou plenos para bancos, Detran, INSS, cartórios e representações legais.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-procuracao-simples"
+    },
+    {
+      "id": "carta-demissao",
+      "categoria": "geradores",
+      "titulo": "Gerador de Carta de Pedido de Demissão",
+      "descricao": "Gere a carta formal de pedido de demissão com opção de cumprimento de aviso prévio ou solicitação de dispensa imediata.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-carta-de-demissao"
+    },
+    {
+      "id": "nota-promissoria",
+      "categoria": "geradores",
+      "titulo": "Gerador de Nota Promissória Online (Pronta para Imprimir)",
+      "descricao": "Gere notas promissórias com valor por extenso automático, dados de emitente, avalista e impressão oficial padrão A4.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-nota-promissoria"
+    },
+    {
+      "id": "recibo-compra-venda-veiculo",
+      "categoria": "geradores",
+      "titulo": "Gerador de Recibo de Compra e Venda de Veículo",
+      "descricao": "Gere o termo e recibo de compra e venda de carro ou moto com dados do Renavam, Chassi, placa, valor e quitação formal.",
+      "url": "https://www.toolbrasil.com.br/geradores/gerador-de-recibo-compra-e-venda-veiculo"
+    },
+    {
+      "id": "compressor-imagens",
+      "categoria": "utilitarios",
+      "titulo": "Compressor de Imagens Online (JPG, PNG, WebP)",
+      "descricao": "Reduza o tamanho em KB/MB de fotos e imagens JPG, PNG e WebP sem perder qualidade visual de forma 100% rápida e segura no seu navegador.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/compressor-de-imagens-online"
+    },
+    {
+      "id": "conversor-imagens",
+      "categoria": "utilitarios",
+      "titulo": "Conversor de Formatos de Imagem (PNG, JPG, WebP)",
+      "descricao": "Converta imagens entre PNG, JPG, WebP e GIF instantaneamente no navegador com controle de qualidade e resolução.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/conversor-de-formato-de-imagens"
+    },
+    {
+      "id": "editor-imagens",
+      "categoria": "utilitarios",
+      "titulo": "Editor de Imagens Rápido Online (Corte, Filtros e Brilho)",
+      "descricao": "Corte, gire, redimensione e aplique ajustes de brilho, contraste e filtros em fotos diretamente no navegador.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/editor-de-imagens-rapido-online"
+    },
+    {
+      "id": "imagem-para-pdf",
+      "categoria": "utilitarios",
+      "titulo": "Conversor de Imagens para PDF (Junte Fotos em PDF)",
+      "descricao": "Converta fotos JPG, PNG e comprovantes em um documento PDF organizado no padrão A4 pronto para imprimir ou enviar.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/conversor-de-imagem-para-pdf"
+    },
+    {
+      "id": "imagem-para-base64",
+      "categoria": "utilitarios",
+      "titulo": "Conversor de Imagem para Base64 e Data URI",
+      "descricao": "Converta fotos e arquivos de imagem em strings Base64 com código pronto para inclusão direta em HTML, CSS e JSON.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/conversor-de-imagem-para-base64"
+    },
+    {
+      "id": "calculadora-ferias-proporcionais",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Férias Proporcionais e Vencidas CLT",
+      "descricao": "Calcule o valor exato das férias proporcionais, vencidas, 1/3 constitucional, abono pecuniário (venda) e descontos legais.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-ferias-proporcionais"
+    },
+    {
+      "id": "calculadora-aviso-previo",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Aviso Prévio Proporcional (Lei 12.506/11)",
+      "descricao": "Descubra a quantidade exata de dias de aviso prévio (de 30 a 90 dias) e o valor financeiro a receber com base no tempo de empresa.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-aviso-previo-proporcional"
+    },
+    {
+      "id": "calculadora-tijolos-argamassa",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Tijolos, Blocos e Argamassa para Paredes",
+      "descricao": "Calcule a quantidade exata de tijolos (6, 8 ou 9 furos) ou blocos de concreto e sacos de argamassa por metro quadrado de parede.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-tijolos-e-argamassa"
+    },
+    {
+      "id": "calculadora-preco-combustivel-viagem",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Combustível e Pedágio para Viagem",
+      "descricao": "Calcule o custo total de ida e volta de viagens de carro (distância, consumo km/l, combustível e pedágios) e divida por passageiro.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-combustivel-para-viagem"
+    },
+    {
+      "id": "calculadora-potencia-ar-condicionado",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de BTUs para Ar-Condicionado",
+      "descricao": "Descubra a potência exata em BTUs necessária para refrigerar seu quarto, sala ou escritório com base na área m², sol e pessoas.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-btus-ar-condicionado"
+    },
+    {
+      "id": "faltas-injustificadas",
+      "categoria": "calculadoras",
+      "titulo": "Calculadora de Faltas Injustificadas: Desconto no Salário e DSR (CLT 2026)",
+      "descricao": "Calcule o desconto de faltas injustificadas no salário, reflexo na perda do DSR e impacto nos dias de férias e 13º salário pela CLT.",
+      "url": "https://www.toolbrasil.com.br/calculadoras/calculadora-de-faltas-injustificadas"
+    },
+    {
+      "id": "descomplica-contrato",
+      "categoria": "utilitarios",
+      "titulo": "DescomplicaContrato: Analisador de Contratos Gratuito com Áudio em 2 Minutos",
+      "descricao": "Analise contratos civis, de aluguel e prestação de serviços em PDF ou texto. Receba um diagnóstico falado em 2 minutos sem juridiquês com inteligência artificial gratuita.",
+      "url": "https://www.toolbrasil.com.br/utilitarios/descomplica-contrato"
+    }
+  ]
+}

@@ -136,7 +136,28 @@ export default function CommandPalette({ isOpen, onClose, onNavigate }: CommandP
         badge: 'Guia Rápido'
       }));
 
-    return [...toolMatches, ...progMatches].slice(0, 15);
+    // Busca na Central de Desenvolvedores / API
+    const devMatches = [];
+    if ('api pública desenvolvedores endpoints widgets docs json'.includes(q) || q.includes('api') || q.includes('dev') || q.includes('wid')) {
+      devMatches.push({
+        id: 'api-docs',
+        title: 'API Pública & Central de Desenvolvedores',
+        description: 'Documentação dos endpoints REST estáticos (CPF, CNPJ, INSS, IRRF) e gerador de widgets.',
+        path: '/desenvolvedores',
+        categoryId: 'desenvolvedores',
+        badge: 'API ⚡'
+      });
+      devMatches.push({
+        id: 'widget-embed',
+        title: 'Widgets Incorporáveis para Sites',
+        description: 'Incorpore calculadoras e validadores no seu blog ou site com link oficial.',
+        path: '/desenvolvedores#widgets',
+        categoryId: 'desenvolvedores',
+        badge: 'Widget 🛠️'
+      });
+    }
+
+    return [...devMatches, ...toolMatches, ...progMatches].slice(0, 15);
   };
 
   const filteredItems = getFilteredItems();

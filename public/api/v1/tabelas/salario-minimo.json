@@ -1,0 +1,75 @@
+{
+  "status": 200,
+  "fonte": "Tool Brasil - API Pública",
+  "url": "https://www.toolbrasil.com.br",
+  "documentacao": "https://www.toolbrasil.com.br/desenvolvedores",
+  "atualizado_em": "2026-09-16T16:17:25.206Z",
+  "vigente": {
+    "ano": 2026,
+    "valor_mensal": 1518,
+    "valor_diario": 50.6,
+    "valor_hora": 6.9
+  },
+  "historico": [
+    {
+      "ano": 2026,
+      "valor": 1518,
+      "norma": "Lei Orçamentária 2026"
+    },
+    {
+      "ano": 2025,
+      "valor": 1412,
+      "norma": "Decreto nº 11.864/2023"
+    },
+    {
+      "ano": 2024,
+      "valor": 1412,
+      "norma": "Decreto nº 11.864/2023"
+    },
+    {
+      "ano": 2023,
+      "valor": 1320,
+      "norma": "Medida Provisória nº 1.172/2023"
+    },
+    {
+      "ano": 2022,
+      "valor": 1212,
+      "norma": "Medida Provisória nº 1.091/2021"
+    },
+    {
+      "ano": 2021,
+      "valor": 1100,
+      "norma": "Medida Provisória nº 1.021/2020"
+    },
+    {
+      "ano": 2020,
+      "valor": 1045,
+      "norma": "Medida Provisória nº 919/2020"
+    },
+    {
+      "ano": 2015,
+      "valor": 788,
+      "norma": "Decreto nº 8.381/2014"
+    },
+    {
+      "ano": 2010,
+      "valor": 510,
+      "norma": "Medida Provisória nº 474/2009"
+    },
+    {
+      "ano": 2005,
+      "valor": 300,
+      "norma": "Medida Provisória nº 248/2005"
+    },
+    {
+      "ano": 2000,
+      "valor": 151,
+      "norma": "Medida Provisória nº 2.019/2000"
+    },
+    {
+      "ano": 1994,
+      "valor": 64.79,
+      "norma": "Início do Plano Real (URV)"
+    }
+  ]
+}

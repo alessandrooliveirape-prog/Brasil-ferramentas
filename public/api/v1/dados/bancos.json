@@ -1,0 +1,130 @@
+{
+  "status": 200,
+  "fonte": "Tool Brasil - API Pública",
+  "url": "https://www.toolbrasil.com.br",
+  "documentacao": "https://www.toolbrasil.com.br/desenvolvedores",
+  "atualizado_em": "2026-09-16T16:17:25.206Z",
+  "total": 20,
+  "bancos": [
+    {
+      "codigo_compe": "001",
+      "ispb": "00000000",
+      "nome": "Banco do Brasil S.A.",
+      "nome_extenso": "Banco do Brasil"
+    },
+    {
+      "codigo_compe": "237",
+      "ispb": "60746948",
+      "nome": "Banco Bradesco S.A.",
+      "nome_extenso": "Bradesco"
+    },
+    {
+      "codigo_compe": "341",
+      "ispb": "60701190",
+      "nome": "Itaú Unibanco S.A.",
+      "nome_extenso": "Itaú"
+    },
+    {
+      "codigo_compe": "104",
+      "ispb": "00360305",
+      "nome": "Caixa Econômica Federal",
+      "nome_extenso": "Caixa"
+    },
+    {
+      "codigo_compe": "033",
+      "ispb": "90400888",
+      "nome": "Banco Santander (Brasil) S.A.",
+      "nome_extenso": "Santander"
+    },
+    {
+      "codigo_compe": "260",
+      "ispb": "18236120",
+      "nome": "Nu Pagamentos S.A. (Nubank)",
+      "nome_extenso": "Nubank"
+    },
+    {
+      "codigo_compe": "077",
+      "ispb": "00416968",
+      "nome": "Banco Inter S.A.",
+      "nome_extenso": "Banco Inter"
+    },
+    {
+      "codigo_compe": "290",
+      "ispb": "10573521",
+      "nome": "PagBank PagSeguro S.A.",
+      "nome_extenso": "PagBank"
+    },
+    {
+      "codigo_compe": "380",
+      "ispb": "16501555",
+      "nome": "PicPay Instituição de Pagamento S.A.",
+      "nome_extenso": "PicPay"
+    },
+    {
+      "codigo_compe": "212",
+      "ispb": "04902979",
+      "nome": "Banco Original S.A.",
+      "nome_extenso": "Banco Original"
+    },
+    {
+      "codigo_compe": "336",
+      "ispb": "07450604",
+      "nome": "Banco C6 S.A.",
+      "nome_extenso": "C6 Bank"
+    },
+    {
+      "codigo_compe": "422",
+      "ispb": "58160789",
+      "nome": "Banco Safra S.A.",
+      "nome_extenso": "Banco Safra"
+    },
+    {
+      "codigo_compe": "756",
+      "ispb": "02038232",
+      "nome": "Banco Cooperativo Sicoob S.A.",
+      "nome_extenso": "Sicoob"
+    },
+    {
+      "codigo_compe": "748",
+      "ispb": "01181521",
+      "nome": "Banco Cooperativo Sicredi S.A.",
+      "nome_extenso": "Sicredi"
+    },
+    {
+      "codigo_compe": "655",
+      "ispb": "07207996",
+      "nome": "Banco Votorantim S.A. (BV)",
+      "nome_extenso": "BV Financeira"
+    },
+    {
+      "codigo_compe": "208",
+      "ispb": "33479023",
+      "nome": "Banco BTG Pactual S.A.",
+      "nome_extenso": "BTG Pactual"
+    },
+    {
+      "codigo_compe": "041",
+      "ispb": "92702067",
+      "nome": "Banco do Estado do Rio Grande do Sul S.A.",
+      "nome_extenso": "Banrisul"
+    },
+    {
+      "codigo_compe": "070",
+      "ispb": "00000208",
+      "nome": "Banco de Brasília S.A.",
+      "nome_extenso": "BRB"
+    },
+    {
+      "codigo_compe": "004",
+      "ispb": "07237373",
+      "nome": "Banco do Nordeste do Brasil S.A.",
+      "nome_extenso": "BNB"
+    },
+    {
+      "codigo_compe": "021",
+      "ispb": "04913711",
+      "nome": "Banco Banestes S.A.",
+      "nome_extenso": "Banestes"
+    }
+  ]
+}

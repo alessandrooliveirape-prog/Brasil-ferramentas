@@ -1,0 +1,41 @@
+{
+  "status": 200,
+  "fonte": "Tool Brasil - API Pública",
+  "url": "https://www.toolbrasil.com.br",
+  "documentacao": "https://www.toolbrasil.com.br/desenvolvedores",
+  "ano_vigencia": 2026,
+  "atualizado_em": "2026-09-16T16:17:25.206Z",
+  "tipo": "Tabela Progressiva INSS CLT",
+  "teto_contribuicao": 8157.41,
+  "teto_recolhimento_maximo": 951.62,
+  "faixas": [
+    {
+      "faixa": 1,
+      "de": 0,
+      "ate": 1518,
+      "aliquota_percentual": 7.5,
+      "parcela_deduzir": 0
+    },
+    {
+      "faixa": 2,
+      "de": 1518.01,
+      "ate": 2793.88,
+      "aliquota_percentual": 9,
+      "parcela_deduzir": 22.77
+    },
+    {
+      "faixa": 3,
+      "de": 2793.89,
+      "ate": 4190.83,
+      "aliquota_percentual": 12,
+      "parcela_deduzir": 106.59
+    },
+    {
+      "faixa": 4,
+      "de": 4190.84,
+      "ate": 8157.41,
+      "aliquota_percentual": 14,
+      "parcela_deduzir": 190.4
+    }
+  ]
+}

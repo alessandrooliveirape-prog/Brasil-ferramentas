@@ -12,6 +12,7 @@ import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { CATEGORIES, TOOLS, PROGRAMMATIC_PAGES } from './src/toolsData.ts';
 import { EXTRA_PROGRAMMATIC_PAGES } from './src/programmaticExtra.ts';
+import { generateAllApiData } from './scripts/generate-api-data.ts';
 
 const ALL_PROGRAMMATIC_PAGES = { ...PROGRAMMATIC_PAGES, ...EXTRA_PROGRAMMATIC_PAGES };
 
@@ -24,6 +25,9 @@ const TEMPLATE_PATH = path.join(DIST_DIR, 'index.html');
 
 function run() {
   console.log('🚀 Iniciando a pré-renderização estática (SSG) das páginas...');
+
+  // 0. Gerar Endpoints da API Estática JSON
+  generateAllApiData();
 
   if (!fs.existsSync(TEMPLATE_PATH)) {
     console.error(`❌ Erro: O template de build '${TEMPLATE_PATH}' não existe. Rode 'npm run build' primeiro.`);
@@ -78,6 +82,18 @@ function run() {
     fs.writeFileSync(path.join(instDir, 'index.html'), instHtml, 'utf-8');
   });
 
+  // 5.1 Gerar página de Desenvolvedores e API
+  console.log(' - Pré-renderizando: Desenvolvedores & API (/desenvolvedores e /api)');
+  const devHtml = generateDeveloperHtml(cleanTemplate);
+  const devDir = path.join(DIST_DIR, 'desenvolvedores');
+  fs.mkdirSync(devDir, { recursive: true });
+  fs.writeFileSync(path.join(devDir, 'index.html'), devHtml, 'utf-8');
+
+  // Rota alias /api
+  const apiDir = path.join(DIST_DIR, 'api');
+  fs.mkdirSync(apiDir, { recursive: true });
+  fs.writeFileSync(path.join(apiDir, 'index.html'), devHtml, 'utf-8');
+
   // 6. Gerar Sitemap.xml unificado e sincronizado
   console.log(' - Gerando sitemap.xml completo...');
   const sitemapXml = generateFullSitemapXml(institutionalPageIds);
@@ -127,6 +143,9 @@ function generateFullSitemapXml(instPages: string[]): string {
   instPages.forEach(id => {
     xml += `  <url>\n    <loc>${host}/institucional/${id}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.4</priority>\n  </url>\n`;
   });
+
+  // Desenvolvedores & API Pública
+  xml += `  <url>\n    <loc>${host}/desenvolvedores</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n  </url>\n`;
 
   xml += `</urlset>`;
   return xml;
@@ -1284,6 +1303,141 @@ function generateInstitutionalHtml(template: string, id: string): string {
     { name: title, path: `/institucional/${id}` }
   ];
   const schemaTags = buildSchemaTags(crumbs);
+  return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
+}
+
+function generateDeveloperHtml(template: string): string {
+  const title = 'API Pública & Central de Desenvolvedores | Tool Brasil';
+  const desc = 'Acesse dados oficiais do Brasil, geradores sintéticos com Módulo 11 (CPF, CNPJ) e tabelas trabalhistas via API REST estática de custo zero e widgets incorporáveis.';
+  const canonical = 'https://www.toolbrasil.com.br/desenvolvedores';
+
+  const content = `
+    <div class="space-y-8 max-w-5xl mx-auto">
+      <nav class="text-xs text-slate-500 font-semibold space-x-1.5 flex items-center">
+        <a href="/" class="hover:underline">Início</a>
+        <span>&gt;</span>
+        <span class="text-slate-800 font-bold">Desenvolvedores & API</span>
+      </nav>
+
+      <div class="bg-gradient-to-br from-slate-900 to-emerald-950 text-white p-8 rounded-2xl border border-slate-800 space-y-4">
+        <span class="px-3 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-mono font-bold border border-emerald-500/30">
+          Tool Brasil Open API v1 & Widgets
+        </span>
+        <h1 class="text-3xl font-black tracking-tight">Central de Desenvolvedores & API Pública</h1>
+        <p class="text-sm text-slate-300 leading-relaxed max-w-2xl">
+          Endpoints REST estáticos de alta performance servidos diretamente na CDN (Edge Cache) com custo zero de infraestrutura e suporte total a CORS. Integre geradores com validação oficial Módulo 11, tabelas trabalhistas e calendários oficiais ao seu sistema ou blog.
+        </p>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-6">
+        <h2 class="text-xl font-black text-slate-900">Endpoints Disponíveis (Custo Zero & Servidos via CDN)</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-200 text-slate-500 font-bold">
+                <th class="py-2.5 px-3">Método</th>
+                <th class="py-2.5 px-3">Endpoint</th>
+                <th class="py-2.5 px-3">Descrição</th>
+                <th class="py-2.5 px-3">Ação</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr>
+                <td class="py-2.5 px-3"><span class="bg-emerald-600 text-white font-mono font-bold px-2 py-0.5 rounded">GET</span></td>
+                <td class="py-2.5 px-3 font-mono font-bold text-slate-800">/api/v1/cpf/gerar.json</td>
+                <td class="py-2.5 px-3 text-slate-600">Lote de CPFs válidos sintéticos com Módulo 11 oficial e UF de origem.</td>
+                <td class="py-2.5 px-3"><a href="/api/v1/cpf/gerar.json" target="_blank" class="text-emerald-600 font-bold hover:underline">Ver JSON →</a></td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3"><span class="bg-emerald-600 text-white font-mono font-bold px-2 py-0.5 rounded">GET</span></td>
+                <td class="py-2.5 px-3 font-mono font-bold text-slate-800">/api/v1/cnpj/gerar.json</td>
+                <td class="py-2.5 px-3 text-slate-600">Lote de CNPJs sintéticos para homologação e desenvolvimento de sistemas.</td>
+                <td class="py-2.5 px-3"><a href="/api/v1/cnpj/gerar.json" target="_blank" class="text-emerald-600 font-bold hover:underline">Ver JSON →</a></td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3"><span class="bg-emerald-600 text-white font-mono font-bold px-2 py-0.5 rounded">GET</span></td>
+                <td class="py-2.5 px-3 font-mono font-bold text-slate-800">/api/v1/tabelas/inss.json</td>
+                <td class="py-2.5 px-3 text-slate-600">Tabela progressiva de alíquotas do INSS 2026, parcelas a deduzir e teto máximo.</td>
+                <td class="py-2.5 px-3"><a href="/api/v1/tabelas/inss.json" target="_blank" class="text-emerald-600 font-bold hover:underline">Ver JSON →</a></td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3"><span class="bg-emerald-600 text-white font-mono font-bold px-2 py-0.5 rounded">GET</span></td>
+                <td class="py-2.5 px-3 font-mono font-bold text-slate-800">/api/v1/tabelas/irrf.json</td>
+                <td class="py-2.5 px-3 text-slate-600">Tabela progressiva do IRRF, faixas de dedução e valor por dependente.</td>
+                <td class="py-2.5 px-3"><a href="/api/v1/tabelas/irrf.json" target="_blank" class="text-emerald-600 font-bold hover:underline">Ver JSON →</a></td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3"><span class="bg-emerald-600 text-white font-mono font-bold px-2 py-0.5 rounded">GET</span></td>
+                <td class="py-2.5 px-3 font-mono font-bold text-slate-800">/api/v1/tabelas/salario-minimo.json</td>
+                <td class="py-2.5 px-3 text-slate-600">Histórico completo do salário mínimo desde o Plano Real (1994) até o vigente.</td>
+                <td class="py-2.5 px-3"><a href="/api/v1/tabelas/salario-minimo.json" target="_blank" class="text-emerald-600 font-bold hover:underline">Ver JSON →</a></td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3"><span class="bg-emerald-600 text-white font-mono font-bold px-2 py-0.5 rounded">GET</span></td>
+                <td class="py-2.5 px-3 font-mono font-bold text-slate-800">/api/v1/dados/bancos.json</td>
+                <td class="py-2.5 px-3 text-slate-600">Catálogo das instituições financeiras do Brasil com código COMPE e ISPB.</td>
+                <td class="py-2.5 px-3"><a href="/api/v1/dados/bancos.json" target="_blank" class="text-emerald-600 font-bold hover:underline">Ver JSON →</a></td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3"><span class="bg-emerald-600 text-white font-mono font-bold px-2 py-0.5 rounded">GET</span></td>
+                <td class="py-2.5 px-3 font-mono font-bold text-slate-800">/api/v1/dados/ddds.json</td>
+                <td class="py-2.5 px-3 text-slate-600">Lista completa de códigos DDD de todos os estados e capitais.</td>
+                <td class="py-2.5 px-3"><a href="/api/v1/dados/ddds.json" target="_blank" class="text-emerald-600 font-bold hover:underline">Ver JSON →</a></td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3"><span class="bg-emerald-600 text-white font-mono font-bold px-2 py-0.5 rounded">GET</span></td>
+                <td class="py-2.5 px-3 font-mono font-bold text-slate-800">/api/v1/dados/feriados-nacionais.json</td>
+                <td class="py-2.5 px-3 text-slate-600">Calendário dos feriados nacionais brasileiros com datas oficiais.</td>
+                <td class="py-2.5 px-3"><a href="/api/v1/dados/feriados-nacionais.json" target="_blank" class="text-emerald-600 font-bold hover:underline">Ver JSON →</a></td>
+              </tr>
+              <tr>
+                <td class="py-2.5 px-3"><span class="bg-emerald-600 text-white font-mono font-bold px-2 py-0.5 rounded">GET</span></td>
+                <td class="py-2.5 px-3 font-mono font-bold text-slate-800">/api/v1/ferramentas.json</td>
+                <td class="py-2.5 px-3 text-slate-600">Catálogo integral com todas as ferramentas ativas no portal.</td>
+                <td class="py-2.5 px-3"><a href="/api/v1/ferramentas.json" target="_blank" class="text-emerald-600 font-bold hover:underline">Ver JSON →</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+        <h2 class="text-xl font-black text-slate-900">Widgets Embebíveis para Blogs e Portais</h2>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Incorpore utilitários da Tool Brasil diretamente em suas postagens ou páginas sem programar back-end. Cole o código HTML abaixo:
+        </p>
+        <div class="bg-slate-900 text-emerald-300 p-4 rounded-xl font-mono text-xs overflow-x-auto">
+          &lt;div id="tool-brasil-widget" data-tool="validador-documentos" data-theme="light"&gt;&lt;/div&gt;<br />
+          &lt;script src="https://www.toolbrasil.com.br/widget.js" async&gt;&lt;/script&gt;
+        </div>
+      </div>
+    </div>
+  `;
+
+  const crumbs = [
+    { name: 'Início', path: '/' },
+    { name: 'Desenvolvedores & API', path: '/desenvolvedores' }
+  ];
+
+  const webApiSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebAPI',
+    name: 'Tool Brasil Public API v1',
+    description: 'API Pública e Gratuita para consulta de tabelas trabalhistas, econômicas e geradores sintéticos de documentos no Brasil.',
+    url: 'https://www.toolbrasil.com.br/desenvolvedores',
+    documentation: 'https://www.toolbrasil.com.br/desenvolvedores',
+    provider: {
+      '@type': 'Organization',
+      name: 'Tool Brasil',
+      url: 'https://www.toolbrasil.com.br'
+    },
+    termsOfService: 'https://www.toolbrasil.com.br/institucional/termos'
+  };
+
+  const breadcrumb = getBreadcrumbSchema(crumbs);
+  let schemaTags = `<script type="application/ld+json">\n${JSON.stringify(breadcrumb, null, 2)}\n</script>`;
+  schemaTags += `\n<script type="application/ld+json">\n${JSON.stringify(webApiSchema, null, 2)}\n</script>`;
+
   return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
 }
 
