@@ -175,6 +175,28 @@ export default function App() {
     if (parts[0] === 'desenvolvedores' || parts[0] === 'api' || parts[0] === 'api-publica') {
       return { view: 'desenvolvedores', categoryId: 'desenvolvedores', slug: null, id: null };
     }
+
+    // Direct institutional root routes
+    const institutionalMap: { [key: string]: string } = {
+      'sobre': 'sobre',
+      'sobre-nos': 'sobre',
+      'quem-somos': 'sobre',
+      'contato': 'contato',
+      'fale-conosco': 'contato',
+      'politica-de-privacidade': 'privacidade',
+      'privacidade': 'privacidade',
+      'termos-de-uso': 'termos',
+      'termos': 'termos',
+      'cookies': 'cookies',
+      'gestao-de-cookies': 'cookies',
+      'anunciantes': 'anunciantes',
+      'transparencia-adsense': 'transparencia-adsense'
+    };
+
+    if (parts.length === 1 && institutionalMap[parts[0]]) {
+      return { view: 'institucional', categoryId: 'institucional', slug: null, id: institutionalMap[parts[0]] };
+    }
+
     if (parts.length === 2) {
       return { view: 'tool', categoryId: parts[0], slug: parts[1], id: null };
     }
@@ -279,9 +301,53 @@ export default function App() {
         pathSuffix = `programatico/${currentRoute.id}`;
       }
     } else if (currentRoute.view === 'institucional' && currentRoute.id) {
-      title = `${currentRoute.id.toUpperCase()} | Tool Brasil`;
-      desc = `Informações institucionais de ${currentRoute.id} da Tool Brasil.`;
-      pathSuffix = `institucional/${currentRoute.id}`;
+      const instMeta: { [key: string]: { title: string; desc: string; path: string } } = {
+        'sobre': {
+          title: "Sobre a Tool Brasil | Nossa Missão, Equipe e Metodologia",
+          desc: "Conheça o portal Tool Brasil, nossa missão de democratizar ferramentas gratuitas para brasileiros, metodologia com fontes oficiais (CLT, INSS, RFB) e corpo técnico.",
+          path: "sobre"
+        },
+        'contato': {
+          title: "Fale Conosco | Atendimento e Suporte Oficial Tool Brasil",
+          desc: "Entre em contato com a equipe da Tool Brasil para dúvidas sobre cálculos, sugestões de novas ferramentas, parcerias comerciais e contato do DPO / LGPD.",
+          path: "contato"
+        },
+        'privacidade': {
+          title: "Política de Privacidade | Tool Brasil",
+          desc: "Política de Privacidade em conformidade com a LGPD (Lei nº 13.709/2018), detalhando o processamento seguro local (client-side), cookies do Google AdSense e direitos do titular.",
+          path: "politica-de-privacidade"
+        },
+        'termos': {
+          title: "Termos de Uso e Condições Gerais | Tool Brasil",
+          desc: "Termos de serviço, gratuidade e isenção de responsabilidade técnica das calculadoras e geradores da central de utilitários Tool Brasil.",
+          path: "termos-de-uso"
+        },
+        'cookies': {
+          title: "Gestão de Preferências de Cookies | Tool Brasil",
+          desc: "Gerencie o consentimento e suas preferências de cookies analíticos e de publicidade na Tool Brasil.",
+          path: "cookies"
+        },
+        'anunciantes': {
+          title: "Anuncie na Tool Brasil | Mídia Kit e Parcerias Comerciais",
+          desc: "Conecte sua empresa a milhares de usuários brasileiros qualificados com alto poder de decisão através de mídia programática e parcerias com a Tool Brasil.",
+          path: "institucional/anunciantes"
+        },
+        'transparencia-adsense': {
+          title: "Transparência Google AdSense | Tool Brasil",
+          desc: "Entenda como a publicidade programática do Google AdSense financia a infraestrutura 100% gratuita da Tool Brasil.",
+          path: "institucional/transparencia-adsense"
+        }
+      };
+
+      const meta = instMeta[currentRoute.id] || {
+        title: "Institucional | Tool Brasil",
+        desc: "Informações institucionais e regulatórias da Tool Brasil.",
+        path: `institucional/${currentRoute.id}`
+      };
+
+      title = meta.title;
+      desc = meta.desc;
+      pathSuffix = meta.path;
     } else if (currentRoute.view === 'desenvolvedores') {
       title = "API Pública & Central de Desenvolvedores | Tool Brasil";
       desc = "Endpoints estáticos de alta performance e custo zero para desenvolvedores, equipes de QA e contadores. Consuma dados oficiais do Brasil e incorpore widgets gratuitos.";
@@ -433,8 +499,17 @@ export default function App() {
         crumbs.push({ name: prog.title, path: `/programatico/${currentRoute.id}` });
       }
     } else if (currentRoute.view === 'institucional' && currentRoute.id) {
-      crumbs.push({ name: 'Institucional', path: '/institucional/sobre' });
-      crumbs.push({ name: currentRoute.id.toUpperCase(), path: `/institucional/${currentRoute.id}` });
+      const instTitles: { [key: string]: { name: string; path: string } } = {
+        'sobre': { name: 'Sobre Nós', path: '/sobre' },
+        'contato': { name: 'Fale Conosco', path: '/contato' },
+        'privacidade': { name: 'Política de Privacidade', path: '/politica-de-privacidade' },
+        'termos': { name: 'Termos de Uso', path: '/termos-de-uso' },
+        'cookies': { name: 'Gestão de Cookies', path: '/cookies' },
+        'anunciantes': { name: 'Anunciantes', path: '/institucional/anunciantes' },
+        'transparencia-adsense': { name: 'Transparência AdSense', path: '/institucional/transparencia-adsense' }
+      };
+      const info = instTitles[currentRoute.id] || { name: 'Institucional', path: `/institucional/${currentRoute.id}` };
+      crumbs.push({ name: info.name, path: info.path });
     }
 
     return crumbs;
@@ -553,8 +628,8 @@ export default function App() {
             </a>
           </div>
 
-          {/* Category Quick Links for Desktop */}
-          <nav className="hidden lg:flex items-center gap-6 text-xs font-extrabold text-slate-800 dark:text-slate-200">
+          {/* Category & Institutional Quick Links for Desktop */}
+          <nav className="hidden lg:flex items-center gap-5 text-xs font-extrabold text-slate-800 dark:text-slate-200">
             {CATEGORIES.filter(c => c.id !== 'institucional' && c.id !== 'programatico').map((cat) => {
               const isCatActive = currentRoute.categoryId === cat.id && currentRoute.view === 'category';
               return (
@@ -567,6 +642,18 @@ export default function App() {
                 </a>
               );
             })}
+            <a
+              href="/sobre"
+              className={`hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 ${currentRoute.view === 'institucional' && currentRoute.id === 'sobre' ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-500 font-bold' : ''}`}
+            >
+              Sobre
+            </a>
+            <a
+              href="/contato"
+              className={`hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 ${currentRoute.view === 'institucional' && currentRoute.id === 'contato' ? 'text-emerald-600 dark:text-emerald-400 border-b-2 border-emerald-500 font-bold' : ''}`}
+            >
+              Contato
+            </a>
           </nav>
 
           {/* Search bar */}
@@ -1386,12 +1473,12 @@ export default function App() {
               <ul className="space-y-1.5 text-xs">
                 <li><a href="/desenvolvedores" className="hover:text-emerald-400 font-bold text-emerald-400">⚡ API Pública & Docs</a></li>
                 <li><a href="/desenvolvedores#widgets" className="hover:text-emerald-400">Widgets para Sites</a></li>
-                <li><a href="/institucional/sobre" className="hover:text-emerald-400">Sobre Nós</a></li>
-                <li><a href="/institucional/contato" className="hover:text-emerald-400">Contato / Fale Conosco</a></li>
-                <li><a href="/institucional/privacidade" className="hover:text-emerald-400">Política de Privacidade</a></li>
-                <li><a href="/institucional/termos" className="hover:text-emerald-400">Termos de Uso</a></li>
-                <li><a href="/institucional/cookies" className="hover:text-emerald-400">Política de Cookies</a></li>
-                <li><a href="/institucional/anunciantes" className="hover:text-emerald-400">Anunciar / AdSense</a></li>
+                <li><a href="/sobre" className="hover:text-emerald-400 font-semibold text-slate-200">Sobre a Tool Brasil</a></li>
+                <li><a href="/contato" className="hover:text-emerald-400 font-semibold text-slate-200">Fale Conosco / Suporte</a></li>
+                <li><a href="/politica-de-privacidade" className="hover:text-emerald-400">Política de Privacidade (LGPD)</a></li>
+                <li><a href="/termos-de-uso" className="hover:text-emerald-400">Termos de Uso</a></li>
+                <li><a href="/cookies" className="hover:text-emerald-400">Preferências de Cookies</a></li>
+                <li><a href="/institucional/anunciantes" className="hover:text-emerald-400">Mídia Kit / Anunciantes</a></li>
               </ul>
             </div>
           </div>

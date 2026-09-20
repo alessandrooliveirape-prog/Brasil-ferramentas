@@ -72,7 +72,7 @@ function run() {
     fs.writeFileSync(path.join(progDir, 'index.html'), progHtml, 'utf-8');
   });
 
-  // 5. Gerar páginas Institucionais
+  // 5. Gerar páginas Institucionais (Rotas aninhadas e rotas diretas raiz)
   const institutionalPageIds = ['sobre', 'contato', 'privacidade', 'termos', 'cookies', 'transparencia-adsense', 'anunciantes'];
   institutionalPageIds.forEach(id => {
     console.log(` - Pré-renderizando pág. institucional: /institucional/${id}`);
@@ -80,6 +80,24 @@ function run() {
     const instDir = path.join(DIST_DIR, 'institucional', id);
     fs.mkdirSync(instDir, { recursive: true });
     fs.writeFileSync(path.join(instDir, 'index.html'), instHtml, 'utf-8');
+
+    // Gerar também em rotas canônicas de primeiro nível para compliance e AdSense
+    const directPathMap: { [key: string]: string[] } = {
+      'sobre': ['sobre', 'sobre-nos', 'quem-somos'],
+      'contato': ['contato', 'fale-conosco'],
+      'privacidade': ['politica-de-privacidade', 'privacidade', 'privacy-policy'],
+      'termos': ['termos-de-uso', 'termos', 'terms'],
+      'cookies': ['cookies', 'gestao-de-cookies']
+    };
+
+    if (directPathMap[id]) {
+      directPathMap[id].forEach(subPath => {
+        console.log(`   └─ Rota direta/alias: /${subPath}`);
+        const targetDir = path.join(DIST_DIR, subPath);
+        fs.mkdirSync(targetDir, { recursive: true });
+        fs.writeFileSync(path.join(targetDir, 'index.html'), instHtml, 'utf-8');
+      });
+    }
   });
 
   // 5.1 Gerar página de Desenvolvedores e API
@@ -95,7 +113,7 @@ function run() {
   fs.writeFileSync(path.join(apiDir, 'index.html'), devHtml, 'utf-8');
 
   // 6. Gerar Sitemap.xml unificado e sincronizado
-  console.log(' - Gerando sitemap.xml completo...');
+  console.log(' - Gerando sitemap.xml completo com rotas canônicas...');
   const sitemapXml = generateFullSitemapXml(institutionalPageIds);
   fs.writeFileSync(path.join(DIST_DIR, 'sitemap.xml'), sitemapXml, 'utf-8');
   const publicSitemap = path.resolve(__dirname, 'public', 'sitemap.xml');
@@ -134,14 +152,24 @@ function generateFullSitemapXml(instPages: string[]): string {
     xml += `  <url>\n    <loc>${host}/${tool.categoryId}/${tool.slug}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n`;
   });
 
-  // Páginas Programáticas
+  // Páginas Programáticas Legítimas
   Object.keys(ALL_PROGRAMMATIC_PAGES).forEach(id => {
     xml += `  <url>\n    <loc>${host}/programatico/${id}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
   });
 
-  // Institucionais
-  instPages.forEach(id => {
-    xml += `  <url>\n    <loc>${host}/institucional/${id}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.4</priority>\n  </url>\n`;
+  // Institucionais - URLs Canônicas de Primeiro Nível
+  const canonicalInstUrls = [
+    { path: '/sobre', priority: '0.6' },
+    { path: '/contato', priority: '0.6' },
+    { path: '/politica-de-privacidade', priority: '0.5' },
+    { path: '/termos-de-uso', priority: '0.5' },
+    { path: '/cookies', priority: '0.3' },
+    { path: '/institucional/anunciantes', priority: '0.4' },
+    { path: '/institucional/transparencia-adsense', priority: '0.4' }
+  ];
+
+  canonicalInstUrls.forEach(item => {
+    xml += `  <url>\n    <loc>${host}${item.path}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${item.priority}</priority>\n  </url>\n`;
   });
 
   // Desenvolvedores & API Pública
@@ -302,12 +330,14 @@ function buildHtmlPage(template: string, title: string, desc: string, canonicalU
               </div>
             </a>
           </div>
-          <nav class="hidden lg:flex items-center gap-6 text-xs font-extrabold text-slate-800">
+          <nav class="hidden lg:flex items-center gap-5 text-xs font-extrabold text-slate-800">
             <a href="/calculadoras" class="hover:text-emerald-700 transition-colors py-1">Calculadoras</a>
             <a href="/conversores" class="hover:text-emerald-700 transition-colors py-1">Conversores</a>
             <a href="/geradores" class="hover:text-emerald-700 transition-colors py-1">Geradores</a>
             <a href="/ferramentas-web" class="hover:text-emerald-700 transition-colors py-1">Ferramentas Web</a>
             <a href="/utilitarios" class="hover:text-emerald-700 transition-colors py-1">Utilitários</a>
+            <a href="/sobre" class="hover:text-emerald-700 transition-colors py-1">Sobre</a>
+            <a href="/contato" class="hover:text-emerald-700 transition-colors py-1">Contato</a>
           </nav>
         </div>
       </header>
@@ -354,13 +384,14 @@ function buildHtmlPage(template: string, title: string, desc: string, canonicalU
       <footer class="bg-white border-t border-slate-200 mt-auto py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500 space-y-4">
           <div class="flex flex-wrap justify-center gap-4">
-            <a href="/institucional/sobre" class="hover:underline font-bold text-slate-700">Sobre Nós</a>
-            <a href="/institucional/contato" class="hover:underline font-bold text-slate-700">Fale Conosco</a>
-            <a href="/institucional/privacidade" class="hover:underline font-bold text-slate-700">Política de Privacidade</a>
-            <a href="/institucional/termos" class="hover:underline font-bold text-slate-700">Termos de Uso</a>
-            <a href="/institucional/cookies" class="hover:underline font-bold text-slate-700">Gestão de Cookies</a>
-            <a href="/institucional/transparencia-adsense" class="hover:underline font-bold text-slate-700">Transparência AdSense</a>
-            <a href="/institucional/anunciantes" class="hover:underline font-bold text-slate-700">Anunciantes</a>
+            <a href="/sobre" class="hover:underline font-bold text-slate-700">Sobre a Tool Brasil</a>
+            <a href="/contato" class="hover:underline font-bold text-slate-700">Fale Conosco / Suporte</a>
+            <a href="/politica-de-privacidade" class="hover:underline font-bold text-slate-700">Política de Privacidade (LGPD)</a>
+            <a href="/termos-de-uso" class="hover:underline font-bold text-slate-700">Termos de Uso</a>
+            <a href="/cookies" class="hover:underline font-bold text-slate-700">Preferências de Cookies</a>
+            <a href="/transparencia-adsense" class="hover:underline font-bold text-slate-700">Transparência AdSense</a>
+            <a href="/anunciantes" class="hover:underline font-bold text-slate-700">Anunciantes / Mídia Kit</a>
+            <a href="/desenvolvedores" class="hover:underline font-bold text-emerald-700">API Pública</a>
           </div>
           <p>&copy; 2026 Tool Brasil. Ferramentas online 100% gratuitas desenvolvidas em conformidade regulatória.</p>
         </div>
@@ -435,6 +466,207 @@ function generateHomeHtml(template: string): string {
   return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
 }
 
+function getCategoryEditorialHtml(cat: any): string {
+  if (cat.id === 'calculadoras') {
+    return `
+      <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-6 text-slate-800">
+        <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <span>📊</span> Central de Calculadoras Financeiras, Trabalhistas e do Cotidiano
+        </h2>
+        <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
+          <p>
+            A categoria de <strong>Calculadoras da Tool Brasil</strong> reúne dezenas de utilitários projetados para entregar agilidade, exatidão matemática e suporte a decisões financeiras e trabalhistas. Nosso catálogo abrange desde estimativas simples de proporcionalidade e consumo até complexos cálculos de rescisão contratual com alíquotas progressivas.
+          </p>
+          <h3 class="text-sm font-bold text-slate-800 pt-2">Rigor Normativo e Alíquotas Vigentes (2026)</h3>
+          <p>
+            Diferente de simuladores desatualizados, as calculadoras trabalhistas e fiscais da Tool Brasil incorporam as diretrizes normativas vigentes no território nacional:
+          </p>
+          <ul class="list-disc pl-5 space-y-1.5">
+            <li><strong>Tabela Progressiva do INSS:</strong> Aplicação das alíquotas progressivas (7,5% a 14%) faixa por faixa, em estrita conformidade com a Portaria Interministerial MPS/MF nº 2/2026.</li>
+            <li><strong>Deduções do Imposto de Renda (IRRF):</strong> Fórmulas alinhadas às faixas de isenção e parcelas a deduzir estabelecidas pela Receita Federal do Brasil.</li>
+            <li><strong>Rescisões e Férias CLT:</strong> Apuração exata de aviso prévio proporcional (Lei nº 12.506/2011), terço constitucional de férias, saldo de salário e multa de 40% do FGTS.</li>
+          </ul>
+          <h3 class="text-sm font-bold text-slate-800 pt-2">Privacidade Total e Processamento Local</h3>
+          <p>
+            Todas as simulações executam exclusivamente na memória do seu navegador web (client-side). Seus dados financeiros, datas de admissão e valores salariais jamais são enviados aos nossos servidores ou compartilhados com terceiros.
+          </p>
+        </div>
+
+        <hr class="border-slate-200" />
+
+        <div class="space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Perguntas Frequentes sobre as Calculadoras</h3>
+          <dl class="space-y-3 text-xs text-slate-600 leading-relaxed">
+            <div>
+              <dt class="font-bold text-slate-800">Os cálculos substituem um contador ou parecer jurídico formal?</dt>
+              <dd class="mt-0.5">Não. Nossas calculadoras possuem finalidade meramente informativa e de estimativa matemática. Decisões formais devem sempre ser referendadas por profissionais habilitados (contadores, advogados trabalhistas) ou órgãos oficiais.</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">As alíquotas de INSS e IRPF estão atualizadas?</dt>
+              <dd class="mt-0.5">Sim. Nossa equipe técnica atualiza continuamente as faixas salariais, tetos previdenciários e tabelas progressivas assim que novas portarias oficiais são publicadas no Diário Oficial da União.</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">É necessário pagar ou criar conta para usar?</dt>
+              <dd class="mt-0.5">Não. Todas as ferramentas da Tool Brasil são 100% gratuitas, sem limites diários de uso e sem exigência de cadastro.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    `;
+  }
+
+  if (cat.id === 'conversores') {
+    return `
+      <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-6 text-slate-800">
+        <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <span>📐</span> Central de Conversores de Unidades, Medidas e Moedas
+        </h2>
+        <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
+          <p>
+            O módulo de <strong>Conversores da Tool Brasil</strong> foi desenvolvido para eliminar erros manuais em transformações métricas, financeiras, de temperatura e de armazenamento digital. Nossos utilitários utilizam os padrões estritos do Sistema Internacional de Unidades (SI) e especificações da ISO.
+          </p>
+          <h3 class="text-sm font-bold text-slate-800 pt-2">Cotações Comerciais em Tempo Real</h3>
+          <p>
+            Os conversores cambiais (Dólar, Euro, Libra Esterlina, Peso Argentino e Bitcoin) atualizam suas taxas de câmbio automaticamente com base em feeds de cotação de mercado, permitindo simular compras internacionais, remessas e viagens com precisão instantânea.
+          </p>
+          <h3 class="text-sm font-bold text-slate-800 pt-2">Padrões Métricos Internacionais</h3>
+          <p>
+            Conversões de comprimento (metros para pés, polegadas para centímetros), peso (quilos para libras) e dados digitais (MB para GB) utilizam fatores de precisão estendida, garantindo confiabilidade para engenharia, logística e informática.
+          </p>
+        </div>
+
+        <hr class="border-slate-200" />
+
+        <div class="space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Perguntas Frequentes sobre os Conversores</h3>
+          <dl class="space-y-3 text-xs text-slate-600 leading-relaxed">
+            <div>
+              <dt class="font-bold text-slate-800">As cotações de moedas utilizam valores comerciais ou turismo?</dt>
+              <dd class="mt-0.5">Utilizamos cotações comerciais de mercado (bid/ask). Para compras com cartão de crédito internacional, lembre-se de considerar o spread bancário e a incidência de IOF.</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">Qual a diferença entre a conversão decimal e binária de gigabytes (GB)?</dt>
+              <dd class="mt-0.5">No padrão decimal (SI), 1 GB = 1.000 MB. No padrão binário computacional (Gibibyte/GiB), 1 GiB = 1.024 MiB. Nossos conversores discriminam ambos os padrões para sua comodidade.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    `;
+  }
+
+  if (cat.id === 'geradores') {
+    return `
+      <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-6 text-slate-800">
+        <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <span>🔒</span> Central de Geradores de Dados, Documentos Sintéticos e Códigos
+        </h2>
+        <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
+          <p>
+            A suíte de <strong>Geradores da Tool Brasil</strong> atende desenvolvedores, testadores de software (QA), designers de interface e administradores de sistemas que necessitam de massas de dados sintéticos válidos para homologação e preenchimento de cadastros de teste.
+          </p>
+          <h3 class="text-sm font-bold text-slate-800 pt-2">Algoritmo Módulo 11 Oficial e Segurança LGPD</h3>
+          <p>
+            Nossos geradores de CPF e CNPJ aplicam estritamente o algoritmo matemático oficial de Módulo 11 para cálculo dos dois dígitos verificadores (DV). Todos os números gerados são combinações sintéticas aleatórias destinadas exclusivamente a testes em ambientes de desenvolvimento, em total conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018).
+          </p>
+          <h3 class="text-sm font-bold text-slate-800 pt-2">Senhas Fortes com Criptografia Web Crypto API</h3>
+          <p>
+            O gerador de senhas utiliza a API nativa criptográfica do navegador (crypto.getRandomValues), gerando entropia de alta segurança resistente a ataques de força bruta e dicionário.
+          </p>
+        </div>
+
+        <hr class="border-slate-200" />
+
+        <div class="space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Perguntas Frequentes sobre os Geradores</h3>
+          <dl class="space-y-3 text-xs text-slate-600 leading-relaxed">
+            <div>
+              <dt class="font-bold text-slate-800">Os CPFs e CNPJs gerados pertencem a pessoas reais?</dt>
+              <dd class="mt-0.5">Não. São números sintéticos gerados aleatoriamente com dígitos verificadores matematicamente válidos para homologação de software. É estritamente proibido o uso de dados fictícios para fins fraudulentos ou contratuais reais.</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">As senhas geradas ficam salvas em algum banco de dados?</dt>
+              <dd class="mt-0.5">Não. Todo o processo de geração ocorre localmente no seu dispositivo. Nenhuma credencial gerada é transmitida pela rede.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    `;
+  }
+
+  if (cat.id === 'ferramentas-web') {
+    return `
+      <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-6 text-slate-800">
+        <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+          <span>🌐</span> Central de Ferramentas Web, Redes e Diagnósticos Online
+        </h2>
+        <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
+          <p>
+            A categoria de <strong>Ferramentas Web da Tool Brasil</strong> disponibiliza utilitários ágeis para inspeção de conectividade, diagnóstico de endereços IP públicos, verificação de portas de rede e análise de cabeçalhos HTTP.
+          </p>
+          <h3 class="text-sm font-bold text-slate-800 pt-2">Diagnóstico Instantâneo sem Instalação</h3>
+          <p>
+            Nossas ferramentas de rede operam diretamente no navegador, permitindo a webmasters, desenvolvedores e profissionais de suporte identificar falhas de resolução DNS, verificar portas de serviços essenciais (HTTP, HTTPS, SSH, DNS) e testar integridade de conexões.
+          </p>
+        </div>
+
+        <hr class="border-slate-200" />
+
+        <div class="space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Perguntas Frequentes sobre Ferramentas Web</h3>
+          <dl class="space-y-3 text-xs text-slate-600 leading-relaxed">
+            <div>
+              <dt class="font-bold text-slate-800">Como funciona a detecção do Meu IP?</dt>
+              <dd class="mt-0.5">A ferramenta detecta seu endereço IPv4 ou IPv6 público visível na internet, identificando também sua cidade aproximada, estado e provedor de internet (ISP).</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">O testador de portas realiza varreduras invasivas?</dt>
+              <dd class="mt-0.5">Não. Realizamos apenas testes pontuais de conexão TCP nas portas declaradas pelo usuário para fins de diagnóstico e depuração de firewall.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    `;
+  }
+
+  // Utilitários
+  return `
+    <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-6 text-slate-800">
+      <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+        <span>⚙️</span> Central de Utilitários de Produtividade, Texto e Mídia
+      </h2>
+      <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
+        <p>
+          Os <strong>Utilitários da Tool Brasil</strong> foram concebidos para economizar tempo em rotinas de formatação textual, manipulação rápida de imagens e conferência documental do dia a dia.
+        </p>
+        <h3 class="text-sm font-bold text-slate-800 pt-2">Processamento de Imagens Seguro via Canvas API</h3>
+        <p>
+          Diferente de portais que realizam o upload de suas fotos para servidores desconhecidos, nossos compressores e conversores de imagem executam a compressão e transformação de formato utilizando a API nativa de Canvas e WebP do seu navegador. Suas imagens nunca saem do seu computador ou celular.
+        </p>
+        <h3 class="text-sm font-bold text-slate-800 pt-2">Produtividade Instantânea</h3>
+        <p>
+          Formatadores de texto (maiúsculas/minúsculas, remoção de quebras de linha, contadores de palavras e caracteres) aceleram a produção de conteúdo, redação de e-mails corporativos e revisão editorial.
+        </p>
+      </div>
+
+      <hr class="border-slate-200" />
+
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-slate-900">Perguntas Frequentes sobre os Utilitários</h3>
+        <dl class="space-y-3 text-xs text-slate-600 leading-relaxed">
+          <div>
+            <dt class="font-bold text-slate-800">Minhas fotos ou documentos enviados para compressão ficam salvos na internet?</dt>
+            <dd class="mt-0.5">Absolutamente não. O processamento é 100% executado localmente na memória do seu navegador. Nada é transmitido a servidores externos.</dd>
+          </div>
+          <div>
+            <dt class="font-bold text-slate-800">Existe limite de tamanho de arquivo para compressão?</dt>
+            <dd class="mt-0.5">O limite depende exclusivamente da memória RAM do seu dispositivo, suportando com facilidade imagens de alta resolução de até 20MB.</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  `;
+}
+
 function generateCategoryHtml(template: string, cat: any): string {
   const title = `${cat.name} | Tool Brasil`;
   const desc = `${cat.description} Acesse ferramentas gratuitas na categoria ${cat.name} na central de utilitários Tool Brasil.`;
@@ -443,7 +675,7 @@ function generateCategoryHtml(template: string, cat: any): string {
   const catTools = TOOLS.filter(t => t.categoryId === cat.id);
 
   const content = `
-    <div class="space-y-6">
+    <div class="space-y-8">
       <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
         <h1 class="text-2xl font-bold text-slate-900">${cat.name}</h1>
         <p class="text-sm text-slate-600 leading-relaxed">${cat.description}</p>
@@ -457,6 +689,9 @@ function generateCategoryHtml(template: string, cat: any): string {
           </a>
         `).join('')}
       </div>
+
+      <!-- CONTEÚDO EDITORIAL PROFUNDO ANTI-THIN-CONTENT -->
+      ${getCategoryEditorialHtml(cat)}
     </div>
   `;
 
@@ -1111,6 +1346,606 @@ function generateToolHtml(template: string, tool: any): string {
   return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
 }
 
+function getProgrammaticEditorialHtml(id: string, page: any): string {
+  // 1. SALÁRIO MÍNIMO HISTÓRICO & ANOS
+  if (id.startsWith('salario-minimo')) {
+    const isYearSpecific = id.match(/salario-minimo-(\d{4})/);
+    const targetYear = isYearSpecific ? isYearSpecific[1] : null;
+
+    return `
+      <div class="space-y-6 text-slate-800">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Histórico Oficial BACEN & MTE</span>
+            <span class="text-xs text-slate-500 font-medium">Atualizado para Vigência 2026</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900">
+            Evolução Histórica do Salário Mínimo no Brasil (1994 a 2026)
+          </h2>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            O salário mínimo nacional é a menor remuneração que a legislação brasileira permite aos empregadores pagar aos seus trabalhadores pelo período de um mês de serviço (Art. 7º, IV da Constituição Federal de 1988). Desde a implementação do Plano Real em julho de 1994, o valor do piso nacional tem sido reajustado anualmente para repor as perdas inflacionárias medidas pelo Índice Nacional de Preços ao Consumidor (INPC) e, em diversos períodos, incorporar ganhos reais atrelados ao crescimento do Produto Interno Bruto (PIB).
+          </p>
+
+          ${targetYear ? `
+            <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-200 text-xs space-y-1.5">
+              <p class="font-bold text-emerald-900 text-sm">📌 Destaque para o Ano de ${targetYear}:</p>
+              <p class="text-slate-700 leading-relaxed">
+                Neste exercício, o piso salarial nacional foi fixado com base nas diretrizes econômicas vigentes na época. Acompanhe abaixo o comparativo histórico detalhado com o valor atual vigente de <strong>R$ 1.518,00</strong>.
+              </p>
+            </div>
+          ` : ''}
+
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="py-2.5 px-3">Ano</th>
+                  <th class="py-2.5 px-3">Valor Mensal (R$)</th>
+                  <th class="py-2.5 px-3">Valor Diário (R$)</th>
+                  <th class="py-2.5 px-3">Valor Hora (R$)</th>
+                  <th class="py-2.5 px-3">Norma Legal Regulamentadora</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr class="${targetYear === '2026' ? 'bg-emerald-50 font-bold' : ''}">
+                  <td class="py-2 px-3 font-bold text-slate-900">2026</td>
+                  <td class="py-2 px-3 font-bold text-emerald-700">R$ 1.518,00</td>
+                  <td class="py-2 px-3">R$ 50,60</td>
+                  <td class="py-2 px-3">R$ 6,90</td>
+                  <td class="py-2 px-3 text-slate-600">Lei Orçamentária Anual / Política de Valorização</td>
+                </tr>
+                <tr class="${targetYear === '2025' ? 'bg-emerald-50 font-bold' : ''}">
+                  <td class="py-2 px-3 font-bold text-slate-900">2025</td>
+                  <td class="py-2 px-3 font-bold text-slate-800">R$ 1.412,00</td>
+                  <td class="py-2 px-3">R$ 47,07</td>
+                  <td class="py-2 px-3">R$ 6,42</td>
+                  <td class="py-2 px-3 text-slate-600">Decreto nº 11.864/2023</td>
+                </tr>
+                <tr class="${targetYear === '2024' ? 'bg-emerald-50 font-bold' : ''}">
+                  <td class="py-2 px-3 font-bold text-slate-900">2024</td>
+                  <td class="py-2 px-3 font-bold text-slate-800">R$ 1.412,00</td>
+                  <td class="py-2 px-3">R$ 47,07</td>
+                  <td class="py-2 px-3">R$ 6,42</td>
+                  <td class="py-2 px-3 text-slate-600">Decreto nº 11.864/2023</td>
+                </tr>
+                <tr class="${targetYear === '2023' ? 'bg-emerald-50 font-bold' : ''}">
+                  <td class="py-2 px-3 font-bold text-slate-900">2023</td>
+                  <td class="py-2 px-3">R$ 1.320,00</td>
+                  <td class="py-2 px-3">R$ 44,00</td>
+                  <td class="py-2 px-3">R$ 6,00</td>
+                  <td class="py-2 px-3 text-slate-600">Medida Provisória nº 1.172/2023 (a partir de maio)</td>
+                </tr>
+                <tr class="${targetYear === '2022' ? 'bg-emerald-50 font-bold' : ''}">
+                  <td class="py-2 px-3 font-bold text-slate-900">2022</td>
+                  <td class="py-2 px-3">R$ 1.212,00</td>
+                  <td class="py-2 px-3">R$ 40,40</td>
+                  <td class="py-2 px-3">R$ 5,51</td>
+                  <td class="py-2 px-3 text-slate-600">Medida Provisória nº 1.091/2021</td>
+                </tr>
+                <tr class="${targetYear === '2021' ? 'bg-emerald-50 font-bold' : ''}">
+                  <td class="py-2 px-3 font-bold text-slate-900">2021</td>
+                  <td class="py-2 px-3">R$ 1.100,00</td>
+                  <td class="py-2 px-3">R$ 36,67</td>
+                  <td class="py-2 px-3">R$ 5,00</td>
+                  <td class="py-2 px-3 text-slate-600">Medida Provisória nº 1.021/2020</td>
+                </tr>
+                <tr class="${targetYear === '2020' ? 'bg-emerald-50 font-bold' : ''}">
+                  <td class="py-2 px-3 font-bold text-slate-900">2020</td>
+                  <td class="py-2 px-3">R$ 1.045,00</td>
+                  <td class="py-2 px-3">R$ 34,83</td>
+                  <td class="py-2 px-3">R$ 4,75</td>
+                  <td class="py-2 px-3 text-slate-600">Medida Provisória nº 919/2020</td>
+                </tr>
+                <tr class="${targetYear === '2015' ? 'bg-emerald-50 font-bold' : ''}">
+                  <td class="py-2 px-3 font-bold text-slate-900">2015</td>
+                  <td class="py-2 px-3">R$ 788,00</td>
+                  <td class="py-2 px-3">R$ 26,27</td>
+                  <td class="py-2 px-3">R$ 3,58</td>
+                  <td class="py-2 px-3 text-slate-600">Decreto nº 8.381/2014</td>
+                </tr>
+                <tr class="${targetYear === '2010' ? 'bg-emerald-50 font-bold' : ''}">
+                  <td class="py-2 px-3 font-bold text-slate-900">2010</td>
+                  <td class="py-2 px-3">R$ 510,00</td>
+                  <td class="py-2 px-3">R$ 17,00</td>
+                  <td class="py-2 px-3">R$ 2,32</td>
+                  <td class="py-2 px-3 text-slate-600">Medida Provisória nº 474/2009</td>
+                </tr>
+                <tr class="${targetYear === '2005' ? 'bg-emerald-50 font-bold' : ''}">
+                  <td class="py-2 px-3 font-bold text-slate-900">2005</td>
+                  <td class="py-2 px-3">R$ 300,00</td>
+                  <td class="py-2 px-3">R$ 10,00</td>
+                  <td class="py-2 px-3">R$ 1,36</td>
+                  <td class="py-2 px-3 text-slate-600">Medida Provisória nº 248/2005</td>
+                </tr>
+                <tr class="${targetYear === '2000' ? 'bg-emerald-50 font-bold' : ''}">
+                  <td class="py-2 px-3 font-bold text-slate-900">2000</td>
+                  <td class="py-2 px-3">R$ 151,00</td>
+                  <td class="py-2 px-3">R$ 5,03</td>
+                  <td class="py-2 px-3">R$ 0,69</td>
+                  <td class="py-2 px-3 text-slate-600">Medida Provisória nº 2.019/2000</td>
+                </tr>
+                <tr class="${targetYear === '1995' ? 'bg-emerald-50 font-bold' : ''}">
+                  <td class="py-2 px-3 font-bold text-slate-900">1995</td>
+                  <td class="py-2 px-3">R$ 100,00</td>
+                  <td class="py-2 px-3">R$ 3,33</td>
+                  <td class="py-2 px-3">R$ 0,45</td>
+                  <td class="py-2 px-3 text-slate-600">Medida Provisória nº 1.053/1995</td>
+                </tr>
+                <tr class="${targetYear === '1994' ? 'bg-emerald-50 font-bold' : ''}">
+                  <td class="py-2 px-3 font-bold text-slate-900">1994</td>
+                  <td class="py-2 px-3">R$ 64,79</td>
+                  <td class="py-2 px-3">R$ 2,16</td>
+                  <td class="py-2 px-3">R$ 0,29</td>
+                  <td class="py-2 px-3 text-slate-600">Início do Plano Real (Conversão da URV)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <h3 class="text-base font-bold text-slate-900">Impactos do Salário Mínimo na Economia e Direitos Trabalhistas</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-600 leading-relaxed">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+              <h4 class="font-bold text-slate-800">Benefícios Previdenciários (INSS)</h4>
+              <p>Nenhum benefício do INSS que substitua o rendimento do trabalho (como aposentadoria por idade, tempo de contribuição ou auxílio-doença) pode ter valor inferior ao salário mínimo nacional vigente.</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+              <h4 class="font-bold text-slate-800">Abono Salarial PIS/PASEP</h4>
+              <p>O valor máximo do abono salarial anual é equivalente a exatamente um salário mínimo nacional, proporcional ao número de meses trabalhados com carteira assinada no ano-base.</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+              <h4 class="font-bold text-slate-800">Seguro-Desemprego</h4>
+              <p>O piso do seguro-desemprego pago pelo Ministério do Trabalho e Emprego é vinculado diretamente ao salário mínimo, garantindo suporte financeiro digno na rescisão contratual involuntária.</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+              <h4 class="font-bold text-slate-800">Juizados Especiais (Pequenas Causas)</h4>
+              <p>O teto de causas nos Juizados Especiais Cíveis (JEC) sem exigência de advogado é de até 20 salários mínimos, e com advogado atinge o limite máximo legal de até 40 salários mínimos.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Ferramentas de Cálculo Relacionadas</h3>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <a href="/calculadoras/salario-liquido" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Salário Líquido →</a>
+            <a href="/calculadoras/rescisao-trabalhista" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Rescisão CLT →</a>
+            <a href="/calculadoras/inss-progressivo" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Tabela de INSS 2026 →</a>
+            <a href="/api" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">API de Salário Mínimo JSON →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 2. DDDs DO BRASIL & POR ESTADO
+  if (id.startsWith('ddd-')) {
+    const isUf = id.match(/ddd-([a-z]{2})/);
+    const ufParam = isUf ? isUf[1].toUpperCase() : null;
+
+    const ufList = [
+      { uf: "SP", estado: "São Paulo", codigos: [11, 12, 13, 14, 15, 16, 17, 18, 19], capital: "São Paulo (11)", regiao: "Sudeste" },
+      { uf: "RJ", estado: "Rio de Janeiro", codigos: [21, 22, 24], capital: "Rio de Janeiro (21)", regiao: "Sudeste" },
+      { uf: "ES", estado: "Espírito Santo", codigos: [27, 28], capital: "Vitória (27)", regiao: "Sudeste" },
+      { uf: "MG", estado: "Minas Gerais", codigos: [31, 32, 33, 34, 35, 37, 38], capital: "Belo Horizonte (31)", regiao: "Sudeste" },
+      { uf: "PR", estado: "Paraná", codigos: [41, 42, 43, 44, 45, 46], capital: "Curitiba (41)", regiao: "Sul" },
+      { uf: "SC", estado: "Santa Catarina", codigos: [47, 48, 49], capital: "Florianópolis (48)", regiao: "Sul" },
+      { uf: "RS", estado: "Rio Grande do Sul", codigos: [51, 53, 54, 55], capital: "Porto Alegre (51)", regiao: "Sul" },
+      { uf: "DF", estado: "Distrito Federal", codigos: [61], capital: "Brasília (61)", regiao: "Centro-Oeste" },
+      { uf: "GO", estado: "Goiás", codigos: [62, 64], capital: "Goiânia (62)", regiao: "Centro-Oeste" },
+      { uf: "BA", estado: "Bahia", codigos: [71, 73, 74, 75, 77], capital: "Salvador (71)", regiao: "Nordeste" },
+      { uf: "PE", estado: "Pernambuco", codigos: [81, 87], capital: "Recife (81)", regiao: "Nordeste" },
+      { uf: "CE", estado: "Ceará", codigos: [85, 88], capital: "Fortaleza (85)", regiao: "Nordeste" }
+    ];
+
+    const currentUf = ufParam ? ufList.find(u => u.uf === ufParam) : null;
+
+    return `
+      <div class="space-y-6 text-slate-800">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-bold">Telecomunicações & Anatel</span>
+            <span class="text-xs text-slate-500 font-medium">Plano de Numeração Telefônica Oficial</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900">
+            ${currentUf ? `Códigos DDD do Estado de ${currentUf.estado} (${currentUf.uf})` : 'Tabela Completa de Códigos DDD do Brasil'}
+          </h2>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            O código de Discagem Direta a Distância (DDD) é um sistema numérico estabelecido pela Agência Nacional de Telecomunicações (Anatel) para identificar áreas geográficas de telecomunicação no território brasileiro. Composto por 2 dígitos, o DDD é essencial para realizar chamadas interurbanas, configurar aparelhos celulares e identificar a procedência geográfica de chamadas e mensagens SMS.
+          </p>
+
+          ${currentUf ? `
+            <div class="p-4 bg-blue-50 rounded-xl border border-blue-200 text-xs space-y-2">
+              <p class="font-bold text-blue-900 text-sm">📍 Cobertura Regional de ${currentUf.estado}:</p>
+              <p class="text-slate-700">
+                O estado de <strong>${currentUf.estado}</strong> possui os seguintes prefixos ativos: <strong>${currentUf.codigos.map(c => `(${c})`).join(', ')}</strong>. A capital ${currentUf.capital} concentra a maior densidade de linhas telefônicas da região.
+              </p>
+            </div>
+          ` : ''}
+
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="py-2.5 px-3">Estado / UF</th>
+                  <th class="py-2.5 px-3">Região</th>
+                  <th class="py-2.5 px-3">Códigos DDD Ativos</th>
+                  <th class="py-2.5 px-3">Capital & DDD Principal</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${ufList.map(u => `
+                  <tr class="${ufParam === u.uf ? 'bg-blue-50 font-bold' : ''}">
+                    <td class="py-2 px-3 font-bold text-slate-900">${u.estado} (${u.uf})</td>
+                    <td class="py-2 px-3 text-slate-600">${u.regiao}</td>
+                    <td class="py-2 px-3 font-mono font-bold text-emerald-700">${u.codigos.join(', ')}</td>
+                    <td class="py-2 px-3">${u.capital}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <h3 class="text-base font-bold text-slate-900">Como Discar para Outro DDD (Regra Oficial da Anatel)</h3>
+          <div class="p-4 bg-slate-900 text-emerald-300 rounded-xl font-mono text-xs space-y-1">
+            <p class="text-slate-400">// Formato de ligação nacional:</p>
+            <p class="text-sm font-bold text-white">0 + [Código da Operadora] + [DDD de Destino] + [Número do Telefone]</p>
+            <p class="text-slate-400 pt-1">// Exemplo para ligar para São Paulo (11) via operadora 15:</p>
+            <p class="text-emerald-400 font-bold">0 15 11 99999-9999</p>
+          </div>
+          <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
+            <p>
+              <strong>Dica contra golpes e clonagens:</strong> Nunca repasse senhas bancárias ou códigos SMS recebidos em chamadas com DDDs desconhecidos. Prefira consultar o número chamador antes de retornar a chamada.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Ferramentas e APIs Relacionadas</h3>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <a href="/programatico/cep-brasil" class="px-3 py-1.5 bg-blue-50 text-blue-800 hover:bg-blue-100 rounded-lg font-bold border border-blue-200">Consulta de CEP Correios →</a>
+            <a href="/ferramentas-web/meu-ip-publico" class="px-3 py-1.5 bg-blue-50 text-blue-800 hover:bg-blue-100 rounded-lg font-bold border border-blue-200">Descobrir Meu IP Público →</a>
+            <a href="/api" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">API de DDDs JSON →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 3. BANCOS COMERCIAIS & CÓDIGOS ISPB
+  if (id === 'bancos-brasil') {
+    const bancos = [
+      { compe: "001", ispb: "00000000", nome: "Banco do Brasil S.A.", tipo: "Banco Múltiplo Público" },
+      { compe: "237", ispb: "60746948", nome: "Banco Bradesco S.A.", tipo: "Banco Múltiplo Privado" },
+      { compe: "341", ispb: "60701190", nome: "Itaú Unibanco S.A.", tipo: "Banco Múltiplo Privado" },
+      { compe: "104", ispb: "00360305", nome: "Caixa Econômica Federal", tipo: "Empresa Pública" },
+      { compe: "033", ispb: "90400888", nome: "Banco Santander (Brasil) S.A.", tipo: "Banco Múltiplo Privado" },
+      { compe: "260", ispb: "18236120", nome: "Nu Pagamentos S.A. (Nubank)", tipo: "Instituição de Pagamento" },
+      { compe: "077", ispb: "00416968", nome: "Banco Inter S.A.", tipo: "Banco Digital Múltiplo" },
+      { compe: "290", ispb: "10573521", nome: "PagBank PagSeguro S.A.", tipo: "Instituição de Pagamento" },
+      { compe: "380", ispb: "16501555", nome: "PicPay Instituição de Pagamento", tipo: "Instituição de Pagamento" },
+      { compe: "336", ispb: "07450604", nome: "Banco C6 S.A.", tipo: "Banco Múltiplo" },
+      { compe: "422", ispb: "58160789", nome: "Banco Safra S.A.", tipo: "Banco Múltiplo" },
+      { compe: "756", ispb: "02038232", nome: "Banco Cooperativo Sicoob S.A.", tipo: "Banco Cooperativo" },
+      { compe: "748", ispb: "01181521", nome: "Banco Cooperativo Sicredi S.A.", tipo: "Banco Cooperativo" },
+      { compe: "208", ispb: "33479023", nome: "Banco BTG Pactual S.A.", tipo: "Banco de Investimento / Múltiplo" }
+    ];
+
+    return `
+      <div class="space-y-6 text-slate-800">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Sistema Financeiro Nacional (SFN)</span>
+            <span class="text-xs text-slate-500 font-medium">Banco Central do Brasil & FEBRABAN</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900">
+            Códigos de Compensação (COMPE) e Números ISPB dos Bancos Brasileiros
+          </h2>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Para realizar transferências via TED, preencher guias de débito automático ou cadastrar dados bancários em órgãos públicos, é mandatório informar o <strong>Código de Compensação (COMPE de 3 dígitos)</strong> ou o <strong>Identificador do Sistema de Pagamentos Brasileiro (ISPB de 8 dígitos)</strong> regulamentado pelo Banco Central do Brasil.
+          </p>
+
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="py-2.5 px-3">Código COMPE</th>
+                  <th class="py-2.5 px-3">Código ISPB</th>
+                  <th class="py-2.5 px-3">Razão Social / Nome do Banco</th>
+                  <th class="py-2.5 px-3">Classificação Regulatória</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${bancos.map(b => `
+                  <tr>
+                    <td class="py-2 px-3 font-mono font-bold text-emerald-700">${b.compe}</td>
+                    <td class="py-2 px-3 font-mono font-bold text-slate-800">${b.ispb}</td>
+                    <td class="py-2 px-3 font-bold text-slate-900">${b.nome}</td>
+                    <td class="py-2 px-3 text-slate-600">${b.tipo}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Diferença entre COMPE, ISPB e PIX</h3>
+          <dl class="space-y-3 text-xs text-slate-600 leading-relaxed">
+            <div>
+              <dt class="font-bold text-slate-800">COMPE (3 dígitos):</dt>
+              <dd class="mt-0.5">Utilizado tradicionalmente para compensação de cheques e transferências via TED. Criado pela FEBRABAN.</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">ISPB (8 dígitos):</dt>
+              <dd class="mt-0.5">Identificador de rede interna do Sistema de Transferência de Reservas (STR) do Banco Central, amplamente utilizado em integrações de APIs bancárias e no ecossistema do Pix.</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">Extinção do DOC em 2024:</dt>
+              <dd class="mt-0.5">A Federação Brasileira de Bancos (FEBRABAN) encerrou definitivamente o Documento de Ordem de Crédito (DOC) em fevereiro de 2024, consolidando o Pix e a TED como modalidades principais de envio de dinheiro.</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    `;
+  }
+
+  // 4. FERIADOS NACIONAIS 2026
+  if (id === 'feriados-nacionais') {
+    const feriados = [
+      { data: "01/01/2026", dia: "Quinta-feira", nome: "Confraternização Universal (Ano Novo)", tipo: "Feriado Nacional (Lei nº 10.607/2002)" },
+      { data: "17/02/2026", dia: "Terça-feira", nome: "Carnaval", tipo: "Ponto Facultativo Federal" },
+      { data: "03/04/2026", dia: "Sexta-feira", nome: "Sexta-feira Santa (Paixão de Cristo)", tipo: "Feriado Nacional (Lei nº 9.093/1995)" },
+      { data: "21/04/2026", dia: "Terça-feira", nome: "Tiradentes", tipo: "Feriado Nacional (Lei nº 10.607/2002)" },
+      { data: "01/05/2026", dia: "Sexta-feira", nome: "Dia Mundial do Trabalho", tipo: "Feriado Nacional (Lei nº 10.607/2002)" },
+      { data: "04/06/2026", dia: "Quinta-feira", nome: "Corpus Christi", tipo: "Ponto Facultativo Federal" },
+      { data: "07/09/2026", dia: "Segunda-feira", nome: "Independência do Brasil", tipo: "Feriado Nacional (Lei nº 10.607/2002)" },
+      { data: "12/10/2026", dia: "Segunda-feira", nome: "Nossa Senhora Aparecida", tipo: "Feriado Nacional (Lei nº 6.802/1980)" },
+      { data: "02/11/2026", dia: "Segunda-feira", nome: "Finados", tipo: "Feriado Nacional (Lei nº 10.607/2002)" },
+      { data: "15/11/2026", dia: "Domingo", nome: "Proclamação da República", tipo: "Feriado Nacional (Lei nº 10.607/2002)" },
+      { data: "20/11/2026", dia: "Sexta-feira", nome: "Dia Nacional de Zumbi e da Consciência Negra", tipo: "Feriado Nacional (Lei nº 14.759/2023)" },
+      { data: "25/12/2026", dia: "Sexta-feira", nome: "Natal", tipo: "Feriado Nacional (Lei nº 10.607/2002)" }
+    ];
+
+    return `
+      <div class="space-y-6 text-slate-800">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Calendário Oficial Federal 2026</span>
+            <span class="text-xs text-slate-500 font-medium">Portaria MGI / Diário Oficial da União</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900">
+            Calendário Oficial de Feriados Nacionais e Pontos Facultativos do Brasil (2026)
+          </h2>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Consulte a programação completa das datas de folga oficiais e pontos facultativos para organizar viagens, escalas de trabalho e compromissos fiscais. Conforme a legislação trabalhista brasileira (CLT), o trabalho em feriados nacionais garante pagamento com adicional de 100% ou folga compensatória equivalente.
+          </p>
+
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="py-2.5 px-3">Data</th>
+                  <th class="py-2.5 px-3">Dia da Semana</th>
+                  <th class="py-2.5 px-3">Celebração Oficial</th>
+                  <th class="py-2.5 px-3">Natureza Jurídica</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${feriados.map(f => `
+                  <tr>
+                    <td class="py-2 px-3 font-mono font-bold text-emerald-700">${f.data}</td>
+                    <td class="py-2 px-3 font-bold text-slate-800">${f.dia}</td>
+                    <td class="py-2 px-3 font-bold text-slate-900">${f.nome}</td>
+                    <td class="py-2 px-3 text-slate-600">${f.tipo}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <h3 class="text-base font-bold text-slate-900">Regras Trabalhistas para Trabalho em Feriados (CLT)</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            O artigo 70 da Consolidação das Leis do Trabalho veda o trabalho em feriados nacionais e religiosos, ressalvadas as atividades essenciais e serviços de funcionamento ininterrupto autorizados por acordo coletivo ou convenção. Quando o trabalhador labora em um feriado oficial sem compensação na mesma semana, a empresa é obrigada a remunerar as horas trabalhadas em dobro (adicional de 100%).
+          </p>
+          <div class="flex flex-wrap gap-2 text-xs pt-1">
+            <a href="/calculadoras/hora-extra" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calcular Hora Extra a 100% →</a>
+            <a href="/calculadoras/dias-entre-datas" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Dias entre Datas →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 5. TAXA SELIC HISTÓRICA
+  if (id.startsWith('selic-')) {
+    return `
+      <div class="space-y-6 text-slate-800">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Política Monetária BACEN</span>
+            <span class="text-xs text-slate-500 font-medium">Comitê de Política Monetária (COPOM)</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900">
+            Taxa SELIC: Histórico, Decisões do COPOM e Impacto nos Investimentos
+          </h2>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            A Taxa SELIC (Sistema Especial de Liquidação e Custódia) é a taxa básica de juros da economia brasileira. Definida a cada 45 dias pelo COPOM (órgão colegiado do Banco Central do Brasil), ela é o principal instrumento de política monetária para o controle da inflação medida pelo IPCA.
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+              <span class="text-[10px] font-bold uppercase text-slate-500">Rendimento da Poupança</span>
+              <p class="font-bold text-slate-900 text-sm">Regra dos 8,5%</p>
+              <p class="text-xs text-slate-600 leading-relaxed">Quando a Selic está acima de 8,5% a.a., a poupança rende fixos 0,5% ao mês + TR. Abaixo ou igual a 8,5%, o rendimento passa a ser 70% da Selic + TR.</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+              <span class="text-[10px] font-bold uppercase text-slate-500">Renda Fixa & CDI</span>
+              <p class="font-bold text-slate-900 text-sm">CDBs e Tesouro Selic</p>
+              <p class="text-xs text-slate-600 leading-relaxed">O Certificado de Depósito Interbancário (CDI) acompanha a taxa Selic efetiva com defasagem de cerca de 0,10 ponto percentual.</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+              <span class="text-[10px] font-bold uppercase text-slate-500">Crédito e Financiamento</span>
+              <p class="font-bold text-slate-900 text-sm">Custo do Empréstimo</p>
+              <p class="text-xs text-slate-600 leading-relaxed">Uma Selic mais elevada encarece linhas de crédito rotativo, financiamentos imobiliários e empréstimos consignados no comércio.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Simuladores Financeiros Relacionados</h3>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <a href="/calculadoras/juros-compostos" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Juros Compostos →</a>
+            <a href="/calculadoras/rendimento-poupanca" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Simulador de Poupança vs CDI →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 6. CALENDÁRIO INSS 2026
+  if (id === 'calendario-inss') {
+    return `
+      <div class="space-y-6 text-slate-800">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Previdência Social Oficial</span>
+            <span class="text-xs text-slate-500 font-medium">Ministério da Previdência Social & INSS</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900">
+            Tabela de Pagamentos do INSS 2026: Datas de Depósito para Aposentados e Pensionistas
+          </h2>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            O Instituto Nacional do Seguro Social (INSS) realiza os depósitos mensais de aposentadorias, pensões por morte e benefícios assistenciais (como BPC/LOAS) seguindo uma escala escalonada com base no <strong>último número do cartão do benefício</strong> (o dígito que precede o traço verificador).
+          </p>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+            <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3 text-xs">
+              <h3 class="font-bold text-slate-900 text-sm">Grupo 1: Benefícios de até 1 Salário Mínimo</h3>
+              <p class="text-slate-600">
+                Os depósitos são liberados diariamente ao longo dos últimos 5 dias úteis do mês de competência e dos primeiros 5 dias úteis do mês subsequente:
+              </p>
+              <ul class="list-disc pl-5 space-y-1 text-slate-700">
+                <li>Final 1: 1º dia útil da escala</li>
+                <li>Final 2: 2º dia útil</li>
+                <li>Final 3: 3º dia útil</li>
+                <li>Final 4: 4º dia útil</li>
+                <li>Final 5: 5º dia útil</li>
+                <li>Finais 6 a 0: Primeiros 5 dias úteis do mês seguinte</li>
+              </ul>
+            </div>
+
+            <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3 text-xs">
+              <h3 class="font-bold text-slate-900 text-sm">Grupo 2: Benefícios Acima de 1 Salário Mínimo</h3>
+              <p class="text-slate-600">
+                Para quem recebe valores superiores ao piso nacional, os depósitos são creditados agrupados de dois em dois números finais nos primeiros 5 dias úteis do mês seguinte:
+              </p>
+              <ul class="list-disc pl-5 space-y-1 text-slate-700">
+                <li>Finais 1 e 6: 1º dia útil do mês seguinte</li>
+                <li>Finais 2 e 7: 2º dia útil do mês seguinte</li>
+                <li>Finais 3 e 8: 3º dia útil do mês seguinte</li>
+                <li>Finais 4 e 9: 4º dia útil do mês seguinte</li>
+                <li>Finais 5 e 0: 5º dia útil do mês seguinte</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Canais de Consulta do Segurado</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Para consultar extratos de pagamento, informe de rendimentos para o Imposto de Renda e dados do benefício, utilize o aplicativo oficial <strong>Meu INSS</strong> (disponível para Android e iOS), o portal <code>meu.inss.gov.br</code> ou ligue gratuitamente para a Central Telefônica <strong>135</strong> (de segunda a sábado, das 7h às 22h).
+          </p>
+          <div class="flex flex-wrap gap-2 text-xs pt-1">
+            <a href="/calculadoras/inss-progressivo" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Desconto INSS 2026 →</a>
+            <a href="/calculadoras/salario-liquido" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Salário Líquido →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 7. CÓDIGOS IBGE DE MUNICÍPIOS
+  if (id.startsWith('ibge-') || id === 'codigos-ibge') {
+    return `
+      <div class="space-y-6 text-slate-800">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Geografia & Estatística Oficial</span>
+            <span class="text-xs text-slate-500 font-medium">Instituto Brasileiro de Geografia e Estatística (IBGE)</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900">
+            Estrutura dos Códigos IBGE de Municípios e Estados Brasileiros
+          </h2>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            O Código de Município do IBGE é um identificador numérico de 7 dígitos atribuído a cada um dos 5.570 municípios brasileiros e ao Distrito Federal. É o padrão oficial exigido pela Secretaria da Receita Federal do Brasil (RFB) e Secretarias Estaduais da Fazenda (SEFAZ) para emissão de Notas Fiscais Eletrônicas (NF-e, tag <code>&lt;cMun&gt;</code>), Conhecimentos de Transporte (CT-e) e apuração tributária do SPED Fiscal.
+          </p>
+
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs">
+            <h3 class="font-bold text-slate-900 text-sm">Composição dos 7 Dígitos:</h3>
+            <ul class="list-disc pl-5 space-y-1 text-slate-700">
+              <li><strong>2 primeiros dígitos:</strong> Identificam a Unidade da Federação (ex: 35 para São Paulo, 33 para Rio de Janeiro, 31 para Minas Gerais, 41 para Paraná, 43 para Rio Grande do Sul).</li>
+              <li><strong>4 dígitos seguintes:</strong> Número sequencial de identificação do município dentro do estado.</li>
+              <li><strong>Último dígito (7º):</strong> Dígito verificador (DV) calculado pelo algoritmo matemático de Módulo 10.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Integração Fiscal e Utilitários</h3>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <a href="/geradores/gerador-de-cnpj" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Gerador de CNPJ para Testes →</a>
+            <a href="/programatico/cep-brasil" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Consulta de CEP e Logradouros →</a>
+            <a href="/api" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">Endpoints da API Tool Brasil →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 8. PADRÃO GERAL / CEP / CNAE / CBO / NCM
+  return `
+    <div class="space-y-6 text-slate-800">
+      <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+        <div class="flex items-center gap-2">
+          <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Base de Dados Pública Brasileira</span>
+          <span class="text-xs text-slate-500 font-medium">Consulta Local & Custo Zero</span>
+        </div>
+        <h2 class="text-xl font-bold text-slate-900">
+          Informações Oficiais e Estrutura Técnica de Consulta
+        </h2>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Esta central programática reúne tabelas estruturadas, nomenclaturas fiscais e parâmetros de conformidade regulatória para empresas, estudantes e desenvolvedores de sistemas em todo o Brasil. Todas as consultas e simulações processam com alta velocidade e respeito absoluto à privacidade dos usuários.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 text-xs text-slate-600 leading-relaxed">
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+            <h3 class="font-bold text-slate-900">Rigor Normativo</h3>
+            <p>Informações alinhadas aos manuais oficiais da Receita Federal, Ministério do Trabalho e Emprego, Anatel e Banco Central do Brasil.</p>
+          </div>
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+            <h3 class="font-bold text-slate-900">Uso Livre & Gratuito</h3>
+            <p>Dados disponibilizados sem custos de assinatura e sem necessidade de cadastros, facilitando a rotina operacional do cidadão.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+        <h3 class="text-sm font-bold text-slate-900">Acesse Utilitários Gratuitos da Tool Brasil</h3>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <a href="/calculadoras" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Central de Calculadoras →</a>
+          <a href="/geradores" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Geradores de Documentos de Teste →</a>
+          <a href="/conversores" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Conversores de Moedas e Medidas →</a>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function generateProgrammaticHtml(template: string, id: string, page: any): string {
   const title = `${page.title} | Tool Brasil`;
   const desc = page.description;
@@ -1129,17 +1964,8 @@ function generateProgrammaticHtml(template: string, id: string, page: any): stri
         <p class="text-sm text-slate-700 leading-relaxed font-medium">${page.description}</p>
       </div>
 
-      <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-4">
-        <h2 class="text-lg font-black text-slate-900">Consulta de Informações Relacionadas</h2>
-        <p class="text-xs text-slate-600 leading-relaxed">
-          Esta página reúne dados históricos e informativos consolidados para consulta pública no Brasil. A pesquisa e filtragem dos dados são efetuadas localmente no navegador, entregando alta velocidade de consulta sem anúncios intrusivos ou necessidade de pagamentos.
-        </p>
-
-        <div class="bg-slate-50 border border-slate-200 p-8 rounded-xl text-center text-xs text-slate-500">
-          <p class="font-bold text-slate-700 mb-1">Painel Dinâmico de Banco de Dados</p>
-          <p>Utilize os filtros no topo da página ao carregar para fazer buscas em tempo real.</p>
-        </div>
-      </div>
+      <!-- CONTEÚDO EDITORIAL ESTRUTURADO E TABELAS REAIS ANTI-THIN-CONTENT -->
+      ${getProgrammaticEditorialHtml(id, page)}
     </div>
   `;
 
@@ -1152,147 +1978,461 @@ function generateProgrammaticHtml(template: string, id: string, page: any): stri
 }
 
 function generateInstitutionalHtml(template: string, id: string): string {
-  let title = '';
-  let desc = '';
+  const canonicalMap: { [key: string]: { path: string; title: string; desc: string } } = {
+    'sobre': {
+      path: '/sobre',
+      title: 'Sobre a Tool Brasil - Metodologia, Rigor Jurídico e Equipe Técnica',
+      desc: 'Conheça os pilares éticos, o rigor normativo e a equipe técnica multidisciplinar da Tool Brasil, ecossistema de calculadoras e utilitários 100% gratuitos.'
+    },
+    'contato': {
+      path: '/contato',
+      title: 'Fale Conosco - Atendimento, Suporte e Encarregado DPO | Tool Brasil',
+      desc: 'Canais oficiais de atendimento da Tool Brasil. Suporte a cálculos, sugestão de novas ferramentas, ouvidoria e encarregado de dados LGPD.'
+    },
+    'privacidade': {
+      path: '/politica-de-privacidade',
+      title: 'Política de Privacidade e Cookies (LGPD) | Tool Brasil',
+      desc: 'Política de Privacidade e Cookies da Tool Brasil em estrita conformidade com a LGPD (Lei 13.709/2018) e diretrizes de editores do Google AdSense.'
+    },
+    'termos': {
+      path: '/termos-de-uso',
+      title: 'Termos de Uso e Condições Gerais | Tool Brasil',
+      desc: 'Termos de Uso e Condições Gerais do portal Tool Brasil. Conheça as diretrizes de licença gratuita, isenção legal e regras de utilização.'
+    },
+    'cookies': {
+      path: '/cookies',
+      title: 'Gestão e Preferências de Cookies | Tool Brasil',
+      desc: 'Saiba como utilizamos cookies técnicos, analíticos e de publicidade Google AdSense, e como gerenciar suas preferências no navegador.'
+    },
+    'transparencia-adsense': {
+      path: '/transparencia-adsense',
+      title: 'Transparência Google AdSense e Monetização Ética | Tool Brasil',
+      desc: 'Entenda como a Tool Brasil se mantém 100% gratuita através de publicidade programática contextual e transparente do Google AdSense.'
+    },
+    'anunciantes': {
+      path: '/anunciantes',
+      title: 'Anuncie na Tool Brasil - Mídia Kit e Oportunidades Publicitárias',
+      desc: 'Conecte sua marca a milhares de trabalhadores, desenvolvedores, contadores e profissionais em um ambiente editorial seguro e relevante.'
+    }
+  };
+
+  const meta = canonicalMap[id] || {
+    path: `/institucional/${id}`,
+    title: 'Informações Institucionais | Tool Brasil',
+    desc: 'Informações institucionais da Tool Brasil.'
+  };
+
+  const title = meta.title;
+  const desc = meta.desc;
+  const canonical = `https://www.toolbrasil.com.br${meta.path}`;
   let content = '';
 
-  const canonical = `https://www.toolbrasil.com.br/institucional/${id}`;
-
   if (id === 'sobre') {
-    title = 'Sobre a Tool Brasil';
-    desc = 'Conheça nossa missão, valores e o ecossistema de utilitários online gratuitos.';
     content = `
-      <div class="space-y-6">
-        <h1 class="text-2xl font-bold text-slate-900">Sobre a Tool Brasil</h1>
-        <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
-          <p>
-            A <strong>Tool Brasil</strong> nasceu em 2024 com o propósito de ser o maior e mais eficiente ecossistema de utilitários online gratuitos da internet brasileira. Nós acreditamos que ferramentas úteis devem ser acessíveis, rápidas e descomplicadas, sem a necessidade de cadastros, instalações ou pagamentos ocultos.
-          </p>
-          <p>
-            Nosso portal oferece mais de 40 ferramentas gratuitas organizadas em categorias como calculadoras financeiras e trabalhistas, conversores de unidades e moedas, geradores de documentos e dados, ferramentas de rede e diagnóstico web, além de utilitários de texto e formatação. Cada ferramenta é desenvolvida com foco em precisão, performance e facilidade de uso.
-          </p>
-          <p>
-            <strong>Nossa missão:</strong> Democratizar o acesso a ferramentas digitais de qualidade para todos os brasileiros, independentemente de sua renda ou nível de conhecimento técnico. Acreditamos que a tecnologia deve servir para simplificar o dia a dia, e não para complicá-lo.
-          </p>
-          <p>
-            <strong>Nossos valores:</strong> Transparência (todas as ferramentas são claras sobre como funcionam), privacidade (processamento local sempre que possível, sem coleta desnecessária de dados), excelência técnica (cálculos precisos e atualizados conforme a legislação brasileira) e compromisso social (ferramentas 100% gratuitas, sem limite de uso).
-          </p>
-          <h2 class="font-bold text-sm text-slate-800 pt-4">Nossa Equipe</h2>
-          <p>
-            Somos formados por desenvolvedores independentes, analistas de dados e consultores jurídicos que trabalham em conjunto para garantir que todas as nossas calculadoras (especialmente as trabalhistas e financeiras) estejam sempre alinhadas com as leis e alíquotas mais recentes publicadas pelo Diário Oficial da União (DOU).
-          </p>
-          <h2 class="font-bold text-sm text-slate-800 pt-4">Nosso Compromisso</h2>
-          <p>
-            Não cobramos assinaturas e nunca esconderemos nossas funcionalidades atrás de paywalls. O financiamento da Tool Brasil provém integralmente da publicidade exibida nas páginas. Isso nos permite manter nossos servidores rodando 24 horas por dia, 7 dias por semana, com 99.9% de uptime para que você nunca fique na mão.
+      <div class="space-y-8 text-slate-800">
+        <div class="border-b border-slate-200 pb-6">
+          <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 mb-3">
+            🏆 Quem Somos & Nossa Metodologia
+          </span>
+          <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Sobre a Tool Brasil</h1>
+          <p class="text-sm text-slate-600 mt-2 max-w-3xl leading-relaxed">
+            Conheça os pilares éticos, o rigor normativo e a equipe multidisciplinar por trás do maior portal brasileiro de utilitários e calculadoras online 100% gratuitos.
           </p>
         </div>
+
+        <section class="space-y-4 text-xs text-slate-600 leading-relaxed">
+          <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            📖 Nossa Missão e Compromisso Social
+          </h2>
+          <p>
+            A <strong>Tool Brasil</strong> (acessível através do domínio <code>toolbrasil.com.br</code>) foi fundada com o propósito inequívoco de democratizar o acesso a ferramentas de cálculo, conversores analíticos, geradores de dados para testes de software e diagnósticos web para todos os cidadãos brasileiros, profissionais autônomos, microempreendedores e estudantes.
+          </p>
+          <p>
+            Em um cenário digital saturado de plataformas que exigem cadastros invasivos, cobranças ocultas de assinaturas ou armazenamento indevido de dados pessoais, a Tool Brasil estabeleceu um novo padrão: <strong>todas as nossas mais de 130 ferramentas são e sempre serão 100% gratuitas, sem limites de utilização diária e livres de paywalls</strong>.
+          </p>
+        </section>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 py-2">
+          <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">⚡</div>
+            <h3 class="font-bold text-slate-900 text-sm">Privacidade Client-Side</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Seus dados nunca saem do seu navegador. Todas as operações matemáticas e validações rodam localmente no dispositivo via JavaScript seguro.</p>
+          </div>
+          <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">⚖️</div>
+            <h3 class="font-bold text-slate-900 text-sm">Rigor Jurídico & Fiscal</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Algoritmos atualizados conforme a CLT, Portarias Interministeriais MPS/MF nº 2/2026 e Instruções Normativas da Receita Federal.</p>
+          </div>
+          <div class="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">🚀</div>
+            <h3 class="font-bold text-slate-900 text-sm">Alta Velocidade na Edge</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">Páginas estáticas pré-renderizadas distribuídas em servidores CDN globais com tempo de resposta ultrarrápido e estabilidade visual total.</p>
+          </div>
+        </div>
+
+        <section class="space-y-4 text-xs text-slate-600 leading-relaxed">
+          <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            ⚖️ Metodologia de Cálculo e Fontes Oficiais
+          </h2>
+          <p>A precisão matemática é um pilar inegociável em nossa plataforma. Cada utilitário foi estruturado com base em normas consolidadas:</p>
+          <ul class="list-disc pl-5 space-y-2 text-slate-700">
+            <li><strong>Cálculos Trabalhistas e Previdenciários:</strong> Baseados na Consolidação das Leis do Trabalho (Decreto-Lei nº 5.452/1943), Lei nº 12.506/2011 (aviso prévio proporcional) e na Tabela Progressiva do INSS 2026 (Portaria Interministerial MPS/MF nº 2/2026).</li>
+            <li><strong>Cálculos Tributários e IRRF:</strong> Fórmulas estruturadas em consonância com as Instruções Normativas da Secretaria da Receita Federal do Brasil (RFB), incluindo faixas de isenção e deduções por dependente.</li>
+            <li><strong>Cotações e Índices Financeiros:</strong> Fórmulas padronizadas pela matemática financeira (Tabela Price, SAC e Juros Compostos exponenciais), aliadas a APIs de câmbio do Banco Central do Brasil.</li>
+            <li><strong>Conversores Métricos:</strong> Estruturados sob os fatores rigorosos do Sistema Internacional de Unidades (SI), padronizados pelo INMETRO e normas ISO.</li>
+          </ul>
+        </section>
+
+        <section class="space-y-4 text-xs text-slate-600 leading-relaxed">
+          <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+            🛡️ Corpo Técnico e Responsabilidade Editorial
+          </h2>
+          <p>
+            O ecossistema Tool Brasil é desenvolvido e mantido por engenheiros de software, especialistas em segurança da informação e analistas de dados focados em utilitários web de alto desempenho, sediados em São Paulo, Brasil.
+          </p>
+          <p>
+            Antes de qualquer ferramenta entrar em produção, seus algoritmos passam por baterias de testes unitários automatizados cobrindo dezenas de cenários reais (rescisões com múltiplos anos, férias proporcionais, frações de 13º e testes de robustez decimal).
+          </p>
+        </section>
+
+        <section class="p-5 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2 text-xs text-slate-700 leading-relaxed">
+          <h3 class="font-bold text-emerald-900 text-sm flex items-center gap-2">🌱 Sustentabilidade do Projeto</h3>
+          <p>
+            A Tool Brasil é financiada exclusivamente por meio de <strong>anúncios programáticos do Google AdSense</strong> e parcerias transparentes. Não cobramos assinaturas e não vendemos dados de usuários. Ao utilizar nossas ferramentas com anúncios discretos, você viabiliza a manutenção contínua e gratuita desta infraestrutura para milhões de brasileiros.
+          </p>
+        </section>
       </div>
     `;
   } else if (id === 'contato') {
-    title = 'Fale Conosco - Suporte e Parcerias';
-    desc = 'Entre em contato com a equipe da Tool Brasil para sugestões, reclamações ou parcerias comerciais.';
     content = `
-      <div class="space-y-6">
-        <h1 class="text-2xl font-bold text-slate-900">Fale Conosco</h1>
-        <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
-          <p>Tem alguma sugestão de nova ferramenta? Reportou algum erro de cálculo? Entre em contato conosco diretamente pelo e-mail:</p>
-          <div class="p-4 bg-emerald-50 border rounded-lg max-w-sm">
-            <p class="font-bold text-emerald-800">📧 E-mail:</p>
-            <p class="mt-1 text-slate-800 font-mono font-bold">contato@toolbrasil.com.br</p>
+      <div class="space-y-8 text-slate-800">
+        <div class="border-b border-slate-200 pb-6">
+          <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 mb-3">
+            📬 Atendimento & Canais Oficiais
+          </span>
+          <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Fale Conosco</h1>
+          <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+            Tem alguma dúvida sobre os cálculos, sugestão de nova ferramenta, relato de inconsistência técnica ou proposta de parceria? Entre em contato pelos canais oficiais da Tool Brasil.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div class="lg:col-span-1 space-y-4">
+            <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4 text-xs">
+              <h2 class="font-bold text-slate-900 text-sm">Canais Oficiais Diretos</h2>
+              <div>
+                <span class="font-semibold text-slate-500 block">📧 Suporte Geral & Sugestões:</span>
+                <a href="mailto:contato@toolbrasil.com.br" class="font-mono font-bold text-emerald-700 hover:underline break-all">contato@toolbrasil.com.br</a>
+              </div>
+              <div>
+                <span class="font-semibold text-slate-500 block">🔒 Encarregado de Dados (DPO LGPD):</span>
+                <a href="mailto:dpo@toolbrasil.com.br" class="font-mono font-bold text-emerald-700 hover:underline break-all">dpo@toolbrasil.com.br</a>
+              </div>
+              <div>
+                <span class="font-semibold text-slate-500 block">💼 Parcerias Comerciais & Mídia:</span>
+                <a href="mailto:comercial@toolbrasil.com.br" class="font-mono font-bold text-emerald-700 hover:underline break-all">comercial@toolbrasil.com.br</a>
+              </div>
+              <hr class="border-slate-200" />
+              <div class="space-y-1.5 text-[11px] text-slate-500">
+                <p><strong>⏰ Horário de Atendimento:</strong> Segunda a Sexta, das 09:00 às 18:00 (Horário de Brasília).</p>
+                <p><strong>⏱️ Prazo de Resposta:</strong> Até 24 a 48 horas úteis.</p>
+                <p><strong>📍 Localização:</strong> São Paulo - SP, Brasil.</p>
+              </div>
+            </div>
           </div>
-          <p>Nosso prazo de retorno para mensagens de suporte é de até 48 horas úteis.</p>
+
+          <div class="lg:col-span-2 space-y-4">
+            <div class="bg-white p-6 rounded-xl border border-slate-200 space-y-4 text-xs text-slate-600 leading-relaxed">
+              <h3 class="text-base font-bold text-slate-900">Perguntas Frequentes de Atendimento</h3>
+              <div class="space-y-3">
+                <div>
+                  <h4 class="font-bold text-slate-800">Como reportar um erro em um cálculo ou simulador?</h4>
+                  <p class="mt-0.5">Envie um e-mail para <strong>contato@toolbrasil.com.br</strong> descrevendo o valor informado, o resultado obtido e o resultado esperado com a respectiva fundamentação legal. Nossa equipe técnica de engenharia audita os cálculos em até 24 horas.</p>
+                </div>
+                <div>
+                  <h4 class="font-bold text-slate-800">Posso solicitar o desenvolvimento de uma nova ferramenta?</h4>
+                  <p class="mt-0.5">Sim! Adoramos receber sugestões da comunidade. Avaliamos a utilidade pública para adicioná-la gratuitamente ao acervo de ferramentas.</p>
+                </div>
+                <div>
+                  <h4 class="font-bold text-slate-800">Como exercer meus direitos previstos na LGPD?</h4>
+                  <p class="mt-0.5">Envie uma mensagem com o assunto "Direitos LGPD" diretamente para nosso Encarregado pelo tratamento de dados no e-mail <strong>dpo@toolbrasil.com.br</strong>.</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     `;
   } else if (id === 'privacidade') {
-    title = 'Política de Privacidade (LGPD)';
-    desc = 'Nossa política regulatória detalhando a coleta de cookies, segurança e conformidade à LGPD.';
     content = `
-      <div class="space-y-6">
-        <h1 class="text-2xl font-bold text-slate-900">Política de Privacidade</h1>
-        <p class="text-[10px] text-slate-400">Última atualização: Junho de 2026</p>
-        <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
-          <p>No <strong>Tool Brasil</strong>, a sua privacidade é de extrema importância para nós. Elaboramos esta política regulatória em conformidade com a Lei Geral de Proteção de Dados Pessoais (LGPD - Lei nº 13.709/2018) para detalhar quais dados são coletados, armazenados e tratados durante sua navegação em nosso domínio toolbrasil.com.br.</p>
-          
-          <h2 class="font-bold text-sm text-slate-800">1. Responsável pelo Tratamento de Dados</h2>
-          <p>O Tool Brasil é um portal de ferramentas online mantido pelo proprietário do domínio toolbrasil.com.br.</p>
+      <div class="space-y-8 text-slate-800">
+        <div class="border-b border-slate-200 pb-6">
+          <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 mb-3">
+            🔒 Conformidade Regulatória & LGPD
+          </span>
+          <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Política de Privacidade</h1>
+          <p class="text-xs text-slate-500 mt-2">
+            Última revisão formal: Setembro de 2026 | Em estrita conformidade com a Lei Geral de Proteção de Dados Pessoais (Lei Federal nº 13.709/2018) e Requisitos de Editores do Google AdSense.
+          </p>
+        </div>
 
-          <h2 class="font-bold text-sm text-slate-800">2. Dados Coletados e Finalidade</h2>
-          <p><strong>2.1 Dados de navegação:</strong> Coleta automática de IP, tipo de navegador e tempo de navegação pelo servidor e parceiros de anúncios (Google Analytics/AdSense).</p>
-          <p><strong>2.2 Processamento local (Client-side):</strong> A maioria das calculadoras roda localmente no navegador. Dados confidenciais como CPFs gerados ou informações financeiras inseridas nunca são enviados aos nossos servidores.</p>
+        <div class="space-y-6 text-xs text-slate-600 leading-relaxed">
+          <p>
+            A privacidade e a soberania de dados de cada usuário que acessa o <strong>Tool Brasil</strong> (domínio <code>toolbrasil.com.br</code>) são tratadas com máxima seriedade e prioridade institucional. Elaboramos esta Política de Privacidade para apresentar de forma transparente e acessível como tratamos eventuais dados de navegação, quais tecnologias de cookies utilizamos e como você exerce plenamente seus direitos de titular.
+          </p>
 
-          <h2 class="font-bold text-sm text-slate-800">3. Cookies e Rastreamento</h2>
-          <p>Utilizamos cookies essenciais de sistema, cookies estatísticos do Google Analytics e cookies de anúncio do Google AdSense para exibir publicidade segmentada.</p>
+          <section class="space-y-2">
+            <h2 class="text-base font-bold text-slate-900">1. Identificação do Controlador e do Encarregado (DPO)</h2>
+            <p>
+              O portal Tool Brasil atua como Controlador no tratamento de dados técnicos de navegação decorrentes do acesso ao site. Para qualquer questionamento, exercício de direitos da LGPD ou esclarecimentos regulatórios, você pode contatar nosso <strong>Encarregado de Proteção de Dados (DPO)</strong> diretamente através do endereço: <strong>dpo@toolbrasil.com.br</strong> ou pelo e-mail de suporte <strong>contato@toolbrasil.com.br</strong>.
+            </p>
+          </section>
 
-          <h2 class="font-bold text-sm text-slate-800 pt-2">4. Base Legal para o Tratamento (Art. 7º da LGPD)</h2>
-          <p>Tratamos seus dados com base no seu <strong>consentimento expresso</strong> (fornecido ao aceitar nossos cookies) e pelo nosso <strong>legítimo interesse</strong> em garantir a segurança do portal, combater fraudes e exibir publicidade contextual que financia o projeto.</p>
-          
-          <h2 class="font-bold text-sm text-slate-800 pt-2">5. Compartilhamento de Dados com Terceiros</h2>
-          <p>Seus dados de navegação anonimizados podem ser processados por:</p>
-          <ul class="list-disc pl-5">
-             <li><strong>Google Analytics:</strong> Para fins estatísticos e de performance.</li>
-             <li><strong>Google AdSense:</strong> Para personalização de anúncios e medição de resultados.</li>
-             <li><strong>Vercel / Cloudflare:</strong> Nossos provedores de infraestrutura e CDN para garantir segurança e velocidade.</li>
-          </ul>
+          <section class="space-y-2">
+            <h2 class="text-base font-bold text-slate-900">2. Princípio da Execução Local (Client-Side First) & Dados Sensíveis</h2>
+            <p>
+              Ao contrário de serviços convencionais que enviam suas informações para processamento em servidores de terceiros, <strong>a arquitetura da Tool Brasil foi construída sob o princípio de Privacidade por Padrão (Privacy by Default)</strong>:
+            </p>
+            <ul class="list-disc pl-5 space-y-1 text-slate-700">
+              <li><strong>Calculadoras Financeiras e Trabalhistas:</strong> Salários, datas de admissão, valores de FGTS e rescisão são computados estritamente na memória volátil do seu próprio navegador. Nenhum valor financeiro é gravado em bancos de dados externos.</li>
+              <li><strong>Geradores Sintéticos (CPF, CNPJ, Senhas):</strong> Algoritmos de geração e checagem de dígitos verificadores rodam via JavaScript localmente. Nós não catalogamos nem armazenamos dados gerados.</li>
+              <li><strong>Tratamento de Arquivos e Textos:</strong> Conversores de imagem e formatadores de texto processam os dados no cliente sem jamais enviá-los para armazenamento em nossa nuvem.</li>
+            </ul>
+          </section>
 
-          <h2 class="font-bold text-sm text-slate-800 pt-2">6. Seus Direitos como Titular (Art. 18 da LGPD)</h2>
-          <p>Você tem o direito de solicitar a confirmação, acesso, correção, anonimização e exclusão dos seus dados coletados pelos nossos servidores. Para exercer qualquer um destes direitos, bem como revogar o consentimento para uso de cookies, entre em contato através de nosso e-mail de suporte em <strong>contato@toolbrasil.com.br</strong>.</p>
-          
-          <h2 class="font-bold text-sm text-slate-800 pt-2">7. Segurança da Informação</h2>
-          <p>Implementamos rigorosas medidas técnicas (criptografia SSL/TLS) e administrativas para proteger os dados pessoais de acessos não autorizados ou situações acidentais de destruição, perda, alteração ou comunicação indevida.</p>
+          <section class="space-y-2">
+            <h2 class="text-base font-bold text-slate-900">3. Cookies, Google AdSense e Publicidade Personalizada</h2>
+            <p>
+              Para garantir a gratuidade irrestrita de nossos utilitários, veiculamos anúncios digitais gerenciados pelo programa <strong>Google AdSense</strong>, fornecido pela Google LLC. Em conformidade com os requisitos de transparência de editores do Google, informamos que:
+            </p>
+            <ul class="list-disc pl-5 space-y-1.5 text-slate-700">
+              <li><strong>Cookies de Terceiros e Cookie DoubleClick DART:</strong> O Google e seus parceiros utilizam cookies (incluindo o cookie DART) para veicular anúncios aos usuários com base em visitas anteriores feitas a este ou a outros sites na internet.</li>
+              <li><strong>Desativação de Publicidade Personalizada:</strong> Os usuários têm a faculdade de desativar a publicidade personalizada acessando as <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" class="text-emerald-700 font-bold underline">Configurações de Anúncios do Google</a>. Alternativamente, é possível desativar o uso de cookies de terceiros para publicidade personalizada acessando o portal internacional <a href="https://www.aboutads.info" target="_blank" rel="noopener noreferrer" class="text-emerald-700 font-bold underline">aboutads.info</a>.</li>
+              <li><strong>Transparência de Parceiros de Tecnologia de Anúncios:</strong> O Google cumpre com os princípios do IAB TCF (Transparency and Consent Framework) e os requisitos vigentes da LGPD brasileira para coleta de consentimento do usuário.</li>
+            </ul>
+          </section>
+
+          <section class="space-y-2">
+            <h2 class="text-base font-bold text-slate-900">4. Dados Coletados pelo Google Analytics 4</h2>
+            <p>
+              Utilizamos o <strong>Google Analytics 4</strong> para mensurar indicadores anônimos de audiência (como páginas mais acessadas, tipo de navegador, sistema operacional e tempo médio de permanência). O GA4 opera com mascaramento e anonimização de endereços IP, impossibilitando a identificação individual de qualquer usuário pela nossa equipe.
+            </p>
+          </section>
+
+          <section class="space-y-2">
+            <h2 class="text-base font-bold text-slate-900">5. Bases Legais para o Tratamento (Art. 7º da LGPD)</h2>
+            <p>Todo e qualquer tratamento de dados realizado pela Tool Brasil encontra respaldo expresso na Lei nº 13.709/2018:</p>
+            <ul class="list-disc pl-5 space-y-1 text-slate-700">
+              <li><strong>Consentimento (Art. 7º, I):</strong> Aplicado ao uso de cookies de marketing e analíticos através do banner de preferências de navegação.</li>
+              <li><strong>Legítimo Interesse (Art. 7º, IX):</strong> Para auditoria técnica da estabilidade do portal, prevenção de ciberataques DDoS e aperfeiçoamento contínuo das ferramentas.</li>
+              <li><strong>Cumprimento de Obrigação Legal (Art. 7º, II):</strong> Para a guarda de registros de acesso à aplicação pelo prazo legal de 6 meses, conforme determinado pelo Artigo 15 do Marco Civil da Internet (Lei nº 12.965/2014).</li>
+            </ul>
+          </section>
+
+          <section class="space-y-2">
+            <h2 class="text-base font-bold text-slate-900">6. Direitos do Titular de Dados Pessoais (Art. 18 da LGPD)</h2>
+            <p>Na qualidade de titular de dados pessoais, você pode exercer a qualquer momento perante a Tool Brasil os seguintes direitos:</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <span class="font-bold text-slate-800 block">✓ Confirmação e Acesso</span>
+                <span class="text-[11px] text-slate-500">Confirmar a existência de tratamento e acessar dados técnicos.</span>
+              </div>
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <span class="font-bold text-slate-800 block">✓ Correção de Dados</span>
+                <span class="text-[11px] text-slate-500">Solicitar a retificação de eventuais registros incompletos.</span>
+              </div>
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <span class="font-bold text-slate-800 block">✓ Eliminação e Revogação</span>
+                <span class="text-[11px] text-slate-500">Revogar o consentimento e pedir a exclusão de cookies.</span>
+              </div>
+              <div class="p-3 bg-slate-50 rounded-lg border border-slate-200">
+                <span class="font-bold text-slate-800 block">✓ Portabilidade</span>
+                <span class="text-[11px] text-slate-500">Solicitar a portabilidade das informações técnicas.</span>
+              </div>
+            </div>
+            <p class="pt-2">
+              Para formalizar qualquer dessas solicitações, envie uma mensagem com o assunto <em>"Direitos LGPD"</em> para <strong>dpo@toolbrasil.com.br</strong>.
+            </p>
+          </section>
+
+          <section class="space-y-2">
+            <h2 class="text-base font-bold text-slate-900">7. Segurança da Informação e Criptografia</h2>
+            <p>
+              Implementamos protocolos de segurança modernos, incluindo tráfego 100% criptografado através de certificados SSL/TLS (HTTPS), proteção contra interceptação e cabeçalhos de segurança HTTP rigorosos (<code>X-Content-Type-Options: nosniff</code>, <code>Referrer-Policy: strict-origin-when-cross-origin</code>).
+            </p>
+          </section>
         </div>
       </div>
     `;
   } else if (id === 'termos') {
-    title = 'Termos de Uso e Isenções Legais';
-    desc = 'Termos de serviço e isenção de responsabilidade dos resultados matemáticos do portal.';
     content = `
-      <div class="space-y-6">
-        <h1 class="text-2xl font-bold text-slate-900">Termos de Uso</h1>
-        <p class="text-[10px] text-slate-400">Última atualização: Junho de 2026</p>
-        <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
-          <p>Ao acessar ou usar nossos serviços através do domínio toolbrasil.com.br, você concorda em se submeter aos termos e condições descritos abaixo.</p>
-          
-          <h2 class="font-bold text-sm text-slate-800">1. Licença de Uso Sem Custos</h2>
-          <p>Todas as ferramentas do Tool Brasil são distribuídas de modo 100% gratuito, sem necessidade de cadastro, registro ou pagamento.</p>
+      <div class="space-y-8 text-slate-800">
+        <div class="border-b border-slate-200 pb-6">
+          <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 mb-3">
+            ⚖️ Condições Gerais de Uso
+          </span>
+          <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Termos de Uso</h1>
+          <p class="text-xs text-slate-500 mt-2">
+            Última revisão formal: Setembro de 2026 | Válido para todo o ecossistema Tool Brasil.
+          </p>
+        </div>
 
-          <h2 class="font-bold text-sm text-slate-800">2. Isenção de Responsabilidade</h2>
-          <p>As ferramentas e calculadoras têm caráter informativo. Os resultados fornecidos não substituem a consulta a contadores, advogados trabalhistas ou assessores financeiros autorizados.</p>
+        <div class="space-y-6 text-xs text-slate-600 leading-relaxed">
+          <p>
+            Seja bem-vindo ao portal <strong>Tool Brasil</strong>. Ao navegar, interagir ou utilizar qualquer uma das ferramentas disponíveis sob o domínio <code>toolbrasil.com.br</code>, você declara expressamente que leu, compreendeu e concorda de forma irrestrita com os presentes Termos de Uso.
+          </p>
+
+          <section class="space-y-2">
+            <h2 class="text-base font-bold text-slate-900">1. Gratuidade e Licença de Uso Sem Custos</h2>
+            <p>
+              O portal concede aos usuários uma licença pessoal, revogável, não-exclusiva e gratuita para acesso e utilização das calculadoras, conversores, geradores e ferramentas analíticas para finalidades pessoais, educacionais, operacionais e de apoio profissional diário. Não exigimos pagamentos ou cadastros prévios.
+            </p>
+          </section>
+
+          <section class="space-y-2">
+            <h2 class="text-base font-bold text-slate-900">2. Caráter Meramente Informativo & Isenção de Responsabilidade Profissional</h2>
+            <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 text-amber-900 space-y-2">
+              <p class="font-bold flex items-center gap-1.5 text-xs">⚠️ Aviso Legal Obrigatório:</p>
+              <p class="text-[11px] leading-relaxed">
+                As calculadoras, simuladores trabalhistas e conversores tributários fornecidos pela Tool Brasil constituem instrumentos de <strong>estimativa matemática preliminar e apoio informativo</strong>. Eles <strong>não substituem, sob nenhuma hipótese</strong>, o parecer técnico formal de profissionais habilitados (contadores diplomados, advogados trabalhistas, consultores tributários registrados) nem os cálculos oficiais definitivos emitidos por órgãos públicos (Receita Federal, Ministério do Trabalho, INSS ou Poder Judiciário).
+              </p>
+            </div>
+            <p>
+              A Tool Brasil empenha seus melhores esforços de engenharia para manter todos os algoritmos atualizados. No entanto, declinamos de qualquer responsabilidade por decisões comerciais, financeiras, contratuais ou tributárias tomadas exclusivamente com base nas simulações realizadas nesta plataforma.
+            </p>
+          </section>
+
+          <section class="space-y-2">
+            <h2 class="text-base font-bold text-slate-900">3. Diretrizes de Uso dos Geradores de Dados Sintéticos</h2>
+            <p>
+              Nossas ferramentas de geração sintética (incluindo geradores de números de CPF, CNPJ e dados cadastrais fictícios) destinam-se <strong>exclusivamente a programadores, analistas de qualidade (QA), estudantes e designers para homologação de sistemas de software, preenchimento de mockups e testes automatizados de formulários</strong>.
+            </p>
+            <p class="font-bold text-slate-800">
+              É terminantemente vedada a utilização de quaisquer dados fictícios aqui gerados para práticas de falsidade ideológica, estelionato, fraudes contra instituições financeiras ou qualquer ato tipificado como ilícito penal pela legislação brasileira (Código Penal, Decreto-Lei nº 2.848/1940).
+            </p>
+          </section>
+
+          <section class="space-y-2">
+            <h2 class="text-base font-bold text-slate-900">4. Propriedade Intelectual</h2>
+            <p>
+              Todos os elementos da interface visual, logotipos, códigos-fonte de pré-renderização e compilações editoriais pertencem à Tool Brasil. É permitida a citação de trechos e o compartilhamento de links diretos, desde que referenciada a autoria.
+            </p>
+          </section>
+
+          <section class="space-y-2">
+            <h2 class="text-base font-bold text-slate-900">5. Legislação Aplicável e Foro</h2>
+            <p>
+              Estes Termos de Uso são regidos e interpretados em estrita conformidade com a legislação da República Federativa do Brasil. Fica eleito o Foro da Comarca de São Paulo, Estado de São Paulo, com exclusão de qualquer outro, por mais privilegiado que seja, para dirimir eventuais litígios oriundos deste instrumento.
+            </p>
+          </section>
         </div>
       </div>
     `;
   } else if (id === 'cookies') {
-    title = 'Preferências e Gestão de Cookies';
-    desc = 'Gerencie sua privacidade e configure o uso de cookies de marketing e analíticos.';
     content = `
-      <div class="space-y-6">
-        <h1 class="text-2xl font-bold text-slate-900">Preferências de Cookies</h1>
-        <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
-          <p>Utilizamos cookies para personalizar conteúdo, anúncios e analisar o nosso tráfego. Você pode ajustar suas preferências de privacidade a qualquer momento através do seu navegador ou desativando cookies de terceiros em suas configurações de segurança.</p>
+      <div class="space-y-8 text-slate-800">
+        <div class="border-b border-slate-200 pb-6">
+          <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 mb-3">
+            🍪 Gestão de Privacidade
+          </span>
+          <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Preferências e Gestão de Cookies</h1>
+          <p class="text-xs text-slate-500 mt-2">
+            Saiba com transparência quais tecnologias de cookies utilizamos e como calibrar suas opções de navegação.
+          </p>
+        </div>
+
+        <div class="space-y-6 text-xs text-slate-600 leading-relaxed">
+          <p>
+            Cookies são pequenos arquivos de texto armazenados no navegador do usuário ao visitar páginas na web. Eles desempenham papel crucial para lembrar suas preferências (como tema escuro/claro e histórico recente da calculadora) e permitir que o portal permaneça viável financeiramente através da monetização do Google AdSense.
+          </p>
+
+          <div class="space-y-3">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+              <h3 class="font-bold text-slate-900 text-sm">1. Cookies Estritamente Necessários</h3>
+              <p>Essenciais para o funcionamento seguro da aplicação, controle de sessão e persistência de preferências de tema. Não podem ser desativados sem comprometer a navegação.</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+              <h3 class="font-bold text-slate-900 text-sm">2. Cookies Analíticos (Google Analytics 4)</h3>
+              <p>Coletam métricas anônimas e agregadas de tráfego, permitindo avaliar quais ferramentas são mais acessadas para priorizarmos novas implementações. Não identificam o usuário pessoalmente.</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
+              <h3 class="font-bold text-slate-900 text-sm">3. Cookies de Publicidade (Google AdSense & DoubleClick)</h3>
+              <p>Utilizados pelo Google para exibir anúncios contextuais relevantes e prevenir a repetição excessiva do mesmo anúncio. O usuário pode desativá-los a qualquer momento nas <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" class="text-emerald-700 font-bold underline">Configurações de Anúncios do Google</a>.</p>
+            </div>
+          </div>
         </div>
       </div>
     `;
   } else if (id === 'transparencia-adsense') {
-    title = 'Transparência de Monetização Google AdSense';
-    desc = 'Como o portal financia sua infraestrutura com anúncios contextuais programáticos do Google.';
     content = `
-      <div class="space-y-6">
-        <h1 class="text-2xl font-bold text-slate-900">Transparência Google AdSense</h1>
+      <div class="space-y-8 text-slate-800">
+        <div class="border-b border-slate-200 pb-6">
+          <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 mb-3">
+            💡 Monetização Responsável
+          </span>
+          <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Transparência Google AdSense</h1>
+          <p class="text-xs text-slate-500 mt-2">
+            Entenda como a Tool Brasil se financia e mantém todas as suas utilidades 100% gratuitas para o público brasileiro.
+          </p>
+        </div>
+
         <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
-          <p>A Tool Brasil é um serviço gratuito financiado primordialmente por anúncios exibidos pelo Google AdSense. Esses anúncios pagam os servidores e a manutenção do portal.</p>
-          <p>Os anúncios respeitam todas as diretrizes de privacidade da LGPD e os cookies são geridos pelo Google de acordo com as preferências selecionadas pelo usuário.</p>
+          <p>
+            Manter uma infraestrutura web de alta disponibilidade, com mais de 130 ferramentas online, servidores em CDN global, certificados SSL de alta segurança e equipe contínua de atualização normativa exige recursos financeiros significativos.
+          </p>
+          <p>
+            Optamos por financiar 100% dos custos através do programa <strong>Google AdSense</strong>. Isso nos permite não cobrar mensalidades, não colocar barreiras de pagamento (paywalls) e não exigir cartões de crédito dos usuários.
+          </p>
+          <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-200 space-y-2">
+            <h3 class="font-bold text-emerald-900 text-sm">Compromissos Éticos de Publicidade:</h3>
+            <ul class="list-disc pl-5 space-y-1 text-slate-700">
+              <li>Zero anúncios enganosos ou disfarçados de botões do sistema.</li>
+              <li>Zero anúncios pop-up invasivos que impeçam o uso das calculadoras.</li>
+              <li>Cumprimento estrito das Políticas para Editores do Google (Google Publisher Policies).</li>
+              <li>Proteção integral de dados pessoais em conformidade com a LGPD.</li>
+            </ul>
+          </div>
         </div>
       </div>
     `;
   } else if (id === 'anunciantes') {
-    title = 'Anuncie Conosco - Mídia Kit da Tool Brasil';
-    desc = 'Anuncie seus produtos ou serviços financeiros para milhares de brasileiros qualificados.';
     content = `
-      <div class="space-y-6">
-        <h1 class="text-2xl font-bold text-slate-900">Anuncie na Tool Brasil</h1>
+      <div class="space-y-8 text-slate-800">
+        <div class="border-b border-slate-200 pb-6">
+          <span class="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 mb-3">
+            📊 Mídia Kit & Oportunidades
+          </span>
+          <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Anuncie na Tool Brasil</h1>
+          <p class="text-xs text-slate-600 mt-2">
+            Conecte sua empresa a um público qualificado de tomadores de decisão, contadores, profissionais de RH, programadores e consumidores financeiros em todo o Brasil.
+          </p>
+        </div>
+
         <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
-          <p>Disponibilizamos espaço para banners publicitários diretos e parcerias editoriais focadas em finanças, utilidades, tecnologia e mercado dev brasileiro.</p>
-          <p>Entre em contato através do e-mail comercial <strong>contato@toolbrasil.com.br</strong> para solicitar nosso mídia kit completo.</p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center space-y-1">
+              <span class="text-2xl font-extrabold text-slate-900">138+</span>
+              <p class="text-slate-500 font-bold">Ferramentas Ativas</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center space-y-1">
+              <span class="text-2xl font-extrabold text-slate-900">100%</span>
+              <p class="text-slate-500 font-bold">Gratuito e Acessível</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 text-center space-y-1">
+              <span class="text-2xl font-extrabold text-slate-900">Edge</span>
+              <p class="text-slate-500 font-bold">CDN Global Ultrarrápida</p>
+            </div>
+          </div>
+
+          <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-3">
+            <h3 class="font-bold text-slate-900 text-sm">Formatos Publicitários Disponíveis</h3>
+            <p>
+              Trabalhamos com inventário programático via Google AdSense/Google Ad Manager e formatos de mídia display direta (IAB Standard Banners: 728x90 Leaderboard, 300x250 Medium Rectangle, 300x600 Half Page), além de patrocínios de categorias temáticas.
+            </p>
+            <p>
+              Para solicitar nosso mídia kit completo com métricas de audiência e tabela de valores, envie um e-mail para: <strong>comercial@toolbrasil.com.br</strong>.
+            </p>
+          </div>
         </div>
       </div>
     `;
@@ -1300,7 +2440,7 @@ function generateInstitutionalHtml(template: string, id: string): string {
 
   const crumbs = [
     { name: 'Início', path: '/' },
-    { name: title, path: `/institucional/${id}` }
+    { name: title, path: meta.path }
   ];
   const schemaTags = buildSchemaTags(crumbs);
   return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
