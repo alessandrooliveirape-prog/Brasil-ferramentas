@@ -47,6 +47,7 @@ import AdSensePlaceholder from './components/AdSensePlaceholder';
 import SEOAnalyzer from './components/SEOAnalyzer';
 import CommandPalette from './components/CommandPalette';
 import MobileCategoryRail from './components/MobileCategoryRail';
+import { AffiliateRecommendationCard } from './components/AffiliateRecommendationCard';
 
 
 export default function App() {
@@ -1063,6 +1064,9 @@ export default function App() {
                   </div>
                 </div>
 
+                {/* RECOMENDAÇÃO DE PRODUTOS AMAZON (AFFILIATE) */}
+                <AffiliateRecommendationCard category="financas" />
+
               </div>
 
               {/* CATEGORIES GRID */}
@@ -1161,6 +1165,10 @@ export default function App() {
                         </a>
                       ))}
                     </div>
+
+                    <div className="pt-2">
+                      <AffiliateRecommendationCard category={currentRoute.categoryId} />
+                    </div>
                   </div>
                 );
               })()}
@@ -1179,6 +1187,9 @@ export default function App() {
                 {activeTool.categoryId === 'ferramentas-web' && <FerramentasWeb toolId={activeTool.id} />}
                 {activeTool.categoryId === 'utilitarios' && <Utilitarios toolId={activeTool.id} />}
               </div>
+
+              {/* RECOMENDAÇÃO DE PRODUTOS AMAZON (AFFILIATE) */}
+              <AffiliateRecommendationCard category={activeTool.categoryId} toolId={activeTool.id} />
 
               {/* ADSENSE MID TOPO & RICH SEO TEXTUAL CONTENT (apenas para ferramentas que usam layout padrão) */}
               {activeTool.id !== 'descomplica-contrato' && (
@@ -1485,7 +1496,7 @@ export default function App() {
 
           <div className="pt-8 border-t border-slate-800 text-center md:flex md:items-center md:justify-between text-xs text-slate-500">
             <p>
-              &copy; {new Date().getFullYear()} <strong className="text-slate-300">Tool Brasil</strong>. Todos os direitos reservados. Ferramentas 100% gratuitas — sem cadastro, sem limites.
+              &copy; {new Date().getFullYear()} <strong className="text-slate-300">Tool Brasil</strong>. Todos os direitos reservados. Ferramentas 100% gratuitas — sem cadastro, sem limites. Como participante do Programa de Associados da Amazon, somos remunerados por compras qualificadas.
             </p>
             <div className="flex items-center justify-center gap-3 mt-4 md:mt-0 flex-wrap text-slate-400">
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-900/30 text-emerald-400 rounded text-[10px] font-mono border border-emerald-800/50">

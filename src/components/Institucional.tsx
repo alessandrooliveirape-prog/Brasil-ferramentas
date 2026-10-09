@@ -394,7 +394,19 @@ function PoliticaPrivacidade() {
 
         <section className="space-y-2">
           <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
-            4. Dados Coletados pelo Google Analytics 4
+            4. Programa de Associados da Amazon & Links Afiliados
+          </h2>
+          <p>
+            O portal <strong>Tool Brasil</strong> é participante do <strong>Programa de Associados da Amazon</strong> (Amazon Services LLC Associates Program / Amazon Brasil). Como participante desse programa, somos remunerados por compras qualificadas efetuadas a partir dos links de produtos recomendados em nossas páginas.
+          </p>
+          <p>
+            Essas recomendações visam sugerir utilitários físicos, calculadoras profissionais, instrumentos de medição e literaturas técnicas relevantes ao contexto da ferramenta utilizada. Essa intermediação não gera nenhum acréscimo de valor ou cobrança extra ao usuário e assegura que a plataforma continue com acesso 100% gratuito e livre de mensalidades.
+          </p>
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
+            5. Dados Coletados pelo Google Analytics 4
           </h2>
           <p>
             Utilizamos o <strong>Google Analytics 4</strong> para mensurar indicadores anônimos de audiência (como páginas mais acessadas, tipo de navegador, sistema operacional e tempo médio de permanência). O GA4 opera com mascaramento e anonimização de endereços IP, impossibilitando a identificação individual de qualquer usuário pela nossa equipe.
@@ -403,7 +415,7 @@ function PoliticaPrivacidade() {
 
         <section className="space-y-2">
           <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
-            5. Bases Legais para o Tratamento (Art. 7º da LGPD)
+            6. Bases Legais para o Tratamento (Art. 7º da LGPD)
           </h2>
           <p>
             Todo e qualquer tratamento de dados realizado pela Tool Brasil encontra respaldo expresso na Lei nº 13.709/2018:
@@ -417,7 +429,7 @@ function PoliticaPrivacidade() {
 
         <section className="space-y-2">
           <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
-            6. Direitos do Titular de Dados Pessoais (Art. 18 da LGPD)
+            7. Direitos do Titular de Dados Pessoais (Art. 18 da LGPD)
           </h2>
           <p>
             Na qualidade de titular de dados pessoais, você pode exercer a qualquer momento perante a Tool Brasil os seguintes direitos garantidos pela lei brasileira:
@@ -447,7 +459,7 @@ function PoliticaPrivacidade() {
 
         <section className="space-y-2">
           <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">
-            7. Segurança da Informação e Criptografia
+            8. Segurança da Informação e Criptografia
           </h2>
           <p>
             Implementamos protocolos de segurança modernos, incluindo tráfego 100% criptografado através de certificados SSL/TLS (HTTPS de alta integridade), proteção contra interceptação do tipo <em>man-in-the-middle</em> e cabeçalhos de segurança HTTP rigorosos (<code>X-Content-Type-Options: nosniff</code>, <code>Referrer-Policy: strict-origin-when-cross-origin</code>).

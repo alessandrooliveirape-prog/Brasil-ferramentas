@@ -13,6 +13,7 @@ import { fileURLToPath } from 'url';
 import { CATEGORIES, TOOLS, PROGRAMMATIC_PAGES } from './src/toolsData.ts';
 import { EXTRA_PROGRAMMATIC_PAGES } from './src/programmaticExtra.ts';
 import { generateAllApiData } from './scripts/generate-api-data.ts';
+import { getRotatedProduct } from './src/config/affiliateProducts.ts';
 
 const ALL_PROGRAMMATIC_PAGES = { ...PROGRAMMATIC_PAGES, ...EXTRA_PROGRAMMATIC_PAGES };
 
@@ -393,7 +394,7 @@ function buildHtmlPage(template: string, title: string, desc: string, canonicalU
             <a href="/anunciantes" class="hover:underline font-bold text-slate-700">Anunciantes / Mídia Kit</a>
             <a href="/desenvolvedores" class="hover:underline font-bold text-emerald-700">API Pública</a>
           </div>
-          <p>&copy; 2026 Tool Brasil. Ferramentas online 100% gratuitas desenvolvidas em conformidade regulatória.</p>
+          <p>&copy; 2026 Tool Brasil. Ferramentas online 100% gratuitas desenvolvidas em conformidade regulatória. Como participante do Programa de Associados da Amazon, a Tool Brasil é remunerada por compras qualificadas.</p>
         </div>
       </footer>
     </div>
@@ -401,6 +402,65 @@ function buildHtmlPage(template: string, title: string, desc: string, canonicalU
 
   // Injeta no <div id="root"></div> do template
   return html.replace('<div id="root"></div>', `<div id="root">${fullBody}</div>`);
+}
+
+/**
+ * COMPONENTE ESTÁTICO DE RECOMENDAÇÃO AMAZON (TAG: chacerto-20)
+ */
+function getAffiliateCardHtml(category?: string, toolId?: string): string {
+  const { product, affiliateUrl } = getRotatedProduct(category, toolId);
+  return `
+    <div class="bg-gradient-to-br from-amber-50/60 via-white to-amber-50/30 border border-amber-200/90 rounded-2xl p-5 sm:p-6 shadow-xs my-6 font-sans">
+      <div class="flex items-center justify-between gap-2 mb-3">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-200 shadow-2xs">
+          <span>💡</span>
+          <span>Recomendação Útil</span>
+        </div>
+        ${product.badge ? `
+          <span class="text-[10px] font-mono font-bold text-amber-700 bg-amber-50 border border-amber-200/70 px-2 py-0.5 rounded-md flex items-center gap-1">
+            <span>✨</span>
+            <span>${product.badge}</span>
+          </span>
+        ` : ''}
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-amber-600 text-base">🛍️</span>
+            <h4 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight leading-snug">
+              ${product.title}
+            </h4>
+          </div>
+          <p class="text-xs sm:text-[13px] text-slate-600 leading-relaxed font-normal mt-1">
+            ${product.benefit}
+          </p>
+        </div>
+
+        <div class="w-full sm:w-auto shrink-0 pt-2 sm:pt-0">
+          <a
+            href="${affiliateUrl}"
+            target="_blank"
+            rel="noopener noreferrer nofollow sponsored"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-xs sm:text-[13px] rounded-xl shadow-xs hover:shadow-md transition-all text-center group"
+            title="Ver ofertas de ${product.title} na Amazon"
+          >
+            <span>Ver Ofertas na Amazon</span>
+            <span class="font-bold">→</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="border-t border-amber-100 pt-2.5 mt-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[10.5px] text-slate-400">
+        <p class="leading-tight font-normal">
+          Como participante do Programa de Associados da Amazon, a Tool Brasil é remunerada por compras qualificadas.
+        </p>
+        <span class="font-mono text-[9.5px] text-slate-400">
+          Amazon Associados (tag: chacerto-20)
+        </span>
+      </div>
+    </div>
+  `;
 }
 
 /**
@@ -458,6 +518,9 @@ function generateHomeHtml(template: string): string {
           </div>
         </div>
       </div>
+
+      <!-- RECOMENDAÇÃO AMAZON EM DESTAQUE (TAG: chacerto-20) -->
+      ${getAffiliateCardHtml('financas')}
     </div>
   `;
 
@@ -1305,6 +1368,9 @@ function generateToolHtml(template: string, tool: any): string {
 
       <!-- INTERACTIVE AREA PREVIEW (ANTI-THIN CONTENT) -->
       ${getInteractivePreviewCardHtml(tool)}
+
+      <!-- RECOMENDAÇÃO AMAZON AFILIADOS (TAG: chacerto-20) -->
+      ${getAffiliateCardHtml(tool.categoryId, tool.id)}
 
       <!-- RICH TEXT CONTENT FOR CRAWLERS -->
       <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-6">
