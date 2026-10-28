@@ -73,32 +73,24 @@ function run() {
     fs.writeFileSync(path.join(progDir, 'index.html'), progHtml, 'utf-8');
   });
 
-  // 5. Gerar páginas Institucionais (Rotas aninhadas e rotas diretas raiz)
+  // 5. Gerar páginas Institucionais exclusivamente nas rotas canônicas (aliases redirecionam via 301 no vercel.json)
   const institutionalPageIds = ['sobre', 'contato', 'privacidade', 'termos', 'cookies', 'transparencia-adsense', 'anunciantes'];
+  const canonicalDirMap: { [key: string]: string } = {
+    'sobre': 'sobre',
+    'contato': 'contato',
+    'privacidade': 'politica-de-privacidade',
+    'termos': 'termos-de-uso',
+    'cookies': 'cookies',
+    'transparencia-adsense': 'transparencia-adsense',
+    'anunciantes': 'anunciantes'
+  };
   institutionalPageIds.forEach(id => {
-    console.log(` - Pré-renderizando pág. institucional: /institucional/${id}`);
     const instHtml = generateInstitutionalHtml(cleanTemplate, id);
-    const instDir = path.join(DIST_DIR, 'institucional', id);
-    fs.mkdirSync(instDir, { recursive: true });
-    fs.writeFileSync(path.join(instDir, 'index.html'), instHtml, 'utf-8');
-
-    // Gerar também em rotas canônicas de primeiro nível para compliance e AdSense
-    const directPathMap: { [key: string]: string[] } = {
-      'sobre': ['sobre', 'sobre-nos', 'quem-somos'],
-      'contato': ['contato', 'fale-conosco'],
-      'privacidade': ['politica-de-privacidade', 'privacidade', 'privacy-policy'],
-      'termos': ['termos-de-uso', 'termos', 'terms'],
-      'cookies': ['cookies', 'gestao-de-cookies']
-    };
-
-    if (directPathMap[id]) {
-      directPathMap[id].forEach(subPath => {
-        console.log(`   └─ Rota direta/alias: /${subPath}`);
-        const targetDir = path.join(DIST_DIR, subPath);
-        fs.mkdirSync(targetDir, { recursive: true });
-        fs.writeFileSync(path.join(targetDir, 'index.html'), instHtml, 'utf-8');
-      });
-    }
+    const canonicalSubPath = canonicalDirMap[id] || id;
+    console.log(` - Pré-renderizando pág. institucional canônica: /${canonicalSubPath}`);
+    const targetDir = path.join(DIST_DIR, canonicalSubPath);
+    fs.mkdirSync(targetDir, { recursive: true });
+    fs.writeFileSync(path.join(targetDir, 'index.html'), instHtml, 'utf-8');
   });
 
   // 5.1 Gerar página de Desenvolvedores e API
@@ -165,8 +157,8 @@ function generateFullSitemapXml(instPages: string[]): string {
     { path: '/politica-de-privacidade', priority: '0.5' },
     { path: '/termos-de-uso', priority: '0.5' },
     { path: '/cookies', priority: '0.3' },
-    { path: '/institucional/anunciantes', priority: '0.4' },
-    { path: '/institucional/transparencia-adsense', priority: '0.4' }
+    { path: '/anunciantes', priority: '0.4' },
+    { path: '/transparencia-adsense', priority: '0.4' }
   ];
 
   canonicalInstUrls.forEach(item => {
@@ -762,7 +754,14 @@ function generateCategoryHtml(template: string, cat: any): string {
     { name: 'Início', path: '/' },
     { name: cat.name, path: `/${cat.id}` }
   ];
-  const schemaTags = buildSchemaTags(crumbs);
+  const collectionSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: title,
+    description: desc,
+    url: canonical
+  };
+  const schemaTags = buildSchemaTags(crumbs) + `\n<script type="application/ld+json">\n${JSON.stringify(collectionSchema, null, 2)}\n</script>`;
   return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
 }
 
@@ -2637,7 +2636,7 @@ function generateDeveloperHtml(template: string): string {
       name: 'Tool Brasil',
       url: 'https://www.toolbrasil.com.br'
     },
-    termsOfService: 'https://www.toolbrasil.com.br/institucional/termos'
+    termsOfService: 'https://www.toolbrasil.com.br/termos-de-uso'
   };
 
   const breadcrumb = getBreadcrumbSchema(crumbs);
