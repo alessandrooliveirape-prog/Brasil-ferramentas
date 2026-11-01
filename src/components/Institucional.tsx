@@ -12,13 +12,13 @@ interface InstitucionalProps {
 
 export default function Institucional({ pageId }: InstitucionalProps) {
   // Map standard aliases
-  const normalizedId = 
+  const normalizedId =
     pageId === 'politica-de-privacidade' || pageId === 'privacidade' ? 'privacidade' :
-    pageId === 'termos-de-uso' || pageId === 'termos' ? 'termos' :
-    pageId === 'sobre-nos' || pageId === 'quem-somos' ? 'sobre' :
-    pageId === 'fale-conosco' ? 'contato' :
-    pageId === 'gestao-de-cookies' ? 'cookies' :
-    pageId;
+      pageId === 'termos-de-uso' || pageId === 'termos' ? 'termos' :
+        pageId === 'sobre-nos' || pageId === 'quem-somos' ? 'sobre' :
+          pageId === 'fale-conosco' ? 'contato' :
+            pageId === 'gestao-de-cookies' ? 'cookies' :
+              pageId;
 
   return (
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-10 shadow-sm font-sans text-slate-800 dark:text-slate-100" id="inst-container">
