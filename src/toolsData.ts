@@ -326,7 +326,15 @@ export const TOOLS: ToolMetadata[] = [
     faqs: [
       {
         question: 'O que significa desconto progressivo do INSS?',
-        answer: 'O desconto progressivo calcula o percentual de contribuição aplicando diferentes alíquotas somente sobre a fatia correspondente a cada faixa salarial, de forma semelhante ao Imposto de Renda.'
+        answer: 'O desconto progressivo calcula o percentual de contribuição aplicando diferentes alíquotas (7,5%, 9%, 12% e 14%) somente sobre a fatia correspondente a cada faixa salarial, de forma semelhante ao Imposto de Renda.'
+      },
+      {
+        question: 'Qual é o teto máximo de desconto do INSS em 2026?',
+        answer: 'Em 2026, o teto previdenciário do INSS é de R$ 8.157,41, resultando em um recolhimento máximo mensal de R$ 951,62 para trabalhadores CLT, mesmo que o salário bruto seja superior ao teto.'
+      },
+      {
+        question: 'Qual a diferença entre alíquota nominal e alíquota efetiva do INSS?',
+        answer: 'A alíquota nominal é o percentual da faixa em que seu salário se enquadra (até 14%), enquanto a alíquota efetiva é o percentual real descontado sobre o total do salário bruto após o cálculo progressivo por faixas.'
       }
     ],
     tips: [
@@ -376,6 +384,14 @@ export const TOOLS: ToolMetadata[] = [
       {
         question: 'Quem recebe a multa de 40% do FGTS?',
         answer: 'A multa indenizatória de 40% incide sobre os depósitos totais realizados ao longo do contrato e é devida de forma integral nas dispensas sem justa causa promovidas pelo empregador.'
+      },
+      {
+        question: 'Qual o prazo legal para pagamento da rescisão trabalhista?',
+        answer: 'Pela Reforma Trabalhista (art. 477, § 6º da CLT), o empregador tem até 10 dias corridos a partir do término do contrato para quitar todas as verbas rescisórias, independentemente do tipo de aviso prévio.'
+      },
+      {
+        question: 'Como funciona a rescisão por acordo mútuo na CLT?',
+        answer: 'Na demissão por comum acordo (art. 484-A da CLT), o trabalhador recebe metade do aviso prévio indenizado (se aplicável), multa de 20% sobre o saldo do FGTS, todas as demais verbas integrais e pode sacar até 80% do fundo, mas não tem direito ao seguro-desemprego.'
       }
     ],
     tips: [
@@ -424,7 +440,15 @@ export const TOOLS: ToolMetadata[] = [
     faqs: [
       {
         question: 'Como o cálculo do IMC é estruturado?',
-        answer: 'A fórmula padrão mundial é o Peso dividido pelo quadrado da Altura (IMC = peso / (altura * altura)).'
+        answer: 'A fórmula padrão mundial da OMS é o Peso (em quilogramas) dividido pelo quadrado da Altura (em metros): IMC = peso ÷ (altura × altura).'
+      },
+      {
+        question: 'Qual é a faixa de IMC considerada peso normal ou ideal?',
+        answer: 'Segundo a Organização Mundial da Saúde (OMS), um IMC entre 18,5 e 24,9 kg/m² é classificado como peso normal (eutrófico) para adultos entre 20 e 59 anos.'
+      },
+      {
+        question: 'O IMC é igual para homens, mulheres e atletas?',
+        answer: 'A fórmula matemática é a mesma para homens e mulheres adultos, mas atletas e praticantes de musculação podem apresentar IMC acima de 25 devido à elevada massa muscular, sem que isso represente excesso de gordura corporal.'
       }
     ],
     tips: [

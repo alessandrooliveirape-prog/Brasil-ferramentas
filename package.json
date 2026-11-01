@@ -9,7 +9,11 @@
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "node --max-old-space-size=4096 ./node_modules/typescript/bin/tsc --noEmit",
-    "indexnow": "node --max-old-space-size=4096 ./node_modules/tsx/dist/cli.mjs scripts/submit-indexnow.ts"
+    "indexnow": "node --max-old-space-size=4096 ./node_modules/tsx/dist/cli.mjs scripts/submit-indexnow.ts",
+    "orchestrator": "node --max-old-space-size=4096 ./node_modules/tsx/dist/cli.mjs scripts/master_orchestrator.ts",
+    "orchestrator:dry": "node --max-old-space-size=4096 ./node_modules/tsx/dist/cli.mjs scripts/master_orchestrator.ts --dry-run",
+    "gsc:audit": "node --max-old-space-size=4096 ./node_modules/tsx/dist/cli.mjs scripts/gscAutoInspector.ts",
+    "api:generate": "node --max-old-space-size=4096 ./node_modules/tsx/dist/cli.mjs scripts/generate-api-data.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

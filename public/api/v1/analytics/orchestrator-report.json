@@ -1,0 +1,325 @@
+{
+  "site": "https://www.toolbrasil.com.br",
+  "timestamp": "2026-11-01T10:43:38.328Z",
+  "overallScore": 100,
+  "overallStatus": "HEALTHY",
+  "subagents": [
+    {
+      "id": "agent_seo_gsc",
+      "name": "Agente SEO, SSG & Search Console",
+      "role": "Auditor de Indexação Googlebot SSG, Sitemap XML, Schemas JSON-LD & IndexNow",
+      "status": "HEALTHY",
+      "score": 20,
+      "maxScore": 20,
+      "summary": "Sitemap (198 URLs), SSG Googlebot (7 rotas) e JSON-LD 100% nominais.",
+      "details": {
+        "sitemap": {
+          "status": 200,
+          "ok": true,
+          "count": 198,
+          "latencyMs": 647
+        },
+        "robots": {
+          "status": 200,
+          "hasSitemapDirective": true,
+          "allowsMediapartners": true,
+          "blocksQueryParams": true
+        },
+        "ssgGooglebotProbe": {
+          "/": {
+            "status": 200,
+            "words": 326,
+            "hasCanonical": true,
+            "hasJsonLd": true,
+            "hasNoindex": false
+          },
+          "/calculadoras": {
+            "status": 200,
+            "words": 1758,
+            "hasCanonical": true,
+            "hasJsonLd": true,
+            "hasNoindex": false
+          },
+          "/conversores": {
+            "status": 200,
+            "words": 594,
+            "hasCanonical": true,
+            "hasJsonLd": true,
+            "hasNoindex": false
+          },
+          "/geradores": {
+            "status": 200,
+            "words": 848,
+            "hasCanonical": true,
+            "hasJsonLd": true,
+            "hasNoindex": false
+          },
+          "/ferramentas-web": {
+            "status": 200,
+            "words": 487,
+            "hasCanonical": true,
+            "hasJsonLd": true,
+            "hasNoindex": false
+          },
+          "/utilitarios": {
+            "status": 200,
+            "words": 824,
+            "hasCanonical": true,
+            "hasJsonLd": true,
+            "hasNoindex": false
+          },
+          "/desenvolvedores": {
+            "status": 200,
+            "words": 357,
+            "hasCanonical": true,
+            "hasJsonLd": true,
+            "hasNoindex": false
+          }
+        }
+      },
+      "issues": [],
+      "selfHealed": false,
+      "healingActions": []
+    },
+    {
+      "id": "agent_monetization",
+      "name": "Agente de Monetização (AdSense & Amazon)",
+      "role": "Auditor de ads.txt, 7 Páginas Mandatórias AdSense e Rotação Amazon Associados",
+      "status": "HEALTHY",
+      "score": 20,
+      "maxScore": 20,
+      "summary": "ads.txt (pub-8160658026927094), 7 páginas institucionais SSG e Amazon (chacerto-20, 24 itens) 100% conformes.",
+      "details": {
+        "adsTxt": {
+          "status": 200,
+          "verified": true,
+          "pubId": "pub-8160658026927094"
+        },
+        "compliancePages": {
+          "Política de Privacidade": {
+            "status": 200,
+            "words": 828
+          },
+          "Termos de Uso": {
+            "status": 200,
+            "words": 508
+          },
+          "Política de Cookies": {
+            "status": 200,
+            "words": 276
+          },
+          "Quem Somos / Sobre": {
+            "status": 200,
+            "words": 571
+          },
+          "Contato e Suporte": {
+            "status": 200,
+            "words": 299
+          },
+          "Transparência AdSense": {
+            "status": 200,
+            "words": 245
+          },
+          "Anunciantes / Mídia Kit": {
+            "status": 200,
+            "words": 211
+          }
+        },
+        "amazonAffiliate": {
+          "associateTag": "chacerto-20",
+          "categoriesCount": 8,
+          "totalProducts": 24
+        }
+      },
+      "issues": [],
+      "selfHealed": false,
+      "healingActions": []
+    },
+    {
+      "id": "agent_infrastructure",
+      "name": "Agente de Infraestrutura & Edge CDN",
+      "role": "Monitor de Latência TTFB Vercel Edge, Headers de Segurança, PWA e Widget.js",
+      "status": "HEALTHY",
+      "score": 15,
+      "maxScore": 15,
+      "summary": "Vercel Edge CDN 68ms (TTFB) | widget.js, sw.js e Security Headers 100% nominais.",
+      "details": {
+        "edge": {
+          "ok": true,
+          "status": 200,
+          "ttfbMs": 68,
+          "securityHeaders": {
+            "xContentType": "nosniff",
+            "referrerPolicy": "strict-origin-when-cross-origin"
+          }
+        },
+        "assets": {
+          "widgetJsStatus": 200,
+          "swJsStatus": 200
+        }
+      },
+      "issues": [],
+      "selfHealed": false,
+      "healingActions": []
+    },
+    {
+      "id": "agent_tools_catalog",
+      "name": "Agente do Catálogo de Ferramentas & Calculadoras",
+      "role": "Auditor de Qualidade Editorial, FAQs Estruturados e SSG das Ferramentas Interativas",
+      "status": "HEALTHY",
+      "score": 15,
+      "maxScore": 15,
+      "summary": "138 ferramentas ativas em 5 categorias | Zero Thin Content e Schemas WebApplication + FAQPage 100% válidos.",
+      "details": {
+        "catalogStats": {
+          "totalTools": 138,
+          "categoriesCount": 5,
+          "thinIntroCount": 0,
+          "missingFaqCount": 0,
+          "missingHowItWorksCount": 0
+        },
+        "sampleToolsProbe": {
+          "/calculadoras/calculadora-de-juros-compostos": {
+            "status": 200,
+            "words": 1051,
+            "hasWebAppSchema": true,
+            "hasFaqSchema": true
+          },
+          "/geradores/gerador-de-cpf": {
+            "status": 200,
+            "words": 1079,
+            "hasWebAppSchema": true,
+            "hasFaqSchema": true
+          },
+          "/conversores/converter-real-para-dolar": {
+            "status": 200,
+            "words": 1026,
+            "hasWebAppSchema": true,
+            "hasFaqSchema": true
+          },
+          "/calculadoras/calculadora-de-churrasco": {
+            "status": 200,
+            "words": 1069,
+            "hasWebAppSchema": true,
+            "hasFaqSchema": true
+          }
+        }
+      },
+      "issues": [],
+      "selfHealed": false,
+      "healingActions": []
+    },
+    {
+      "id": "agent_programmatic_seo",
+      "name": "Agente de SEO Programático & Long-Tail",
+      "role": "Auditor de Páginas Programáticas, Tabelas Nacionais e Redirecionamentos 301 Anti-Canibalização",
+      "status": "HEALTHY",
+      "score": 15,
+      "maxScore": 15,
+      "summary": "46 páginas programáticas Long-Tail ativas | SSG (>250 palavras) e canônicas 100% íntegras.",
+      "details": {
+        "totalProgrammaticPages": 46,
+        "programmaticProbe": {
+          "/programatico/ddd-brasil": {
+            "status": 200,
+            "words": 441,
+            "hasCanonical": true
+          },
+          "/programatico/cep-brasil": {
+            "status": 200,
+            "words": 273,
+            "hasCanonical": true
+          },
+          "/programatico/bancos-brasil": {
+            "status": 200,
+            "words": 432,
+            "hasCanonical": true
+          },
+          "/programatico/salario-minimo-historico": {
+            "status": 200,
+            "words": 585,
+            "hasCanonical": true
+          },
+          "/programatico/feriados-nacionais": {
+            "status": 200,
+            "words": 422,
+            "hasCanonical": true
+          },
+          "/programatico/selic-historica": {
+            "status": 200,
+            "words": 329,
+            "hasCanonical": true
+          }
+        }
+      },
+      "issues": [],
+      "selfHealed": false,
+      "healingActions": []
+    },
+    {
+      "id": "agent_public_api",
+      "name": "Agente da API Pública v1 & Dados Oficiais 2026",
+      "role": "Auditor dos 9 Endpoints JSON Estáticos (INSS, IRRF, Salário Mínimo, CPF/CNPJ Módulo 11, Bancos, DDDs, Feriados)",
+      "status": "HEALTHY",
+      "score": 15,
+      "maxScore": 15,
+      "summary": "9/9 endpoints JSON da API Pública v1 online (CORS ativo, tabelas 2026 e Módulo 11 validados).",
+      "details": {
+        "endpointsChecked": 9,
+        "endpointsHealthy": 9,
+        "apiProbe": {
+          "/api/v1/cpf/gerar.json": {
+            "status": 200,
+            "validJson": true,
+            "cors": "*"
+          },
+          "/api/v1/cnpj/gerar.json": {
+            "status": 200,
+            "validJson": true,
+            "cors": "*"
+          },
+          "/api/v1/tabelas/inss.json": {
+            "status": 200,
+            "validJson": true,
+            "cors": "*"
+          },
+          "/api/v1/tabelas/irrf.json": {
+            "status": 200,
+            "validJson": true,
+            "cors": "*"
+          },
+          "/api/v1/tabelas/salario-minimo.json": {
+            "status": 200,
+            "validJson": true,
+            "cors": "*"
+          },
+          "/api/v1/dados/bancos.json": {
+            "status": 200,
+            "validJson": true,
+            "cors": "*"
+          },
+          "/api/v1/dados/ddds.json": {
+            "status": 200,
+            "validJson": true,
+            "cors": "*"
+          },
+          "/api/v1/dados/feriados-nacionais.json": {
+            "status": 200,
+            "validJson": true,
+            "cors": "*"
+          },
+          "/api/v1/ferramentas.json": {
+            "status": 200,
+            "validJson": true,
+            "cors": "*"
+          }
+        }
+      },
+      "issues": [],
+      "selfHealed": false,
+      "healingActions": []
+    }
+  ],
+  "healingSummary": [],
+  "executionTimeMs": 4280
+}

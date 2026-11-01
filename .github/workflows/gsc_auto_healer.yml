@@ -1,0 +1,39 @@
+# .github/workflows/gsc_auto_healer.yml
+name: GSC Auto-Healer & Proactive SEO Inspection
+
+on:
+  schedule:
+    # 04:15 AM Horário de Pernambuco/Brasília (UTC-3) -> 07:15 AM UTC
+    - cron: '15 7 * * *'
+  workflow_dispatch:
+
+jobs:
+  audit-and-heal:
+    name: Auditoria e Autocura Preventiva do Google Search Console
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Executar Auditoria Sintética Googlebot e Autocura
+        run: npx tsx scripts/gscAutoInspector.ts
+
+      - name: Commit e Push caso haja Autocura no Sitemap ou Arquivos Públicos
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add public/sitemap.xml
+          git diff --staged --quiet || (git commit -m "chore(seo): autocura diária de sitemap e integridade GSC [skip ci]" && git push)
+
