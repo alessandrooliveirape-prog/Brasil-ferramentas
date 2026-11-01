@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { ShieldCheck, Mail, BookOpen, Scale, Award, Lock, HelpCircle, CheckCircle, AlertCircle } from 'lucide-react';
+import { ShieldCheck, Mail, BookOpen, Scale, Award, Lock, HelpCircle, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 
 interface InstitucionalProps {
   pageId: string; // e.g. "sobre", "contato", "privacidade", "termos", "cookies", "transparencia-adsense", "anunciantes"
@@ -154,17 +154,50 @@ function ContatoForm() {
   const [email, setEmail] = useState('');
   const [motivo, setMotivo] = useState('duvida');
   const [mensagem, setMensagem] = useState('');
+  const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (nome && email && mensagem) {
-      setStatus('enviado');
-      setNome('');
-      setEmail('');
-      setMensagem('');
-    } else {
+    const cleanNome = nome.trim();
+    const cleanEmail = email.trim();
+    const cleanMensagem = mensagem.trim();
+
+    if (!cleanNome || !cleanEmail || !cleanMensagem) {
       setStatus('erro');
+      return;
+    }
+
+    setLoading(true);
+    setStatus(null);
+
+    try {
+      const res = await fetch('/api/contato', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          nome: cleanNome,
+          email: cleanEmail,
+          motivo,
+          mensagem: cleanMensagem
+        })
+      });
+
+      if (res.ok) {
+        setStatus('enviado');
+        setNome('');
+        setEmail('');
+        setMensagem('');
+      } else {
+        setStatus('falha');
+      }
+    } catch (err) {
+      console.error('Erro ao enviar contato:', err);
+      setStatus('falha');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -242,7 +275,17 @@ function ContatoForm() {
               <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
               <div>
                 <p className="font-bold">Campos incompletos</p>
-                <p className="font-normal mt-0.5">Por favor, preencha todos os campos obrigatórios (nome, e-mail e descrição) para prosseguir.</p>
+                <p className="font-normal mt-0.5">Por favor, preencha todos os campos obrigatórios (nome, e-mail válido e descrição) para prosseguir.</p>
+              </div>
+            </div>
+          )}
+
+          {status === 'falha' && (
+            <div className="p-4 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 text-xs font-semibold rounded-xl border border-amber-200 dark:border-amber-800 flex items-start gap-2.5">
+              <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold">Não foi possível enviar pelo formulário</p>
+                <p className="font-normal mt-0.5">Houve uma instabilidade temporária. Você pode nos contatar diretamente pelo e-mail: <a href="mailto:contato@toolbrasil.com.br" className="underline font-bold">contato@toolbrasil.com.br</a>.</p>
               </div>
             </div>
           )}
@@ -256,7 +299,8 @@ function ContatoForm() {
                 <input
                   type="text"
                   required
-                  className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  disabled={loading}
+                  className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-60"
                   value={nome}
                   onChange={(e) => setNome(e.target.value)}
                   placeholder="Ex: Carlos Silva"
@@ -270,7 +314,8 @@ function ContatoForm() {
                 <input
                   type="email"
                   required
-                  className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  disabled={loading}
+                  className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-60"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="carlos@exemplo.com.br"
@@ -283,7 +328,8 @@ function ContatoForm() {
                 Motivo do Contato *
               </label>
               <select
-                className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                disabled={loading}
+                className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-60"
                 value={motivo}
                 onChange={(e) => setMotivo(e.target.value)}
               >
@@ -302,7 +348,8 @@ function ContatoForm() {
               <textarea
                 required
                 rows={5}
-                className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                disabled={loading}
+                className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-60"
                 value={mensagem}
                 onChange={(e) => setMensagem(e.target.value)}
                 placeholder="Descreva detalhadamente sua sugestão, dúvida ou a ferramenta de interesse..."
@@ -311,9 +358,20 @@ function ContatoForm() {
 
             <button
               type="submit"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-3 px-6 rounded-lg transition-colors shadow-sm cursor-pointer inline-flex items-center gap-2"
+              disabled={loading}
+              className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white font-bold text-xs py-3 px-6 rounded-lg transition-colors shadow-sm cursor-pointer inline-flex items-center gap-2"
             >
-              <Mail className="w-4 h-4" /> Enviar Mensagem
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Enviando mensagem...</span>
+                </>
+              ) : (
+                <>
+                  <Mail className="w-4 h-4" />
+                  <span>Enviar Mensagem</span>
+                </>
+              )}
             </button>
           </form>
         </div>
