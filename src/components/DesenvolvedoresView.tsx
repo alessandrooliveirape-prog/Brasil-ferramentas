@@ -663,7 +663,7 @@ export default function DesenvolvedoresView() {
           </p>
           <div className="pt-2">
             <a
-              href="/institucional/contato"
+              href="/contato"
               className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow-xs"
             >
               <span>Falar com a Equipe de Engenharia</span>

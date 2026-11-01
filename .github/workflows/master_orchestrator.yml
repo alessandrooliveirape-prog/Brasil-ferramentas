@@ -20,7 +20,7 @@ on:
 
 jobs:
   orchestrate-ecosystem:
-    name: Orquestração Diária SRE dos 6 Subagentes (ToolBrasil)
+    name: Orquestração Diária SRE dos 7 Subagentes (ToolBrasil)
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -45,7 +45,6 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           VITE_ADSENSE_PUB_ID: ${{ secrets.VITE_ADSENSE_PUB_ID || 'ca-pub-8160658026927094' }}
-          VITE_AMAZON_ASSOCIATE_TAG: ${{ secrets.VITE_AMAZON_ASSOCIATE_TAG || 'chacerto-20' }}
         run: |
           ARGS=""
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then

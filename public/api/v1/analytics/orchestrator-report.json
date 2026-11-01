@@ -1,6 +1,6 @@
 {
   "site": "https://www.toolbrasil.com.br",
-  "timestamp": "2026-11-01T11:00:10.726Z",
+  "timestamp": "2026-11-01T13:00:19.956Z",
   "overallScore": 100,
   "overallStatus": "HEALTHY",
   "subagents": [
@@ -11,13 +11,13 @@
       "status": "HEALTHY",
       "score": 15,
       "maxScore": 15,
-      "summary": "Sitemap (198 URLs no ar), SSG Googlebot (7 rotas) e JSON-LD 100% nominais.",
+      "summary": "Sitemap (241 URLs no ar), SSG Googlebot (7 rotas) e JSON-LD 100% nominais.",
       "details": {
         "sitemap": {
           "status": 200,
           "ok": true,
-          "count": 198,
-          "latencyMs": 1184
+          "count": 241,
+          "latencyMs": 1009
         },
         "robots": {
           "status": 200,
@@ -83,12 +83,12 @@
     },
     {
       "id": "agent_monetization",
-      "name": "Agente de Monetização (AdSense & Amazon)",
-      "role": "Auditor de ads.txt, 7 Páginas Mandatórias AdSense e Rotação Amazon Associados",
+      "name": "Agente de Monetização (AdSense Exclusivo & LGPD)",
+      "role": "Auditor de ads.txt, 7 Páginas Mandatórias AdSense e Blindagem contra Scripts Intrusivos",
       "status": "HEALTHY",
       "score": 15,
       "maxScore": 15,
-      "summary": "ads.txt (pub-8160658026927094), 7 páginas institucionais SSG e Amazon (chacerto-20, 24 itens) 100% conformes.",
+      "summary": "ads.txt (pub-8160658026927094), 7 páginas institucionais SSG e pureza AdSense (zero Monetag/afiliados) 100% conformes.",
       "details": {
         "adsTxt": {
           "status": 200,
@@ -125,10 +125,9 @@
             "words": 211
           }
         },
-        "amazonAffiliate": {
-          "associateTag": "chacerto-20",
-          "categoriesCount": 8,
-          "totalProducts": 24
+        "adSensePurity": {
+          "adSenseAccountMeta": true,
+          "monetagFree": true
         }
       },
       "issues": [],
@@ -142,12 +141,12 @@
       "status": "HEALTHY",
       "score": 15,
       "maxScore": 15,
-      "summary": "Vercel Edge CDN 77ms (TTFB) | widget.js, sw.js e Security Headers 100% nominais.",
+      "summary": "Vercel Edge CDN 68ms (TTFB) | widget.js, sw.js e Security Headers 100% nominais.",
       "details": {
         "edge": {
           "ok": true,
           "status": 200,
-          "ttfbMs": 77,
+          "ttfbMs": 68,
           "securityHeaders": {
             "xContentType": "nosniff",
             "referrerPolicy": "strict-origin-when-cross-origin"
@@ -222,7 +221,7 @@
         "programmaticProbe": {
           "/programatico/ddd-brasil": {
             "status": 200,
-            "words": 441,
+            "words": 550,
             "hasCanonical": true
           },
           "/programatico/cep-brasil": {
@@ -341,17 +340,13 @@
           "core": 14
         },
         "thinSsgPagesCount": 0,
-        "indexNowSubmittedCount": 75
+        "indexNowSubmittedCount": 0
       },
       "issues": [],
-      "selfHealed": true,
-      "healingActions": [
-        "43 nova(s) página(s) Long-Tail pré-renderizada(s) e injetada(s) no sitemap.xml."
-      ]
+      "selfHealed": false,
+      "healingActions": []
     }
   ],
-  "healingSummary": [
-    "43 nova(s) página(s) Long-Tail pré-renderizada(s) e injetada(s) no sitemap.xml."
-  ],
-  "executionTimeMs": 12115
+  "healingSummary": [],
+  "executionTimeMs": 11864
 }

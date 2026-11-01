@@ -13,7 +13,6 @@ import { fileURLToPath } from 'url';
 import { CATEGORIES, TOOLS, PROGRAMMATIC_PAGES } from './src/toolsData.ts';
 import { EXTRA_PROGRAMMATIC_PAGES } from './src/programmaticExtra.ts';
 import { generateAllApiData } from './scripts/generate-api-data.ts';
-import { getRotatedProduct } from './src/config/affiliateProducts.ts';
 
 const ALL_PROGRAMMATIC_PAGES = { ...PROGRAMMATIC_PAGES, ...EXTRA_PROGRAMMATIC_PAGES };
 
@@ -386,7 +385,7 @@ function buildHtmlPage(template: string, title: string, desc: string, canonicalU
             <a href="/anunciantes" class="hover:underline font-bold text-slate-700">Anunciantes / Mídia Kit</a>
             <a href="/desenvolvedores" class="hover:underline font-bold text-emerald-700">API Pública</a>
           </div>
-          <p>&copy; 2026 Tool Brasil. Ferramentas online 100% gratuitas desenvolvidas em conformidade regulatória. Como participante do Programa de Associados da Amazon, a Tool Brasil é remunerada por compras qualificadas.</p>
+          <p>&copy; 2026 Tool Brasil. Ferramentas online 100% gratuitas desenvolvidas em estrita conformidade regulatória (CLT, Receita Federal, BACEN e LGPD).</p>
         </div>
       </footer>
     </div>
@@ -397,71 +396,12 @@ function buildHtmlPage(template: string, title: string, desc: string, canonicalU
 }
 
 /**
- * COMPONENTE ESTÁTICO DE RECOMENDAÇÃO AMAZON (TAG: chacerto-20)
- */
-function getAffiliateCardHtml(category?: string, toolId?: string): string {
-  const { product, affiliateUrl } = getRotatedProduct(category, toolId);
-  return `
-    <div class="bg-gradient-to-br from-amber-50/60 via-white to-amber-50/30 border border-amber-200/90 rounded-2xl p-5 sm:p-6 shadow-xs my-6 font-sans">
-      <div class="flex items-center justify-between gap-2 mb-3">
-        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-900 border border-amber-200 shadow-2xs">
-          <span>💡</span>
-          <span>Recomendação Útil</span>
-        </div>
-        ${product.badge ? `
-          <span class="text-[10px] font-mono font-bold text-amber-700 bg-amber-50 border border-amber-200/70 px-2 py-0.5 rounded-md flex items-center gap-1">
-            <span>✨</span>
-            <span>${product.badge}</span>
-          </span>
-        ` : ''}
-      </div>
-
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div class="flex-1">
-          <div class="flex items-center gap-2 mb-1">
-            <span class="text-amber-600 text-base">🛍️</span>
-            <h4 class="text-sm sm:text-base font-bold text-slate-900 tracking-tight leading-snug">
-              ${product.title}
-            </h4>
-          </div>
-          <p class="text-xs sm:text-[13px] text-slate-600 leading-relaxed font-normal mt-1">
-            ${product.benefit}
-          </p>
-        </div>
-
-        <div class="w-full sm:w-auto shrink-0 pt-2 sm:pt-0">
-          <a
-            href="${affiliateUrl}"
-            target="_blank"
-            rel="noopener noreferrer nofollow sponsored"
-            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-xs sm:text-[13px] rounded-xl shadow-xs hover:shadow-md transition-all text-center group"
-            title="Ver ofertas de ${product.title} na Amazon"
-          >
-            <span>Ver Ofertas na Amazon</span>
-            <span class="font-bold">→</span>
-          </a>
-        </div>
-      </div>
-
-      <div class="border-t border-amber-100 pt-2.5 mt-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[10.5px] text-slate-400">
-        <p class="leading-tight font-normal">
-          Como participante do Programa de Associados da Amazon, a Tool Brasil é remunerada por compras qualificadas.
-        </p>
-        <span class="font-mono text-[9.5px] text-slate-400">
-          Amazon Associados (tag: chacerto-20)
-        </span>
-      </div>
-    </div>
-  `;
-}
-
-/**
  * GERADORES DE HTML ESPECÍFICOS POR ROTA
  */
 
 function generateHomeHtml(template: string): string {
-  const title = "Tool Brasil | Ferramentas Online Gratuitas";
-  const desc = "Acesse calculadoras financeiras, geradores de documentos (CPF/CNPJ), conversores de moedas e unidades. Mais de 40 ferramentas úteis livres de cadastro.";
+  const title = "Tool Brasil | 138+ Ferramentas e Calculadoras Online Gratuitas";
+  const desc = "Acesse 138+ calculadoras financeiras e trabalhistas, geradores de documentos (CPF/CNPJ), conversores de moedas e unidades. Ferramentas úteis 100% gratuitas e sem cadastro.";
   const canonical = "https://www.toolbrasil.com.br/";
 
   const content = `
@@ -504,15 +444,12 @@ function generateHomeHtml(template: string): string {
             💡 Por que utilizar a Tool Brasil?
           </h2>
           <div class="space-y-3 text-xs text-slate-600 leading-relaxed">
-            <p><strong>1. Processamento Local (Client-Side):</strong> Suas informações privadas como documentos, dados financeiros e senhas são processados estritamente em seu navegador. Nós nunca enviamos ou salvamos seus dados confidenciais em servidores servidores.</p>
+            <p><strong>1. Processamento Local (Client-Side):</strong> Suas informações privadas como documentos, dados financeiros e senhas são processados estritamente em seu navegador. Nós nunca enviamos ou salvamos seus dados confidenciais em servidores externos.</p>
             <p><strong>2. Interface Otimizada:</strong> Desenvolvido sob rigorosos princípios de web design para carregar de forma instantânea tanto em dispositivos móveis quanto em computadores de mesa.</p>
-            <p><strong>3. 100% Gratuito:</strong> Sem assinaturas ocultas, taxas ou limites de utilização. O portal é financiado através de anúncios discretos do AdSense e parcerias reguladas.</p>
+            <p><strong>3. 100% Gratuito:</strong> Sem assinaturas ocultas, taxas ou limites de utilização. O portal é mantido exclusivamente através de publicidade contextual transparente via Google AdSense.</p>
           </div>
         </div>
       </div>
-
-      <!-- RECOMENDAÇÃO AMAZON EM DESTAQUE (TAG: chacerto-20) -->
-      ${getAffiliateCardHtml('financas')}
     </div>
   `;
 
@@ -1275,7 +1212,7 @@ function getStepByStepExampleHtml(tool: any): string {
 
 function getInternalLinkingGridHtml(tool: any): string {
   const categorySiblings = TOOLS.filter(t => t.categoryId === tool.categoryId && t.id !== tool.id).slice(0, 6);
-  const topGlobalIds = ['juros-compostos', 'cpf', 'rescisao-trabalhista', 'real-para-dolar', 'gerador-whatsapp', 'sorteador'];
+  const topGlobalIds = ['juros-compostos', 'cpf', 'rescisao', 'real-para-dolar', 'gerador-whatsapp', 'sorteador'];
   const topGlobals = TOOLS.filter(t => topGlobalIds.includes(t.id) && t.id !== tool.id).slice(0, 4);
 
   return `
@@ -1367,9 +1304,6 @@ function generateToolHtml(template: string, tool: any): string {
 
       <!-- INTERACTIVE AREA PREVIEW (ANTI-THIN CONTENT) -->
       ${getInteractivePreviewCardHtml(tool)}
-
-      <!-- RECOMENDAÇÃO AMAZON AFILIADOS (TAG: chacerto-20) -->
-      ${getAffiliateCardHtml(tool.categoryId, tool.id)}
 
       <!-- RICH TEXT CONTENT FOR CRAWLERS -->
       <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-6">
@@ -1573,9 +1507,9 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
         <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
           <h3 class="text-sm font-bold text-slate-900">Ferramentas de Cálculo Relacionadas</h3>
           <div class="flex flex-wrap gap-2 text-xs">
-            <a href="/calculadoras/salario-liquido" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Salário Líquido →</a>
-            <a href="/calculadoras/rescisao-trabalhista" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Rescisão CLT →</a>
-            <a href="/calculadoras/inss-progressivo" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Tabela de INSS 2026 →</a>
+            <a href="/calculadoras/calculadora-de-salario-liquido" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Salário Líquido →</a>
+            <a href="/calculadoras/calculadora-de-rescisao-trabalhista" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Rescisão CLT →</a>
+            <a href="/calculadoras/calculadora-desconto-inss" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Tabela de INSS 2026 →</a>
             <a href="/api" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">API de Salário Mínimo JSON →</a>
           </div>
         </div>
@@ -1686,7 +1620,7 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
           <h3 class="text-sm font-bold text-slate-900">Ferramentas e APIs Relacionadas</h3>
           <div class="flex flex-wrap gap-2 text-xs">
             <a href="/programatico/cep-brasil" class="px-3 py-1.5 bg-blue-50 text-blue-800 hover:bg-blue-100 rounded-lg font-bold border border-blue-200">Consulta de CEP Correios →</a>
-            <a href="/ferramentas-web/meu-ip-publico" class="px-3 py-1.5 bg-blue-50 text-blue-800 hover:bg-blue-100 rounded-lg font-bold border border-blue-200">Descobrir Meu IP Público →</a>
+            <a href="/ferramentas-web/qual-o-meu-ip" class="px-3 py-1.5 bg-blue-50 text-blue-800 hover:bg-blue-100 rounded-lg font-bold border border-blue-200">Descobrir Meu IP Público →</a>
             <a href="/api" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">API de DDDs JSON →</a>
           </div>
         </div>
@@ -1833,8 +1767,8 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
             O artigo 70 da Consolidação das Leis do Trabalho veda o trabalho em feriados nacionais e religiosos, ressalvadas as atividades essenciais e serviços de funcionamento ininterrupto autorizados por acordo coletivo ou convenção. Quando o trabalhador labora em um feriado oficial sem compensação na mesma semana, a empresa é obrigada a remunerar as horas trabalhadas em dobro (adicional de 100%).
           </p>
           <div class="flex flex-wrap gap-2 text-xs pt-1">
-            <a href="/calculadoras/hora-extra" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calcular Hora Extra a 100% →</a>
-            <a href="/calculadoras/dias-entre-datas" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Dias entre Datas →</a>
+            <a href="/calculadoras/calculadora-de-hora-extra" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calcular Hora Extra a 100% →</a>
+            <a href="/calculadoras/calculadora-dias-entre-datas" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Dias entre Datas →</a>
           </div>
         </div>
       </div>
@@ -1879,8 +1813,8 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
         <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
           <h3 class="text-sm font-bold text-slate-900">Simuladores Financeiros Relacionados</h3>
           <div class="flex flex-wrap gap-2 text-xs">
-            <a href="/calculadoras/juros-compostos" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Juros Compostos →</a>
-            <a href="/calculadoras/rendimento-poupanca" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Simulador de Poupança vs CDI →</a>
+            <a href="/calculadoras/calculadora-de-juros-compostos" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Juros Compostos →</a>
+            <a href="/calculadoras/calculadora-de-imposto-de-renda" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Imposto de Renda →</a>
           </div>
         </div>
       </div>
@@ -1941,8 +1875,8 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
             Para consultar extratos de pagamento, informe de rendimentos para o Imposto de Renda e dados do benefício, utilize o aplicativo oficial <strong>Meu INSS</strong> (disponível para Android e iOS), o portal <code>meu.inss.gov.br</code> ou ligue gratuitamente para a Central Telefônica <strong>135</strong> (de segunda a sábado, das 7h às 22h).
           </p>
           <div class="flex flex-wrap gap-2 text-xs pt-1">
-            <a href="/calculadoras/inss-progressivo" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Desconto INSS 2026 →</a>
-            <a href="/calculadoras/salario-liquido" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Salário Líquido →</a>
+            <a href="/calculadoras/calculadora-desconto-inss" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Desconto INSS 2026 →</a>
+            <a href="/calculadoras/calculadora-de-salario-liquido" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Salário Líquido →</a>
           </div>
         </div>
       </div>

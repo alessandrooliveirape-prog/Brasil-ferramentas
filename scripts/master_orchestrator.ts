@@ -4,8 +4,8 @@
  * TOOLBRASIL MASTER MULTIAGENT ORCHESTRATOR & SRE AUTÔNOMO v2.0 (2026)
  * ======================================================================
  * Coordena 7 subagentes especializados (100 pontos totais), audita saúde
- * técnica, SEO/SSG Googlebot, monetização AdSense (7 páginas institucionais)
- * + Afiliados Amazon (tag chacerto-20), infraestrutura Vercel Edge/CDN,
+ * técnica, SEO/SSG Googlebot, monetização AdSense exclusiva (7 páginas institucionais,
+ * ads.txt e zero redes terceiras intrusivas), infraestrutura Vercel Edge/CDN,
  * catálogo de 138+ ferramentas interativas, páginas de SEO Programático,
  * API Pública v1 (JSON estático + Widgets) e o 7º Agente de Tração &
  * Expansão Long-Tail (88 páginas programáticas + IndexNow ativo), executando
@@ -18,7 +18,6 @@ import * as path from 'path';
 import { execSync } from 'child_process';
 import { CATEGORIES, TOOLS, PROGRAMMATIC_PAGES } from '../src/toolsData.ts';
 import { EXTRA_PROGRAMMATIC_PAGES } from '../src/programmaticExtra.ts';
-import { AFFILIATE_PRODUCTS, AMAZON_ASSOCIATE_TAG } from '../src/config/affiliateProducts.ts';
 import { generateAllApiData } from './generate-api-data.ts';
 import { runGrowthExpander } from './agent_growth_expander.ts';
 
@@ -227,13 +226,13 @@ async function runAgentSeoGsc(): Promise<SubagentReport> {
 }
 
 // ======================================================================
-// 2. SUBAGENTE: agent_monetization (15 pts — AdSense, ads.txt, 7 Páginas & Amazon)
+// 2. SUBAGENTE: agent_monetization (15 pts — AdSense Exclusivo, ads.txt & 7 Páginas)
 // ======================================================================
 async function runAgentMonetization(): Promise<SubagentReport> {
   const report: SubagentReport = {
     id: 'agent_monetization',
-    name: 'Agente de Monetização (AdSense & Amazon)',
-    role: 'Auditor de ads.txt, 7 Páginas Mandatórias AdSense e Rotação Amazon Associados',
+    name: 'Agente de Monetização (AdSense Exclusivo & LGPD)',
+    role: 'Auditor de ads.txt, 7 Páginas Mandatórias AdSense e Blindagem contra Scripts Intrusivos',
     status: 'HEALTHY',
     score: 15,
     maxScore: 15,
@@ -305,17 +304,17 @@ async function runAgentMonetization(): Promise<SubagentReport> {
     }
     report.details.compliancePages = pagesResult;
 
-    // 3. Auditoria do Motor de Afiliados Amazon
-    const affiliateCategories = Object.keys(AFFILIATE_PRODUCTS);
-    const totalAffiliateProducts = Object.values(AFFILIATE_PRODUCTS).reduce((acc, arr) => acc + arr.length, 0);
-    report.details.amazonAffiliate = {
-      associateTag: AMAZON_ASSOCIATE_TAG,
-      categoriesCount: affiliateCategories.length,
-      totalProducts: totalAffiliateProducts
+    // 3. Blindagem contra scripts de terceiros não autorizados (Monetag / Afiliados)
+    const indexHtmlPath = path.resolve('index.html');
+    const indexHtmlContent = fs.existsSync(indexHtmlPath) ? fs.readFileSync(indexHtmlPath, 'utf-8') : '';
+    const hasMonetag = /monetag|n6wxm|vignette\.min\.js/i.test(indexHtmlContent);
+    report.details.adSensePurity = {
+      adSenseAccountMeta: indexHtmlContent.includes(ADSENSE_PUB_ID),
+      monetagFree: !hasMonetag
     };
-    if (!AMAZON_ASSOCIATE_TAG || totalAffiliateProducts < 15) {
-      report.issues.push('Configuração de afiliados Amazon incompleta.');
-      report.score -= 2;
+    if (hasMonetag) {
+      report.issues.push('Script de rede terceira (Monetag/vignette) detectado no index.html!');
+      report.score -= 5;
     }
 
     // Autocura de ads.txt local se necessário
@@ -338,7 +337,7 @@ async function runAgentMonetization(): Promise<SubagentReport> {
     report.score = Math.max(0, Math.min(report.maxScore, report.score));
     if (report.score >= 13) {
       report.status = 'HEALTHY';
-      report.summary = `ads.txt (${ADSENSE_PUB_RAW}), 7 páginas institucionais SSG e Amazon (${AMAZON_ASSOCIATE_TAG}, ${totalAffiliateProducts} itens) 100% conformes.`;
+      report.summary = `ads.txt (${ADSENSE_PUB_RAW}), 7 páginas institucionais SSG e pureza AdSense (zero Monetag/afiliados) 100% conformes.`;
     } else if (report.score >= 9) {
       report.status = 'WARNING';
       report.summary = `Avisos na auditoria de monetização (${report.issues.length} alerta(s)).`;
@@ -1016,7 +1015,7 @@ async function runMasterOrchestrator() {
   console.log('📡 [1/7] Executando subagente SEO, SSG Googlebot & Search Console...');
   const seoReport = await runAgentSeoGsc();
 
-  console.log('💰 [2/7] Executando subagente de Monetização (AdSense, 7 páginas & Amazon)...');
+  console.log('💰 [2/7] Executando subagente de Monetização (AdSense Exclusivo & 7 páginas)...');
   const monetizationReport = await runAgentMonetization();
 
   console.log('⚡ [3/7] Executando subagente de Infraestrutura & Edge CDN...');

@@ -47,12 +47,55 @@ import AdSensePlaceholder from './components/AdSensePlaceholder';
 import SEOAnalyzer from './components/SEOAnalyzer';
 import CommandPalette from './components/CommandPalette';
 import MobileCategoryRail from './components/MobileCategoryRail';
-import { AffiliateRecommendationCard } from './components/AffiliateRecommendationCard';
 
+function normalizeSearchText(str: string): string {
+  return (str || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+}
+
+function matchesSearchTokens(haystack: string, rawQuery: string): boolean {
+  const normHaystack = normalizeSearchText(haystack);
+  const tokens = normalizeSearchText(rawQuery)
+    .split(/\s+/)
+    .filter(Boolean);
+  if (tokens.length === 0) return true;
+  return tokens.every(token => normHaystack.includes(token));
+}
+
+function getCalculatorSubcategory(tool: any): string {
+  const text = `${tool.id} ${tool.slug} ${tool.title}`.toLowerCase();
+  if (/rescisao|ferias|inss|irrf|salario|decimo|fgts|clt|horas|noturno|insalubridade|periculosidade|seguro-desemprego|pis|pasep|aviso-previo|dsr|custo-funcionario|vt|vale-transporte|trabalh/.test(text)) {
+    return 'trabalhista';
+  }
+  if (/juros|financiamento|emprestimo|investimento|cdi|selic|tesouro|poupanca|desconto|margem|lucro|markup|roi|inflacao|aposentadoria|aluguel|compra|venda|consignado|preco|dividendo|amortizacao|parcela|fipe|ipva/.test(text)) {
+    return 'financas';
+  }
+  if (/imc|agua|caloria|tmb|gordura|gestacional|gravidez|ovulacao|sono|frequencia-cardiaca|proteina|peso|saude/.test(text)) {
+    return 'saude';
+  }
+  if (/tijolo|argamassa|piso|revestimento|tinta|pintura|btu|ar-condicionado|concreto|telha|consumo-energia|kwh|combustivel|gasolina|etanol|churrasco|cerveja|festa/.test(text)) {
+    return 'casa';
+  }
+  return 'matematica';
+}
 
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState(() => parseRoute());
   const [searchQuery, setSearchQuery] = useState('');
+  const [categorySearch, setCategorySearch] = useState('');
+  const [categorySubFilter, setCategorySubFilter] = useState('all');
+  const [sidebarFilter, setSidebarFilter] = useState('');
+  const [recentToolIds, setRecentToolIds] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('toolbrasil_recent_tools_v1');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState<{ [key: string]: boolean }>({});
 
@@ -215,6 +258,8 @@ export default function App() {
   useEffect(() => {
     const handleLocationChange = () => {
       setCurrentRoute(parseRoute());
+      setCategorySearch('');
+      setCategorySubFilter('all');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -331,12 +376,12 @@ export default function App() {
         'anunciantes': {
           title: "Anuncie na Tool Brasil | Mídia Kit e Parcerias Comerciais",
           desc: "Conecte sua empresa a milhares de usuários brasileiros qualificados com alto poder de decisão através de mídia programática e parcerias com a Tool Brasil.",
-          path: "institucional/anunciantes"
+          path: "anunciantes"
         },
         'transparencia-adsense': {
           title: "Transparência Google AdSense | Tool Brasil",
           desc: "Entenda como a publicidade programática do Google AdSense financia a infraestrutura 100% gratuita da Tool Brasil.",
-          path: "institucional/transparencia-adsense"
+          path: "transparencia-adsense"
         }
       };
 
@@ -389,7 +434,7 @@ export default function App() {
     }
   }, [currentRoute, activeTool]);
 
-  // Log and persist tool visits
+  // Log and persist tool visits & recent tools history
   useEffect(() => {
     if (activeTool && activeTool.id) {
       setUseCounts(prev => {
@@ -400,6 +445,13 @@ export default function App() {
           console.error('Error persisting score:', e);
         }
         return next;
+      });
+      setRecentToolIds(prev => {
+        const nextRecent = [activeTool.id, ...prev.filter(id => id !== activeTool.id)].slice(0, 8);
+        try {
+          localStorage.setItem('toolbrasil_recent_tools_v1', JSON.stringify(nextRecent));
+        } catch (e) {}
+        return nextRecent;
       });
     }
   }, [activeTool?.id]);
@@ -506,8 +558,8 @@ export default function App() {
         'privacidade': { name: 'Política de Privacidade', path: '/politica-de-privacidade' },
         'termos': { name: 'Termos de Uso', path: '/termos-de-uso' },
         'cookies': { name: 'Gestão de Cookies', path: '/cookies' },
-        'anunciantes': { name: 'Anunciantes', path: '/institucional/anunciantes' },
-        'transparencia-adsense': { name: 'Transparência AdSense', path: '/institucional/transparencia-adsense' }
+        'anunciantes': { name: 'Anunciantes', path: '/anunciantes' },
+        'transparencia-adsense': { name: 'Transparência AdSense', path: '/transparencia-adsense' }
       };
       const info = instTitles[currentRoute.id] || { name: 'Institucional', path: `/institucional/${currentRoute.id}` };
       crumbs.push({ name: info.name, path: info.path });
@@ -562,21 +614,19 @@ export default function App() {
   const breadcrumbSchema = getBreadcrumbSchema();
   const webAppSchema = getWebAppSchema();
 
-  // Filter tools based on search input
+  // Filter tools based on search input (accent-insensitive & tokenized)
   const getFilteredTools = () => {
     if (!searchQuery.trim()) return [];
-    const query = searchQuery.toLowerCase();
+    const query = searchQuery.trim();
     
     // Tools
     const toolsMatching = TOOLS.filter(t => 
-      t.title.toLowerCase().includes(query) || 
-      t.shortDescription.toLowerCase().includes(query)
+      matchesSearchTokens(`${t.title} ${t.shortDescription} ${t.slug} ${t.id}`, query)
     ).map(t => ({ ...t, type: 'tool' }));
 
     // Programmatic Pages
     const progMatching = Object.entries(ALL_PROGRAMMATIC_PAGES).filter(([key, value]) => 
-      value.title.toLowerCase().includes(query) ||
-      value.description.toLowerCase().includes(query)
+      matchesSearchTokens(`${value.title} ${value.description} ${key}`, query)
     ).map(([key, value]) => ({
       id: key,
       categoryId: 'programatico' as const,
@@ -714,7 +764,7 @@ export default function App() {
               <input
                 type="text"
                 className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-full py-3.5 pl-12 pr-24 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-xs transition-all font-medium text-slate-900 dark:text-slate-100"
-                placeholder="Pesquise entre 40+ ferramentas ex: Juros Compostos, CPF, CEP..."
+                placeholder="Pesquise entre 138+ ferramentas e tabelas (ex: ferias, rescisao, inss, cpf)..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -734,7 +784,7 @@ export default function App() {
                 
                 {/* Dólar Card */}
                 <a 
-                  href="/conversores/real-para-dolar"
+                  href="/conversores/converter-real-para-dolar"
                   className="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
                 >
                   <div className="flex items-center justify-between">
@@ -753,7 +803,7 @@ export default function App() {
 
                 {/* Euro Card */}
                 <a 
-                  href="/conversores/euro-para-real"
+                  href="/conversores/converter-euro-para-real"
                   className="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
                 >
                   <div className="flex items-center justify-between">
@@ -772,7 +822,7 @@ export default function App() {
 
                 {/* Libra Card */}
                 <a 
-                  href="/conversores/libra-para-real"
+                  href="/conversores/converter-libra-para-real"
                   className="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
                 >
                   <div className="flex items-center justify-between">
@@ -791,7 +841,7 @@ export default function App() {
 
                 {/* Bitcoin Card */}
                 <a 
-                  href="/conversores/bitcoin-para-real"
+                  href="/conversores/converter-bitcoin-para-real"
                   className="bg-white dark:bg-slate-900 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-emerald-600 transition-all hover:shadow-xs text-left flex flex-col justify-between"
                 >
                   <div className="flex items-center justify-between">
@@ -893,7 +943,7 @@ export default function App() {
               </a>
 
               {CATEGORIES.filter(c => c.id !== 'institucional' && c.id !== 'programatico').map((cat) => {
-                const isActive = currentRoute.categoryId === cat.id && currentRoute.view === 'category';
+                const isActive = currentRoute.categoryId === cat.id && (currentRoute.view === 'category' || currentRoute.view === 'tool');
                 return (
                   <a
                     key={cat.id}
@@ -912,6 +962,54 @@ export default function App() {
               })}
             </nav>
           </div>
+
+          {/* CONTEXTUAL SIDEBAR: FERRAMENTAS DA CATEGORIA ATUAL */}
+          {(currentRoute.view === 'tool' || currentRoute.view === 'category') && currentRoute.categoryId && (
+            <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800/70 shadow-xs space-y-3" id="contextual-category-sidebar">
+              <div className="flex items-center justify-between">
+                <h3 className="text-[11px] font-extrabold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
+                  Trocar em {CATEGORIES.find(c => c.id === currentRoute.categoryId)?.name || 'Categoria'}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setIsCommandPaletteOpen(true)}
+                  className="text-[10px] font-mono font-bold text-slate-500 hover:text-emerald-600 cursor-pointer"
+                  title="Busca rápida (Ctrl+K)"
+                >
+                  ⌘K
+                </button>
+              </div>
+              <input
+                type="text"
+                value={sidebarFilter}
+                onChange={e => setSidebarFilter(e.target.value)}
+                placeholder="Filtrar nesta categoria..."
+                className="w-full px-2.5 py-1.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg outline-none focus:border-emerald-500 text-slate-800 dark:text-slate-200"
+              />
+              <div className="max-h-64 overflow-y-auto space-y-1 pr-1">
+                {TOOLS.filter(
+                  t =>
+                    t.categoryId === currentRoute.categoryId &&
+                    matchesSearchTokens(`${t.title} ${t.slug}`, sidebarFilter)
+                ).map(t => {
+                  const isCurrentTool = activeTool?.id === t.id;
+                  return (
+                    <a
+                      key={t.id}
+                      href={`/${t.categoryId}/${t.slug}`}
+                      className={`block px-2.5 py-1.5 rounded-lg text-[11.5px] transition-colors truncate ${
+                        isCurrentTool
+                          ? 'bg-emerald-600 text-white font-extrabold shadow-2xs'
+                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold'
+                      }`}
+                    >
+                      {t.title.replace('Calculadora de ', '').replace('Conversor de ', '').replace('Gerador de ', '')}
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* DYNAMIC METRIC DISPATCHER */}
           <div className="bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-xs space-y-2 text-xs">
@@ -1064,10 +1162,32 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* RECOMENDAÇÃO DE PRODUTOS AMAZON (AFFILIATE) */}
-                <AffiliateRecommendationCard category="financas" />
-
               </div>
+
+              {/* RECENTLY USED TOOLS RAIL (IF USER HAS HISTORY) */}
+              {recentToolIds.length > 0 && (
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 flex items-center justify-between gap-3 flex-wrap shadow-2xs" id="home-recent-tools">
+                  <div className="flex items-center gap-2 text-xs font-extrabold text-slate-800 dark:text-slate-200">
+                    <span className="text-emerald-600">🕒</span>
+                    <span>Continuar usando:</span>
+                  </div>
+                  <div className="flex items-center gap-2 flex-wrap flex-1">
+                    {recentToolIds.slice(0, 5).map(rId => {
+                      const rTool = TOOLS.find(t => t.id === rId);
+                      if (!rTool) return null;
+                      return (
+                        <a
+                          key={rId}
+                          href={`/${rTool.categoryId}/${rTool.slug}`}
+                          className="text-xs font-bold px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/70 hover:bg-emerald-100 transition"
+                        >
+                          {rTool.title.replace('Calculadora de ', '').replace('Conversor de ', '').replace('Gerador de ', '')} →
+                        </a>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
               {/* CATEGORIES GRID */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1127,9 +1247,9 @@ export default function App() {
                   <a href="/calculadoras/calculadora-desconto-inss" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Calcular INSS 2026</a>
                   <a href="/geradores/gerador-de-senha-segura" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Gerar Senha Segura</a>
                   <a href="/conversores/converter-euro-para-real" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Real para Euro Hoje</a>
-                  <a href="/utilitarios/meu-ip" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Qual é o Meu IP?</a>
+                  <a href="/ferramentas-web/qual-o-meu-ip" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Qual é o Meu IP?</a>
                   <a href="/programatico/cep-brasil" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Buscar CEP Online</a>
-                  <a href="/calculadoras/calcular-imc" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Calcular IMC Grátis</a>
+                  <a href="/calculadoras/calculadora-de-imc" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Calcular IMC Grátis</a>
                   <a href="/geradores/gerador-de-qr-code" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Gerar QR Code</a>
                 </div>
               </div>
@@ -1142,33 +1262,106 @@ export default function App() {
               {(() => {
                 const cat = CATEGORIES.find(c => c.id === currentRoute.categoryId);
                 if (!cat) return null;
+                const allCatTools = TOOLS.filter(t => t.categoryId === cat.id);
+                const filteredCatTools = allCatTools.filter(tool => {
+                  const matchesQuery = matchesSearchTokens(`${tool.title} ${tool.shortDescription} ${tool.slug}`, categorySearch);
+                  if (!matchesQuery) return false;
+                  if (cat.id === 'calculadoras' && categorySubFilter !== 'all') {
+                    return getCalculatorSubcategory(tool) === categorySubFilter;
+                  }
+                  return true;
+                });
+
+                const calcSubfilters = [
+                  { id: 'all', label: `Todas (${allCatTools.length})` },
+                  { id: 'trabalhista', label: '⚖️ Trabalhistas & CLT' },
+                  { id: 'financas', label: '💰 Finanças & Juros' },
+                  { id: 'saude', label: '❤️ Saúde & Corpo' },
+                  { id: 'casa', label: '🏠 Casa, Obra & Veículos' },
+                  { id: 'matematica', label: '📐 Matemática & Datas' }
+                ];
+
                 return (
-                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl space-y-3 shadow-xs">
-                    <h2 className="text-2xl font-black text-slate-900 dark:text-white">
-                      {cat.name}
-                    </h2>
-                    <p className="text-xs text-slate-700 dark:text-slate-300 font-semibold">{cat.description}</p>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
-                      {TOOLS.filter(t => t.categoryId === cat.id).map((tool) => (
-                        <a
-                          key={tool.id}
-                          href={`/${cat.id}/${tool.slug}`}
-                          className="bg-slate-50 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-xl hover:border-emerald-600 transition-all block group"
-                        >
-                          <span className="font-extrabold text-base text-slate-900 dark:text-slate-100 block group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                            {tool.title}
-                          </span>
-                          <span className="text-[12px] text-slate-600 dark:text-slate-400 mt-1 block line-clamp-2 font-semibold">
-                            {tool.shortDescription}
-                          </span>
-                        </a>
-                      ))}
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl space-y-4 shadow-xs">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div>
+                        <h2 className="text-2xl font-black text-slate-900 dark:text-white">
+                          {cat.name}
+                        </h2>
+                        <p className="text-xs text-slate-700 dark:text-slate-300 font-semibold mt-1">{cat.description}</p>
+                      </div>
+                      <span className="inline-flex items-center self-start sm:self-auto px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                        {filteredCatTools.length} de {allCatTools.length} ferramentas
+                      </span>
                     </div>
 
-                    <div className="pt-2">
-                      <AffiliateRecommendationCard category={currentRoute.categoryId} />
+                    {/* Filtro Rápido Local na Categoria */}
+                    <div className="space-y-3 pt-1">
+                      <div className="relative">
+                        <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <input
+                          type="text"
+                          value={categorySearch}
+                          onChange={e => setCategorySearch(e.target.value)}
+                          placeholder={`Filtrar rápido em ${cat.name} (ex: sem acento)...`}
+                          className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-slate-50 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-slate-900 dark:text-slate-100 font-medium"
+                        />
+                      </div>
+
+                      {cat.id === 'calculadoras' && (
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          {calcSubfilters.map(sub => (
+                            <button
+                              key={sub.id}
+                              type="button"
+                              onClick={() => setCategorySubFilter(sub.id)}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border ${
+                                categorySubFilter === sub.id
+                                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-2xs'
+                                  : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-emerald-500'
+                              }`}
+                            >
+                              {sub.label}
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
+                    
+                    {filteredCatTools.length === 0 ? (
+                      <div className="p-8 text-center bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2">
+                        <p className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                          Nenhuma ferramenta encontrada com este filtro.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCategorySearch('');
+                            setCategorySubFilter('all');
+                          }}
+                          className="text-xs font-bold text-emerald-600 hover:underline cursor-pointer"
+                        >
+                          Limpar filtros e mostrar todas
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        {filteredCatTools.map((tool) => (
+                          <a
+                            key={tool.id}
+                            href={`/${cat.id}/${tool.slug}`}
+                            className="bg-slate-50 dark:bg-slate-800/60 hover:bg-white dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-700 p-4 rounded-xl hover:border-emerald-600 transition-all block group"
+                          >
+                            <span className="font-extrabold text-base text-slate-900 dark:text-slate-100 block group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                              {tool.title}
+                            </span>
+                            <span className="text-[12px] text-slate-600 dark:text-slate-400 mt-1 block line-clamp-2 font-semibold">
+                              {tool.shortDescription}
+                            </span>
+                          </a>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 );
               })()}
@@ -1188,8 +1381,51 @@ export default function App() {
                 {activeTool.categoryId === 'utilitarios' && <Utilitarios toolId={activeTool.id} />}
               </div>
 
-              {/* RECOMENDAÇÃO DE PRODUTOS AMAZON (AFFILIATE) */}
-              <AffiliateRecommendationCard category={activeTool.categoryId} toolId={activeTool.id} />
+              {/* BARRA DE TROCA RÁPIDA DE FERRAMENTA (QUICK-SWITCH BAR) */}
+              <div className="bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-800/70 rounded-xl p-4 shadow-xs space-y-3" id="tool-quick-switch-bar">
+                <div className="flex items-center justify-between gap-2 flex-wrap">
+                  <span className="text-xs font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                    <span>Trocar rápido para outra ferramenta:</span>
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <a
+                      href={`/${activeTool.categoryId}`}
+                      className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 hover:underline"
+                    >
+                      Ver todas em {CATEGORIES.find(c => c.id === activeTool.categoryId)?.name} →
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setIsCommandPaletteOpen(true)}
+                      className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-[11px] font-bold border border-slate-300 dark:border-slate-700 transition cursor-pointer flex items-center gap-1"
+                    >
+                      <Search className="w-3 h-3" /> Buscar (Ctrl+K)
+                    </button>
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {(() => {
+                    const relatedObjects = (activeTool.relatedToolIds || [])
+                      .map(id => TOOLS.find(t => t.id === id))
+                      .filter(Boolean) as any[];
+                    const fallbackSiblings = TOOLS.filter(
+                      t => t.categoryId === activeTool.categoryId && t.id !== activeTool.id && !relatedObjects.some(r => r.id === t.id)
+                    ).slice(0, 6 - relatedObjects.length);
+                    const quickLinks = [...relatedObjects, ...fallbackSiblings].slice(0, 6);
+
+                    return quickLinks.map(relTool => (
+                      <a
+                        key={relTool.id}
+                        href={`/${relTool.categoryId}/${relTool.slug}`}
+                        className="px-3 py-1.5 bg-emerald-50/70 dark:bg-emerald-950/40 hover:bg-emerald-600 hover:text-white text-emerald-900 dark:text-emerald-200 border border-emerald-200 dark:border-emerald-800/80 rounded-lg text-xs font-bold transition-all shadow-2xs"
+                      >
+                        {relTool.title.replace('Calculadora de ', '').replace('Conversor de ', '').replace('Gerador de ', '')} →
+                      </a>
+                    ));
+                  })()}
+                </div>
+              </div>
 
               {/* ADSENSE MID TOPO & RICH SEO TEXTUAL CONTENT (apenas para ferramentas que usam layout padrão) */}
               {activeTool.id !== 'descomplica-contrato' && (
@@ -1489,14 +1725,15 @@ export default function App() {
                 <li><a href="/politica-de-privacidade" className="hover:text-emerald-400">Política de Privacidade (LGPD)</a></li>
                 <li><a href="/termos-de-uso" className="hover:text-emerald-400">Termos de Uso</a></li>
                 <li><a href="/cookies" className="hover:text-emerald-400">Preferências de Cookies</a></li>
-                <li><a href="/institucional/anunciantes" className="hover:text-emerald-400">Mídia Kit / Anunciantes</a></li>
+                <li><a href="/transparencia-adsense" className="hover:text-emerald-400">Transparência AdSense</a></li>
+                <li><a href="/anunciantes" className="hover:text-emerald-400">Mídia Kit / Anunciantes</a></li>
               </ul>
             </div>
           </div>
 
           <div className="pt-8 border-t border-slate-800 text-center md:flex md:items-center md:justify-between text-xs text-slate-500">
             <p>
-              &copy; {new Date().getFullYear()} <strong className="text-slate-300">Tool Brasil</strong>. Todos os direitos reservados. Ferramentas 100% gratuitas — sem cadastro, sem limites. Como participante do Programa de Associados da Amazon, somos remunerados por compras qualificadas.
+              &copy; {new Date().getFullYear()} <strong className="text-slate-300">Tool Brasil</strong>. Todos os direitos reservados. 138+ ferramentas e tabelas oficiais 100% gratuitas — sem cadastro, sem limites, com privacidade client-side (LGPD).
             </p>
             <div className="flex items-center justify-center gap-3 mt-4 md:mt-0 flex-wrap text-slate-400">
               <span className="inline-flex items-center gap-1 px-2 py-1 bg-emerald-900/30 text-emerald-400 rounded text-[10px] font-mono border border-emerald-800/50">
