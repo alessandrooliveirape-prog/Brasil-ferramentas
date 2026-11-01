@@ -1,6 +1,6 @@
 {
   "site": "https://www.toolbrasil.com.br",
-  "timestamp": "2026-11-01T10:43:38.328Z",
+  "timestamp": "2026-11-01T11:00:10.726Z",
   "overallScore": 100,
   "overallStatus": "HEALTHY",
   "subagents": [
@@ -9,15 +9,15 @@
       "name": "Agente SEO, SSG & Search Console",
       "role": "Auditor de Indexação Googlebot SSG, Sitemap XML, Schemas JSON-LD & IndexNow",
       "status": "HEALTHY",
-      "score": 20,
-      "maxScore": 20,
-      "summary": "Sitemap (198 URLs), SSG Googlebot (7 rotas) e JSON-LD 100% nominais.",
+      "score": 15,
+      "maxScore": 15,
+      "summary": "Sitemap (198 URLs no ar), SSG Googlebot (7 rotas) e JSON-LD 100% nominais.",
       "details": {
         "sitemap": {
           "status": 200,
           "ok": true,
           "count": 198,
-          "latencyMs": 647
+          "latencyMs": 1184
         },
         "robots": {
           "status": 200,
@@ -28,7 +28,7 @@
         "ssgGooglebotProbe": {
           "/": {
             "status": 200,
-            "words": 326,
+            "words": 323,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
@@ -86,8 +86,8 @@
       "name": "Agente de Monetização (AdSense & Amazon)",
       "role": "Auditor de ads.txt, 7 Páginas Mandatórias AdSense e Rotação Amazon Associados",
       "status": "HEALTHY",
-      "score": 20,
-      "maxScore": 20,
+      "score": 15,
+      "maxScore": 15,
       "summary": "ads.txt (pub-8160658026927094), 7 páginas institucionais SSG e Amazon (chacerto-20, 24 itens) 100% conformes.",
       "details": {
         "adsTxt": {
@@ -142,12 +142,12 @@
       "status": "HEALTHY",
       "score": 15,
       "maxScore": 15,
-      "summary": "Vercel Edge CDN 68ms (TTFB) | widget.js, sw.js e Security Headers 100% nominais.",
+      "summary": "Vercel Edge CDN 77ms (TTFB) | widget.js, sw.js e Security Headers 100% nominais.",
       "details": {
         "edge": {
           "ok": true,
           "status": 200,
-          "ttfbMs": 68,
+          "ttfbMs": 77,
           "securityHeaders": {
             "xContentType": "nosniff",
             "referrerPolicy": "strict-origin-when-cross-origin"
@@ -181,25 +181,25 @@
         "sampleToolsProbe": {
           "/calculadoras/calculadora-de-juros-compostos": {
             "status": 200,
-            "words": 1051,
+            "words": 1048,
             "hasWebAppSchema": true,
             "hasFaqSchema": true
           },
           "/geradores/gerador-de-cpf": {
             "status": 200,
-            "words": 1079,
+            "words": 1074,
             "hasWebAppSchema": true,
             "hasFaqSchema": true
           },
           "/conversores/converter-real-para-dolar": {
             "status": 200,
-            "words": 1026,
+            "words": 1023,
             "hasWebAppSchema": true,
             "hasFaqSchema": true
           },
           "/calculadoras/calculadora-de-churrasco": {
             "status": 200,
-            "words": 1069,
+            "words": 1066,
             "hasWebAppSchema": true,
             "hasFaqSchema": true
           }
@@ -211,14 +211,14 @@
     },
     {
       "id": "agent_programmatic_seo",
-      "name": "Agente de SEO Programático & Long-Tail",
-      "role": "Auditor de Páginas Programáticas, Tabelas Nacionais e Redirecionamentos 301 Anti-Canibalização",
+      "name": "Agente de SEO Programático & Anti-Canibalização",
+      "role": "Auditor de Páginas Programáticas Core, Tabelas Nacionais e Redirecionamentos 301",
       "status": "HEALTHY",
       "score": 15,
       "maxScore": 15,
-      "summary": "46 páginas programáticas Long-Tail ativas | SSG (>250 palavras) e canônicas 100% íntegras.",
+      "summary": "89 páginas programáticas ativas | SSG (>250 palavras) e canônicas 100% íntegras.",
       "details": {
-        "totalProgrammaticPages": 46,
+        "totalProgrammaticPages": 89,
         "programmaticProbe": {
           "/programatico/ddd-brasil": {
             "status": 200,
@@ -261,8 +261,8 @@
       "name": "Agente da API Pública v1 & Dados Oficiais 2026",
       "role": "Auditor dos 9 Endpoints JSON Estáticos (INSS, IRRF, Salário Mínimo, CPF/CNPJ Módulo 11, Bancos, DDDs, Feriados)",
       "status": "HEALTHY",
-      "score": 15,
-      "maxScore": 15,
+      "score": 10,
+      "maxScore": 10,
       "summary": "9/9 endpoints JSON da API Pública v1 online (CORS ativo, tabelas 2026 e Módulo 11 validados).",
       "details": {
         "endpointsChecked": 9,
@@ -318,8 +318,40 @@
       "issues": [],
       "selfHealed": false,
       "healingActions": []
+    },
+    {
+      "id": "agent_growth_traction",
+      "name": "Agente de Tração Orgânica & Expansão Long-Tail",
+      "role": "Gerador e Auditor da Matriz Long-Tail (27 UFs DDD, IPVA 2026, Bancos COMPE/ISPB, Tabelas 2026 & IndexNow)",
+      "status": "HEALTHY",
+      "score": 15,
+      "maxScore": 15,
+      "summary": "89 páginas Long-Tail (241 URLs totais no Sitemap) | 27/27 UFs DDD, IPVA 2026, 10 Bancos COMPE e Tabelas 2026 100% ativos.",
+      "details": {
+        "totalProgrammaticPages": 89,
+        "totalSitemapUrls": 241,
+        "clusters": {
+          "ddd": 27,
+          "ipva-2026": 8,
+          "codigo-banco": 10,
+          "tabela-trabalhista": 4,
+          "ibge": 13,
+          "salario-minimo": 10,
+          "selic": 3,
+          "core": 14
+        },
+        "thinSsgPagesCount": 0,
+        "indexNowSubmittedCount": 75
+      },
+      "issues": [],
+      "selfHealed": true,
+      "healingActions": [
+        "43 nova(s) página(s) Long-Tail pré-renderizada(s) e injetada(s) no sitemap.xml."
+      ]
     }
   ],
-  "healingSummary": [],
-  "executionTimeMs": 4280
+  "healingSummary": [
+    "43 nova(s) página(s) Long-Tail pré-renderizada(s) e injetada(s) no sitemap.xml."
+  ],
+  "executionTimeMs": 12115
 }

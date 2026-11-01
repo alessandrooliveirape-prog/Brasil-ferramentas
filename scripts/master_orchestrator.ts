@@ -3,12 +3,13 @@
  * ======================================================================
  * TOOLBRASIL MASTER MULTIAGENT ORCHESTRATOR & SRE AUTÔNOMO v2.0 (2026)
  * ======================================================================
- * Coordena 6 subagentes especializados (100 pontos totais), audita saúde
+ * Coordena 7 subagentes especializados (100 pontos totais), audita saúde
  * técnica, SEO/SSG Googlebot, monetização AdSense (7 páginas institucionais)
  * + Afiliados Amazon (tag chacerto-20), infraestrutura Vercel Edge/CDN,
- * catálogo de 138+ ferramentas interativas, páginas de SEO Programático e
- * API Pública v1 (JSON estático + Widgets), executando loops de autocura
- * ativa (self-healing) e persistindo relatórios em JSON, Resend e Telegram.
+ * catálogo de 138+ ferramentas interativas, páginas de SEO Programático,
+ * API Pública v1 (JSON estático + Widgets) e o 7º Agente de Tração &
+ * Expansão Long-Tail (88 páginas programáticas + IndexNow ativo), executando
+ * loops de autocura ativa e persistindo relatórios em JSON, Resend e Telegram.
  */
 
 import * as dotenv from 'dotenv';
@@ -19,6 +20,7 @@ import { CATEGORIES, TOOLS, PROGRAMMATIC_PAGES } from '../src/toolsData.ts';
 import { EXTRA_PROGRAMMATIC_PAGES } from '../src/programmaticExtra.ts';
 import { AFFILIATE_PRODUCTS, AMAZON_ASSOCIATE_TAG } from '../src/config/affiliateProducts.ts';
 import { generateAllApiData } from './generate-api-data.ts';
+import { runGrowthExpander } from './agent_growth_expander.ts';
 
 dotenv.config({ path: '.env.local' });
 dotenv.config();
@@ -85,7 +87,7 @@ function countVisibleWords(html: string): number {
 }
 
 // ======================================================================
-// 1. SUBAGENTE: agent_seo_gsc (20 pts — SEO, SSG Googlebot, Sitemap & IndexNow)
+// 1. SUBAGENTE: agent_seo_gsc (15 pts — SEO, SSG Googlebot, Sitemap & IndexNow)
 // ======================================================================
 async function runAgentSeoGsc(): Promise<SubagentReport> {
   const report: SubagentReport = {
@@ -93,8 +95,8 @@ async function runAgentSeoGsc(): Promise<SubagentReport> {
     name: 'Agente SEO, SSG & Search Console',
     role: 'Auditor de Indexação Googlebot SSG, Sitemap XML, Schemas JSON-LD & IndexNow',
     status: 'HEALTHY',
-    score: 20,
-    maxScore: 20,
+    score: 15,
+    maxScore: 15,
     summary: '',
     details: {},
     issues: [],
@@ -122,12 +124,12 @@ async function runAgentSeoGsc(): Promise<SubagentReport> {
       } else {
         report.details.sitemap = { status: sitemapRes.status, ok: false, error: 'HTTP != 200' };
         report.issues.push(`Sitemap retornou status HTTP ${sitemapRes.status}`);
-        report.score -= 5;
+        report.score -= 4;
       }
     } catch (e: any) {
       report.details.sitemap = { ok: false, error: e.message };
       report.issues.push(`Falha de conexão com sitemap.xml: ${e.message}`);
-      report.score -= 5;
+      report.score -= 4;
     }
 
     // 2. Robots.txt Check
@@ -204,10 +206,10 @@ async function runAgentSeoGsc(): Promise<SubagentReport> {
     }
 
     report.score = Math.max(0, Math.min(report.maxScore, report.score));
-    if (report.score >= 18) {
+    if (report.score >= 13) {
       report.status = 'HEALTHY';
-      report.summary = `Sitemap (${sitemapUrlsCount} URLs), SSG Googlebot (${strategicRoutes.length} rotas) e JSON-LD 100% nominais.`;
-    } else if (report.score >= 13) {
+      report.summary = `Sitemap (${sitemapUrlsCount} URLs no ar), SSG Googlebot (${strategicRoutes.length} rotas) e JSON-LD 100% nominais.`;
+    } else if (report.score >= 9) {
       report.status = 'WARNING';
       report.summary = `Pequenos alertas em SEO/SSG detectados (${report.issues.length} aviso(s)).`;
     } else {
@@ -216,7 +218,7 @@ async function runAgentSeoGsc(): Promise<SubagentReport> {
     }
   } catch (err: any) {
     report.status = 'CRITICAL';
-    report.score = 5;
+    report.score = 3;
     report.issues.push(`Exceção fatal no agente SEO: ${err.message}`);
     report.summary = `Falha na verificação de SEO.`;
   }
@@ -225,7 +227,7 @@ async function runAgentSeoGsc(): Promise<SubagentReport> {
 }
 
 // ======================================================================
-// 2. SUBAGENTE: agent_monetization (20 pts — AdSense, ads.txt, 7 Páginas & Amazon)
+// 2. SUBAGENTE: agent_monetization (15 pts — AdSense, ads.txt, 7 Páginas & Amazon)
 // ======================================================================
 async function runAgentMonetization(): Promise<SubagentReport> {
   const report: SubagentReport = {
@@ -233,8 +235,8 @@ async function runAgentMonetization(): Promise<SubagentReport> {
     name: 'Agente de Monetização (AdSense & Amazon)',
     role: 'Auditor de ads.txt, 7 Páginas Mandatórias AdSense e Rotação Amazon Associados',
     status: 'HEALTHY',
-    score: 20,
-    maxScore: 20,
+    score: 15,
+    maxScore: 15,
     summary: '',
     details: {},
     issues: [],
@@ -256,15 +258,15 @@ async function runAgentMonetization(): Promise<SubagentReport> {
         report.details.adsTxt = { status: adsRes.status, verified: adsTxtVerified, pubId: ADSENSE_PUB_RAW };
         if (!adsTxtVerified) {
           report.issues.push(`ads.txt no ar não contém o publisher ID ${ADSENSE_PUB_RAW}`);
-          report.score -= 8;
+          report.score -= 6;
         }
       } else {
         report.issues.push(`ads.txt retornou status HTTP ${adsRes.status}`);
-        report.score -= 10;
+        report.score -= 8;
       }
     } catch (e: any) {
       report.issues.push(`Falha de conexão com ads.txt: ${e.message}`);
-      report.score -= 10;
+      report.score -= 8;
     }
 
     // 2. Checagem SSG Completa das Páginas Institucionais e de Conformidade AdSense
@@ -290,7 +292,7 @@ async function runAgentMonetization(): Promise<SubagentReport> {
         pagesResult[page.name] = { status: res.status, words };
         if (!res.ok) {
           report.issues.push(`Página mandatória "${page.name}" retornou status ${res.status}`);
-          report.score -= 3;
+          report.score -= 2;
         } else if (words < 180) {
           report.issues.push(`Página mandatória "${page.name}" com baixo volume textual no SSG (${words} palavras)`);
           report.score -= 2;
@@ -334,10 +336,10 @@ async function runAgentMonetization(): Promise<SubagentReport> {
     }
 
     report.score = Math.max(0, Math.min(report.maxScore, report.score));
-    if (report.score >= 18) {
+    if (report.score >= 13) {
       report.status = 'HEALTHY';
       report.summary = `ads.txt (${ADSENSE_PUB_RAW}), 7 páginas institucionais SSG e Amazon (${AMAZON_ASSOCIATE_TAG}, ${totalAffiliateProducts} itens) 100% conformes.`;
-    } else if (report.score >= 12) {
+    } else if (report.score >= 9) {
       report.status = 'WARNING';
       report.summary = `Avisos na auditoria de monetização (${report.issues.length} alerta(s)).`;
     } else {
@@ -346,7 +348,7 @@ async function runAgentMonetization(): Promise<SubagentReport> {
     }
   } catch (err: any) {
     report.status = 'CRITICAL';
-    report.score = 5;
+    report.score = 3;
     report.issues.push(`Exceção fatal no agente de monetização: ${err.message}`);
     report.summary = `Falha na verificação de monetização.`;
   }
@@ -571,8 +573,8 @@ async function runAgentToolsCatalog(): Promise<SubagentReport> {
 async function runAgentProgrammaticSeo(): Promise<SubagentReport> {
   const report: SubagentReport = {
     id: 'agent_programmatic_seo',
-    name: 'Agente de SEO Programático & Long-Tail',
-    role: 'Auditor de Páginas Programáticas, Tabelas Nacionais e Redirecionamentos 301 Anti-Canibalização',
+    name: 'Agente de SEO Programático & Anti-Canibalização',
+    role: 'Auditor de Páginas Programáticas Core, Tabelas Nacionais e Redirecionamentos 301',
     status: 'HEALTHY',
     score: 15,
     maxScore: 15,
@@ -620,25 +622,10 @@ async function runAgentProgrammaticSeo(): Promise<SubagentReport> {
     }
     report.details.programmaticProbe = progChecks;
 
-    // 2. Verificar se páginas programáticas locais estão sincronizadas no dist/
-    const distDir = path.resolve('dist');
-    if (fs.existsSync(distDir)) {
-      const missingProg = progSlugs.filter(slug => !fs.existsSync(path.join(distDir, 'programatico', slug, 'index.html')));
-      if (missingProg.length > 0 && !SKIP_HEALING) {
-        try {
-          execSync('npx tsx prerender.ts', { stdio: 'pipe', timeout: 60000 });
-          report.selfHealed = true;
-          report.healingActions.push(`${missingProg.length} página(s) programática(s) regeneradas no dist/.`);
-        } catch (err: any) {
-          report.healingActions.push(`Erro ao regenerar páginas programáticas: ${err.message}`);
-        }
-      }
-    }
-
     report.score = Math.max(0, Math.min(report.maxScore, report.score));
     if (report.score >= 13) {
       report.status = 'HEALTHY';
-      report.summary = `${progSlugs.length} páginas programáticas Long-Tail ativas | SSG (>250 palavras) e canônicas 100% íntegras.`;
+      report.summary = `${progSlugs.length} páginas programáticas ativas | SSG (>250 palavras) e canônicas 100% íntegras.`;
     } else if (report.score >= 9) {
       report.status = 'WARNING';
       report.summary = `Alertas leves nas rotas de SEO Programático.`;
@@ -657,7 +644,7 @@ async function runAgentProgrammaticSeo(): Promise<SubagentReport> {
 }
 
 // ======================================================================
-// 6. SUBAGENTE: agent_public_api (15 pts — Tool Brasil Open API v1 & Dados 2026)
+// 6. SUBAGENTE: agent_public_api (10 pts — Tool Brasil Open API v1 & Dados 2026)
 // ======================================================================
 async function runAgentPublicApi(): Promise<SubagentReport> {
   const report: SubagentReport = {
@@ -665,8 +652,8 @@ async function runAgentPublicApi(): Promise<SubagentReport> {
     name: 'Agente da API Pública v1 & Dados Oficiais 2026',
     role: 'Auditor dos 9 Endpoints JSON Estáticos (INSS, IRRF, Salário Mínimo, CPF/CNPJ Módulo 11, Bancos, DDDs, Feriados)',
     status: 'HEALTHY',
-    score: 15,
-    maxScore: 15,
+    score: 10,
+    maxScore: 10,
     summary: '',
     details: {},
     issues: [],
@@ -687,7 +674,6 @@ async function runAgentPublicApi(): Promise<SubagentReport> {
   ];
 
   try {
-    // 1. Verificar existência e frescor local dos arquivos em public/api/v1
     let needsRegeneration = false;
     for (const ep of endpoints) {
       const localFile = path.resolve('public', ep.slice(1));
@@ -708,7 +694,6 @@ async function runAgentPublicApi(): Promise<SubagentReport> {
       }
     }
 
-    // 2. Testar endpoints em produção (status 200 + JSON válido + CORS)
     const apiResults: Record<string, any> = {};
     let okCount = 0;
     for (const ep of endpoints) {
@@ -743,10 +728,10 @@ async function runAgentPublicApi(): Promise<SubagentReport> {
     report.details.apiProbe = apiResults;
 
     report.score = Math.max(0, Math.min(report.maxScore, report.score));
-    if (report.score >= 13) {
+    if (report.score >= 9) {
       report.status = 'HEALTHY';
       report.summary = `${okCount}/${endpoints.length} endpoints JSON da API Pública v1 online (CORS ativo, tabelas 2026 e Módulo 11 validados).`;
-    } else if (report.score >= 9) {
+    } else if (report.score >= 6) {
       report.status = 'WARNING';
       report.summary = `API Pública v1 operando com alertas parciais (${okCount}/${endpoints.length} online).`;
     } else {
@@ -755,9 +740,76 @@ async function runAgentPublicApi(): Promise<SubagentReport> {
     }
   } catch (err: any) {
     report.status = 'CRITICAL';
-    report.score = 3;
+    report.score = 2;
     report.issues.push(`Exceção fatal no agente da API Pública: ${err.message}`);
     report.summary = `Falha na verificação da API Pública.`;
+  }
+
+  return report;
+}
+
+// ======================================================================
+// 7. NOVO SUBAGENTE: agent_growth_traction (15 pts — Tração Orgânica & Expansão Long-Tail)
+// ======================================================================
+async function runAgentGrowthTraction(): Promise<SubagentReport> {
+  const report: SubagentReport = {
+    id: 'agent_growth_traction',
+    name: 'Agente de Tração Orgânica & Expansão Long-Tail',
+    role: 'Gerador e Auditor da Matriz Long-Tail (27 UFs DDD, IPVA 2026, Bancos COMPE/ISPB, Tabelas 2026 & IndexNow)',
+    status: 'HEALTHY',
+    score: 15,
+    maxScore: 15,
+    summary: '',
+    details: {},
+    issues: [],
+    selfHealed: false,
+    healingActions: []
+  };
+
+  try {
+    const growthRes = await runGrowthExpander({ skipHeal: SKIP_HEALING, dryRun: IS_DRY_RUN });
+    report.details = {
+      totalProgrammaticPages: growthRes.totalProgrammaticPages,
+      totalSitemapUrls: growthRes.totalSitemapUrls,
+      clusters: growthRes.clusters,
+      thinSsgPagesCount: growthRes.thinSsgPages.length,
+      indexNowSubmittedCount: growthRes.indexNowSubmittedCount
+    };
+
+    if (growthRes.selfHealed) {
+      report.selfHealed = true;
+      report.healingActions.push(...growthRes.healingActions);
+    }
+
+    if (growthRes.missingSsgPages.length > 0) {
+      report.issues.push(`${growthRes.missingSsgPages.length} página(s) Long-Tail ausentes no build estático`);
+      report.score -= 4;
+    }
+    if (growthRes.thinSsgPages.length > 0) {
+      report.issues.push(`${growthRes.thinSsgPages.length} página(s) Long-Tail com menos de 220 palavras`);
+      report.score -= 3;
+    }
+    if ((growthRes.clusters.ddd || 0) < 27) {
+      report.issues.push(`Cobertura de DDD por UF incompleta (${growthRes.clusters.ddd}/27 estados)`);
+      report.score -= 3;
+    }
+
+    report.score = Math.max(0, Math.min(report.maxScore, report.score));
+    if (report.score >= 13) {
+      report.status = 'HEALTHY';
+      report.summary = `${growthRes.totalProgrammaticPages} páginas Long-Tail (${growthRes.totalSitemapUrls} URLs totais no Sitemap) | 27/27 UFs DDD, IPVA 2026, 10 Bancos COMPE e Tabelas 2026 100% ativos.`;
+    } else if (report.score >= 9) {
+      report.status = 'WARNING';
+      report.summary = `Expansão Long-Tail ativa com ${report.issues.length} alerta(s).`;
+    } else {
+      report.status = 'CRITICAL';
+      report.summary = `Falha na matriz de expansão de cauda longa!`;
+    }
+  } catch (err: any) {
+    report.status = 'CRITICAL';
+    report.score = 3;
+    report.issues.push(`Exceção fatal no 7º Agente de Tração: ${err.message}`);
+    report.summary = `Falha na execução do agente de tração.`;
   }
 
   return report;
@@ -788,7 +840,6 @@ function consolidateReport(subagents: SubagentReport[], executionTimeMs: number)
     executionTimeMs
   };
 
-  // Persiste o relatório estruturado em public/ e dist/
   try {
     const outPaths = [
       path.resolve('public/api/v1/analytics/orchestrator-report.json'),
@@ -852,7 +903,7 @@ async function sendResendReport(report: MasterReport): Promise<boolean> {
     <div style="font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif; max-width: 720px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; overflow: hidden;">
       <div style="background: #064e3b; color: #ffffff; padding: 24px 28px;">
         <h1 style="margin: 0; font-size: 20px;">🛠️ ToolBrasil Master Orchestrator v2.0</h1>
-        <p style="margin: 6px 0 0; color: #a7f3d0; font-size: 13px;">Auditoria Multiagente Diária (6 Subagentes) • ${nowRecife}</p>
+        <p style="margin: 6px 0 0; color: #a7f3d0; font-size: 13px;">Auditoria Multiagente Diária (7 Subagentes) • ${nowRecife}</p>
       </div>
       <div style="padding: 24px 28px;">
         <div style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; padding: 16px 20px; border-radius: 10px; border-left: 5px solid ${statusColor}; margin-bottom: 24px;">
@@ -928,7 +979,7 @@ async function sendTelegramAlert(report: MasterReport): Promise<boolean> {
 
   const message = `🛠️ *[ToolBrasil-Master-Orchestrator v2.0]*\n` +
     `🌐 *Portal:* https://www.toolbrasil.com.br\n` +
-    `📅 *Relatório Operacional Diário* — ${nowRecife}\n\n` +
+    `📅 *Relatório Operacional Diário (7 Agentes)* — ${nowRecife}\n\n` +
     `📊 *Score de Saúde:* ${report.overallScore}/100 (${statusEmoji} ${report.overallStatus})\n\n` +
     `${lines}\n\n` +
     `${healingLine}`;
@@ -950,7 +1001,7 @@ async function sendTelegramAlert(report: MasterReport): Promise<boolean> {
 }
 
 // ======================================================================
-// EXECUÇÃO PRINCIPAL DO MASTER ORCHESTRATOR
+// EXECUÇÃO PRINCIPAL DO MASTER ORCHESTRATOR (7 SUBAGENTES)
 // ======================================================================
 async function runMasterOrchestrator() {
   const startTime = Date.now();
@@ -962,27 +1013,30 @@ async function runMasterOrchestrator() {
   console.log(`🎯 Modo Dry-Run: ${IS_DRY_RUN ? 'SIM (Sem disparos externos)' : 'NÃO'}`);
   console.log(`🛡️ Pular Autocura: ${SKIP_HEALING ? 'SIM' : 'NÃO'}\n`);
 
-  console.log('📡 [1/6] Executando subagente SEO, SSG Googlebot & Search Console...');
+  console.log('📡 [1/7] Executando subagente SEO, SSG Googlebot & Search Console...');
   const seoReport = await runAgentSeoGsc();
 
-  console.log('💰 [2/6] Executando subagente de Monetização (AdSense, 7 páginas & Amazon)...');
+  console.log('💰 [2/7] Executando subagente de Monetização (AdSense, 7 páginas & Amazon)...');
   const monetizationReport = await runAgentMonetization();
 
-  console.log('⚡ [3/6] Executando subagente de Infraestrutura & Edge CDN...');
+  console.log('⚡ [3/7] Executando subagente de Infraestrutura & Edge CDN...');
   const infraReport = await runAgentInfrastructure();
 
-  console.log('🧮 [4/6] Executando subagente do Catálogo de Ferramentas & Anti-Thin Content...');
+  console.log('🧮 [4/7] Executando subagente do Catálogo de Ferramentas & Anti-Thin Content...');
   const toolsReport = await runAgentToolsCatalog();
 
-  console.log('📈 [5/6] Executando subagente de SEO Programático & Long-Tail...');
+  console.log('📈 [5/7] Executando subagente de SEO Programático & Anti-Canibalização...');
   const progReport = await runAgentProgrammaticSeo();
 
-  console.log('🔌 [6/6] Executando subagente da API Pública v1 & Dados Oficiais 2026...');
+  console.log('🔌 [6/7] Executando subagente da API Pública v1 & Dados Oficiais 2026...');
   const apiReport = await runAgentPublicApi();
+
+  console.log('🚀 [7/7] Executando 7º Agente de Tração Orgânica & Expansão Long-Tail...');
+  const growthReport = await runAgentGrowthTraction();
 
   const executionTimeMs = Date.now() - startTime;
   const masterReport = consolidateReport(
-    [seoReport, monetizationReport, infraReport, toolsReport, progReport, apiReport],
+    [seoReport, monetizationReport, infraReport, toolsReport, progReport, apiReport, growthReport],
     executionTimeMs
   );
 
@@ -993,7 +1047,7 @@ async function runMasterOrchestrator() {
     console.log(`[${a.status.padEnd(8)}] ${a.name.padEnd(48)}: ${a.score}/${a.maxScore} pts`);
   });
   if (masterReport.healingSummary.length > 0) {
-    console.log('\n🛠️ Ações de Autocura Executadas:');
+    console.log('\n🛠️ Ações de Autocura / Expansão Executadas:');
     masterReport.healingSummary.forEach(h => console.log(`  ↳ ${h}`));
   }
   console.log(`\n⏱️ Tempo total de auditoria: ${(executionTimeMs / 1000).toFixed(2)}s\n`);
@@ -1005,11 +1059,10 @@ async function runMasterOrchestrator() {
     console.log('ℹ️ [DryRun] Disparos externos ignorados conforme flag --dry-run.');
   }
 
-  console.log('\n🎉 [MasterOrchestrator] Ciclo operacional diário finalizado com sucesso!');
+  console.log('\n🎉 [MasterOrchestrator] Ciclo operacional diário dos 7 subagentes finalizado com sucesso!');
 }
 
 runMasterOrchestrator().catch(err => {
   console.error('❌ [MasterOrchestrator] Erro crítico no orquestrador:', err);
   process.exit(1);
 });
-

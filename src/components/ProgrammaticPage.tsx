@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Phone } from 'lucide-react';
+import { EXTRA_PROGRAMMATIC_PAGES } from '../programmaticExtra';
 
 interface ProgrammaticPageProps {
   id: string; // e.g. "ddd-brasil", "cep-brasil", "quantos-dias-faltam-para-o-natal"
@@ -37,6 +38,25 @@ export default function ProgrammaticPage({ id }: ProgrammaticPageProps) {
       {id === 'ddd-pe' && <DddPorEstado uf="PE" nome="Pernambuco" ddds="81, 87" />}
       {id === 'ddd-go' && <DddPorEstado uf="GO" nome="Goiás" ddds="62, 64" />}
       {id === 'ddd-es' && <DddPorEstado uf="ES" nome="Espírito Santo" ddds="27, 28" />}
+      {id === 'ddd-df' && <DddPorEstado uf="DF" nome="Distrito Federal" ddds="61" />}
+      {id === 'ddd-pa' && <DddPorEstado uf="PA" nome="Pará" ddds="91, 93, 94" />}
+      {id === 'ddd-am' && <DddPorEstado uf="AM" nome="Amazonas" ddds="92, 97" />}
+      {id === 'ddd-mt' && <DddPorEstado uf="MT" nome="Mato Grosso" ddds="65, 66" />}
+      {id === 'ddd-ms' && <DddPorEstado uf="MS" nome="Mato Grosso do Sul" ddds="67" />}
+      {id === 'ddd-pb' && <DddPorEstado uf="PB" nome="Paraíba" ddds="83" />}
+      {id === 'ddd-rn' && <DddPorEstado uf="RN" nome="Rio Grande do Norte" ddds="84" />}
+      {id === 'ddd-al' && <DddPorEstado uf="AL" nome="Alagoas" ddds="82" />}
+      {id === 'ddd-ma' && <DddPorEstado uf="MA" nome="Maranhão" ddds="98, 99" />}
+      {id === 'ddd-pi' && <DddPorEstado uf="PI" nome="Piauí" ddds="86, 89" />}
+      {id === 'ddd-se' && <DddPorEstado uf="SE" nome="Sergipe" ddds="79" />}
+      {id === 'ddd-ro' && <DddPorEstado uf="RO" nome="Rondônia" ddds="69" />}
+      {id === 'ddd-to' && <DddPorEstado uf="TO" nome="Tocantins" ddds="63" />}
+      {id === 'ddd-ac' && <DddPorEstado uf="AC" nome="Acre" ddds="68" />}
+      {id === 'ddd-ap' && <DddPorEstado uf="AP" nome="Amapá" ddds="96" />}
+      {id === 'ddd-rr' && <DddPorEstado uf="RR" nome="Roraima" ddds="95" />}
+      {id.startsWith('ipva-2026-') && <IpvaPorEstado id={id} />}
+      {id.startsWith('codigo-banco-') && <CodigoBancoDetalhe id={id} />}
+      {['tabela-inss-2026', 'tabela-irrf-2026', 'tabela-seguro-desemprego-2026', 'aviso-previo-proporcional-tabela'].includes(id) && <TabelaTrabalhista2026 id={id} />}
       {/* Salário mínimo por ano */}
       {id.startsWith('salario-minimo-') && <SalarioMinimoPorAno year={id.replace('salario-minimo-', '')} />}
       {/* SELIC por ano */}
@@ -1349,6 +1369,101 @@ function CboConsulta() {
             ))}
           </tbody>
         </table>
+      </div>
+    </div>
+  );
+}
+
+
+// 19. IPVA 2026 POR ESTADO
+function IpvaPorEstado({ id }: { id: string }) {
+  const entry = EXTRA_PROGRAMMATIC_PAGES[id];
+  const m = entry?.meta || { uf: 'SP', estado: 'São Paulo', carro: '4,0%', moto: '2,0%', utilitario: '2,0%', isencaoAnos: '20 anos de fabricação', descontoVista: '3%' };
+  return (
+    <div className="space-y-6" id={`prog-${id}`}>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">{entry?.title || `IPVA 2026 ${m.estado}`}</h2>
+      <p className="text-xs text-slate-500 leading-relaxed">{entry?.description}</p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div className="p-4 bg-emerald-50/60 dark:bg-emerald-950/30 rounded-xl border border-emerald-200">
+          <span className="text-slate-500 block font-bold uppercase text-[10px]">Carros de Passeio</span>
+          <span className="text-2xl font-extrabold text-emerald-700 font-mono">{m.carro}</span>
+        </div>
+        <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border">
+          <span className="text-slate-500 block font-bold uppercase text-[10px]">Motocicletas</span>
+          <span className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 font-mono">{m.moto}</span>
+        </div>
+        <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border">
+          <span className="text-slate-500 block font-bold uppercase text-[10px]">Isenção por Idade</span>
+          <span className="text-base font-bold text-blue-700">{m.isencaoAnos}</span>
+        </div>
+      </div>
+      <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border text-xs flex flex-wrap items-center justify-between gap-3">
+        <span><strong>Desconto Cota Única:</strong> {m.descontoVista}</span>
+        <a href="/calculadoras/calculadora-de-ipva" className="px-4 py-2 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700">Simular na Calculadora de IPVA →</a>
+      </div>
+    </div>
+  );
+}
+
+// 20. CÓDIGO BANCÁRIO ESPECÍFICO (COMPE & ISPB)
+function CodigoBancoDetalhe({ id }: { id: string }) {
+  const entry = EXTRA_PROGRAMMATIC_PAGES[id];
+  const m = entry?.meta || { compe: '001', ispb: '00000000', nome: 'Instituição Financeira', agenciaPadrao: '0001', cnpj: '00.000.000/0001-91' };
+  return (
+    <div className="space-y-6" id={`prog-${id}`}>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">{entry?.title || m.nome}</h2>
+      <p className="text-xs text-slate-500 leading-relaxed">{entry?.description}</p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div className="p-4 bg-emerald-50/60 dark:bg-emerald-950/30 rounded-xl border border-emerald-200">
+          <span className="text-slate-500 block font-bold uppercase text-[10px]">Código COMPE (TED)</span>
+          <span className="text-3xl font-extrabold text-emerald-700 font-mono">{m.compe}</span>
+        </div>
+        <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border">
+          <span className="text-slate-500 block font-bold uppercase text-[10px]">Código ISPB (8 Dígitos)</span>
+          <span className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 font-mono">{m.ispb}</span>
+        </div>
+        <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border">
+          <span className="text-slate-500 block font-bold uppercase text-[10px]">CNPJ Matriz</span>
+          <span className="text-sm font-bold font-mono text-slate-700">{m.cnpj}</span>
+        </div>
+      </div>
+      <div className="p-4 bg-slate-50 dark:bg-slate-850 rounded-xl border text-xs flex flex-wrap items-center justify-between gap-3">
+        <span><strong>Agência Padrão:</strong> {m.agenciaPadrao}</span>
+        <a href="/programatico/bancos-brasil" className="px-4 py-2 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700">Ver Lista Completa de Bancos →</a>
+      </div>
+    </div>
+  );
+}
+
+// 21. TABELAS TRABALHISTAS 2026
+function TabelaTrabalhista2026({ id }: { id: string }) {
+  const entry = EXTRA_PROGRAMMATIC_PAGES[id];
+  return (
+    <div className="space-y-6" id={`prog-${id}`}>
+      <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 border-b border-slate-100 pb-3">{entry?.title}</h2>
+      <p className="text-xs text-slate-500 leading-relaxed">{entry?.description}</p>
+      <div className="overflow-x-auto">
+        <table className="w-full text-xs text-left border-collapse border border-slate-200">
+          <thead className="bg-slate-100 font-bold">
+            <tr>
+              <th className="p-2.5">Faixa / Parâmetro 2026</th>
+              <th className="p-2.5">Base Salarial</th>
+              <th className="p-2.5">Alíquota</th>
+              <th className="p-2.5">Dedução / Regra</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            <tr><td className="p-2 font-bold">1ª Faixa INSS</td><td className="p-2 font-mono">Até R$ 1.518,00</td><td className="p-2 font-bold text-emerald-700">7,5%</td><td className="p-2">Dedução: R$ 0,00</td></tr>
+            <tr><td className="p-2 font-bold">2ª Faixa INSS</td><td className="p-2 font-mono">R$ 1.518,01 a R$ 2.793,88</td><td className="p-2 font-bold text-emerald-700">9,0%</td><td className="p-2">Dedução: R$ 22,77</td></tr>
+            <tr><td className="p-2 font-bold">3ª Faixa INSS</td><td className="p-2 font-mono">R$ 2.793,89 a R$ 4.190,83</td><td className="p-2 font-bold text-emerald-700">12,0%</td><td className="p-2">Dedução: R$ 106,59</td></tr>
+            <tr><td className="p-2 font-bold">4ª Faixa INSS (Teto)</td><td className="p-2 font-mono">R$ 4.190,84 a R$ 8.157,41</td><td className="p-2 font-bold text-emerald-700">14,0%</td><td className="p-2">Dedução: R$ 190,40 (Teto R$ 951,62)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div className="flex flex-wrap gap-2 text-xs">
+        <a href="/calculadoras/calculadora-desconto-inss" className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg font-bold">Calcular Desconto INSS →</a>
+        <a href="/calculadoras/calculadora-de-salario-liquido" className="px-3 py-1.5 bg-slate-800 text-white rounded-lg font-bold">Calcular Salário Líquido →</a>
+        <a href="/calculadoras/calculadora-de-rescisao-trabalhista" className="px-3 py-1.5 bg-slate-800 text-white rounded-lg font-bold">Calcular Rescisão CLT →</a>
       </div>
     </div>
   );

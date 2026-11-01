@@ -1598,9 +1598,24 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
       { uf: "RS", estado: "Rio Grande do Sul", codigos: [51, 53, 54, 55], capital: "Porto Alegre (51)", regiao: "Sul" },
       { uf: "DF", estado: "Distrito Federal", codigos: [61], capital: "Brasília (61)", regiao: "Centro-Oeste" },
       { uf: "GO", estado: "Goiás", codigos: [62, 64], capital: "Goiânia (62)", regiao: "Centro-Oeste" },
+      { uf: "MT", estado: "Mato Grosso", codigos: [65, 66], capital: "Cuiabá (65)", regiao: "Centro-Oeste" },
+      { uf: "MS", estado: "Mato Grosso do Sul", codigos: [67], capital: "Campo Grande (67)", regiao: "Centro-Oeste" },
+      { uf: "TO", estado: "Tocantins", codigos: [63], capital: "Palmas (63)", regiao: "Norte" },
+      { uf: "PA", estado: "Pará", codigos: [91, 93, 94], capital: "Belém (91)", regiao: "Norte" },
+      { uf: "AM", estado: "Amazonas", codigos: [92, 97], capital: "Manaus (92)", regiao: "Norte" },
+      { uf: "RO", estado: "Rondônia", codigos: [69], capital: "Porto Velho (69)", regiao: "Norte" },
+      { uf: "AC", estado: "Acre", codigos: [68], capital: "Rio Branco (68)", regiao: "Norte" },
+      { uf: "AP", estado: "Amapá", codigos: [96], capital: "Macapá (96)", regiao: "Norte" },
+      { uf: "RR", estado: "Roraima", codigos: [95], capital: "Boa Vista (95)", regiao: "Norte" },
       { uf: "BA", estado: "Bahia", codigos: [71, 73, 74, 75, 77], capital: "Salvador (71)", regiao: "Nordeste" },
       { uf: "PE", estado: "Pernambuco", codigos: [81, 87], capital: "Recife (81)", regiao: "Nordeste" },
-      { uf: "CE", estado: "Ceará", codigos: [85, 88], capital: "Fortaleza (85)", regiao: "Nordeste" }
+      { uf: "CE", estado: "Ceará", codigos: [85, 88], capital: "Fortaleza (85)", regiao: "Nordeste" },
+      { uf: "MA", estado: "Maranhão", codigos: [98, 99], capital: "São Luís (98)", regiao: "Nordeste" },
+      { uf: "PB", estado: "Paraíba", codigos: [83], capital: "João Pessoa (83)", regiao: "Nordeste" },
+      { uf: "RN", estado: "Rio Grande do Norte", codigos: [84], capital: "Natal (84)", regiao: "Nordeste" },
+      { uf: "AL", estado: "Alagoas", codigos: [82], capital: "Maceió (82)", regiao: "Nordeste" },
+      { uf: "PI", estado: "Piauí", codigos: [86, 89], capital: "Teresina (86)", regiao: "Nordeste" },
+      { uf: "SE", estado: "Sergipe", codigos: [79], capital: "Aracaju (79)", regiao: "Nordeste" }
     ];
 
     const currentUf = ufParam ? ufList.find(u => u.uf === ufParam) : null;
@@ -1966,6 +1981,220 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
             <a href="/geradores/gerador-de-cnpj" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Gerador de CNPJ para Testes →</a>
             <a href="/programatico/cep-brasil" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Consulta de CEP e Logradouros →</a>
             <a href="/api" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">Endpoints da API Tool Brasil →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 7.1 IPVA 2026 POR ESTADO
+  if (id.startsWith('ipva-2026-')) {
+    const m = page?.meta || { uf: 'SP', estado: 'São Paulo', carro: '4,0%', moto: '2,0%', utilitario: '2,0%', isencaoAnos: '20 anos de fabricação', descontoVista: '3%' };
+    return `
+      <div class="space-y-6 text-slate-800">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Tributação Estadual SEFAZ/${m.uf} 2026</span>
+            <span class="text-xs text-slate-500 font-medium">Tabela FIPE & DETRAN-${m.uf}</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900">
+            Tabela de Alíquotas, Descontos e Isenção do IPVA 2026 em ${m.estado} (${m.uf})
+          </h2>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            O Imposto sobre a Propriedade de Veículos Automotores (IPVA) no estado de <strong>${m.estado} (${m.uf})</strong> incide anualmente sobre o valor venal divulgado pela Tabela FIPE. Para o exercício fiscal de 2026, a Secretaria da Fazenda Estadual aplica alíquotas diferenciadas conforme a categoria e motorização do veículo.
+          </p>
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="py-2.5 px-3">Categoria / Regra em ${m.estado} (${m.uf})</th>
+                  <th class="py-2.5 px-3">Alíquota / Condição Oficial 2026</th>
+                  <th class="py-2.5 px-3">Exemplo sobre Veículo R$ 60.000</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Carros de Passeio (Flex / Gasolina)</td>
+                  <td class="py-2 px-3 font-mono font-bold text-emerald-700">${m.carro}</td>
+                  <td class="py-2 px-3">Cálculo direto sobre valor venal FIPE</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Motocicletas e Similares</td>
+                  <td class="py-2 px-3 font-mono font-bold text-emerald-700">${m.moto}</td>
+                  <td class="py-2 px-3">Alíquota reduzida para duas rodas</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Utilitários de Carga / Caminhonetes</td>
+                  <td class="py-2 px-3 font-mono font-bold text-emerald-700">${m.utilitario}</td>
+                  <td class="py-2 px-3">Cabine simples e veículos comerciais</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Isenção por Tempo de Fabricação</td>
+                  <td class="py-2 px-3 font-bold text-blue-700">${m.isencaoAnos}</td>
+                  <td class="py-2 px-3">Isento de IPVA (mantém licenciamento)</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Desconto em Cota Única (À Vista)</td>
+                  <td class="py-2 px-3 font-bold text-emerald-700">${m.descontoVista}</td>
+                  <td class="py-2 px-3">Pagamento antecipado no vencimento</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed pt-2">
+            <strong>Como calcular o valor exato:</strong> Multiplique o valor venal do veículo na Tabela FIPE pela alíquota correspondente do estado de ${m.estado}. Lembre-se de que o atraso no pagamento do IPVA impede a emissão do Certificado de Registro e Licenciamento de Veículo (CRLV-e digital) e gera multa diária mais juros baseados na taxa SELIC.
+          </p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Simule Agora seu IPVA 2026 Online</h3>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <a href="/calculadoras/calculadora-de-ipva" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de IPVA 2026 Interativa →</a>
+            <a href="/calculadoras/calculadora-de-consumo-combustivel" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Consumo de Combustível →</a>
+            <a href="/calculadoras/calculadora-de-alcool-ou-gasolina" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora Álcool ou Gasolina →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 7.2 CÓDIGOS BANCÁRIOS ESPECÍFICOS (COMPE & ISPB)
+  if (id.startsWith('codigo-banco-')) {
+    const m = page?.meta || { compe: '001', ispb: '00000000', nome: 'Instituição Bancária', agenciaPadrao: '0001', cnpj: '00.000.000/0001-91' };
+    return `
+      <div class="space-y-6 text-slate-800">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Sistema de Pagamentos Brasileiro (SPB)</span>
+            <span class="text-xs text-slate-500 font-medium">Banco Central do Brasil & FEBRABAN</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900">
+            Ficha Técnica de Compensação: ${m.nome} (Código ${m.compe})
+          </h2>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Para realizar transferências interbancárias via <strong>TED (Transferência Eletrônica Disponível)</strong>, cadastrar recebimento de folha salarial, restituição do Imposto de Renda ou configurar débito automático no <strong>${m.nome}</strong>, utilize os códigos normativos homologados pelo Banco Central do Brasil listados na tabela abaixo:
+          </p>
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="py-2.5 px-3">Parâmetro Bancário</th>
+                  <th class="py-2.5 px-3">Código / Valor Oficial</th>
+                  <th class="py-2.5 px-3">Finalidade de Uso</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Código COMPE (Número do Banco)</td>
+                  <td class="py-2 px-3 font-mono font-bold text-emerald-700 text-sm">${m.compe}</td>
+                  <td class="py-2 px-3">Transferências TED, compensação e cadastro de conta</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Código ISPB (8 dígitos BACEN)</td>
+                  <td class="py-2 px-3 font-mono font-bold text-slate-800">${m.ispb}</td>
+                  <td class="py-2 px-3">Liquidação STR, PIX e integrações Open Finance</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Razão Social Homologada</td>
+                  <td class="py-2 px-3 font-bold text-slate-900">${m.nome}</td>
+                  <td class="py-2 px-3">Contratos, informes de rendimentos e DIRPF</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Padrão de Agência</td>
+                  <td class="py-2 px-3 font-mono text-slate-800">${m.agenciaPadrao}</td>
+                  <td class="py-2 px-3">Preenchimento de formulários bancários</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">CNPJ Matriz da Instituição</td>
+                  <td class="py-2 px-3 font-mono text-slate-700">${m.cnpj}</td>
+                  <td class="py-2 px-3">Declaração de Bens e Direitos no Imposto de Renda</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed pt-2">
+            <strong>Importante sobre o fim do DOC:</strong> Desde fevereiro de 2024, as operações de DOC foram descontinuadas pela FEBRABAN. Utilize sempre o <strong>PIX</strong> (gratuito para pessoas físicas 24h por dia) ou a <strong>TED</strong> (com o código COMPE <strong>${m.compe}</strong> em dias úteis até as 17h).
+          </p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Consultas e Ferramentas Financeiras</h3>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <a href="/programatico/bancos-brasil" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Lista Completa de Todos os Bancos →</a>
+            <a href="/calculadoras/calculadora-de-juros-compostos" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Juros Compostos →</a>
+            <a href="/geradores/gerador-de-cnpj" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Gerador e Validador de CNPJ →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // 7.3 TABELAS TRABALHISTAS E PREVIDENCIÁRIAS 2026
+  if (['tabela-inss-2026', 'tabela-irrf-2026', 'tabela-seguro-desemprego-2026', 'aviso-previo-proporcional-tabela'].includes(id)) {
+    return `
+      <div class="space-y-6 text-slate-800">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Legislação Trabalhista & Previdenciária 2026</span>
+            <span class="text-xs text-slate-500 font-medium">Ministério do Trabalho, Previdência Social & Receita Federal</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900">${page.title}</h2>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Consulte os parâmetros oficiais vigentes em 2026 para apuração de folha de pagamento, retenções na fonte, cálculo de rescisões contratuais CLT e planejamento financeiro. Todos os valores refletem o piso salarial nacional de <strong>R$ 1.518,00</strong> e o teto previdenciário de <strong>R$ 8.157,41</strong>.
+          </p>
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="py-2.5 px-3">Faixa / Parâmetro 2026</th>
+                  <th class="py-2.5 px-3">Base de Cálculo Salarial</th>
+                  <th class="py-2.5 px-3">Alíquota / Regra Aplicável</th>
+                  <th class="py-2.5 px-3">Parcela a Deduzir / Observação</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">1ª Faixa INSS (Salário Mínimo)</td>
+                  <td class="py-2 px-3 font-mono">Até R$ 1.518,00</td>
+                  <td class="py-2 px-3 font-bold text-emerald-700">7,5%</td>
+                  <td class="py-2 px-3">Dedução: R$ 0,00 (Desconto máx: R$ 113,85)</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">2ª Faixa INSS Progressiva</td>
+                  <td class="py-2 px-3 font-mono">De R$ 1.518,01 até R$ 2.793,88</td>
+                  <td class="py-2 px-3 font-bold text-emerald-700">9,0%</td>
+                  <td class="py-2 px-3">Parcela a deduzir: R$ 22,77</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">3ª Faixa INSS Progressiva</td>
+                  <td class="py-2 px-3 font-mono">De R$ 2.793,89 até R$ 4.190,83</td>
+                  <td class="py-2 px-3 font-bold text-emerald-700">12,0%</td>
+                  <td class="py-2 px-3">Parcela a deduzir: R$ 106,59</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">4ª Faixa INSS (Teto Máximo)</td>
+                  <td class="py-2 px-3 font-mono">De R$ 4.190,84 até R$ 8.157,41</td>
+                  <td class="py-2 px-3 font-bold text-emerald-700">14,0%</td>
+                  <td class="py-2 px-3">Parcela a deduzir: R$ 190,40 (Teto: R$ 951,62)</td>
+                </tr>
+                <tr>
+                  <td class="py-2 px-3 font-bold text-slate-900">Aviso Prévio Proporcional (Lei 12.506)</td>
+                  <td class="py-2 px-3 font-mono">Até 1 ano completo: 30 dias</td>
+                  <td class="py-2 px-3 font-bold text-blue-700">+3 dias por ano completo</td>
+                  <td class="py-2 px-3">Limite máximo legal de 90 dias (20 anos)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed pt-2">
+            <strong>Fórmula Rápida com Parcela a Deduzir:</strong> Para encontrar o desconto exato do INSS sem precisar calcular faixa por faixa manualmente, multiplique o salário bruto pela alíquota da faixa correspondente e subtraia a <em>Parcela a Deduzir</em> indicada na tabela acima.
+          </p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Calculadoras Trabalhistas Automatizadas 2026</h3>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <a href="/calculadoras/calculadora-desconto-inss" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Desconto INSS →</a>
+            <a href="/calculadoras/calculadora-de-salario-liquido" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Salário Líquido →</a>
+            <a href="/calculadoras/calculadora-de-rescisao-trabalhista" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Rescisão CLT →</a>
+            <a href="/calculadoras/calculadora-de-seguro-desemprego" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Seguro-Desemprego →</a>
           </div>
         </div>
       </div>
