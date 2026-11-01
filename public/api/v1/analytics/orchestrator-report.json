@@ -1,8 +1,8 @@
 {
   "site": "https://www.toolbrasil.com.br",
-  "timestamp": "2026-11-01T13:00:19.956Z",
-  "overallScore": 100,
-  "overallStatus": "HEALTHY",
+  "timestamp": "2026-11-01T17:15:25.960Z",
+  "overallScore": 96,
+  "overallStatus": "WARNING",
   "subagents": [
     {
       "id": "agent_seo_gsc",
@@ -17,7 +17,7 @@
           "status": 200,
           "ok": true,
           "count": 241,
-          "latencyMs": 1009
+          "latencyMs": 574
         },
         "robots": {
           "status": 200,
@@ -28,49 +28,49 @@
         "ssgGooglebotProbe": {
           "/": {
             "status": 200,
-            "words": 323,
+            "words": 263,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
           },
           "/calculadoras": {
             "status": 200,
-            "words": 1758,
+            "words": 1749,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
           },
           "/conversores": {
             "status": 200,
-            "words": 594,
+            "words": 585,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
           },
           "/geradores": {
             "status": 200,
-            "words": 848,
+            "words": 839,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
           },
           "/ferramentas-web": {
             "status": 200,
-            "words": 487,
+            "words": 478,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
           },
           "/utilitarios": {
             "status": 200,
-            "words": 824,
+            "words": 815,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
           },
           "/desenvolvedores": {
             "status": 200,
-            "words": 357,
+            "words": 348,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
@@ -98,31 +98,31 @@
         "compliancePages": {
           "Política de Privacidade": {
             "status": 200,
-            "words": 828
+            "words": 819
           },
           "Termos de Uso": {
             "status": 200,
-            "words": 508
+            "words": 499
           },
           "Política de Cookies": {
             "status": 200,
-            "words": 276
+            "words": 267
           },
           "Quem Somos / Sobre": {
             "status": 200,
-            "words": 571
+            "words": 562
           },
           "Contato e Suporte": {
             "status": 200,
-            "words": 299
+            "words": 290
           },
           "Transparência AdSense": {
             "status": 200,
-            "words": 245
+            "words": 236
           },
           "Anunciantes / Mídia Kit": {
             "status": 200,
-            "words": 211
+            "words": 202
           }
         },
         "adSensePurity": {
@@ -141,12 +141,12 @@
       "status": "HEALTHY",
       "score": 15,
       "maxScore": 15,
-      "summary": "Vercel Edge CDN 68ms (TTFB) | widget.js, sw.js e Security Headers 100% nominais.",
+      "summary": "Vercel Edge CDN 26ms (TTFB) | widget.js, sw.js e Security Headers 100% nominais.",
       "details": {
         "edge": {
           "ok": true,
           "status": 200,
-          "ttfbMs": 68,
+          "ttfbMs": 26,
           "securityHeaders": {
             "xContentType": "nosniff",
             "referrerPolicy": "strict-origin-when-cross-origin"
@@ -180,25 +180,25 @@
         "sampleToolsProbe": {
           "/calculadoras/calculadora-de-juros-compostos": {
             "status": 200,
-            "words": 1048,
+            "words": 981,
             "hasWebAppSchema": true,
             "hasFaqSchema": true
           },
           "/geradores/gerador-de-cpf": {
             "status": 200,
-            "words": 1074,
+            "words": 1011,
             "hasWebAppSchema": true,
             "hasFaqSchema": true
           },
           "/conversores/converter-real-para-dolar": {
             "status": 200,
-            "words": 1023,
+            "words": 956,
             "hasWebAppSchema": true,
             "hasFaqSchema": true
           },
           "/calculadoras/calculadora-de-churrasco": {
             "status": 200,
-            "words": 1066,
+            "words": 1005,
             "hasWebAppSchema": true,
             "hasFaqSchema": true
           }
@@ -221,32 +221,32 @@
         "programmaticProbe": {
           "/programatico/ddd-brasil": {
             "status": 200,
-            "words": 550,
+            "words": 541,
             "hasCanonical": true
           },
           "/programatico/cep-brasil": {
             "status": 200,
-            "words": 273,
+            "words": 264,
             "hasCanonical": true
           },
           "/programatico/bancos-brasil": {
             "status": 200,
-            "words": 432,
+            "words": 423,
             "hasCanonical": true
           },
           "/programatico/salario-minimo-historico": {
             "status": 200,
-            "words": 585,
+            "words": 576,
             "hasCanonical": true
           },
           "/programatico/feriados-nacionais": {
             "status": 200,
-            "words": 422,
+            "words": 413,
             "hasCanonical": true
           },
           "/programatico/selic-historica": {
             "status": 200,
-            "words": 329,
+            "words": 320,
             "hasCanonical": true
           }
         }
@@ -322,10 +322,10 @@
       "id": "agent_growth_traction",
       "name": "Agente de Tração Orgânica & Expansão Long-Tail",
       "role": "Gerador e Auditor da Matriz Long-Tail (27 UFs DDD, IPVA 2026, Bancos COMPE/ISPB, Tabelas 2026 & IndexNow)",
-      "status": "HEALTHY",
-      "score": 15,
+      "status": "WARNING",
+      "score": 11,
       "maxScore": 15,
-      "summary": "89 páginas Long-Tail (241 URLs totais no Sitemap) | 27/27 UFs DDD, IPVA 2026, 10 Bancos COMPE e Tabelas 2026 100% ativos.",
+      "summary": "Expansão Long-Tail ativa com 1 alerta(s).",
       "details": {
         "totalProgrammaticPages": 89,
         "totalSitemapUrls": 241,
@@ -340,13 +340,15 @@
           "core": 14
         },
         "thinSsgPagesCount": 0,
-        "indexNowSubmittedCount": 0
+        "indexNowSubmittedCount": 75
       },
-      "issues": [],
+      "issues": [
+        "89 página(s) Long-Tail ausentes no build estático"
+      ],
       "selfHealed": false,
       "healingActions": []
     }
   ],
   "healingSummary": [],
-  "executionTimeMs": 11864
+  "executionTimeMs": 6900
 }
