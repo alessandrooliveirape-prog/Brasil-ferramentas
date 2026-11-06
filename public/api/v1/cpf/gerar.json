@@ -3,70 +3,70 @@
   "fonte": "Tool Brasil - API Pública",
   "url": "https://www.toolbrasil.com.br",
   "documentacao": "https://www.toolbrasil.com.br/desenvolvedores",
-  "atualizado_em": "2026-11-05T18:58:02.948Z",
+  "atualizado_em": "2026-11-06T18:27:17.655Z",
   "tipo": "CPF",
   "algoritmo": "Módulo 11 Oficial da Receita Federal",
   "aviso": "Dados sintéticos gerados estritamente para testes de software, QA e homologação. Em conformidade com a LGPD.",
   "total": 10,
   "dados": [
     {
-      "cpf": "259.970.041-80",
-      "cpf_raw": "25997004180",
+      "cpf": "277.248.672-91",
+      "cpf_raw": "27724867291",
+      "regiao_origem": "AC, AM, AP, PA, RO, RR",
+      "valido": true
+    },
+    {
+      "cpf": "979.059.271-05",
+      "cpf_raw": "97905927105",
       "regiao_origem": "DF, GO, MS, MT, TO",
       "valido": true
     },
     {
-      "cpf": "502.670.479-40",
-      "cpf_raw": "50267047940",
+      "cpf": "568.263.423-32",
+      "cpf_raw": "56826342332",
+      "regiao_origem": "CE, MA, PI",
+      "valido": true
+    },
+    {
+      "cpf": "623.851.222-94",
+      "cpf_raw": "62385122294",
+      "regiao_origem": "AC, AM, AP, PA, RO, RR",
+      "valido": true
+    },
+    {
+      "cpf": "957.635.024-77",
+      "cpf_raw": "95763502477",
+      "regiao_origem": "AL, PB, PE, RN",
+      "valido": true
+    },
+    {
+      "cpf": "472.390.911-71",
+      "cpf_raw": "47239091171",
+      "regiao_origem": "DF, GO, MS, MT, TO",
+      "valido": true
+    },
+    {
+      "cpf": "561.152.598-94",
+      "cpf_raw": "56115259894",
+      "regiao_origem": "SP",
+      "valido": true
+    },
+    {
+      "cpf": "727.424.834-03",
+      "cpf_raw": "72742483403",
+      "regiao_origem": "AL, PB, PE, RN",
+      "valido": true
+    },
+    {
+      "cpf": "027.515.523-40",
+      "cpf_raw": "02751552340",
+      "regiao_origem": "CE, MA, PI",
+      "valido": true
+    },
+    {
+      "cpf": "877.841.989-14",
+      "cpf_raw": "87784198914",
       "regiao_origem": "PR, SC",
-      "valido": true
-    },
-    {
-      "cpf": "638.761.174-10",
-      "cpf_raw": "63876117410",
-      "regiao_origem": "AL, PB, PE, RN",
-      "valido": true
-    },
-    {
-      "cpf": "112.208.048-43",
-      "cpf_raw": "11220804843",
-      "regiao_origem": "SP",
-      "valido": true
-    },
-    {
-      "cpf": "853.534.058-03",
-      "cpf_raw": "85353405803",
-      "regiao_origem": "SP",
-      "valido": true
-    },
-    {
-      "cpf": "216.286.434-71",
-      "cpf_raw": "21628643471",
-      "regiao_origem": "AL, PB, PE, RN",
-      "valido": true
-    },
-    {
-      "cpf": "386.682.065-83",
-      "cpf_raw": "38668206583",
-      "regiao_origem": "BA, SE",
-      "valido": true
-    },
-    {
-      "cpf": "743.245.373-05",
-      "cpf_raw": "74324537305",
-      "regiao_origem": "CE, MA, PI",
-      "valido": true
-    },
-    {
-      "cpf": "629.330.355-53",
-      "cpf_raw": "62933035553",
-      "regiao_origem": "BA, SE",
-      "valido": true
-    },
-    {
-      "cpf": "635.242.883-59",
-      "cpf_raw": "63524288359",
-      "regiao_origem": "CE, MA, PI",
       "valido": true
     }
   ]
