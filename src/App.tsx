@@ -26,7 +26,8 @@ import {
   TrendingUp,
   RotateCcw,
   Sun,
-  Moon
+  Moon,
+  Monitor
 } from 'lucide-react';
 
 // Core data and sub-components
@@ -99,13 +100,13 @@ export default function App() {
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [faqOpen, setFaqOpen] = useState<{ [key: string]: boolean }>({});
 
-  // Theme state: defaults to 'light', stores selection in localStorage
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+  // Theme state: defaults to 'system' (respects OS), supports forced 'light' | 'dark'
+  const [theme, setTheme] = useState<'system' | 'light' | 'dark'>(() => {
     try {
       const saved = localStorage.getItem('brasil_ferramentas_theme');
-      if (saved === 'dark') return 'dark';
+      if (saved === 'dark' || saved === 'light') return saved;
     } catch (e) {}
-    return 'light';
+    return 'system';
   });
 
   // State to control visibility of SEOAnalyzer panel
@@ -142,17 +143,46 @@ export default function App() {
     };
   });
 
-  // Manage theme dark class on document element and persist in localStorage
+  // Sync Tailwind .dark class + <meta name="color-scheme"> + OS & cross-tab preference changes
   useEffect(() => {
     const root = window.document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
+    const mql = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const applyTheme = (mode: 'system' | 'light' | 'dark') => {
+      const meta = document.querySelector('meta[name="color-scheme"]');
+      const useDark = mode === 'dark' || (mode === 'system' && mql.matches);
+      root.classList.toggle('dark', useDark);
+      if (meta) {
+        meta.setAttribute('content', mode === 'system' ? 'light dark' : mode);
+      }
+    };
+
+    applyTheme(theme);
+
     try {
-      localStorage.setItem('brasil_ferramentas_theme', theme);
+      if (theme === 'system') {
+        localStorage.removeItem('brasil_ferramentas_theme');
+      } else {
+        localStorage.setItem('brasil_ferramentas_theme', theme);
+      }
     } catch (e) {}
+
+    const handleMediaChange = () => {
+      if (theme === 'system') applyTheme('system');
+    };
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'brasil_ferramentas_theme') {
+        const next = e.newValue === 'light' || e.newValue === 'dark' ? e.newValue : 'system';
+        setTheme(next);
+      }
+    };
+
+    mql.addEventListener('change', handleMediaChange);
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      mql.removeEventListener('change', handleMediaChange);
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, [theme]);
 
   // Fetch API rates from AwesomeAPI specifically for the homepage ticker
@@ -643,6 +673,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300" id="main-root">
+      <a href="#conteudo-principal" className="visually-hidden skip-link no-underline">
+        Pular para o conteúdo principal
+      </a>
       
       {/* Dynamic JSON-LD Structured Data for SEO / Google Search Console */}
       {breadcrumbSchema && (
@@ -680,7 +713,7 @@ export default function App() {
           </div>
 
           {/* Category & Institutional Quick Links for Desktop */}
-          <nav className="hidden lg:flex items-center gap-5 text-xs font-extrabold text-slate-800 dark:text-slate-200">
+          <nav aria-label="Navegação principal" className="hidden lg:flex items-center gap-5 text-xs font-extrabold text-slate-800 dark:text-slate-200">
             {CATEGORIES.filter(c => c.id !== 'institucional' && c.id !== 'programatico').map((cat) => {
               const isCatActive = currentRoute.categoryId === cat.id && currentRoute.view === 'category';
               return (
@@ -712,12 +745,26 @@ export default function App() {
             
             {/* Theme Toggle Button */}
             <button
-              onClick={() => setTheme(p => p === 'light' ? 'dark' : 'light')}
+              type="button"
+              onClick={() => setTheme(p => p === 'system' ? 'light' : p === 'light' ? 'dark' : 'system')}
+              aria-label={
+                theme === 'system'
+                  ? 'Tema: Automático (Sistema). Clique para alternar para modo claro'
+                  : theme === 'light'
+                  ? 'Tema: Claro. Clique para alternar para modo escuro'
+                  : 'Tema: Escuro. Clique para alternar para automático'
+              }
               className="p-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-full hover:bg-slate-200 dark:hover:bg-slate-750 hover:cursor-pointer transition-colors shadow-xs"
               id="theme-toggle-btn"
-              title={theme === 'light' ? 'Ativar Modo Escuro' : 'Ativar Modo Claro'}
+              title={
+                theme === 'system'
+                  ? 'Tema: Automático (Sistema)'
+                  : theme === 'light'
+                  ? 'Tema: Claro'
+                  : 'Tema: Escuro'
+              }
             >
-              {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+              {theme === 'system' ? <Monitor className="w-4 h-4" /> : theme === 'light' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
 
             {/* Header Universal Search Trigger / Command Palette */}
@@ -763,6 +810,8 @@ export default function App() {
               </div>
               <input
                 type="text"
+                aria-label="Pesquisar ferramentas e tabelas"
+                enterKeyHint="search"
                 className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-full py-3.5 pl-12 pr-24 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 shadow-xs transition-all font-medium text-slate-900 dark:text-slate-100"
                 placeholder="Pesquise entre 138+ ferramentas e tabelas (ex: ferias, rescisao, inss, cpf)..."
                 value={searchQuery}
@@ -924,7 +973,7 @@ export default function App() {
       )}
 
       {/* MAIN CONTAINER LAYOUT */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-6 flex-grow grid grid-cols-1 lg:grid-cols-4 gap-6" id="main-holder">
+      <main id="conteudo-principal" tabIndex={-1} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-6 flex-grow grid grid-cols-1 lg:grid-cols-4 gap-6">
         
         {/* LEFT NAV SIDEBAR - order-2 renders sidebar below content on mobile, left on desktop */}
         <aside className="order-2 lg:order-1 lg:col-span-1 space-y-4" id="left-sidebar">
@@ -934,7 +983,7 @@ export default function App() {
               Categorias
             </h3>
             
-            <nav className="space-y-1">
+            <nav aria-label="Categorias de ferramentas" className="space-y-1">
               <a
                 href="/"
                 className={`flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold tracking-wide transition-all ${currentRoute.view === 'home' ? 'bg-emerald-600 text-white font-bold shadow-xs' : 'text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-950 dark:hover:text-white'}`}
@@ -1190,7 +1239,7 @@ export default function App() {
               )}
 
               {/* CATEGORIES GRID */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="deferred-section grid grid-cols-1 md:grid-cols-2 gap-4">
                 {CATEGORIES.filter(c => c.id !== 'institucional' && c.id !== 'programatico').map((cat) => (
                   <div
                     key={cat.id}
@@ -1229,7 +1278,7 @@ export default function App() {
               </div>
 
               {/* SEARCH SUGGESTIONS - LONG TAIL KEYWORDS */}
-              <div className="bg-emerald-900/5 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/60 p-5 rounded-xl space-y-3">
+              <div className="deferred-section bg-emerald-900/5 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/60 p-5 rounded-xl space-y-3">
                 <h3 className="text-sm font-black text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
                   <BookOpen className="w-4 h-4" /> 🔍 Principais Consultas do Google
                 </h3>
@@ -1285,9 +1334,9 @@ export default function App() {
                   <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-6 rounded-xl space-y-4 shadow-xs">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                       <div>
-                        <h2 className="text-2xl font-black text-slate-900 dark:text-white">
+                        <h1 className="text-2xl font-black text-slate-900 dark:text-white">
                           {cat.name}
-                        </h2>
+                        </h1>
                         <p className="text-xs text-slate-700 dark:text-slate-300 font-semibold mt-1">{cat.description}</p>
                       </div>
                       <span className="inline-flex items-center self-start sm:self-auto px-3 py-1 rounded-full text-xs font-mono font-bold bg-emerald-50 dark:bg-emerald-950/50 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
@@ -1301,6 +1350,8 @@ export default function App() {
                         <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                         <input
                           type="text"
+                          aria-label={`Filtrar ferramentas em ${cat.name}`}
+                          enterKeyHint="search"
                           value={categorySearch}
                           onChange={e => setCategorySearch(e.target.value)}
                           placeholder={`Filtrar rápido em ${cat.name} (ex: sem acento)...`}

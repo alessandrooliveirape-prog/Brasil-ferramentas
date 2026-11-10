@@ -57,6 +57,47 @@ export default function CommandPalette({ isOpen, onClose, onNavigate }: CommandP
   const [recentIds, setRecentIds] = useState<string[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  // Sincronizar abertura/fechamento nativo com showModal()
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    if (isOpen) {
+      if (!dialog.open) dialog.showModal();
+    } else if (dialog.open) {
+      dialog.close();
+    }
+  }, [isOpen]);
+
+  // Fallback de light-dismiss por coordenadas para navegadores sem <dialog closedby="any">
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog || 'closedBy' in HTMLDialogElement.prototype) return;
+
+    const outside = (e: PointerEvent) => {
+      const r = dialog.getBoundingClientRect();
+      return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+    };
+
+    let pressedOutside = false;
+    const onPointerDown = (e: PointerEvent) => {
+      pressedOutside = outside(e);
+    };
+    const onPointerUp = (e: PointerEvent) => {
+      if (pressedOutside && outside(e)) {
+        dialog.close();
+      }
+      pressedOutside = false;
+    };
+
+    dialog.addEventListener('pointerdown', onPointerDown);
+    dialog.addEventListener('pointerup', onPointerUp);
+    return () => {
+      dialog.removeEventListener('pointerdown', onPointerDown);
+      dialog.removeEventListener('pointerup', onPointerUp);
+    };
+  }, []);
 
   // Carregar histórico recente e focar no input ao abrir
   useEffect(() => {
@@ -72,27 +113,25 @@ export default function CommandPalette({ isOpen, onClose, onNavigate }: CommandP
       } catch {
         // Ignora erro de localStorage
       }
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         inputRef.current?.focus();
-      }, 50);
+      });
     }
   }, [isOpen]);
 
-  // Tratar teclas de navegação (setas, enter, esc)
+  // Tratar teclas de navegação (setas e Enter com proteção IME)
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose();
-      } else if (e.key === 'ArrowDown') {
+      if (e.key === 'ArrowDown') {
         e.preventDefault();
         setSelectedIndex(prev => (prev < filteredItems.length - 1 ? prev + 1 : 0));
       } else if (e.key === 'ArrowUp') {
         e.preventDefault();
         setSelectedIndex(prev => (prev > 0 ? prev - 1 : filteredItems.length - 1));
       } else if (e.key === 'Enter') {
+        if (e.isComposing || e.keyCode === 229) return;
         e.preventDefault();
         if (filteredItems[selectedIndex]) {
           handleSelect(filteredItems[selectedIndex]);
@@ -234,132 +273,145 @@ export default function CommandPalette({ isOpen, onClose, onNavigate }: CommandP
     }
   };
 
-  if (!isOpen) return null;
+  const handleDialogClose = () => {
+    if (dialogRef.current) {
+      dialogRef.current.returnValue = '';
+    }
+    onClose();
+  };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-start justify-center pt-12 sm:pt-20 px-4 bg-slate-950/60 backdrop-blur-sm animate-fade-in"
-      onClick={onClose}
+    <dialog
+      ref={dialogRef}
+      closedby="any"
+      aria-label="Busca rápida de ferramentas"
+      onClose={handleDialogClose}
+      className="w-[calc(100%-2rem)] max-w-2xl mx-auto mt-12 sm:mt-20 p-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden max-h-[85vh] text-slate-900 dark:text-slate-100 open:flex open:flex-col"
     >
-      <div
-        className="w-full max-w-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh] animate-scale-in"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* Barra de Busca Superior */}
-        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center gap-3 bg-slate-50/50 dark:bg-slate-900/50">
-          <Search className="w-5 h-5 text-emerald-600 shrink-0" />
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={e => {
-              setQuery(e.target.value);
-              setSelectedIndex(0);
-            }}
-            placeholder="Busque entre 138+ ferramentas e tabelas (ex: ferias, rescisao, inss, cpf, dolar)..."
-            className="w-full bg-transparent text-sm sm:text-base font-medium text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none"
-          />
-          {query && (
-            <button
-              onClick={() => setQuery('')}
-              className="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition cursor-pointer"
-              title="Limpar busca"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
-          <kbd className="hidden sm:inline-flex items-center gap-0.5 px-2 py-1 text-[10px] font-mono font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded border border-slate-300 dark:border-slate-700">
-            ESC
-          </kbd>
-        </div>
+      {/* Barra de Busca Superior */}
+      <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center gap-3 bg-slate-50/50 dark:bg-slate-900/50">
+        <Search className="w-5 h-5 text-emerald-600 shrink-0" />
+        <input
+          ref={inputRef}
+          type="text"
+          aria-label="Buscar ferramentas e tabelas"
+          enterKeyHint="search"
+          value={query}
+          onChange={e => {
+            setQuery(e.target.value);
+            setSelectedIndex(0);
+          }}
+          placeholder="Busque entre 138+ ferramentas e tabelas (ex: ferias, rescisao, inss, cpf, dolar)..."
+          className="w-full bg-transparent text-sm sm:text-base font-medium text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none"
+        />
+        {query && (
+          <button
+            type="button"
+            aria-label="Limpar busca"
+            onClick={() => setQuery('')}
+            className="p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition cursor-pointer"
+            title="Limpar busca"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Fechar busca rápida"
+          className="hidden sm:inline-flex items-center gap-0.5 px-2 py-1 text-[10px] font-mono font-bold bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded border border-slate-300 dark:border-slate-700 cursor-pointer"
+        >
+          ESC
+        </button>
+      </div>
 
-        {/* Lista de Resultados */}
-        <div ref={listRef} className="overflow-y-auto p-2 space-y-1 flex-grow divide-y divide-slate-100 dark:divide-slate-800/60">
-          {filteredItems.length === 0 ? (
-            <div className="p-8 text-center space-y-2">
-              <span className="text-2xl">🔍</span>
-              <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                Nenhuma ferramenta encontrada para "{query}"
-              </p>
-              <p className="text-[11px] text-slate-500">
-                Tente buscar por "Férias", "Rescisão", "Salário", "Juros", "CPF", "IP" ou "Dólar".
-              </p>
-            </div>
-          ) : (
-            <>
-              {!query && (
-                <div className="px-3 pt-2 pb-1 text-[10px] font-mono font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Flame className="w-3.5 h-3.5 text-emerald-500" />
-                  <span>{recentIds.length > 0 ? 'Acessadas Recentemente & Mais Usadas' : 'Ferramentas Mais Acessadas'}</span>
-                </div>
-              )}
+      {/* Lista de Resultados */}
+      <div ref={listRef} className="overflow-y-auto p-2 space-y-1 flex-grow divide-y divide-slate-100 dark:divide-slate-800/60">
+        {filteredItems.length === 0 ? (
+          <div className="p-8 text-center space-y-2">
+            <span className="text-2xl">🔍</span>
+            <p className="text-xs font-bold text-slate-800 dark:text-slate-200">
+              Nenhuma ferramenta encontrada para "{query}"
+            </p>
+            <p className="text-[11px] text-slate-500">
+              Tente buscar por "Férias", "Rescisão", "Salário", "Juros", "CPF", "IP" ou "Dólar".
+            </p>
+          </div>
+        ) : (
+          <>
+            {!query && (
+              <div className="px-3 pt-2 pb-1 text-[10px] font-mono font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5 text-emerald-500" />
+                <span>{recentIds.length > 0 ? 'Acessadas Recentemente & Mais Usadas' : 'Ferramentas Mais Acessadas'}</span>
+              </div>
+            )}
 
-              {filteredItems.map((item, index) => {
-                const isSelected = index === selectedIndex;
-                return (
-                  <div
-                    key={item.id + index}
-                    data-index={index}
-                    onClick={() => handleSelect(item)}
-                    onMouseEnter={() => setSelectedIndex(index)}
-                    className={`p-3 rounded-xl cursor-pointer transition-all flex items-center justify-between gap-3 ${
-                      isSelected
-                        ? 'bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 shadow-xs'
-                        : 'hover:bg-slate-100/60 dark:hover:bg-slate-800/40 border border-transparent'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 shrink-0">
-                        {renderCategoryIcon(item.categoryId, item.isRecent)}
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-slate-100 truncate block">
-                            {item.title}
-                          </span>
-                          <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded shrink-0 ${
-                            item.isRecent
-                              ? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300'
-                              : 'bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
-                          }`}>
-                            {item.badge}
-                          </span>
-                        </div>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5 font-normal">
-                          {item.description}
-                        </p>
-                      </div>
+            {filteredItems.map((item, index) => {
+              const isSelected = index === selectedIndex;
+              return (
+                <button
+                  type="button"
+                  key={item.id + index}
+                  data-index={index}
+                  onClick={() => handleSelect(item)}
+                  onMouseEnter={() => setSelectedIndex(index)}
+                  className={`w-full text-left p-3 rounded-xl cursor-pointer transition-all flex items-center justify-between gap-3 ${
+                    isSelected
+                      ? 'bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-300 dark:border-emerald-800 shadow-xs'
+                      : 'hover:bg-slate-100/60 dark:hover:bg-slate-800/40 border border-transparent'
+                  }`}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-800 shrink-0">
+                      {renderCategoryIcon(item.categoryId, item.isRecent)}
                     </div>
-
-                    <div className="shrink-0 flex items-center gap-1.5 text-slate-400">
-                      {isSelected && (
-                        <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400">
-                          Abrir <CornerDownLeft className="w-3 h-3" />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-extrabold text-xs sm:text-sm text-slate-900 dark:text-slate-100 truncate block">
+                          {item.title}
                         </span>
-                      )}
-                      <ArrowRight className="w-4 h-4" />
+                        <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded shrink-0 ${
+                          item.isRecent
+                            ? 'bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-300'
+                            : 'bg-slate-200/80 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                        }`}>
+                          {item.badge}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate mt-0.5 font-normal">
+                        {item.description}
+                      </p>
                     </div>
                   </div>
-                );
-              })}
-            </>
-          )}
-        </div>
 
-        {/* Rodapé Informativo */}
-        <div className="p-3 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-          <div className="flex items-center gap-3">
-            <span className="hidden sm:inline-flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 text-[9.5px] font-mono bg-white dark:bg-slate-800 border rounded">↑</kbd>
-              <kbd className="px-1.5 py-0.5 text-[9.5px] font-mono bg-white dark:bg-slate-800 border rounded">↓</kbd> Navegar
-            </span>
-            <span className="hidden sm:inline-flex items-center gap-1">
-              <kbd className="px-1.5 py-0.5 text-[9.5px] font-mono bg-white dark:bg-slate-800 border rounded">↵</kbd> Acessar
-            </span>
-          </div>
-          <span className="text-[10px] font-mono">Tool Brasil • 138+ Ferramentas & 88 Tabelas Oficiais</span>
-        </div>
+                  <div className="shrink-0 flex items-center gap-1.5 text-slate-400">
+                    {isSelected && (
+                      <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono font-bold text-emerald-600 dark:text-emerald-400">
+                        Abrir <CornerDownLeft className="w-3 h-3" />
+                      </span>
+                    )}
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </button>
+              );
+            })}
+          </>
+        )}
       </div>
-    </div>
+
+      {/* Rodapé Informativo */}
+      <div className="p-3 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 font-medium">
+        <div className="flex items-center gap-3">
+          <span className="hidden sm:inline-flex items-center gap-1">
+            <kbd className="px-1.5 py-0.5 text-[9.5px] font-mono bg-white dark:bg-slate-800 border rounded">↑</kbd>
+            <kbd className="px-1.5 py-0.5 text-[9.5px] font-mono bg-white dark:bg-slate-800 border rounded">↓</kbd> Navegar
+          </span>
+          <span className="hidden sm:inline-flex items-center gap-1">
+            <kbd className="px-1.5 py-0.5 text-[9.5px] font-mono bg-white dark:bg-slate-800 border rounded">↵</kbd> Acessar
+          </span>
+        </div>
+        <span className="text-[10px] font-mono">Tool Brasil • 138+ Ferramentas & 88 Tabelas Oficiais</span>
+      </div>
+    </dialog>
   );
 }

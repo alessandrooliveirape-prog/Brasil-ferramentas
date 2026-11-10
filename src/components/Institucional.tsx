@@ -156,6 +156,18 @@ function ContatoForm() {
   const [mensagem, setMensagem] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<{ nome?: string; email?: string; mensagem?: string }>({});
+
+  const validateField = (field: 'nome' | 'email' | 'mensagem', val: string) => {
+    const trimmed = val.trim();
+    if (field === 'nome') {
+      return trimmed.length < 2 ? 'Informe seu nome completo.' : '';
+    }
+    if (field === 'email') {
+      return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed) ? 'Informe um e-mail válido para retorno.' : '';
+    }
+    return trimmed.length < 5 ? 'Escreva sua mensagem com pelo menos 5 caracteres.' : '';
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -163,10 +175,20 @@ function ContatoForm() {
     const cleanEmail = email.trim();
     const cleanMensagem = mensagem.trim();
 
-    if (!cleanNome || !cleanEmail || !cleanMensagem) {
+    const nomeErr = validateField('nome', nome);
+    const emailErr = validateField('email', email);
+    const msgErr = validateField('mensagem', mensagem);
+
+    if (nomeErr || emailErr || msgErr) {
+      setFieldErrors({
+        ...(nomeErr ? { nome: nomeErr } : {}),
+        ...(emailErr ? { email: emailErr } : {}),
+        ...(msgErr ? { mensagem: msgErr } : {}),
+      });
       setStatus('erro');
       return;
     }
+    setFieldErrors({});
 
     setLoading(true);
     setStatus(null);
@@ -291,43 +313,82 @@ function ContatoForm() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            <p className="text-xs text-slate-500 dark:text-slate-400">Campos marcados com <span aria-hidden="true">*</span> são obrigatórios.</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Seu Nome Completo *
+                <label htmlFor="tb-contato-nome" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Seu Nome Completo <span aria-hidden="true">*</span>
                 </label>
                 <input
+                  id="tb-contato-nome"
                   type="text"
                   required
+                  autoComplete="name"
+                  enterKeyHint="next"
                   disabled={loading}
+                  aria-invalid={Boolean(fieldErrors.nome)}
+                  aria-describedby={fieldErrors.nome ? 'tb-contato-nome-err' : undefined}
                   className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-60"
                   value={nome}
-                  onChange={(e) => setNome(e.target.value)}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setNome(v);
+                    if (fieldErrors.nome) setFieldErrors((prev) => ({ ...prev, nome: validateField('nome', v) || undefined }));
+                  }}
+                  onInvalid={(e) => {
+                    const err = validateField('nome', e.currentTarget.value);
+                    if (err) setFieldErrors((prev) => ({ ...prev, nome: err }));
+                  }}
+                  onBlur={(e) => {
+                    const err = validateField('nome', e.target.value);
+                    setFieldErrors((prev) => ({ ...prev, nome: err || undefined }));
+                  }}
                   placeholder="Ex: Carlos Silva"
                 />
+                {fieldErrors.nome && <span id="tb-contato-nome-err" className="field-error-msg">{fieldErrors.nome}</span>}
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                  Seu E-mail para Retorno *
+                <label htmlFor="tb-contato-email" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                  Seu E-mail para Retorno <span aria-hidden="true">*</span>
                 </label>
                 <input
+                  id="tb-contato-email"
                   type="email"
                   required
+                  autoComplete="email"
+                  spellCheck={false}
+                  enterKeyHint="next"
                   disabled={loading}
+                  aria-invalid={Boolean(fieldErrors.email)}
+                  aria-describedby={fieldErrors.email ? 'tb-contato-email-err' : undefined}
                   className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-60"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setEmail(v);
+                    if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: validateField('email', v) || undefined }));
+                  }}
+                  onInvalid={(e) => {
+                    const err = validateField('email', e.currentTarget.value);
+                    if (err) setFieldErrors((prev) => ({ ...prev, email: err }));
+                  }}
+                  onBlur={(e) => {
+                    const err = validateField('email', e.target.value);
+                    setFieldErrors((prev) => ({ ...prev, email: err || undefined }));
+                  }}
                   placeholder="carlos@exemplo.com.br"
                 />
+                {fieldErrors.email && <span id="tb-contato-email-err" className="field-error-msg">{fieldErrors.email}</span>}
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Motivo do Contato *
+              <label htmlFor="tb-contato-motivo" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                Motivo do Contato <span aria-hidden="true">*</span>
               </label>
               <select
+                id="tb-contato-motivo"
                 disabled={loading}
                 className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-60"
                 value={motivo}
@@ -342,18 +403,34 @@ function ContatoForm() {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
-                Mensagem Detalhada *
+              <label htmlFor="tb-contato-mensagem" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+                Mensagem Detalhada <span aria-hidden="true">*</span>
               </label>
               <textarea
+                id="tb-contato-mensagem"
                 required
                 rows={5}
                 disabled={loading}
+                aria-invalid={Boolean(fieldErrors.mensagem)}
+                aria-describedby={fieldErrors.mensagem ? 'tb-contato-mensagem-err' : undefined}
                 className="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2.5 text-sm bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500 disabled:opacity-60"
                 value={mensagem}
-                onChange={(e) => setMensagem(e.target.value)}
+                onChange={(e) => {
+                  const v = e.target.value;
+                  setMensagem(v);
+                  if (fieldErrors.mensagem) setFieldErrors((prev) => ({ ...prev, mensagem: validateField('mensagem', v) || undefined }));
+                }}
+                onInvalid={(e) => {
+                  const err = validateField('mensagem', e.currentTarget.value);
+                  if (err) setFieldErrors((prev) => ({ ...prev, mensagem: err }));
+                }}
+                onBlur={(e) => {
+                  const err = validateField('mensagem', e.target.value);
+                  setFieldErrors((prev) => ({ ...prev, mensagem: err || undefined }));
+                }}
                 placeholder="Descreva detalhadamente sua sugestão, dúvida ou a ferramenta de interesse..."
               />
+              {fieldErrors.mensagem && <span id="tb-contato-mensagem-err" className="field-error-msg">{fieldErrors.mensagem}</span>}
             </div>
 
             <button

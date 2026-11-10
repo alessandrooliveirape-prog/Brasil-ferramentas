@@ -3,6 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('brasil_ferramentas_theme');
+          var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var meta = document.querySelector('meta[name="color-scheme"]');
+          if (saved === 'dark' || saved === 'light') {
+            if (meta) meta.setAttribute('content', saved);
+            document.documentElement.classList.toggle('dark', saved === 'dark');
+          } else {
+            document.documentElement.classList.toggle('dark', Boolean(prefersDark));
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- Fonts (moved out of blocking CSS @import) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" />
     
     <!-- SEO Meta Tags Primárias -->
     <title>Tool Brasil | 138+ Ferramentas e Calculadoras Online Gratuitas</title>
@@ -22,10 +43,10 @@
     <meta name="geo.placename" content="Brasil" />
 
     <!-- Google AdSense Auto Ads -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8160658026927094" crossorigin="anonymous"></script>
+    <script async fetchpriority="low" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8160658026927094" crossorigin="anonymous"></script>
 
     <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LFFBFH5EW9"></script>
+    <script async fetchpriority="low" src="https://www.googletagmanager.com/gtag/js?id=G-LFFBFH5EW9"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
