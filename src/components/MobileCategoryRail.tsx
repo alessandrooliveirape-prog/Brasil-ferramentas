@@ -48,11 +48,11 @@ export default function MobileCategoryRail({ currentCategory, currentView }: Mob
           href="/"
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 ${
             isHomeActive
-              ? 'bg-emerald-600 text-white shadow-xs'
+              ? 'bg-emerald-700 text-white shadow-xs'
               : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
           }`}
         >
-          <Home className="w-3.5 h-3.5" />
+          <Home className="w-3.5 h-3.5" aria-hidden="true" />
           <span>Início</span>
         </a>
 
@@ -67,7 +67,7 @@ export default function MobileCategoryRail({ currentCategory, currentView }: Mob
               href={`/${cat.id}`}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 ${
                 isActive
-                  ? 'bg-emerald-600 text-white shadow-xs'
+                  ? 'bg-emerald-700 text-white shadow-xs'
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
               }`}
             >
@@ -76,8 +76,8 @@ export default function MobileCategoryRail({ currentCategory, currentView }: Mob
               <span
                 className={`text-[9px] font-mono font-black px-1.5 py-0.2 rounded-full ${
                   isActive
-                    ? 'bg-emerald-700 text-emerald-100'
-                    : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-400'
+                    ? 'bg-emerald-800 text-emerald-100'
+                    : 'bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300'
                 }`}
               >
                 {count}
