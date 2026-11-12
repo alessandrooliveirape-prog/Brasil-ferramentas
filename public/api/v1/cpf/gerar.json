@@ -3,70 +3,70 @@
   "fonte": "Tool Brasil - API Pública",
   "url": "https://www.toolbrasil.com.br",
   "documentacao": "https://www.toolbrasil.com.br/desenvolvedores",
-  "atualizado_em": "2026-11-11T18:51:52.312Z",
+  "atualizado_em": "2026-11-12T19:07:25.198Z",
   "tipo": "CPF",
   "algoritmo": "Módulo 11 Oficial da Receita Federal",
   "aviso": "Dados sintéticos gerados estritamente para testes de software, QA e homologação. Em conformidade com a LGPD.",
   "total": 10,
   "dados": [
     {
-      "cpf": "391.673.627-29",
-      "cpf_raw": "39167362729",
-      "regiao_origem": "ES, RJ",
-      "valido": true
-    },
-    {
-      "cpf": "567.436.874-05",
-      "cpf_raw": "56743687405",
-      "regiao_origem": "AL, PB, PE, RN",
-      "valido": true
-    },
-    {
-      "cpf": "981.394.346-71",
-      "cpf_raw": "98139434671",
-      "regiao_origem": "MG",
-      "valido": true
-    },
-    {
-      "cpf": "108.453.960-80",
-      "cpf_raw": "10845396080",
+      "cpf": "875.358.820-72",
+      "cpf_raw": "87535882072",
       "regiao_origem": "RS",
       "valido": true
     },
     {
-      "cpf": "729.879.589-94",
-      "cpf_raw": "72987958994",
-      "regiao_origem": "PR, SC",
+      "cpf": "392.044.883-95",
+      "cpf_raw": "39204488395",
+      "regiao_origem": "CE, MA, PI",
       "valido": true
     },
     {
-      "cpf": "438.271.035-92",
-      "cpf_raw": "43827103592",
-      "regiao_origem": "BA, SE",
-      "valido": true
-    },
-    {
-      "cpf": "610.870.316-48",
-      "cpf_raw": "61087031648",
-      "regiao_origem": "MG",
-      "valido": true
-    },
-    {
-      "cpf": "147.017.154-68",
-      "cpf_raw": "14701715468",
+      "cpf": "694.692.514-90",
+      "cpf_raw": "69469251490",
       "regiao_origem": "AL, PB, PE, RN",
       "valido": true
     },
     {
-      "cpf": "658.571.489-01",
-      "cpf_raw": "65857148901",
+      "cpf": "589.772.459-82",
+      "cpf_raw": "58977245982",
       "regiao_origem": "PR, SC",
       "valido": true
     },
     {
-      "cpf": "658.180.585-81",
-      "cpf_raw": "65818058581",
+      "cpf": "224.605.675-61",
+      "cpf_raw": "22460567561",
       "regiao_origem": "BA, SE",
+      "valido": true
+    },
+    {
+      "cpf": "977.182.681-60",
+      "cpf_raw": "97718268160",
+      "regiao_origem": "DF, GO, MS, MT, TO",
+      "valido": true
+    },
+    {
+      "cpf": "655.594.607-53",
+      "cpf_raw": "65559460753",
+      "regiao_origem": "ES, RJ",
+      "valido": true
+    },
+    {
+      "cpf": "611.895.153-50",
+      "cpf_raw": "61189515350",
+      "regiao_origem": "CE, MA, PI",
+      "valido": true
+    },
+    {
+      "cpf": "634.679.361-64",
+      "cpf_raw": "63467936164",
+      "regiao_origem": "DF, GO, MS, MT, TO",
+      "valido": true
+    },
+    {
+      "cpf": "659.452.822-00",
+      "cpf_raw": "65945282200",
+      "regiao_origem": "AC, AM, AP, PA, RO, RR",
       "valido": true
     }
   ]
