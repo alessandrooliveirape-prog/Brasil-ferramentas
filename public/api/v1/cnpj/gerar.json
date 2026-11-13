@@ -3,69 +3,69 @@
   "fonte": "Tool Brasil - API Pública",
   "url": "https://www.toolbrasil.com.br",
   "documentacao": "https://www.toolbrasil.com.br/desenvolvedores",
-  "atualizado_em": "2026-11-12T19:07:25.198Z",
+  "atualizado_em": "2026-11-13T18:45:07.034Z",
   "tipo": "CNPJ",
   "algoritmo": "Módulo 11 Oficial da Receita Federal",
   "aviso": "Dados sintéticos gerados para testes e desenvolvimento de software conforme a LGPD.",
   "total": 10,
   "dados": [
     {
-      "cnpj": "06.151.710/0001-07",
-      "cnpj_raw": "06151710000107",
+      "cnpj": "95.004.143/0001-88",
+      "cnpj_raw": "95004143000188",
       "tipo_estabelecimento": "Matriz (0001)",
       "valido": true
     },
     {
-      "cnpj": "84.642.929/0001-04",
-      "cnpj_raw": "84642929000104",
+      "cnpj": "99.107.739/0001-64",
+      "cnpj_raw": "99107739000164",
       "tipo_estabelecimento": "Matriz (0001)",
       "valido": true
     },
     {
-      "cnpj": "91.590.279/0001-66",
-      "cnpj_raw": "91590279000166",
+      "cnpj": "94.667.953/0001-51",
+      "cnpj_raw": "94667953000151",
       "tipo_estabelecimento": "Matriz (0001)",
       "valido": true
     },
     {
-      "cnpj": "16.888.652/0001-44",
-      "cnpj_raw": "16888652000144",
+      "cnpj": "78.021.203/0001-51",
+      "cnpj_raw": "78021203000151",
       "tipo_estabelecimento": "Matriz (0001)",
       "valido": true
     },
     {
-      "cnpj": "15.374.344/0001-38",
-      "cnpj_raw": "15374344000138",
+      "cnpj": "76.610.039/0001-92",
+      "cnpj_raw": "76610039000192",
       "tipo_estabelecimento": "Matriz (0001)",
       "valido": true
     },
     {
-      "cnpj": "83.854.502/0001-07",
-      "cnpj_raw": "83854502000107",
+      "cnpj": "75.691.926/0001-70",
+      "cnpj_raw": "75691926000170",
       "tipo_estabelecimento": "Matriz (0001)",
       "valido": true
     },
     {
-      "cnpj": "69.116.527/0001-82",
-      "cnpj_raw": "69116527000182",
+      "cnpj": "46.444.810/0001-38",
+      "cnpj_raw": "46444810000138",
       "tipo_estabelecimento": "Matriz (0001)",
       "valido": true
     },
     {
-      "cnpj": "69.815.097/0001-97",
-      "cnpj_raw": "69815097000197",
+      "cnpj": "98.058.660/0001-28",
+      "cnpj_raw": "98058660000128",
       "tipo_estabelecimento": "Matriz (0001)",
       "valido": true
     },
     {
-      "cnpj": "76.613.377/0001-88",
-      "cnpj_raw": "76613377000188",
+      "cnpj": "04.995.516/0001-74",
+      "cnpj_raw": "04995516000174",
       "tipo_estabelecimento": "Matriz (0001)",
       "valido": true
     },
     {
-      "cnpj": "27.989.111/0001-29",
-      "cnpj_raw": "27989111000129",
+      "cnpj": "28.391.095/0001-30",
+      "cnpj_raw": "28391095000130",
       "tipo_estabelecimento": "Matriz (0001)",
       "valido": true
     }
