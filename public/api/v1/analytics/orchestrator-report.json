@@ -1,6 +1,6 @@
 {
   "site": "https://www.toolbrasil.com.br",
-  "timestamp": "2026-11-13T18:45:09.617Z",
+  "timestamp": "2026-11-14T17:18:14.201Z",
   "overallScore": 96,
   "overallStatus": "WARNING",
   "subagents": [
@@ -17,7 +17,7 @@
           "status": 200,
           "ok": true,
           "count": 241,
-          "latencyMs": 606
+          "latencyMs": 540
         },
         "robots": {
           "status": 200,
@@ -141,12 +141,12 @@
       "status": "HEALTHY",
       "score": 15,
       "maxScore": 15,
-      "summary": "Vercel Edge CDN 34ms (TTFB) | widget.js, sw.js e Security Headers 100% nominais.",
+      "summary": "Vercel Edge CDN 10ms (TTFB) | widget.js, sw.js e Security Headers 100% nominais.",
       "details": {
         "edge": {
           "ok": true,
           "status": 200,
-          "ttfbMs": 34,
+          "ttfbMs": 10,
           "securityHeaders": {
             "xContentType": "nosniff",
             "referrerPolicy": "strict-origin-when-cross-origin"
@@ -350,5 +350,5 @@
     }
   ],
   "healingSummary": [],
-  "executionTimeMs": 5556
+  "executionTimeMs": 3234
 }
