@@ -22,18 +22,18 @@
 
     { "source": "/programatico/gerar-cpf-valido", "destination": "/geradores/gerador-de-cpf", "permanent": true },
     { "source": "/programatico/gerar-cnpj-valido", "destination": "/geradores/gerador-de-cnpj", "permanent": true },
-    { "source": "/programatico/calcular-rescisao-clt", "destination": "/calculadoras/rescisao-trabalhista", "permanent": true },
-    { "source": "/programatico/calcular-ferias-proporcionais", "destination": "/calculadoras/ferias-completas", "permanent": true },
-    { "source": "/programatico/calcular-salario-liquido", "destination": "/calculadoras/salario-liquido", "permanent": true },
-    { "source": "/programatico/calcular-juros-compostos", "destination": "/calculadoras/juros-compostos", "permanent": true },
-    { "source": "/programatico/calcular-decimo-terceiro", "destination": "/calculadoras/decimo-terceiro", "permanent": true },
-    { "source": "/programatico/calcular-inss-2026", "destination": "/calculadoras/inss-progressivo", "permanent": true },
-    { "source": "/programatico/calcular-irrf-2026", "destination": "/calculadoras/irrf-mensal", "permanent": true },
-    { "source": "/programatico/gerador-senhas-seguras", "destination": "/geradores/gerador-de-senhas", "permanent": true },
-    { "source": "/programatico/converter-dolar-real", "destination": "/conversores/dolar-para-real", "permanent": true },
-    { "source": "/programatico/comprimir-imagens-png", "destination": "/utilitarios/compressor-de-imagem", "permanent": true },
-    { "source": "/programatico/descobrir-meu-ip", "destination": "/ferramentas-web/meu-ip-publico", "permanent": true },
-    { "source": "/programatico/testar-velocidade-conexao", "destination": "/ferramentas-web/teste-de-velocidade", "permanent": true }
+    { "source": "/programatico/calcular-rescisao-clt", "destination": "/calculadoras/calculadora-de-rescisao-trabalhista", "permanent": true },
+    { "source": "/programatico/calcular-ferias-proporcionais", "destination": "/calculadoras/calculadora-de-ferias-proporcionais", "permanent": true },
+    { "source": "/programatico/calcular-salario-liquido", "destination": "/calculadoras/calculadora-de-salario-liquido", "permanent": true },
+    { "source": "/programatico/calcular-juros-compostos", "destination": "/calculadoras/calculadora-de-juros-compostos", "permanent": true },
+    { "source": "/programatico/calcular-decimo-terceiro", "destination": "/calculadoras/calculadora-de-decimo-terceiro", "permanent": true },
+    { "source": "/programatico/calcular-inss-2026", "destination": "/calculadoras/calculadora-desconto-inss", "permanent": true },
+    { "source": "/programatico/calcular-irrf-2026", "destination": "/calculadoras/calculadora-de-imposto-de-renda", "permanent": true },
+    { "source": "/programatico/gerador-senhas-seguras", "destination": "/geradores/gerador-de-senha-segura", "permanent": true },
+    { "source": "/programatico/converter-dolar-real", "destination": "/conversores/converter-real-para-dolar", "permanent": true },
+    { "source": "/programatico/comprimir-imagens-png", "destination": "/utilitarios/compressor-de-imagens-online", "permanent": true },
+    { "source": "/programatico/descobrir-meu-ip", "destination": "/ferramentas-web/qual-o-meu-ip", "permanent": true },
+    { "source": "/programatico/testar-velocidade-conexao", "destination": "/ferramentas-web/teste-de-ping-online", "permanent": true }
   ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }

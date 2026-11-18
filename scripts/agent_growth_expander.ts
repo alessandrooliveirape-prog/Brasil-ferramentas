@@ -14,7 +14,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 import { PROGRAMMATIC_PAGES, TOOLS } from '../src/toolsData.ts';
-import { EXTRA_PROGRAMMATIC_PAGES } from '../src/programmaticExtra.ts';
+import { EXTRA_PROGRAMMATIC_PAGES, isNoIndexProgrammaticId } from '../src/programmaticExtra.ts';
+import { EDITORIAL_GUIDES } from '../src/guidesData.ts';
 
 const SITE_URL = 'https://www.toolbrasil.com.br';
 const HOST = 'www.toolbrasil.com.br';
@@ -74,20 +75,28 @@ export async function runGrowthExpander(options: { skipHeal?: boolean; dryRun?: 
   let selfHealed = false;
 
   for (const slug of progSlugs) {
+    const isNoIndex = isNoIndexProgrammaticId(slug);
     const expectedUrl = `${SITE_URL}/programatico/${slug}`;
-    if (!sitemapContent.includes(`<loc>${expectedUrl}</loc>`)) {
+    if (!isNoIndex && !sitemapContent.includes(`<loc>${expectedUrl}</loc>`)) {
       missingSitemapUrls.push(expectedUrl);
     }
 
     const htmlPath = path.join(distDir, 'programatico', slug, 'index.html');
     if (!fs.existsSync(htmlPath)) {
       missingSsgPages.push(slug);
-    } else {
+    } else if (!isNoIndex) {
       const html = fs.readFileSync(htmlPath, 'utf-8');
       const words = countWords(html);
-      if (words < 220) {
+      if (words < 600) {
         thinSsgPages.push(`${slug} (${words}w)`);
       }
+    }
+  }
+
+  for (const guide of EDITORIAL_GUIDES) {
+    const guideUrl = `${SITE_URL}/guias/${guide.slug}`;
+    if (!sitemapContent.includes(`<loc>${guideUrl}</loc>`)) {
+      missingSitemapUrls.push(guideUrl);
     }
   }
 
@@ -112,9 +121,13 @@ export async function runGrowthExpander(options: { skipHeal?: boolean; dryRun?: 
   const sitemapMatches = finalSitemap.match(/<loc>/g);
   const totalSitemapUrls = sitemapMatches ? sitemapMatches.length : 0;
 
-  // Submeter as URLs de expansão para o IndexNow se não for dryRun
+  // Submeter apenas URLs indexáveis estratégicas (/guias + programáticas canônicas) para o IndexNow
   let indexNowSubmittedCount = 0;
-  const expansionUrls = Object.keys(EXTRA_PROGRAMMATIC_PAGES).map(s => `${SITE_URL}/programatico/${s}`);
+  const canonicalProgUrls = progSlugs
+    .filter(s => !isNoIndexProgrammaticId(s))
+    .map(s => `${SITE_URL}/programatico/${s}`);
+  const guideUrls = EDITORIAL_GUIDES.map(g => `${SITE_URL}/guias/${g.slug}`);
+  const expansionUrls = [...canonicalProgUrls, `${SITE_URL}/guias`, ...guideUrls];
 
   if (!options.dryRun && expansionUrls.length > 0) {
     try {

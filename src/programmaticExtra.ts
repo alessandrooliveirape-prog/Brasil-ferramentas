@@ -423,3 +423,25 @@ export const EXTRA_PROGRAMMATIC_PAGES: { [key: string]: PageEntry } = {
     cluster: 'tabela-trabalhista'
   }
 };
+
+/**
+ * Rotas programáticas replicadas por UF/ano/banco ou contagens regressivas efêmeras:
+ * mantidas acessíveis ao usuário via navegação interna, mas isoladas com noindex, follow
+ * e excluídas do sitemap.xml para evitar indexação de páginas repetitivas (Low Value Content).
+ */
+export const NOINDEX_COUNTDOWN_IDS = [
+  'quantos-dias-faltam-para-o-natal',
+  'quantos-dias-faltam-para-2027',
+  'quantos-dias-faltam-para-o-carnaval',
+] as const;
+
+export const NOINDEX_PROGRAMMATIC_IDS: ReadonlySet<string> = new Set<string>([
+  ...Object.keys(EXTRA_PROGRAMMATIC_PAGES),
+  ...NOINDEX_COUNTDOWN_IDS,
+]);
+
+export function isNoIndexProgrammaticId(id?: string | null): boolean {
+  if (!id) return false;
+  return NOINDEX_PROGRAMMATIC_IDS.has(id);
+}
+

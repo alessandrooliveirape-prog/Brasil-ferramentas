@@ -1,0 +1,41 @@
+name: Autonomous Site Health & SEO Audit (Tool Brasil)
+
+on:
+  schedule:
+    # Diariamente às 06:30 UTC (03:30 Horário de Brasília)
+    - cron: '30 6 * * *'
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  health-audit:
+    name: Typecheck, Build SSG & AdSense Compliance Audit
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Verificação TypeScript
+        run: npm run lint
+
+      - name: Executar Agente Autônomo de Saúde e Build SSG
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: npm run agent:health

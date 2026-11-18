@@ -11,7 +11,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import { CATEGORIES, TOOLS, PROGRAMMATIC_PAGES } from './src/toolsData.ts';
-import { EXTRA_PROGRAMMATIC_PAGES } from './src/programmaticExtra.ts';
+import { EXTRA_PROGRAMMATIC_PAGES, isNoIndexProgrammaticId } from './src/programmaticExtra.ts';
+import { EDITORIAL_GUIDES } from './src/guidesData.ts';
 import { generateAllApiData } from './scripts/generate-api-data.ts';
 
 const ALL_PROGRAMMATIC_PAGES = { ...PROGRAMMATIC_PAGES, ...EXTRA_PROGRAMMATIC_PAGES };
@@ -72,6 +73,21 @@ function run() {
     fs.writeFileSync(path.join(progDir, 'index.html'), progHtml, 'utf-8');
   });
 
+  // 4.1 Gerar Hub e Artigos de Guias Práticos (/guias e /guias/:slug)
+  console.log(' - Pré-renderizando Central de Guias (/guias)');
+  const guidesHubHtml = generateGuidesHubHtml(cleanTemplate);
+  const guidesDir = path.join(DIST_DIR, 'guias');
+  fs.mkdirSync(guidesDir, { recursive: true });
+  fs.writeFileSync(path.join(guidesDir, 'index.html'), guidesHubHtml, 'utf-8');
+
+  EDITORIAL_GUIDES.forEach(guide => {
+    console.log(` - Pré-renderizando guia: /guias/${guide.slug}`);
+    const guideHtml = generateGuideArticleHtml(cleanTemplate, guide);
+    const guideDir = path.join(guidesDir, guide.slug);
+    fs.mkdirSync(guideDir, { recursive: true });
+    fs.writeFileSync(path.join(guideDir, 'index.html'), guideHtml, 'utf-8');
+  });
+
   // 5. Gerar páginas Institucionais exclusivamente nas rotas canônicas (aliases redirecionam via 301 no vercel.json)
   const institutionalPageIds = ['sobre', 'contato', 'privacidade', 'termos', 'cookies', 'transparencia-adsense', 'anunciantes'];
   const canonicalDirMap: { [key: string]: string } = {
@@ -93,16 +109,17 @@ function run() {
   });
 
   // 5.1 Gerar página de Desenvolvedores e API
-  console.log(' - Pré-renderizando: Desenvolvedores & API (/desenvolvedores e /api)');
-  const devHtml = generateDeveloperHtml(cleanTemplate);
+  console.log(' - Pré-renderizando: Desenvolvedores & API (/desenvolvedores e /api [noindex])');
+  const devHtml = generateDeveloperHtml(cleanTemplate, 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1');
   const devDir = path.join(DIST_DIR, 'desenvolvedores');
   fs.mkdirSync(devDir, { recursive: true });
   fs.writeFileSync(path.join(devDir, 'index.html'), devHtml, 'utf-8');
 
-  // Rota alias /api
+  // Rota alias /api isolada com noindex, follow para evitar duplicação com /desenvolvedores
+  const apiHtmlNoIndex = generateDeveloperHtml(cleanTemplate, 'noindex, follow');
   const apiDir = path.join(DIST_DIR, 'api');
   fs.mkdirSync(apiDir, { recursive: true });
-  fs.writeFileSync(path.join(apiDir, 'index.html'), devHtml, 'utf-8');
+  fs.writeFileSync(path.join(apiDir, 'index.html'), apiHtmlNoIndex, 'utf-8');
 
   // 6. Gerar Sitemap.xml unificado e sincronizado
   console.log(' - Gerando sitemap.xml completo com rotas canônicas...');
@@ -144,9 +161,17 @@ function generateFullSitemapXml(instPages: string[]): string {
     xml += `  <url>\n    <loc>${host}/${tool.categoryId}/${tool.slug}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n`;
   });
 
-  // Páginas Programáticas Legítimas
-  Object.keys(ALL_PROGRAMMATIC_PAGES).forEach(id => {
-    xml += `  <url>\n    <loc>${host}/programatico/${id}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+  // Páginas Programáticas Canônicas (exclui páginas replicadas/efêmeras marcadas com noindex)
+  Object.keys(ALL_PROGRAMMATIC_PAGES)
+    .filter(id => !isNoIndexProgrammaticId(id))
+    .forEach(id => {
+      xml += `  <url>\n    <loc>${host}/programatico/${id}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.75</priority>\n  </url>\n`;
+    });
+
+  // Hub e Guias Práticos Editoriais (/guias + 12 artigos)
+  xml += `  <url>\n    <loc>${host}/guias</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.85</priority>\n  </url>\n`;
+  EDITORIAL_GUIDES.forEach(guide => {
+    xml += `  <url>\n    <loc>${host}/guias/${guide.slug}</loc>\n    <lastmod>${guide.updatedAt || today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.8</priority>\n  </url>\n`;
   });
 
   // Institucionais - URLs Canônicas de Primeiro Nível
@@ -277,8 +302,23 @@ function buildSchemaTags(crumbs: { name: string; path: string }[], toolObj?: any
 /**
  * Utilitário para substituir metadados e injetar corpo no HTML
  */
-function buildHtmlPage(template: string, title: string, desc: string, canonicalUrl: string, bodyContent: string, schemaJsonLd?: string): string {
+function buildHtmlPage(
+  template: string,
+  title: string,
+  desc: string,
+  canonicalUrl: string,
+  bodyContent: string,
+  schemaJsonLd?: string,
+  robotsMeta: string = 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
+): string {
   let html = template;
+
+  // Substitui Robots Meta Directive (e injeta caso não exista no template)
+  if (/<meta name="robots" content=".*?" \/>/i.test(html)) {
+    html = html.replace(/<meta name="robots" content=".*?" \/>/gi, `<meta name="robots" content="${robotsMeta}" />`);
+  } else {
+    html = html.replace('</head>', `<meta name="robots" content="${robotsMeta}" />\n</head>`);
+  }
 
   // Substitui Title
   html = html.replace(/<title>.*?<\/title>/g, `<title>${title}</title>`);
@@ -328,6 +368,7 @@ function buildHtmlPage(template: string, title: string, desc: string, canonicalU
             <a href="/geradores" class="hover:text-emerald-700 transition-colors py-1">Geradores</a>
             <a href="/ferramentas-web" class="hover:text-emerald-700 transition-colors py-1">Ferramentas Web</a>
             <a href="/utilitarios" class="hover:text-emerald-700 transition-colors py-1">Utilitários</a>
+            <a href="/guias" class="hover:text-emerald-700 transition-colors py-1">Guias</a>
             <a href="/sobre" class="hover:text-emerald-700 transition-colors py-1">Sobre</a>
             <a href="/contato" class="hover:text-emerald-700 transition-colors py-1">Contato</a>
           </nav>
@@ -350,11 +391,15 @@ function buildHtmlPage(template: string, title: string, desc: string, canonicalU
                   </span>
                 </a>
               `).join('')}
+              <a href="/guias" class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold text-emerald-800 bg-emerald-50 hover:bg-emerald-100">
+                <span>Guias Práticos</span>
+                <span class="text-[9.5px] bg-white text-emerald-700 font-extrabold rounded px-1.5 py-0.5">${EDITORIAL_GUIDES.length}</span>
+              </a>
             </nav>
           </div>
 
           <div class="bg-white p-4 rounded-xl border border-slate-300 shadow-xs space-y-2 text-xs">
-            <span class="text-[10px] font-extrabold text-slate-900 uppercase flex items-center gap-1.5">Conteúdo Programático</span>
+            <span class="text-[10px] font-extrabold text-slate-900 uppercase flex items-center gap-1.5">Tabelas Oficiais</span>
             <div class="grid grid-cols-1 gap-1">
               <a href="/programatico/ddd-brasil" class="text-slate-700 hover:text-emerald-600 transition-colors font-mono font-semibold">▸ DDD Brasil</a>
               <a href="/programatico/cep-brasil" class="text-slate-700 hover:text-emerald-600 transition-colors font-mono font-semibold">▸ CEP Correios</a>
@@ -376,6 +421,7 @@ function buildHtmlPage(template: string, title: string, desc: string, canonicalU
       <footer class="bg-white border-t border-slate-200 mt-auto py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-slate-500 space-y-4">
           <div class="flex flex-wrap justify-center gap-4">
+            <a href="/guias" class="hover:underline font-bold text-emerald-700">Guias Práticos (2026)</a>
             <a href="/sobre" class="hover:underline font-bold text-slate-700">Sobre a Tool Brasil</a>
             <a href="/contato" class="hover:underline font-bold text-slate-700">Fale Conosco / Suporte</a>
             <a href="/politica-de-privacidade" class="hover:underline font-bold text-slate-700">Política de Privacidade (LGPD)</a>
@@ -408,8 +454,8 @@ function generateHomeHtml(template: string): string {
     <div class="space-y-8">
       <div class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-2xl p-8 text-white space-y-4 shadow-lg">
         <h1 class="text-3xl font-extrabold tracking-tight">Ferramentas Online Gratuitas para o seu Dia a Dia</h1>
-        <p class="text-emerald-100 max-w-xl">
-          Sua central de utilitários rápidos e precisos para cálculos trabalhistas, segurança de dados, conversores de medidas e diagnósticos web. 100% grátis e sem cadastro.
+        <p class="text-emerald-100 max-w-2xl leading-relaxed">
+          Sua central brasileira de utilitários rápidos e precisos para cálculos trabalhistas e previdenciários (CLT, INSS e IRRF 2026), simulações de financiamento e juros compostos, segurança de dados com processamento local, conversores de medidas em tempo real e diagnósticos técnicos web. Tudo 100% grátis, imediato e sem exigência de cadastro.
         </p>
       </div>
 
@@ -418,23 +464,31 @@ function generateHomeHtml(template: string): string {
           <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
             ⭐ Ferramentas em Destaque
           </h2>
-          <p class="text-xs text-slate-600">Utilitários selecionados de alta utilidade:</p>
+          <p class="text-xs text-slate-600">Utilitários selecionados de alta utilidade para trabalhadores, desenvolvedores e finanças pessoais:</p>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <a href="/calculadoras/calculadora-de-juros-compostos" class="p-3 bg-slate-50 border rounded-xl hover:border-emerald-600 transition block">
               <span class="font-bold text-xs text-slate-900 block">Juros Compostos</span>
-              <span class="text-[10px] text-slate-500 block">Investimentos e projeção de riqueza.</span>
+              <span class="text-[10px] text-slate-500 block">Investimentos e projeção de riqueza com aportes.</span>
+            </a>
+            <a href="/calculadoras/calculadora-de-rescisao-trabalhista" class="p-3 bg-slate-50 border rounded-xl hover:border-emerald-600 transition block">
+              <span class="font-bold text-xs text-slate-900 block">Rescisão CLT 2026</span>
+              <span class="text-[10px] text-slate-500 block">Verbas rescisórias, aviso proporcional e FGTS.</span>
             </a>
             <a href="/geradores/gerador-de-cpf" class="p-3 bg-slate-50 border rounded-xl hover:border-emerald-600 transition block">
               <span class="font-bold text-xs text-slate-900 block">Gerador de CPF</span>
-              <span class="text-[10px] text-slate-500 block">Geração de documentos para testes de software.</span>
+              <span class="text-[10px] text-slate-500 block">Documentos sintéticos Módulo 11 para QA.</span>
             </a>
             <a href="/conversores/converter-real-para-dolar" class="p-3 bg-slate-50 border rounded-xl hover:border-emerald-600 transition block">
               <span class="font-bold text-xs text-slate-900 block">Real para Dólar</span>
-              <span class="text-[10px] text-slate-500 block">Conversão com cotação comercial atualizada.</span>
+              <span class="text-[10px] text-slate-500 block">Conversão cambial com cotação comercial atualizada.</span>
             </a>
             <a href="/geradores/gerador-de-senha-segura" class="p-3 bg-slate-50 border rounded-xl hover:border-emerald-600 transition block">
               <span class="font-bold text-xs text-slate-900 block">Senha Segura</span>
-              <span class="text-[10px] text-slate-500 block">Geração de senhas fortes com criptografia.</span>
+              <span class="text-[10px] text-slate-500 block">Geração criptográfica local via Web Crypto API.</span>
+            </a>
+            <a href="/utilitarios/compressor-de-imagens-online" class="p-3 bg-slate-50 border rounded-xl hover:border-emerald-600 transition block">
+              <span class="font-bold text-xs text-slate-900 block">Compressor de Imagens</span>
+              <span class="text-[10px] text-slate-500 block">Otimize JPG, PNG e WebP no navegador sem upload.</span>
             </a>
           </div>
         </div>
@@ -444,12 +498,67 @@ function generateHomeHtml(template: string): string {
             💡 Por que utilizar a Tool Brasil?
           </h2>
           <div class="space-y-3 text-xs text-slate-600 leading-relaxed">
-            <p><strong>1. Processamento Local (Client-Side):</strong> Suas informações privadas como documentos, dados financeiros e senhas são processados estritamente em seu navegador. Nós nunca enviamos ou salvamos seus dados confidenciais em servidores externos.</p>
-            <p><strong>2. Interface Otimizada:</strong> Desenvolvido sob rigorosos princípios de web design para carregar de forma instantânea tanto em dispositivos móveis quanto em computadores de mesa.</p>
-            <p><strong>3. 100% Gratuito:</strong> Sem assinaturas ocultas, taxas ou limites de utilização. O portal é mantido exclusivamente através de publicidade contextual transparente via Google AdSense.</p>
+            <p><strong>1. Processamento Local (Client-Side & LGPD):</strong> Documentos, dados financeiros, textos e fotografias são processados estritamente na memória do seu navegador. Nunca armazenamos dados sigilosos em servidores externos.</p>
+            <p><strong>2. Metodologia Oficial Vigente em 2026:</strong> Nossos módulos trabalhistas acompanham a tabela progressiva do INSS (piso de R$ 1.518,00 e teto de R$ 8.157,41), alíquotas e desconto simplificado do IRRF, Lei nº 12.506/2011 e padrões técnicos do Banco Central e Receita Federal.</p>
+            <p><strong>3. Performance Instantânea e Zero Barreiras:</strong> Desenvolvido sob boas práticas modernas de web para carregar em milissegundos em celulares e desktops, 100% gratuito e mantido de maneira transparente via Google AdSense.</p>
           </div>
         </div>
       </div>
+
+      <article class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-6 text-slate-800">
+        <div class="flex items-center justify-between flex-wrap gap-2 border-b border-slate-200 pb-4">
+          <div>
+            <h2 class="text-xl font-black text-slate-900">Ecossistema Completo: 5 Suítes Especializadas e Central de Guias</h2>
+            <p class="text-xs text-slate-600 mt-1">Conheça como cada área da Tool Brasil apoia rotinas trabalhistas, financeiras, educacionais e de engenharia de software.</p>
+          </div>
+          <a href="/guias" class="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition">Explorar ${EDITORIAL_GUIDES.length} Guias Práticos →</a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-600 leading-relaxed">
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+            <h3 class="font-bold text-slate-900 text-sm">Calculadoras CLT & Finanças</h3>
+            <p>Simule férias proporcionais, 13º salário, horas extras a 50% e 100%, adicional noturno urbano e rural, seguro-desemprego, PIS/PASEP, comparativo CLT vs. PJ no Simples Nacional, financiamentos SAC e Price e juros compostos com precisão centavo a centavo.</p>
+            <a href="/calculadoras" class="text-emerald-700 font-bold hover:underline inline-block">Abrir Calculadoras →</a>
+          </div>
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+            <h3 class="font-bold text-slate-900 text-sm">Geradores Sintéticos & PIX</h3>
+            <p>Gere e valide CPFs, CNPJs e títulos de eleitor para homologação em ambientes de QA, além de contratos de locação pela Lei do Inquilinato, cartas formais de demissão, declarações dos Correios e QR Codes PIX estáticos no padrão EMVCo do Banco Central.</p>
+            <a href="/geradores" class="text-emerald-700 font-bold hover:underline inline-block">Abrir Geradores →</a>
+          </div>
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+            <h3 className="font-bold text-slate-900 text-sm">Redes, Conversores & Mídia</h3>
+            <p>Inspecione registros DNS (A, AAAA, MX, TXT), certificados SSL/TLS, headers HTTP, WHOIS e meu IP público; converta moedas, temperaturas, unidades imperiais e megabytes; ou comprima imagens WebP/PNG/JPG e gere PDFs em A4 localmente no navegador.</p>
+            <a href="/ferramentas-web" class="text-emerald-700 font-bold hover:underline inline-block">Abrir Ferramentas Web →</a>
+          </div>
+        </div>
+
+        <div class="space-y-3 pt-2 border-t border-slate-200">
+          <h3 class="text-base font-black text-slate-900">Guias Editoriais Mais Procurados de 2026</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            ${EDITORIAL_GUIDES.slice(0, 6).map(g => `
+              <a href="/guias/${g.slug}" class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 hover:border-emerald-600 transition block space-y-1">
+                <span class="text-[10px] font-bold uppercase text-emerald-700">${g.category}</span>
+                <span class="font-bold text-slate-900 block">${g.title}</span>
+                <span class="text-[11px] text-slate-600 block">${g.summary}</span>
+              </a>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="space-y-3 pt-2 border-t border-slate-200 text-xs text-slate-600 leading-relaxed">
+          <h3 class="text-sm font-bold text-slate-900">Perguntas Frequentes sobre a Tool Brasil</h3>
+          <dl class="space-y-2.5">
+            <div>
+              <dt class="font-bold text-slate-800">Os dados inseridos nas calculadoras e geradores ficam salvos em servidores?</dt>
+              <dd>Não. Praticamente toda a computação ocorre no dispositivo do próprio visitante via JavaScript local, sem armazenamento de salários, textos, senhas ou imagens em nuvem.</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">As tabelas do INSS, IRRF e salário mínimo estão atualizadas para 2026?</dt>
+              <dd>Sim. Todas as faixas progressivas, parcelas a deduzir, desconto simplificado mensal e endpoints da API Pública JSON refletem as referências vigentes de 2026.</dd>
+            </div>
+          </dl>
+        </div>
+      </article>
     </div>
   `;
 
@@ -515,16 +624,35 @@ function getCategoryEditorialHtml(cat: any): string {
         </h2>
         <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
           <p>
-            O módulo de <strong>Conversores da Tool Brasil</strong> foi desenvolvido para eliminar erros manuais em transformações métricas, financeiras, de temperatura e de armazenamento digital. Nossos utilitários utilizam os padrões estritos do Sistema Internacional de Unidades (SI) e especificações da ISO.
+            O módulo de <strong>Conversores da Tool Brasil</strong> foi desenvolvido para eliminar erros manuais em transformações métricas, financeiras, de temperatura e de armazenamento digital. Nossos utilitários utilizam os padrões estritos do Sistema Internacional de Unidades (SI) e especificações da ISO, atendendo desde cálculos escolares e receitas culinárias até especificações de engenharia civil, logística internacional e administração de infraestrutura de TI.
           </p>
-          <h3 class="text-sm font-bold text-slate-800 pt-2">Cotações Comerciais em Tempo Real</h3>
+          <h3 class="text-sm font-bold text-slate-800 pt-2">Cotações Comerciais em Tempo Real e Simulações Cambiais</h3>
           <p>
-            Os conversores cambiais (Dólar, Euro, Libra Esterlina, Peso Argentino e Bitcoin) atualizam suas taxas de câmbio automaticamente com base em feeds de cotação de mercado, permitindo simular compras internacionais, remessas e viagens com precisão instantânea.
+            Os conversores cambiais (Dólar Americano USD, Euro EUR, Libra Esterlina GBP, Peso Argentino ARS e Bitcoin BTC) atualizam suas taxas automaticamente com base em feeds de cotação comercial de mercado, permitindo simular compras internacionais, remessas financeiras, orçamentos de importação e viagens ao exterior com clareza imediata. Além da cotação pura PTAX/comercial, você pode ajustar manualmente a taxa de câmbio informada pela sua corretora ou banco para incluir spread cambial e IOF em simulações personalizadas.
           </p>
-          <h3 class="text-sm font-bold text-slate-800 pt-2">Padrões Métricos Internacionais</h3>
+          <h3 class="text-sm font-bold text-slate-800 pt-2">Padrões Métricos Internacionais, Tempo e Armazenamento Digital</h3>
           <p>
-            Conversões de comprimento (metros para pés, polegadas para centímetros), peso (quilos para libras) e dados digitais (MB para GB) utilizam fatores de precisão estendida, garantindo confiabilidade para engenharia, logística e informática.
+            Conversões de comprimento (metros para pés, polegadas para centímetros, milhas para quilômetros), massa (quilos para libras), velocidade (km/h para mph), temperatura (°C para °F) e dados digitais (KB para MB e MB para GB) aplicam fatores de precisão estendida em ponto flutuante. Também oferecemos conversores de algarismos romanos, conversor de fusos horários ancorado no Horário Oficial de Brasília (UTC-3) e acessibilidade com leitura de texto em voz direta via Web Speech API do navegador.
           </p>
+          <h3 class="text-sm font-bold text-slate-800 pt-2">Tabela Rápida de Fatores de Conversão mais Consultados</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse border border-slate-200 text-[11px]">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="py-2 px-3">Conversão</th>
+                  <th class="py-2 px-3">Fator Exato / Fórmula</th>
+                  <th class="py-2 px-3">Exemplo Prático</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr><td class="py-1.5 px-3 font-bold text-slate-900">Polegadas para Centímetros</td><td class="py-1.5 px-3 font-mono">1 in = 2,54 cm</td><td class="py-1.5 px-3">Tela 55" = 139,7 cm diagonais</td></tr>
+                <tr><td class="py-1.5 px-3 font-bold text-slate-900">Metros para Pés</td><td class="py-1.5 px-3 font-mono">1 m = 3,28084 ft</td><td class="py-1.5 px-3">10 m = 32,81 pés</td></tr>
+                <tr><td class="py-1.5 px-3 font-bold text-slate-900">Quilos para Libras</td><td class="py-1.5 px-3 font-mono">1 kg = 2,20462 lb</td><td class="py-1.5 px-3">23 kg bagagem = 50,71 lb</td></tr>
+                <tr><td class="py-1.5 px-3 font-bold text-slate-900">Celsius para Fahrenheit</td><td class="py-1.5 px-3 font-mono">(°C × 1,8) + 32</td><td class="py-1.5 px-3">180 °C forno = 356 °F</td></tr>
+                <tr><td class="py-1.5 px-3 font-bold text-slate-900">Megabytes para Gigabytes</td><td class="py-1.5 px-3 font-mono">÷ 1.000 (SI) ou ÷ 1.024 (Binário)</td><td class="py-1.5 px-3">10.240 MiB = 10 GiB</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
         <hr class="border-slate-200" />
@@ -534,11 +662,15 @@ function getCategoryEditorialHtml(cat: any): string {
           <dl class="space-y-3 text-xs text-slate-600 leading-relaxed">
             <div>
               <dt class="font-bold text-slate-800">As cotações de moedas utilizam valores comerciais ou turismo?</dt>
-              <dd class="mt-0.5">Utilizamos cotações comerciais de mercado (bid/ask). Para compras com cartão de crédito internacional, lembre-se de considerar o spread bancário e a incidência de IOF.</dd>
+              <dd class="mt-0.5">Utilizamos cotações comerciais de mercado (bid/ask). Para compras com cartão de crédito internacional ou casas de câmbio físicas, considere o spread cambial e a alíquota vigente de IOF diretamente no campo de taxa editável.</dd>
             </div>
             <div>
               <dt class="font-bold text-slate-800">Qual a diferença entre a conversão decimal e binária de gigabytes (GB)?</dt>
-              <dd class="mt-0.5">No padrão decimal (SI), 1 GB = 1.000 MB. No padrão binário computacional (Gibibyte/GiB), 1 GiB = 1.024 MiB. Nossos conversores discriminam ambos os padrões para sua comodidade.</dd>
+              <dd class="mt-0.5">No padrão decimal adotado por fabricantes de SSDs e operadoras (SI), 1 GB equivale a 1.000 MB. No padrão binário usado por sistemas operacionais (Gibibyte/GiB), 1 GiB corresponde a 1.024 MiB. Nossos conversores detalham ambos os valores.</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">Os conversores funcionam em celulares offline ou redes móveis lentas?</dt>
+              <dd class="mt-0.5">Sim. Todas as conversões matemáticas de medidas, temperaturas, velocidades e unidades de tempo executam integralmente no navegador sem depender de chamadas a servidores externos.</dd>
             </div>
           </dl>
         </div>
@@ -589,15 +721,19 @@ function getCategoryEditorialHtml(cat: any): string {
     return `
       <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-6 text-slate-800">
         <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-          <span>🌐</span> Central de Ferramentas Web, Redes e Diagnósticos Online
+          <span>🌐</span> Central de Ferramentas Web, Redes, SEO e Diagnósticos Online
         </h2>
         <div class="space-y-4 text-xs text-slate-600 leading-relaxed">
           <p>
-            A categoria de <strong>Ferramentas Web da Tool Brasil</strong> disponibiliza utilitários ágeis para inspeção de conectividade, diagnóstico de endereços IP públicos, verificação de portas de rede e análise de cabeçalhos HTTP.
+            A categoria de <strong>Ferramentas Web da Tool Brasil</strong> disponibiliza um conjunto completo de utilitários para engenheiros de software, administradores de sistemas (SRE), analistas de SEO técnico e equipes de infraestrutura diagnosticarem conectividade, resolução DNS, segurança TLS/SSL, cabeçalhos HTTP e integridade de cargas de dados JSON e URLs diretamente no navegador.
           </p>
-          <h3 class="text-sm font-bold text-slate-800 pt-2">Diagnóstico Instantâneo sem Instalação</h3>
+          <h3 class="text-sm font-bold text-slate-800 pt-2">Inspeção DNS, Certificados SSL/TLS, WHOIS e Rede TCP/IP</h3>
           <p>
-            Nossas ferramentas de rede operam diretamente no navegador, permitindo a webmasters, desenvolvedores e profissionais de suporte identificar falhas de resolução DNS, verificar portas de serviços essenciais (HTTP, HTTPS, SSH, DNS) e testar integridade de conexões.
+            Durante migrações de servidores, criação de novas aplicações web ou investigação de incidentes de disponibilidade, verificar a propagação de registros A, AAAA, CNAME, MX e TXT (incluindo SPF e DMARC) evita indisponibilidades prolongadas e falhas de entrega de e-mail transacional. Complementamos essa análise com consultor de certificado SSL/TLS (verificação de validade e autoridade certificadora), verificação de status Up/Down em tempo real, leitura de cabeçalhos HTTP (HSTS, Cache-Control, CORS e redirects), localizador ASN/GeoIP e consulta WHOIS de titularidade de domínios nacionais e internacionais.
+          </p>
+          <h3 class="text-sm font-bold text-slate-800 pt-2">Formatação e Otimização de Código para Desenvolvedores</h3>
+          <p>
+            Além de inspeção de infraestrutura, a suíte reúne utilitários instantâneos client-side para formatar e validar payloads JSON complexos (JSON Formatter / Beautifier), codificar e decodificar strings em URLs com suporte Unicode (percent-encoding), e minificar arquivos CSS e JavaScript reduzindo bytes transferidos e acelerando métricas Core Web Vitals como LCP e INP. Para recomendações avançadas de segurança web, confira nosso <a href="/guias/auditoria-tecnica-dns-ssl-headers-http-seguranca-sites" class="font-bold text-emerald-700 hover:underline">Guia de Auditoria Técnica DNS, SSL e Headers HTTP</a>.
           </p>
         </div>
 
@@ -607,12 +743,16 @@ function getCategoryEditorialHtml(cat: any): string {
           <h3 class="text-sm font-bold text-slate-900">Perguntas Frequentes sobre Ferramentas Web</h3>
           <dl class="space-y-3 text-xs text-slate-600 leading-relaxed">
             <div>
-              <dt class="font-bold text-slate-800">Como funciona a detecção do Meu IP?</dt>
-              <dd class="mt-0.5">A ferramenta detecta seu endereço IPv4 ou IPv6 público visível na internet, identificando também sua cidade aproximada, estado e provedor de internet (ISP).</dd>
+              <dt class="font-bold text-slate-800">Como funciona a detecção do Meu IP público (IPv4 / IPv6)?</dt>
+              <dd class="mt-0.5">A ferramenta consulta o endereço IPv4 ou IPv6 visível na internet pública pela sua conexão atual, identificando cidade aproximada, estado, fuso horário, código ASN e provedor de internet (ISP) sem salvar registros históricos.</dd>
             </div>
             <div>
-              <dt class="font-bold text-slate-800">O testador de portas realiza varreduras invasivas?</dt>
-              <dd class="mt-0.5">Não. Realizamos apenas testes pontuais de conexão TCP nas portas declaradas pelo usuário para fins de diagnóstico e depuração de firewall.</dd>
+              <dt class="font-bold text-slate-800">O verificador de portas realiza varreduras invasivas na rede?</dt>
+              <dd class="mt-0.5">Não. São executadas verificações pontuais e autorizadas de disponibilidade nas portas padrão declaradas (como 80, 443, 21, 22, 587 ou 3306) estritamente para fins legítimos de depuração de firewall e diagnóstico administrativo.</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">Os códigos JSON, CSS ou JavaScript colados nos formatadores são armazenados?</dt>
+              <dd class="mt-0.5">Absolutamente não. Tanto a formatação quanto a minificação e o encode/decode de URLs rodam integralmente na memória do seu navegador sem envio para servidores remotos.</dd>
             </div>
           </dl>
         </div>
@@ -1188,25 +1328,98 @@ function getCategoryGuideAndTableHtml(categoryId: string, tool: any): string {
 }
 
 function getStepByStepExampleHtml(tool: any): string {
+  const keywordsList: string[] = Array.isArray(tool.keywords) ? tool.keywords : [];
+  const kwsText = keywordsList.slice(0, 5).join(', ') || tool.title;
+  const textSignal = `${tool.id} ${tool.slug} ${tool.title} ${keywordsList.join(' ')}`.toLowerCase();
+
+  let domainBadge = 'Fluxo Metodológico Exclusivo';
+  let scenarioIntro = '';
+  let steps: string[] = [];
+  let verificationTip = '';
+
+  if (tool.categoryId === 'calculadoras') {
+    if (/inss|irrf|rescisao|ferias|decimo|clt|fgts|hora-extra|dsr|noturno|seguro-desemprego|pis|pasep|aviso-previo|faltas|salario|periculosidade|insalubridade/.test(textSignal)) {
+      domainBadge = 'Conferência Trabalhista & Folha CLT 2026';
+      scenarioIntro = `Ao auditar valores de folha ou desligamento na ${tool.title}, considere sempre a base salarial bruta composta pelo salário contratual somado a eventuais médias variáveis habituais, conferindo as faixas vigentes de 2026 (piso nacional de R$ 1.518,00 e teto do INSS de R$ 8.157,41).`;
+      steps = [
+        `Informe com exatidão o salário-base e parâmetros temporais exigidos em ${tool.title} (como meses trabalhados, dependentes ou adicionais habituais).`,
+        'Verifique no detalhamento se as deduções progressivas do INSS (7,5% a 14% com parcela a deduzir) e do IRRF (método legal versus desconto simplificado mensal) foram aplicadas na ordem regulamentar.',
+        'Compare o resultado líquido estimado com os eventos discriminados no seu holerite ou TRCT oficial e guarde os cálculos antes de homologar prazos de pagamento.'
+      ];
+      verificationTip = 'Verbas indenizatórias como férias proporcionais na rescisão e multa de 40% do FGTS não sofrem retenção de INSS ou IRRF na mesma base do saldo de salário.';
+    } else if (/juros|financiamento|emprestimo|consignado|ipva|icms|itbi|itcmd|margem|preco-de-venda|desconto|move-brasil/.test(textSignal)) {
+      domainBadge = 'Simulação Financeira & Custo Efetivo';
+      scenarioIntro = `Para avaliar propostas bancárias, formação de preço comercial ou tributos patrimoniais com a ${tool.title}, diferencie sempre taxas nominais mensais das taxas efetivas anuais capitalizadas (CET).`;
+      steps = [
+        `Insira o capital principal, alíquota aplicável ou taxa de juros e o horizonte exato de meses ou etapas exigido por ${tool.title}.`,
+        'Compare pelo menos dois cenários variando prazo ou percentual de entrada para enxergar o peso dos juros compostos acumulados ao longo do tempo.',
+        'Valide o resultado final frente ao Custo Efetivo Total (CET), seguros obrigatórios ou alíquotas estaduais/municipais específicas da operação.'
+      ];
+      verificationTip = 'Em financiamentos longos, antecipar amortizações diretamente no prazo costuma economizar mais juros do que reduzir apenas a parcela corrente.';
+    } else {
+      domainBadge = 'Apuração Matemática & Planejamento Prático';
+      scenarioIntro = `A ${tool.title} converte variáveis do dia a dia (${kwsText}) em métricas objetivas prontas para embasar decisões domésticas, educacionais ou de obra/viagem.`;
+      steps = [
+        `Preencha as medidas reais do seu caso na ${tool.title}, mantendo todas as grandezas na mesma unidade ou escala informada nos rótulos.`,
+        'Revise margens técnicas de segurança ou folgas percentuais aplicáveis (como margem de corte em reformas, consumo urbano versus rodoviário em viagens ou pesos de prova).',
+        'Use o comparativo exibido imediatamente em tela para evitar compras em excesso ou estimativas subdimensionadas.'
+      ];
+      verificationTip = 'Salve uma captura ou anote os parâmetros usados na primeira simulação para confrontar com o resultado real após a execução do projeto.';
+    }
+  } else if (tool.categoryId === 'conversores') {
+    domainBadge = 'Conversão Bidirecional de Precisão (SI / Mercado)';
+    scenarioIntro = `Ao utilizar o ${tool.title}, certifique-se da escala de origem e de destino (${kwsText}) para evitar erros clássicos de grandeza entre padrões métricos, binários, decimais ou cotações cambiais.`;
+    steps = [
+      `Digite o valor numérico conhecido no campo de origem do ${tool.title} utilizando ponto ou vírgula decimal corretamente.`,
+      'Observe o fator exato de equivalência exibido instantaneamente (como PTAX comercial em moedas, 2,54 cm por polegada ou fatores binários 1024 versus decimais 1000 em dados digitais).',
+      'Copie o valor convertido ou ajuste manualmente a taxa/parâmetro caso esteja simulando casa de câmbio com IOF e spread específicos.'
+    ];
+    verificationTip = 'Em planilhas fiscais e relatórios técnicos, padronize duas ou quatro casas decimais conforme a exigência do documento receptor.';
+  } else if (tool.categoryId === 'geradores') {
+    domainBadge = 'Geração Sintética Local & Conformidade LGPD';
+    scenarioIntro = `O ${tool.title} produz saídas estruturadas diretamente na memória do navegador para testes de software (QA), homologação ou emissão de minutas sem exposição em servidores externos.`;
+    steps = [
+      `Selecione as opções de formatação, máscara ou entropia desejadas no painel do ${tool.title}.`,
+      'Acione a geração local instantânea via Web Crypto API / algoritmo oficial (Módulo 11, UUID v4, padrão EMVCo PIX ou minuta contratual conforme o instrumento).',
+      'Copie ou imprima a saída já validada para uso exclusivo em homologação técnica ou documentação legítima do seu projeto.'
+    ];
+    verificationTip = 'Nunca utilize documentos sintéticos (CPF/CNPJ/RG de teste) em transações comerciais reais, cadastros governamentais ou sistemas de produção.';
+  } else if (tool.categoryId === 'ferramentas-web') {
+    domainBadge = 'Diagnóstico Técnico de Rede, Web & APIs';
+    scenarioIntro = `Em fluxos de deploy e auditoria SRE, a ferramenta ${tool.title} (${kwsText}) fornece resposta imediata para validar disponibilidade, configuração de protocolo e estrutura sintática de dados.`;
+    steps = [
+      `Informe o domínio, endereço IP, porta TCP ou trecho estruturado (JSON/URL/CSS/JS) para análise na ${tool.title}.`,
+      'Interprete os cabeçalhos retornados, registros DNS, validade SSL ou alertas de formatação sem alterar o servidor de produção.',
+      'Reexecute a verificação após ajustes de DNS/TTL ou correções de sintaxe para confirmar propagação limpa.'
+    ];
+    verificationTip = 'Ao alterar registros DNS, aguarde o vencimento do TTL configurado antes de concluir testes definitivos de propagação global.';
+  } else {
+    domainBadge = 'Produtividade Textual & Processamento Local de Mídia';
+    scenarioIntro = `Desenvolvido para fluxos editoriais, acadêmicos e administrativos, o utilitário ${tool.title} (${kwsText}) executa todas as transformações localmente no navegador com sigilo completo.`;
+    steps = [
+      `Carregue seu arquivo local ou cole o bloco de texto de trabalho na área dedicada da ${tool.title}.`,
+      'Escolha os parâmetros de saída (qualidade WebP/JPG, resolução em pixels, formato de capitalização, separação silábica ou marcação de voltas no cronômetro).',
+      'Confira o resultado final em tela e faça o download ou cópia imediata sem upload para nuvens de terceiros.'
+    ];
+    verificationTip = 'Antes de publicar documentos ou imagens geradas localmente, faça uma conferência visual rápida de contraste, ortografia e peso em KB.';
+  }
+
   return `
-    <div class="space-y-3 pt-2">
-      <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
-        <span>📖</span> Exemplo Prático de Utilização Passo a Passo
-      </h3>
-      <div class="bg-emerald-50/60 border border-emerald-200 rounded-xl p-4 text-xs space-y-3 text-slate-700 leading-relaxed">
-        <p>
-          <strong>Cenário Simulado:</strong> Imagine que você precise realizar a apuração rápida utilizando a ferramenta <strong>${tool.title}</strong> para tomada de decisão imediata ou conferência de valores.
-        </p>
+    <article class="space-y-4 pt-2" id="tool-worked-methodology">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h2 class="text-lg font-black text-slate-900">Como Utilizar ${tool.title} na Prática</h2>
+        <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">${domainBadge}</span>
+      </div>
+      <div class="bg-emerald-50/60 border border-emerald-200 rounded-xl p-4 sm:p-5 text-xs space-y-3 text-slate-700 leading-relaxed">
+        <p>${scenarioIntro}</p>
         <ol class="list-decimal pl-5 space-y-1.5 font-medium">
-          <li><strong>Etapa 1 (Entrada de Dados):</strong> Preencha os campos principais do formulário com as informações base (valores numéricos, opções de formatação ou parâmetros desejados).</li>
-          <li><strong>Etapa 2 (Processamento Automático):</strong> Nosso motor matemático em JavaScript executa as fórmulas aplicáveis instantaneamente na memória do seu dispositivo.</li>
-          <li><strong>Etapa 3 (Conferência do Resultado):</strong> O resultado discriminado é consolidado em tela, permitindo copiar o valor com 1 clique ou gerar um relatório detalhado.</li>
+          ${steps.map((s, idx) => `<li><strong>Passo ${idx + 1}:</strong> ${s}</li>`).join('')}
         </ol>
-        <p class="text-[11px] text-slate-600 bg-white/80 p-2.5 rounded-lg border border-emerald-200/60">
-          💡 <em>Dica de Ouro:</em> Para resultados recorrentes, salve a página em seus favoritos (<kbd class="px-1.5 py-0.5 bg-slate-200 rounded font-mono text-[10px]">Ctrl+D</kbd>) ou utilize o recurso de compartilhamento rápido para enviar a simulação para clientes ou colegas de trabalho.
+        <p class="text-[11px] text-slate-700 bg-white/90 p-3 rounded-lg border border-emerald-200/70">
+          <strong>Observação Técnica sobre ${tool.title}:</strong> ${verificationTip}
         </p>
       </div>
-    </div>
+    </article>
   `;
 }
 
@@ -1214,9 +1427,27 @@ function getInternalLinkingGridHtml(tool: any): string {
   const categorySiblings = TOOLS.filter(t => t.categoryId === tool.categoryId && t.id !== tool.id).slice(0, 6);
   const topGlobalIds = ['juros-compostos', 'cpf', 'rescisao', 'real-para-dolar', 'gerador-whatsapp', 'sorteador'];
   const topGlobals = TOOLS.filter(t => topGlobalIds.includes(t.id) && t.id !== tool.id).slice(0, 4);
+  const matchingGuides = EDITORIAL_GUIDES.filter(g => g.categoryId === tool.categoryId);
+  const contextualGuides = (matchingGuides.length > 0 ? matchingGuides : EDITORIAL_GUIDES).slice(0, 3);
 
   return `
     <div class="space-y-6 pt-4">
+      <div class="space-y-3">
+        <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center justify-between">
+          <span>📚 Guias Práticos Recomendados para Aprofundamento</span>
+          <a href="/guias" class="text-emerald-700 hover:underline font-bold text-[11px]">Ver Todos os Guias →</a>
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          ${contextualGuides.map(g => `
+            <a href="/guias/${g.slug}" class="p-3 bg-emerald-50/50 border border-emerald-200 rounded-xl hover:border-emerald-600 transition block space-y-1">
+              <span class="text-[10px] font-bold uppercase text-emerald-700 block">${g.category}</span>
+              <span class="font-bold text-xs text-slate-900 block">${g.title}</span>
+              <span class="text-[10px] text-slate-600 block line-clamp-2">${g.summary}</span>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+
       <div class="space-y-3">
         <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center justify-between">
           <span>Mais Ferramentas na Categoria</span>
@@ -1504,13 +1735,17 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
           </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
-          <h3 class="text-sm font-bold text-slate-900">Ferramentas de Cálculo Relacionadas</h3>
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <h3 class="text-sm font-bold text-slate-900">Como Funciona a Fórmula de Reajuste e o Impacto Fiscal</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            A política de valorização real do salário mínimo brasileiro combina a correção inflacionária acumulada pelo Índice Nacional de Preços ao Consumidor (INPC) apurado pelo IBGE nos 12 meses até novembro do exercício anterior com um componente de ganho real vinculado ao crescimento do Produto Interno Bruto (PIB). Além de balizar o piso remuneratório nacional previsto no artigo 7º, inciso IV, da Constituição Federal, o valor atualizado impacta diretamente o reajuste da primeira faixa contributiva do INSS, benefícios previdenciários urbanos e rurais de 1 salário mínimo, pensões alimentícias fixadas em frações de piso nacional e bases de contribuição do MEI (5% do salário mínimo).
+          </p>
+          <h3 class="text-sm font-bold text-slate-900 pt-1">Ferramentas de Cálculo Relacionadas</h3>
           <div class="flex flex-wrap gap-2 text-xs">
             <a href="/calculadoras/calculadora-de-salario-liquido" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Salário Líquido →</a>
             <a href="/calculadoras/calculadora-de-rescisao-trabalhista" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Rescisão CLT →</a>
-            <a href="/calculadoras/calculadora-desconto-inss" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Tabela de INSS 2026 →</a>
-            <a href="/api" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">API de Salário Mínimo JSON →</a>
+            <a href="/calculadoras/calculadora-desconto-inss" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora INSS 2026 →</a>
+            <a href="/desenvolvedores" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">API de Salário Mínimo JSON →</a>
           </div>
         </div>
       </div>
@@ -1602,16 +1837,19 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
         </div>
 
         <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-4">
-          <h3 class="text-base font-bold text-slate-900">Como Discar para Outro DDD (Regra Oficial da Anatel)</h3>
+          <h3 class="text-base font-bold text-slate-900">Como Discar para Outro DDD e Portabilidade Numérica (Anatel)</h3>
           <div class="p-4 bg-slate-900 text-emerald-300 rounded-xl font-mono text-xs space-y-1">
-            <p class="text-slate-400">// Formato de ligação nacional:</p>
+            <p class="text-slate-400">// Formato de ligação nacional com Código de Seleção de Prestadora (CSP):</p>
             <p class="text-sm font-bold text-white">0 + [Código da Operadora] + [DDD de Destino] + [Número do Telefone]</p>
             <p class="text-slate-400 pt-1">// Exemplo para ligar para São Paulo (11) via operadora 15:</p>
             <p class="text-emerald-400 font-bold">0 15 11 99999-9999</p>
           </div>
           <div class="text-xs text-slate-600 space-y-2 leading-relaxed">
             <p>
-              <strong>Dica contra golpes e clonagens:</strong> Nunca repasse senhas bancárias ou códigos SMS recebidos em chamadas com DDDs desconhecidos. Prefira consultar o número chamador antes de retornar a chamada.
+              Na ligação internacional para números brasileiros (DDI), utiliza-se <code>+55</code> seguido imediatamente pelos dois dígitos do DDD e pelo número local, omitindo o zero inicial e o CSP da operadora. Desde a implementação da portabilidade numérica pela Anatel, um prefixo como 99xxx ou 98xxx não identifica mais a operadora original — somente o código DDD de dois dígitos permanece estritamente ligado à área geográfica de registro da linha fixa ou móvel.
+            </p>
+            <p>
+              <strong>Prevenção contra fraudes telefônicas e golpes:</strong> Desconfie de solicitações urgentes de transferências PIX enviadas por números desconhecidos com DDD divergente da região do suposto contato, e nunca repasse códigos de verificação SMS ou senhas bancárias por telefone.
             </p>
           </div>
         </div>
@@ -1621,7 +1859,8 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
           <div class="flex flex-wrap gap-2 text-xs">
             <a href="/programatico/cep-brasil" class="px-3 py-1.5 bg-blue-50 text-blue-800 hover:bg-blue-100 rounded-lg font-bold border border-blue-200">Consulta de CEP Correios →</a>
             <a href="/ferramentas-web/qual-o-meu-ip" class="px-3 py-1.5 bg-blue-50 text-blue-800 hover:bg-blue-100 rounded-lg font-bold border border-blue-200">Descobrir Meu IP Público →</a>
-            <a href="/api" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">API de DDDs JSON →</a>
+            <a href="/geradores/gerador-link-whatsapp" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Gerador de Link WhatsApp com DDD →</a>
+            <a href="/desenvolvedores" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">API de DDDs JSON →</a>
           </div>
         </div>
       </div>
@@ -1685,22 +1924,39 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
           </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
-          <h3 class="text-sm font-bold text-slate-900">Diferença entre COMPE, ISPB e PIX</h3>
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <h3 class="text-sm font-bold text-slate-900">Diferença entre COMPE, ISPB e PIX no Sistema de Pagamentos Brasileiro</h3>
           <dl class="space-y-3 text-xs text-slate-600 leading-relaxed">
             <div>
               <dt class="font-bold text-slate-800">COMPE (3 dígitos):</dt>
-              <dd class="mt-0.5">Utilizado tradicionalmente para compensação de cheques e transferências via TED. Criado pela FEBRABAN.</dd>
+              <dd class="mt-0.5">Utilizado tradicionalmente para compensação de cheques, cadastro de folhas salariais, restituições tributárias e transferências interbancárias via TED (Transferência Eletrônica Disponível). Administrado historicamente pela FEBRABAN e pelo Banco do Brasil como executante da compensação.</dd>
             </div>
             <div>
               <dt class="font-bold text-slate-800">ISPB (8 dígitos):</dt>
-              <dd class="mt-0.5">Identificador de rede interna do Sistema de Transferência de Reservas (STR) do Banco Central, amplamente utilizado em integrações de APIs bancárias e no ecossistema do Pix.</dd>
+              <dd class="mt-0.5">Identificador do Sistema de Pagamentos Brasileiro atribuído pelo Banco Central a instituições participantes diretas ou indiretas do Sistema de Transferência de Reservas (STR) e do Sistema de Pagamentos Instantâneos (SPI/PIX).</dd>
             </div>
             <div>
-              <dt class="font-bold text-slate-800">Extinção do DOC em 2024:</dt>
-              <dd class="mt-0.5">A Federação Brasileira de Bancos (FEBRABAN) encerrou definitivamente o Documento de Ordem de Crédito (DOC) em fevereiro de 2024, consolidando o Pix e a TED como modalidades principais de envio de dinheiro.</dd>
+              <dt class="font-bold text-slate-800">Extinção do DOC e Consolidação de PIX + TED:</dt>
+              <dd class="mt-0.5">A Federação Brasileira de Bancos (FEBRABAN) encerrou definitivamente as operações via DOC (Documento de Ordem de Crédito) em fevereiro de 2024. Hoje, pessoas físicas utilizam PIX gratuitamente 24 horas por dia (inclusive feriados e finais de semana) ou TED com código COMPE em dias úteis até as 17h para grandes montantes e liquidações corporativas.</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">Dígito Verificador "X" no Banco do Brasil e Operações Caixa:</dt>
+              <dd class="mt-0.5">Em sistemas eletrônicos que aceitam somente caracteres numéricos no campo agência ou conta (por exemplo, agências e contas antigas do Banco do Brasil 001 com dígito X), substitua o X por 0. Na Caixa Econômica Federal (104), contas antigas trazem códigos de operação (001 conta corrente PF, 013 poupança, 003 conta jurídica e 1288 para contas digitais Caixa Tem).</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">Contas Digitais e Instituições de Pagamento (Nubank 260, Inter 077, C6 336, PagBank 290):</dt>
+              <dd class="mt-0.5">Bancos e contas de pagamento digitais utilizam agência padrão <code>0001</code> e permitem liquidações tanto via código COMPE tradicional (TED) quanto pelo código ISPB de 8 dígitos em transferências PIX e Open Finance. Em formulários do eSocial, declarações de Imposto de Renda e pagamentos judiciais, confira sempre se o campo exige os 3 dígitos COMPE com zero à esquerda.</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">Horário Limite de TED vs. PIX Instantâneo:</dt>
+              <dd class="mt-0.5">Enquanto transferências PIX funcionam 24 horas por dia com liquidação em segundos sem tarifas para pessoas físicas, ordens TED enviadas após as 17h em dias úteis ou em feriados bancários nacionais são agendadas automaticamente para compensação na manhã do próximo dia útil bancário.</dd>
             </div>
           </dl>
+          <div class="flex flex-wrap gap-2 text-xs pt-2">
+            <a href="/geradores/gerador-de-pix-copia-e-cola-e-qr-code" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Gerador de QR Code PIX →</a>
+            <a href="/calculadoras/calculadora-de-juros-compostos" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Juros Compostos →</a>
+            <a href="/desenvolvedores" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">API de Bancos JSON →</a>
+          </div>
         </div>
       </div>
     `;
@@ -1762,13 +2018,21 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
         </div>
 
         <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-4">
-          <h3 class="text-base font-bold text-slate-900">Regras Trabalhistas para Trabalho em Feriados (CLT)</h3>
+          <h3 class="text-base font-bold text-slate-900">Regras Trabalhistas para Trabalho em Feriados (CLT) e Diferença para Pontos Facultativos</h3>
           <p class="text-xs text-slate-600 leading-relaxed">
-            O artigo 70 da Consolidação das Leis do Trabalho veda o trabalho em feriados nacionais e religiosos, ressalvadas as atividades essenciais e serviços de funcionamento ininterrupto autorizados por acordo coletivo ou convenção. Quando o trabalhador labora em um feriado oficial sem compensação na mesma semana, a empresa é obrigada a remunerar as horas trabalhadas em dobro (adicional de 100%).
+            O artigo 70 da Consolidação das Leis do Trabalho (CLT) veda o trabalho em feriados nacionais e religiosos civis, ressalvadas as atividades essenciais de saúde, transporte, segurança, telecomunicações e setores do comércio devidamente autorizados por convenção coletiva ou legislação municipal vigente. Quando o colaborador labora regularmente em um feriado nacional ou municipal sem receber folga compensatória equivalente na mesma semana ou dentro do acordo de banco de horas válido, a empresa é obrigada a remunerar integralmente as horas trabalhadas em dobro — equivalente ao adicional de 100% sobre a hora normal, gerando ainda reflexo proporcional no Descanso Semanal Remunerado (DSR), férias e 13º salário.
+          </p>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Já os <strong>pontos facultativos federais</strong> (como os dias de Carnaval em fevereiro e o feriado religioso de Corpus Christi em junho em localidades sem lei municipal específica declarando feriado local) suspendem o expediente apenas nos órgãos públicos e repartições da administração direta ou autárquica, não obrigando empresas privadas à dispensa nem ao pagamento em dobro — salvo previsão expressa em Convenção Coletiva de Trabalho (CCT) ou costume consolidado na cidade. Além dos feriados federais acima, cada estado e município brasileiro celebra suas próprias datas cívicas (como a data magna estadual e o aniversário do município, limitado pela Lei nº 9.093/1995 a no máximo quatro feriados religiosos municipais).
+          </p>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Em relação a compensações e emendas de feriados que caem na terça ou quinta-feira (como Tiradentes em 21/04/2026 e Corpus Christi em 04/06/2026), empregadores podem pactuar acordo individual escrito de compensação de jornada ou banco de horas dentro do semestre conforme artigo 59 da CLT, trocando o dia-ponte por minutos diários adicionais ou sábados alternados sem acréscimo salarial. Já nos feriados em segundas-feiras e sextas-feiras de 2026 (Paixão de Cristo, Dia do Trabalho, Independência, Nossa Senhora Aparecida, Finados, Consciência Negra e Natal), empresas de atendimento contínuo precisam revisar previamente escalas de revezamento e reflexos de Descanso Semanal Remunerado (DSR).
           </p>
           <div class="flex flex-wrap gap-2 text-xs pt-1">
             <a href="/calculadoras/calculadora-de-hora-extra" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calcular Hora Extra a 100% →</a>
+            <a href="/calculadoras/calculadora-de-dsr" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calcular Reflexo do DSR →</a>
             <a href="/calculadoras/calculadora-dias-entre-datas" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Dias entre Datas →</a>
+            <a href="/desenvolvedores" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">API de Feriados JSON →</a>
           </div>
         </div>
       </div>
@@ -1785,36 +2049,62 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
             <span class="text-xs text-slate-500 font-medium">Comitê de Política Monetária (COPOM)</span>
           </div>
           <h2 class="text-xl font-bold text-slate-900">
-            Taxa SELIC: Histórico, Decisões do COPOM e Impacto nos Investimentos
+            Taxa SELIC: Histórico (1996–2026), Decisões do COPOM e Impacto nos Investimentos
           </h2>
           <p class="text-xs text-slate-600 leading-relaxed">
-            A Taxa SELIC (Sistema Especial de Liquidação e Custódia) é a taxa básica de juros da economia brasileira. Definida a cada 45 dias pelo COPOM (órgão colegiado do Banco Central do Brasil), ela é o principal instrumento de política monetária para o controle da inflação medida pelo IPCA.
+            A Taxa SELIC (Sistema Especial de Liquidação e Custódia) é a taxa básica de juros da economia brasileira e referência central para todas as operações financeiras do país. Definida a cada 45 dias pelo Comitê de Política Monetária (COPOM) do Banco Central do Brasil em reuniões ordinárias de dois dias, a meta da Selic é o instrumento primário de política monetária para ancorar expectativas e manter a inflação medida pelo IPCA dentro das bandas definidas pelo Conselho Monetário Nacional (CMN).
           </p>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Diferencia-se tecnicamente a <strong>Selic Meta</strong> (anunciada ao final de cada reunião do COPOM) da <strong>Selic Over</strong> (taxa efetivamente praticada nas operações diárias de financiamento de títulos públicos federais entre instituições financeiras, tradicionalmente 0,10 ponto percentual abaixo da Meta). Desde sua criação em meados da década de 1990 após o Plano Real, a Selic já percorreu picos superiores a 40% ao ano em períodos de choques externos, atingiu a mínima histórica de 2,00% ao ano durante a pandemia em 2020–2021 e voltou ao patamar de dois dígitos para conter pressões inflacionárias posteriores.
+          </p>
+
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="py-2 px-3">Ciclo / Ano de Referência</th>
+                  <th class="py-2 px-3">Faixa Histórica da Selic Meta (% a.a.)</th>
+                  <th class="py-2 px-3">Contexto Econômico Brasileiro</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr><td class="py-2 px-3 font-bold">1999 – 2005 (Metas de Inflação)</td><td class="py-2 px-3 font-mono font-bold text-emerald-700">15,25% a 45,00% a.a.</td><td class="py-2 px-3">Consolidação do regime de metas de inflação e controle cambial flutuante.</td></tr>
+                <tr><td class="py-2 px-3 font-bold">2013 – 2016 (Aperto Monetário)</td><td class="py-2 px-3 font-mono font-bold text-emerald-700">7,25% a 14,25% a.a.</td><td class="py-2 px-3">Ciclo de alta prolongada para reancorar expectativas do IPCA pós-2014.</td></tr>
+                <tr><td class="py-2 px-3 font-bold">2020 – 2021 (Mínima Histórica)</td><td class="py-2 px-3 font-mono font-bold text-emerald-700">2,00% a 9,25% a.a.</td><td class="py-2 px-3">Estímulo monetário pandêmico seguido de rápida reversão contracionista em 2021.</td></tr>
+                <tr><td class="py-2 px-3 font-bold">2022 – 2026 (Juros Reais Elevados)</td><td class="py-2 px-3 font-mono font-bold text-emerald-700">10,50% a 15,00% a.a.</td><td class="py-2 px-3">Manutenção de juros restritivos frente ao cenário fiscal e inflação de serviços.</td></tr>
+              </tbody>
+            </table>
+          </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
             <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
               <span class="text-[10px] font-bold uppercase text-slate-500">Rendimento da Poupança</span>
-              <p class="font-bold text-slate-900 text-sm">Regra dos 8,5%</p>
-              <p class="text-xs text-slate-600 leading-relaxed">Quando a Selic está acima de 8,5% a.a., a poupança rende fixos 0,5% ao mês + TR. Abaixo ou igual a 8,5%, o rendimento passa a ser 70% da Selic + TR.</p>
+              <p class="font-bold text-slate-900 text-sm">Regra dos 8,5% (Lei 12.703)</p>
+              <p class="text-xs text-slate-600 leading-relaxed">Quando a Selic está acima de 8,5% a.a., a poupança rende fixos 0,5% ao mês mais TR (cerca de 6,17% a.a. + TR). Abaixo ou igual a 8,5%, o rendimento cai para 70% da Selic mais TR.</p>
             </div>
             <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
               <span class="text-[10px] font-bold uppercase text-slate-500">Renda Fixa & CDI</span>
-              <p class="font-bold text-slate-900 text-sm">CDBs e Tesouro Selic</p>
-              <p class="text-xs text-slate-600 leading-relaxed">O Certificado de Depósito Interbancário (CDI) acompanha a taxa Selic efetiva com defasagem de cerca de 0,10 ponto percentual.</p>
+              <p class="font-bold text-slate-900 text-sm">CDBs, LCI/LCA e Tesouro Selic</p>
+              <p class="text-xs text-slate-600 leading-relaxed">O Certificado de Depósito Interbancário (CDI) acompanha a Selic efetiva (Over) dia a dia, tornando CDBs 100% do CDI e Tesouro Selic referências diretas de reserva de liquidez.</p>
             </div>
             <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
               <span class="text-[10px] font-bold uppercase text-slate-500">Crédito e Financiamento</span>
-              <p class="font-bold text-slate-900 text-sm">Custo do Empréstimo</p>
-              <p class="text-xs text-slate-600 leading-relaxed">Uma Selic mais elevada encarece linhas de crédito rotativo, financiamentos imobiliários e empréstimos consignados no comércio.</p>
+              <p class="font-bold text-slate-900 text-sm">Custo de Capital e Parcelas</p>
+              <p class="text-xs text-slate-600 leading-relaxed">Alta na Selic encarece financiamentos de imóveis, empréstimos consignados, CDC de automóveis e linhas de capital de giro empresarial em todo o sistema bancário.</p>
             </div>
           </div>
+          <p class="text-xs text-slate-600 leading-relaxed pt-2">
+            <strong>Como calcular o ganho real acima da inflação (Equação de Fisher):</strong> Para descobrir quanto uma aplicação atrelada à taxa Selic ou ao CDI realmente aumentou o poder de compra do investidor, não basta subtrair o IPCA da taxa bruta: primeiro apure o retorno líquido após o Imposto de Renda regressivo (22,5% a 15%), e então aplique a razão <code>(1 + rendimento_líquido) / (1 + IPCA) − 1</code>. Em ciclos de Selic elevada com inflação controlada, títulos pós-fixados entregam juro real expressivo com volatilidade praticamente nula para reservas de curto e médio prazo.
+          </p>
         </div>
 
         <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
-          <h3 class="text-sm font-bold text-slate-900">Simuladores Financeiros Relacionados</h3>
+          <h3 class="text-sm font-bold text-slate-900">Simuladores e Guias Financeiros Relacionados</h3>
           <div class="flex flex-wrap gap-2 text-xs">
             <a href="/calculadoras/calculadora-de-juros-compostos" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Juros Compostos →</a>
+            <a href="/calculadoras/calculadora-desconto-a-vista-vs-parcelado" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">À Vista ou Parcelado com CDI →</a>
             <a href="/calculadoras/calculadora-de-imposto-de-renda" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Imposto de Renda →</a>
+            <a href="/guias/juros-compostos-tesouro-selic-cdb-renda-fixa-2026" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">Guia de Renda Fixa & Selic →</a>
           </div>
         </div>
       </div>
@@ -1867,16 +2157,28 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
               </ul>
             </div>
           </div>
+
+          <div class="p-4 bg-emerald-50/70 rounded-xl border border-emerald-200 space-y-2 text-xs text-slate-700 leading-relaxed">
+            <h3 class="font-bold text-slate-900 text-sm">Regra Oficial de Ordem por Dígito Final e Antecipação do 13º do INSS</h3>
+            <p>
+              Para descobrir em qual dia o depósito cai na conta corrente ou poupança social, observe exclusivamente o <strong>último algarismo antes do traço</strong> no Número do Benefício (NB). Por exemplo, se o número do cartão for <code>123.456.789-0</code>, o dígito verificador após o traço é ignorado e o número considerado na tabela é o <strong>9</strong>. Aposentados, pensionistas e segurados que recebem auxílio por incapacidade temporária ou BPC/LOAS seguem o mesmo calendário, sendo que eventual feriado municipal ou estadual não altera a programação nacional — exceto feriados bancários nacionais que transferem o pagamento para o dia útil imediatamente posterior.
+            </p>
+            <p>
+              Além dos 12 depósitos mensais regulares, segurados elegíveis (aposentadorias, pensão por morte, auxílio-doença e auxílio-reclusão; não aplicável ao BPC/LOAS por ser benefício assistencial) recebem anualmente o abono anual (13º salário do INSS) dividido em duas parcelas seguindo a mesma ordem do dígito final do benefício.
+            </p>
+          </div>
         </div>
 
         <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
-          <h3 class="text-sm font-bold text-slate-900">Canais de Consulta do Segurado</h3>
+          <h3 class="text-sm font-bold text-slate-900">Canais de Consulta do Segurado e Simuladores Previdenciários</h3>
           <p class="text-xs text-slate-600 leading-relaxed">
-            Para consultar extratos de pagamento, informe de rendimentos para o Imposto de Renda e dados do benefício, utilize o aplicativo oficial <strong>Meu INSS</strong> (disponível para Android e iOS), o portal <code>meu.inss.gov.br</code> ou ligue gratuitamente para a Central Telefônica <strong>135</strong> (de segunda a sábado, das 7h às 22h).
+            Para consultar extratos de pagamento, carta de concessão, histórico contributivo CNIS e informe de rendimentos para o Imposto de Renda, utilize o aplicativo oficial <strong>Meu INSS</strong> (disponível para Android e iOS), o portal web <code>meu.inss.gov.br</code> com conta Gov.br ou ligue gratuitamente para a Central Telefônica <strong>135</strong> (atendimento humano de segunda a sábado, das 7h às 22h, horário de Brasília).
           </p>
           <div class="flex flex-wrap gap-2 text-xs pt-1">
             <a href="/calculadoras/calculadora-desconto-inss" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Desconto INSS 2026 →</a>
+            <a href="/calculadoras/calculadora-de-aposentadoria-inss" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Simulador de Aposentadoria INSS →</a>
             <a href="/calculadoras/calculadora-de-salario-liquido" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Salário Líquido →</a>
+            <a href="/guias/tabela-inss-e-irrf-2026-guia-completo" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">Guia Tabela INSS & IRRF 2026 →</a>
           </div>
         </div>
       </div>
@@ -1896,25 +2198,70 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
             Estrutura dos Códigos IBGE de Municípios e Estados Brasileiros
           </h2>
           <p class="text-xs text-slate-600 leading-relaxed">
-            O Código de Município do IBGE é um identificador numérico de 7 dígitos atribuído a cada um dos 5.570 municípios brasileiros e ao Distrito Federal. É o padrão oficial exigido pela Secretaria da Receita Federal do Brasil (RFB) e Secretarias Estaduais da Fazenda (SEFAZ) para emissão de Notas Fiscais Eletrônicas (NF-e, tag <code>&lt;cMun&gt;</code>), Conhecimentos de Transporte (CT-e) e apuração tributária do SPED Fiscal.
+            O Código de Município do IBGE é um identificador numérico oficial de 7 dígitos atribuído a cada um dos 5.570 municípios brasileiros e ao Distrito Federal. É o padrão nacional obrigatório exigido pela Secretaria Especial da Receita Federal do Brasil (RFB) e pelas Secretarias Estaduais da Fazenda (SEFAZ) para emissão de Notas Fiscais Eletrônicas (NF-e e NFC-e, tag XML <code>&lt;cMun&gt;</code>), Conhecimentos de Transporte Eletrônicos (CT-e), Notas Fiscais de Serviço (NFS-e nacional) e escrituração fiscal digital no SPED e eSocial.
           </p>
 
           <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs">
-            <h3 class="font-bold text-slate-900 text-sm">Composição dos 7 Dígitos:</h3>
+            <h3 class="font-bold text-slate-900 text-sm">Composição dos 7 Dígitos Oficiais:</h3>
             <ul class="list-disc pl-5 space-y-1 text-slate-700">
-              <li><strong>2 primeiros dígitos:</strong> Identificam a Unidade da Federação (ex: 35 para São Paulo, 33 para Rio de Janeiro, 31 para Minas Gerais, 41 para Paraná, 43 para Rio Grande do Sul).</li>
-              <li><strong>4 dígitos seguintes:</strong> Número sequencial de identificação do município dentro do estado.</li>
-              <li><strong>Último dígito (7º):</strong> Dígito verificador (DV) calculado pelo algoritmo matemático de Módulo 10.</li>
+              <li><strong>2 primeiros dígitos (Código UF):</strong> Identificam a Unidade da Federação segundo a divisão geocientífica nacional (1x Norte, 2x Nordeste, 3x Sudeste, 4x Sul e 5x Centro-Oeste).</li>
+              <li><strong>4 dígitos seguintes:</strong> Identificador numérico sequencial exclusivo do município dentro daquela Unidade da Federação.</li>
+              <li><strong>Último dígito (7º):</strong> Dígito verificador (DV) calculado pelo algoritmo oficial de Módulo 10 para prevenir erros de digitação em ERPs e guias fiscais.</li>
             </ul>
+          </div>
+
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="py-2 px-3">Código UF</th>
+                  <th class="py-2 px-3">Estado</th>
+                  <th class="py-2 px-3">Capital</th>
+                  <th class="py-2 px-3">Código IBGE da Capital</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr><td class="py-1.5 px-3 font-mono font-bold">35</td><td class="py-1.5 px-3 font-bold">São Paulo (SP)</td><td class="py-1.5 px-3">São Paulo</td><td class="py-1.5 px-3 font-mono text-emerald-700 font-bold">3550308</td></tr>
+                <tr><td class="py-1.5 px-3 font-mono font-bold">33</td><td class="py-1.5 px-3 font-bold">Rio de Janeiro (RJ)</td><td class="py-1.5 px-3">Rio de Janeiro</td><td class="py-1.5 px-3 font-mono text-emerald-700 font-bold">3304557</td></tr>
+                <tr><td class="py-1.5 px-3 font-mono font-bold">31</td><td class="py-1.5 px-3 font-bold">Minas Gerais (MG)</td><td class="py-1.5 px-3">Belo Horizonte</td><td class="py-1.5 px-3 font-mono text-emerald-700 font-bold">3106200</td></tr>
+                <tr><td class="py-1.5 px-3 font-mono font-bold">41</td><td class="py-1.5 px-3 font-bold">Paraná (PR)</td><td class="py-1.5 px-3">Curitiba</td><td class="py-1.5 px-3 font-mono text-emerald-700 font-bold">4106902</td></tr>
+                <tr><td class="py-1.5 px-3 font-mono font-bold">43</td><td class="py-1.5 px-3 font-bold">Rio Grande do Sul (RS)</td><td class="py-1.5 px-3">Porto Alegre</td><td class="py-1.5 px-3 font-mono text-emerald-700 font-bold">4314902</td></tr>
+                <tr><td class="py-1.5 px-3 font-mono font-bold">29</td><td class="py-1.5 px-3 font-bold">Bahia (BA)</td><td class="py-1.5 px-3">Salvador</td><td class="py-1.5 px-3 font-mono text-emerald-700 font-bold">2927408</td></tr>
+                <tr><td class="py-1.5 px-3 font-mono font-bold">26</td><td class="py-1.5 px-3 font-bold">Pernambuco (PE)</td><td class="py-1.5 px-3">Recife</td><td class="py-1.5 px-3 font-mono text-emerald-700 font-bold">2611606</td></tr>
+                <tr><td class="py-1.5 px-3 font-mono font-bold">23</td><td class="py-1.5 px-3 font-bold">Ceará (CE)</td><td class="py-1.5 px-3">Fortaleza</td><td class="py-1.5 px-3 font-mono text-emerald-700 font-bold">2304400</td></tr>
+                <tr><td class="py-1.5 px-3 font-mono font-bold">53</td><td class="py-1.5 px-3 font-bold">Distrito Federal (DF)</td><td class="py-1.5 px-3">Brasília</td><td class="py-1.5 px-3 font-mono text-emerald-700 font-bold">5300108</td></tr>
+                <tr><td class="py-1.5 px-3 font-mono font-bold">13</td><td class="py-1.5 px-3 font-bold">Amazonas (AM)</td><td class="py-1.5 px-3">Manaus</td><td class="py-1.5 px-3 font-mono text-emerald-700 font-bold">1302603</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            <strong>Rejeição 254 / Código Municipal Inválido na NF-e:</strong> Quando o sistema emissor envia um código IBGE de 6 dígitos sem o dígito verificador ou informa código incompatível com a UF do destinatário, a SEFAZ rejeita automaticamente o lote XML. Em casos de municípios emancipados mais recentes ou consultas integradas por CEP via ViaCEP, valide sempre os 7 algarismos completos antes de gravar no banco de clientes do ERP.
+          </p>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            <strong>Diferença entre Código IBGE (7 dígitos), Código TOM/SIAFI (4 dígitos) e CEP (8 dígitos):</strong> Enquanto o CEP pertence à logística postal dos Correios (podendo haver milhares de CEPs dentro de uma única metrópole) e a tabela TOM/SIAFI histórica da Receita Federal identifica municípios em guias antigas de arrecadação DARF, o código IBGE de 7 dígitos representa de maneira única cada município brasileiro em sistemas fiscais modernos, NFS-e nacional, eSocial trabalhista e tabelas demográficas do Censo.
+          </p>
+          <div class="space-y-2 text-xs text-slate-600 leading-relaxed pt-2 border-t border-slate-100">
+            <h3 class="font-bold text-slate-900">Perguntas Frequentes sobre Códigos IBGE</h3>
+            <dl class="space-y-1.5">
+              <div>
+                <dt class="font-bold text-slate-800">Como descobrir o código IBGE de uma cidade pelo endereço?</dt>
+                <dd>Basta consultar o CEP oficial do logradouro na ferramenta de Consulta de CEP: o retorno padrão da base nacional já traz o campo <code>ibge</code> com os 7 dígitos exatos vinculados ao município.</dd>
+              </div>
+              <div>
+                <dt class="font-bold text-slate-800">Exportações para o exterior utilizam qual código IBGE na NF-e?</dt>
+                <dd>Para destinatários residentes fora do Brasil, a nota técnica da NF-e orienta preencher o código especial <code>9999999</code> associado à sigla de UF <code>EX</code> e ao código do país na tabela BACEN.</dd>
+              </div>
+            </dl>
           </div>
         </div>
 
         <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
-          <h3 class="text-sm font-bold text-slate-900">Integração Fiscal e Utilitários</h3>
+          <h3 class="text-sm font-bold text-slate-900">Integração Fiscal e Utilitários Relacionados</h3>
           <div class="flex flex-wrap gap-2 text-xs">
             <a href="/geradores/gerador-de-cnpj" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Gerador de CNPJ para Testes →</a>
             <a href="/programatico/cep-brasil" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Consulta de CEP e Logradouros →</a>
-            <a href="/api" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">Endpoints da API Tool Brasil →</a>
+            <a href="/programatico/codigos-ncm" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Tabela de Códigos NCM →</a>
+            <a href="/desenvolvedores" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">Endpoints da API Tool Brasil →</a>
           </div>
         </div>
       </div>
@@ -2135,7 +2482,298 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
     `;
   }
 
-  // 8. PADRÃO GERAL / CEP / CNAE / CBO / NCM
+  // 8. SUBCATEGORIAS PROGRAMÁTICAS DEDICADAS: CEP, CNAE, CBO & NCM
+  if (id === 'cep-brasil') {
+    return `
+      <div class="space-y-6 text-slate-800">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Endereçamento Postal Oficial</span>
+            <span class="text-xs text-slate-500 font-medium">Diretório Nacional de Endereços (DNE / Correios)</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900">Como Funciona a Estrutura dos 8 Dígitos do CEP no Brasil</h2>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            O Código de Endereçamento Postal (CEP) brasileiro é composto por oito algarismos no formato <code>XXXXX-XXX</code> gerenciados pela Empresa Brasileira de Correios e Telégrafos. Cada dígito da esquerda para a direita reduz progressivamente a área geográfica abrangida, começando pela Grande Região postal (primeiro dígito de 0 a 9), passando pela sub-região, setor, sub-setor, divisor de sub-setor e finalmente os três dígitos de sufixo que identificam o logradouro exato, códigos de grandes usuários ou unidades operacionais dos Correios.
+          </p>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Utilizar o CEP validado corretamente evita extravios logísticos em envios de encomendas PAC e SEDEX, reduz erros de cálculo de frete em lojas virtuais (e-commerce), garante emissão correta de Notas Fiscais Eletrônicas (NF-e e NFC-e junto às Secretarias da Fazenda estaduais) e acelera o preenchimento automático de cadastros bancários e declarações de residência.
+          </p>
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="py-2 px-3">Faixa Inicial do CEP</th>
+                  <th class="py-2 px-3">Região Postal Oficial</th>
+                  <th class="py-2 px-3">Estados Cobertos</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr><td class="py-2 px-3 font-mono font-bold text-emerald-700">01000 a 09999</td><td class="py-2 px-3 font-bold">Região 0</td><td class="py-2 px-3">Grande São Paulo (Capital e Região Metropolitana)</td></tr>
+                <tr><td class="py-2 px-3 font-mono font-bold text-emerald-700">11000 a 19999</td><td class="py-2 px-3 font-bold">Região 1</td><td class="py-2 px-3">Litoral e Interior do Estado de São Paulo</td></tr>
+                <tr><td class="py-2 px-3 font-mono font-bold text-emerald-700">20000 a 29999</td><td class="py-2 px-3 font-bold">Região 2</td><td class="py-2 px-3">Rio de Janeiro (20000-28999) e Espírito Santo (29000-29999)</td></tr>
+                <tr><td class="py-2 px-3 font-mono font-bold text-emerald-700">30000 a 39999</td><td class="py-2 px-3 font-bold">Região 3</td><td class="py-2 px-3">Minas Gerais (todas as macrorregiões e capital BH)</td></tr>
+                <tr><td class="py-2 px-3 font-mono font-bold text-emerald-700">40000 a 49999</td><td class="py-2 px-3 font-bold">Região 4</td><td class="py-2 px-3">Bahia (40000-48999) e Sergipe (49000-49999)</td></tr>
+                <tr><td class="py-2 px-3 font-mono font-bold text-emerald-700">50000 a 59999</td><td class="py-2 px-3 font-bold">Região 5</td><td class="py-2 px-3">Pernambuco, Alagoas, Paraíba e Rio Grande do Norte</td></tr>
+                <tr><td class="py-2 px-3 font-mono font-bold text-emerald-700">60000 a 69999</td><td class="py-2 px-3 font-bold">Região 6</td><td class="py-2 px-3">Ceará, Piauí, Maranhão, Pará, Amapá, Amazonas, Acre e Roraima</td></tr>
+                <tr><td class="py-2 px-3 font-mono font-bold text-emerald-700">70000 a 79999</td><td class="py-2 px-3 font-bold">Região 7</td><td class="py-2 px-3">Distrito Federal, Goiás, Tocantins, Mato Grosso, MS e Rondônia</td></tr>
+                <tr><td class="py-2 px-3 font-mono font-bold text-emerald-700">80000 a 89999</td><td class="py-2 px-3 font-bold">Região 8</td><td class="py-2 px-3">Paraná (80000-87999) e Santa Catarina (88000-89999)</td></tr>
+                <tr><td class="py-2 px-3 font-mono font-bold text-emerald-700">90000 a 99999</td><td class="py-2 px-3 font-bold">Região 9</td><td class="py-2 px-3">Rio Grande do Sul (Porto Alegre, Região Metropolitana e Interior)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 text-xs text-slate-600 leading-relaxed">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+              <h3 class="font-bold text-slate-900">CEP Único vs. Município Codificado por Logradouro</h3>
+              <p>Cidades com menor densidade populacional utilizam historicamente um CEP único terminando em <code>-000</code> para todo o perímetro urbano, enquanto cidades maiores e capitais adotam codificação individualizada por rua ou trecho de avenida. Nos últimos anos, os Correios têm promovido a atualização progressiva de dezenas de municípios do interior para CEPs específicos por logradouro, exigindo atenção redobrada em sistemas de frete e integração fiscal.</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+              <h3 class="font-bold text-slate-900">Declaração de Conteúdo e Código IBGE</h3>
+              <p>Além do CEP de origem e destino, o transporte de mercadorias sem Nota Fiscal por pessoas físicas nos Correios requer a Declaração de Conteúdo assinada, enquanto faturamentos empresariais associam o CEP ao código municipal oficial do IBGE de 7 dígitos.</p>
+            </div>
+          </div>
+          <div class="space-y-2 text-xs text-slate-600 leading-relaxed pt-2 border-t border-slate-100">
+            <h3 class="font-bold text-slate-900">Perguntas Frequentes sobre CEPs e Endereçamento</h3>
+            <dl class="space-y-1.5">
+              <div>
+                <dt class="font-bold text-slate-800">Qual a diferença entre CEP de logradouro e CEP promocional ou comunitário?</dt>
+                <dd>Além dos CEPs de rua convencionais, grandes edifícios comerciais, órgãos públicos e empresas recebem CEPs exclusivos (Grande Usuário), enquanto localidades sem entrega domiciliar ou distritos rurais utilizam CEPs comunitários vinculados a Agências dos Correios ou Caixas Postais Comunitárias.</dd>
+              </div>
+              <div>
+                <dt class="font-bold text-slate-800">Por que meu e-commerce ou NF-e recusa um CEP recém-criado?</dt>
+                <dd>Municípios que passaram por recodificação recente podem demorar alguns dias para sincronizar nos cadastros secundários de transportadoras ou ERPs. Sempre valide se os 8 dígitos constam no Diretório Nacional de Endereços (DNE) atualizado e confirme se o município não deixou de usar CEP geral terminando em 000.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Utilitários Logísticos e Endereçamento Relacionados</h3>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <a href="/geradores/gerador-de-declaracao-de-conteudo-para-correios" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Gerador de Declaração de Conteúdo Correios →</a>
+            <a href="/geradores/gerador-de-declaracao-de-residencia" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Gerador de Declaração de Residência →</a>
+            <a href="/programatico/codigos-ibge" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">Tabela de Códigos IBGE →</a>
+            <a href="/programatico/ddd-brasil" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">DDDs do Brasil →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (id === 'cnae-consulta') {
+    return `
+      <div class="space-y-6 text-slate-800">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">CONCLA / IBGE & Receita Federal</span>
+            <span class="text-xs text-slate-500 font-medium">Classificação Nacional de Atividades Econômicas 2.3</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900">Guia Completo da Estrutura CNAE, Simples Nacional e Fator R</h2>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            A <strong>CNAE (Classificação Nacional de Atividades Econômicas)</strong> é o código padronizado de 7 dígitos definido pela Comissão Nacional de Classificação (CONCLA/IBGE) e adotado por Receita Federal, Juntas Comerciais, Prefeituras e Secretarias da Fazenda estaduais para identificar formalmente o ramo de atuação principal e os ramos secundários de qualquer CNPJ brasileiro.
+          </p>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Escolher o código CNAE exato na abertura de empresa ou alteração contratual define diretamente: se a atividade pode ser exercida como Microempreendedor Individual (MEI), qual Anexo tributário do Simples Nacional incide sobre o faturamento (Anexo I para comércio, Anexo II para indústria e Anexos III, IV ou V para prestação de serviços), a exigência ou dispensa de Inscrição Estadual (ICMS) e alvarás sanitários ou de conselhos profissionais.
+          </p>
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="py-2 px-3">Nível Hierárquico CNAE</th>
+                  <th class="py-2 px-3">Estrutura do Código</th>
+                  <th class="py-2 px-3">Finalidade Tributária e Cadastral</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr><td class="py-2 px-3 font-bold">Seção (A a U)</td><td class="py-2 px-3 font-mono">1 letra</td><td class="py-2 px-3">Grande setor econômico (ex: G Comércio, J Tecnologia/Informação, M Serviços Técnicos).</td></tr>
+                <tr><td class="py-2 px-3 font-bold">Divisão / Grupo / Classe</td><td class="py-2 px-3 font-mono">5 dígitos + DV</td><td class="py-2 px-3">Refinamento intermediário usado em estatísticas econômicas e enquadramento sindical patronal.</td></tr>
+                <tr><td class="py-2 px-3 font-bold">Subclasse CNAE Fiscal</td><td class="py-2 px-3 font-mono text-emerald-700 font-bold">XXXX-X/XX (7 dígitos)</td><td class="py-2 px-3">Código exato obrigatório no Cartão CNPJ, emissão de NF-e/NFS-e, eSocial e cálculo do DAS.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 text-xs text-slate-600 leading-relaxed">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+              <h3 class="font-bold text-slate-900">Impacto do Fator R no Anexo III vs. Anexo V</h3>
+              <p>Atividades intelectuais de tecnologia (como desenvolvimento de software sob encomenda 6201-5/01), consultoria e engenharia começam originalmente no Anexo V (alíquota inicial de 15,5%), mas podem migrar legalmente para o Anexo III (a partir de 6%) quando a folha salarial somada ao pró-labore dos sócios atinge 28% ou mais da receita bruta dos últimos 12 meses.</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+              <h3 class="font-bold text-slate-900">CNAE Principal vs. CNAEs Secundários</h3>
+              <p>Uma empresa pode manter até 1 CNAE principal (aquele responsável pela maior parcela da receita operacional) e diversos CNAEs secundários ligados ao objeto social do contrato, emitindo notas fiscais distintas para cada frente regularizada.</p>
+            </div>
+          </div>
+          <div class="space-y-2 text-xs text-slate-600 leading-relaxed pt-2 border-t border-slate-100">
+            <h3 class="font-bold text-slate-900">Perguntas Frequentes sobre Enquadramento CNAE, MEI e Nota Fiscal</h3>
+            <dl class="space-y-1.5">
+              <div>
+                <dt class="font-bold text-slate-800">Todo código CNAE é permitido para registro como Microempreendedor Individual (MEI)?</dt>
+                <dd>Não. Atividades regulamentadas por conselhos profissionais e serviços intelectuais de alta especialização (como medicina, engenharia, advocacia, desenvolvimento de sistemas e contabilidade) são vedadas ao MEI, exigindo enquadramento como Microempresa (ME) ou Empresa de Pequeno Porte (EPP) no Simples Nacional ou Lucro Presumido.</dd>
+              </div>
+              <div>
+                <dt class="font-bold text-slate-800">Posso alterar ou adicionar um novo CNAE depois que o CNPJ já foi aberto?</dt>
+                <dd>Sim. Basta registrar alteração contratual ou atualização cadastral via RedeSim / Junta Comercial e DBE da Receita Federal, observando a viabilidade municipal do alvará no endereço da sede e a correlação correta com os códigos de serviço municipal (LC 116) para emissão de NFS-e sem bitributação ou retenção indevida.</dd>
+              </div>
+              <div>
+                <dt class="font-bold text-slate-800">O código CNAE influencia na alíquota de RAT/FAP e contribuição sindical na CLT?</dt>
+                <dd>Sim. A Secretaria Especial da Previdência associa a Subclasse CNAE principal ao grau de risco de acidente de trabalho (RAT de 1%, 2% ou 3%), definindo encargos sobre a folha de pagamento dos empregados contratados.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Ferramentas Empresariais e Fiscais Tool Brasil</h3>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <a href="/calculadoras/calculadora-clt-vs-pj" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora CLT vs PJ →</a>
+            <a href="/calculadoras/calculadora-de-margem-de-lucro" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Margem de Lucro →</a>
+            <a href="/geradores/gerador-de-cnpj" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Gerador de CNPJ para Testes →</a>
+            <a href="/guias/clt-ou-pj-simples-nacional-pro-labore-comparativo" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">Guia CLT vs PJ & Simples Nacional →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (id === 'cbo-consulta') {
+    return `
+      <div class="space-y-6 text-slate-800">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Ministério do Trabalho e Emprego (MTE)</span>
+            <span class="text-xs text-slate-500 font-medium">Classificação Brasileira de Ocupações — eSocial & CTPS Digital</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900">Estrutura dos Códigos CBO para Admissão CLT, eSocial e Seguro-Desemprego</h2>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            A <strong>Classificação Brasileira de Ocupações (CBO)</strong> é o documento oficial mantido pelo Ministério do Trabalho e Emprego que identifica, padroniza e descreve as funções e profissões reconhecidas no mercado de trabalho brasileiro por meio de códigos numéricos no formato <code>XXXX-XX</code> (4 dígitos de família ocupacional seguidos de 2 dígitos identificadores da ocupação específica).
+          </p>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Na gestão diária de Recursos Humanos e Departamento Pessoal, o preenchimento correto do código CBO é obrigatório na emissão da Carteira de Trabalho Digital (evento S-2200 do eSocial), no envio do CAGED/Novo CAGED, no requerimento do Seguro-Desemprego, na elaboração de perfis profissiográficos previdenciários (PPP) junto ao INSS e na verificação de regras específicas de aposentadoria ou cotas legais de aprendizagem e PCD.
+          </p>
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="py-2 px-3">Grande Grupo CBO</th>
+                  <th class="py-2 px-3">Dígito Inicial</th>
+                  <th class="py-2 px-3">Exemplos de Ocupações e Setores</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr><td class="py-2 px-3 font-bold">Grande Grupo 1</td><td class="py-2 px-3 font-mono text-emerald-700 font-bold">1xxx-xx</td><td class="py-2 px-3">Dirigentes, Diretores Executivos e Gerentes de Área</td></tr>
+                <tr><td class="py-2 px-3 font-bold">Grande Grupo 2</td><td class="py-2 px-3 font-mono text-emerald-700 font-bold">2xxx-xx</td><td class="py-2 px-3">Profissionais das Ciências, Engenharia, Direito, Saúde e Tecnologia</td></tr>
+                <tr><td class="py-2 px-3 font-bold">Grande Grupo 3</td><td class="py-2 px-3 font-mono text-emerald-700 font-bold">3xxx-xx</td><td class="py-2 px-3">Técnicos de Nível Médio (Enfermagem, Eletrotécnica, Suporte TI)</td></tr>
+                <tr><td class="py-2 px-3 font-bold">Grande Grupo 4</td><td class="py-2 px-3 font-mono text-emerald-700 font-bold">4xxx-xx</td><td class="py-2 px-3">Trabalhadores de Serviços Administrativos, Auxiliares e Caixa</td></tr>
+                <tr><td class="py-2 px-3 font-bold">Grande Grupo 5</td><td class="py-2 px-3 font-mono text-emerald-700 font-bold">5xxx-xx</td><td class="py-2 px-3">Trabalhadores dos Serviços, Vendedores do Comércio e Atendimento</td></tr>
+                <tr><td class="py-2 px-3 font-bold">Grande Grupo 7</td><td class="py-2 px-3 font-mono text-emerald-700 font-bold">7xxx-xx</td><td class="py-2 px-3">Construção Civil, Manutenção Industrial, Eletricistas e Mecânicos</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed pt-2">
+            <strong>Diferença entre CBO e Regulamentação Profissional:</strong> Constar na tabela CBO oficial não transforma automaticamente uma profissão livre em profissão regulamentada por conselho de classe, mas registra estatisticamente a função efetivamente desempenhada para fins de contratos trabalhistas e proteção previdenciária.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 text-xs text-slate-600 leading-relaxed">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+              <h3 class="font-bold text-slate-900">Importância do CBO no eSocial (S-2200) e PPP Previdenciário</h3>
+              <p>O evento S-2200 do eSocial vincula obrigatoriamente o código CBO de 6 dígitos ao contrato do colaborador. Além de alimentar estatísticas nacionais do Novo CAGED, o código informado precisa refletir a atividade real do trabalhador para validação de aposentadoria especial no PPP (Perfil Profissiográfico Previdenciário), análise de insalubridade/periculosidade e habilitação correta ao Seguro-Desemprego.</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+              <h3 class="font-bold text-slate-900">CBO vs. Piso Salarial e Enquadramento Sindical</h3>
+              <p>Embora o código CBO descreva as atribuições ocupacionais padrão e escolaridade média esperada para o cargo, a definição do piso salarial aplicável decorre da Convenção Coletiva de Trabalho (CCT) firmada entre o sindicato patronal correspondente ao CNAE principal da empresa e o sindicato laboral da categoria preponderante ou diferenciada.</p>
+            </div>
+          </div>
+          <div class="space-y-2 text-xs text-slate-600 leading-relaxed pt-2 border-t border-slate-100">
+            <h3 class="font-bold text-slate-900">Perguntas Frequentes sobre Códigos CBO</h3>
+            <dl class="space-y-1.5">
+              <div>
+                <dt class="font-bold text-slate-800">O código CBO registrado na Carteira Digital pode ser corrigido se houver promoção?</dt>
+                <dd>Sim. Sempre que o empregado muda efetivamente de função ou recebe promoção formal, o setor de RH deve transmitir evento de alteração contratual no eSocial (S-2206) atualizando cargo, remuneração e o novo código CBO correspondente.</dd>
+              </div>
+              <div>
+                <dt class="font-bold text-slate-800">Existe código CBO específico para jovem aprendiz e estagiário?</dt>
+                <dd>No contrato de aprendizagem (CLT especial), utiliza-se o CBO equivalente ao curso de formação técnico-profissional metódica; já estágios regidos pela Lei nº 11.788/2008 informam a função correlata de formação no evento S-2300 sem vínculo empregatício celetista.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Calculadoras CLT e Previdenciárias Relacionadas</h3>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <a href="/calculadoras/calculadora-de-salario-liquido" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Salário Líquido →</a>
+            <a href="/calculadoras/calculadora-de-rescisao-trabalhista" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Rescisão CLT →</a>
+            <a href="/calculadoras/calculadora-de-seguro-desemprego" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Seguro-Desemprego →</a>
+            <a href="/calculadoras/calculadora-de-adicional-de-periculosidade" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">Calculadora de Periculosidade (30%) →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  if (id === 'codigos-ncm') {
+    return `
+      <div class="space-y-6 text-slate-800">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Receita Federal / MDIC / Mercosul</span>
+            <span class="text-xs text-slate-500 font-medium">Nomenclatura Comum do Mercosul (8 Dígitos)</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-900">Como Ler os 8 Dígitos do Código NCM em Notas Fiscais (NF-e / NFC-e)</h2>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            A <strong>NCM (Nomenclatura Comum do Mercosul)</strong> é o código numérico oficial de 8 dígitos obrigatório para classificar toda e qualquer mercadoria física comercializada internamente ou movimentada em operações de importação e exportação entre Brasil, Argentina, Paraguai e Uruguai. Adotada integralmente na emissão de Notas Fiscais Eletrônicas (NF-e e NFC-e), a NCM determina as alíquotas incidentes de II (Imposto de Importação), IPI (Imposto sobre Produtos Industrializados), PIS/COFINS monofásico, ICMS e regimes de Substituição Tributária (ICMS-ST + CEST).
+          </p>
+          <div class="overflow-x-auto pt-2">
+            <table class="w-full text-xs text-left border-collapse border border-slate-200">
+              <thead>
+                <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200">
+                  <th class="py-2 px-3">Posição na NCM</th>
+                  <th class="py-2 px-3">Nível de Classificação</th>
+                  <th class="py-2 px-3">Origem e Significado Técnico</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr><td class="py-2 px-3 font-mono font-bold text-emerald-700">Dígitos 1 e 2</td><td class="py-2 px-3 font-bold">Capítulo (SH)</td><td class="py-2 px-3">Grande categoria internacional do Sistema Harmonizado (ex: Cap. 84 Máquinas, Cap. 85 Eletrônicos).</td></tr>
+                <tr><td class="py-2 px-3 font-mono font-bold text-emerald-700">Dígitos 3 e 4</td><td class="py-2 px-3 font-bold">Posição (SH)</td><td class="py-2 px-3">Subdivisão direta dentro do capítulo identificando o tipo de bem.</td></tr>
+                <tr><td class="py-2 px-3 font-mono font-bold text-emerald-700">Dígitos 5 e 6</td><td class="py-2 px-3 font-bold">Subposição (SH-6)</td><td class="py-2 px-3">Padrão global unificado em mais de 200 países pela Organização Mundial das Aduanas (OMA).</td></tr>
+                <tr><td class="py-2 px-3 font-mono font-bold text-emerald-700">Dígitos 7 e 8</td><td class="py-2 px-3 font-bold">Item e Subitem (Mercosul)</td><td class="py-2 px-3">Desdobramento regional exclusivo do Mercosul para definição tributária fina no Brasil.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed pt-2">
+            <strong>Atenção à Tabela TIPI e NF-e Rejeitada:</strong> Informar uma NCM extinta ou incorreta causa rejeição imediata na validação do XML da NF-e pela SEFAZ (Erro 778 — NCM inexistente) ou gera recolhimento indevido de tributos em vendas de varejo e e-commerce. Sempre atualize periodicamente o cadastro de produtos do seu ERP segundo a tabela vigente publicada pela Secretaria Especial da Receita Federal do Brasil.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 text-xs text-slate-600 leading-relaxed">
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+              <h3 class="font-bold text-slate-900">Relação Entre NCM, CEST e Substituição Tributária (ICMS-ST)</h3>
+              <p>Em vendas interestaduais e operações sujeitas ao regime de Substituição Tributária do ICMS, a NCM atua combinada ao Código Especificador da Substituição Tributária (CEST, de 7 dígitos). Enquanto a NCM classifica fisicamente o produto no Sistema Harmonizado, o CEST vincula aquele item aos convênios CONFAZ aplicáveis para determinar o MVA e o cálculo correto de retenção antecipada do imposto estadual.</p>
+            </div>
+            <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+              <h3 class="font-bold text-slate-900">Regras para Serviços vs. Mercadorias e Ex-Tarifário</h3>
+              <p>Prestação de serviços puros (como consultoria ou desenvolvimento de software) utilizam códigos NBS/LC 116 em NFS-e e não exigem NCM; somente mercadorias físicas na NF-e e NFC-e requerem os 8 algarismos da Nomenclatura Comum do Mercosul. Em importações de bens de capital e informática sem produção nacional equivalente, regimes de Ex-Tarifário reduzem temporariamente o Imposto de Importação com destaque sobre a NCM base.</p>
+            </div>
+          </div>
+          <div class="space-y-2 text-xs text-slate-600 leading-relaxed pt-2 border-t border-slate-100">
+            <h3 class="font-bold text-slate-900">Perguntas Frequentes sobre Códigos NCM</h3>
+            <dl class="space-y-1.5">
+              <div>
+                <dt class="font-bold text-slate-800">Pequenas empresas no Simples Nacional também precisam preencher a NCM na nota fiscal?</dt>
+                <dd>Sim. Mesmo empresas optantes pelo Simples Nacional e MEIs emitentes de NF-e/NFC-e devem informar os 8 dígitos da NCM por item, inclusive para segregar corretamente receitas sujeitas à tributação monofásica de PIS/COFINS ou ICMS-ST e evitar pagar imposto em duplicidade no PGDAS-D.</dd>
+              </div>
+              <div>
+                <dt class="font-bold text-slate-800">Qual NCM usar para kits promocionais com múltiplos produtos?</dt>
+                <dd>Regra geral de interpretação fiscal recomenda discriminar cada item do kit separadamente na nota fiscal com sua respectiva NCM individual para preservar a exatidão tributária dos anexos de IPI, PIS/COFINS e ICMS de cada mercadoria.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+          <h3 class="text-sm font-bold text-slate-900">Utilitários Comerciais e Tributários Tool Brasil</h3>
+          <div class="flex flex-wrap gap-2 text-xs">
+            <a href="/calculadoras/calculadora-de-icms" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de ICMS por Estado →</a>
+            <a href="/calculadoras/calculadora-de-preco-de-venda" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Calculadora de Preço de Venda (Markup) →</a>
+            <a href="/geradores/gerador-de-codigo-de-barras" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Gerador de Código de Barras EAN-13 →</a>
+            <a href="/programatico/cnae-consulta" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">Consulta de CNAE →</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // Fallback genérico (para eventual futura rota)
   return `
     <div class="space-y-6 text-slate-800">
       <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-4">
@@ -2143,32 +2781,10 @@ function getProgrammaticEditorialHtml(id: string, page: any): string {
           <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold">Base de Dados Pública Brasileira</span>
           <span class="text-xs text-slate-500 font-medium">Consulta Local & Custo Zero</span>
         </div>
-        <h2 class="text-xl font-bold text-slate-900">
-          Informações Oficiais e Estrutura Técnica de Consulta
-        </h2>
+        <h2 class="text-xl font-bold text-slate-900">Informações Oficiais e Estrutura Técnica de Consulta</h2>
         <p class="text-xs text-slate-600 leading-relaxed">
           Esta central programática reúne tabelas estruturadas, nomenclaturas fiscais e parâmetros de conformidade regulatória para empresas, estudantes e desenvolvedores de sistemas em todo o Brasil. Todas as consultas e simulações processam com alta velocidade e respeito absoluto à privacidade dos usuários.
         </p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 text-xs text-slate-600 leading-relaxed">
-          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-            <h3 class="font-bold text-slate-900">Rigor Normativo</h3>
-            <p>Informações alinhadas aos manuais oficiais da Receita Federal, Ministério do Trabalho e Emprego, Anatel e Banco Central do Brasil.</p>
-          </div>
-          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-            <h3 class="font-bold text-slate-900">Uso Livre & Gratuito</h3>
-            <p>Dados disponibilizados sem custos de assinatura e sem necessidade de cadastros, facilitando a rotina operacional do cidadão.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3">
-        <h3 class="text-sm font-bold text-slate-900">Acesse Utilitários Gratuitos da Tool Brasil</h3>
-        <div class="flex flex-wrap gap-2 text-xs">
-          <a href="/calculadoras" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Central de Calculadoras →</a>
-          <a href="/geradores" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Geradores de Documentos de Teste →</a>
-          <a href="/conversores" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Conversores de Moedas e Medidas →</a>
-        </div>
       </div>
     </div>
   `;
@@ -2178,6 +2794,10 @@ function generateProgrammaticHtml(template: string, id: string, page: any): stri
   const title = `${page.title} | Tool Brasil`;
   const desc = page.description;
   const canonical = `https://www.toolbrasil.com.br/programatico/${id}`;
+  const isNoIndex = isNoIndexProgrammaticId(id);
+  const robotsMeta = isNoIndex
+    ? 'noindex, follow'
+    : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
 
   const content = `
     <div class="space-y-6">
@@ -2202,6 +2822,160 @@ function generateProgrammaticHtml(template: string, id: string, page: any): stri
     { name: page.title, path: `/programatico/${id}` }
   ];
   const schemaTags = buildSchemaTags(crumbs);
+  return buildHtmlPage(template, title, desc, canonical, content, schemaTags, robotsMeta);
+}
+
+function generateGuidesHubHtml(template: string): string {
+  const title = 'Guias Práticos, Manuais CLT, Finanças e Web | Tool Brasil';
+  const desc = 'Biblioteca editorial completa com guias passo a passo sobre CLT 2026, tabela INSS e IRRF, rescisão, juros compostos, segurança LGPD e infraestrutura web.';
+  const canonical = 'https://www.toolbrasil.com.br/guias';
+
+  const content = `
+    <div class="space-y-6">
+      <nav class="text-xs text-slate-500 font-semibold space-x-1.5 flex items-center">
+        <a href="/" class="hover:underline">Início</a>
+        <span>&gt;</span>
+        <span class="text-slate-800 font-bold">Guias Práticos</span>
+      </nav>
+
+      <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+        <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold inline-block">Biblioteca Editorial Tool Brasil</span>
+        <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">Guias Práticos, Manuais CLT 2026, Finanças e Segurança Web</h1>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          Estude em profundidade a metodologia por trás das nossas calculadoras e utilitários: cálculos passo a passo do INSS e IRRF 2026, cálculo de rescisão trabalhista CLT, planejamento do 13º salário, comparação SAC vs. Price, uso de dados sintéticos em QA sob a LGPD e auditoria técnica DNS/SSL.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        ${EDITORIAL_GUIDES.map(g => `
+          <article class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm flex flex-col justify-between gap-3">
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-[11px] font-bold">
+                <span class="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">${g.category}</span>
+                <span class="text-slate-500 font-mono">${g.publishedAt}</span>
+              </div>
+              <h2 class="text-base font-black text-slate-900">
+                <a href="/guias/${g.slug}" class="hover:text-emerald-700 hover:underline">${g.title}</a>
+              </h2>
+              <p class="text-xs text-slate-600 leading-relaxed">${g.summary}</p>
+            </div>
+            <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-700">
+              <span>Leitura: ${g.readTimeMinutes} min • ${g.author}</span>
+              <a href="/guias/${g.slug}" class="hover:underline">Ler guia →</a>
+            </div>
+          </article>
+        `).join('')}
+      </div>
+
+      <section class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-3 text-xs text-slate-600 leading-relaxed">
+        <h2 class="text-base font-black text-slate-900">Critérios Editoriais e Fontes Oficiais</h2>
+        <p>
+          Cada artigo publicado na central editorial da Tool Brasil passa por conferência numérica frente às normas brasileiras vigentes — Consolidação das Leis do Trabalho (CLT), tabelas anuais da Receita Federal (IRRF), Previdência Social (INSS), FEBRABAN/BACEN (Sistema de Pagamentos Brasileiro) e Lei Geral de Proteção de Dados (Lei nº 13.709/2018). Todos os guias se conectam diretamente às nossas ferramentas interativas gratuitas para permitir validação imediata no navegador do usuário.
+        </p>
+      </section>
+    </div>
+  `;
+
+  const crumbs = [
+    { name: 'Início', path: '/' },
+    { name: 'Guias Práticos', path: '/guias' }
+  ];
+  const schemaTags = buildSchemaTags(crumbs);
+  return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
+}
+
+function generateGuideArticleHtml(template: string, guide: any): string {
+  const title = `${guide.title} | Guias Tool Brasil`;
+  const desc = guide.summary;
+  const canonical = `https://www.toolbrasil.com.br/guias/${guide.slug}`;
+
+  const content = `
+    <article class="space-y-6">
+      <nav class="text-xs text-slate-500 font-semibold space-x-1.5 flex items-center flex-wrap">
+        <a href="/" class="hover:underline">Início</a>
+        <span>&gt;</span>
+        <a href="/guias" class="hover:underline">Guias Práticos</a>
+        <span>&gt;</span>
+        <span class="text-slate-800 font-bold">${guide.title}</span>
+      </nav>
+
+      <header class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-3">
+        <div class="flex flex-wrap items-center gap-2 text-xs font-bold">
+          <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">${guide.category}</span>
+          <span class="text-slate-500 font-mono">Data editorial: ${guide.publishedAt}</span>
+          <span class="text-slate-500">• ${guide.readTimeMinutes} min de leitura</span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black tracking-tight text-slate-900">${guide.title}</h1>
+        <p class="text-sm text-slate-700 font-medium leading-relaxed">${guide.summary}</p>
+        <p class="text-xs text-slate-500 font-semibold">Por <strong>${guide.author}</strong> — ${guide.authorRole}</p>
+      </header>
+
+      <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-300 shadow-sm space-y-6 text-xs sm:text-sm text-slate-700 leading-relaxed">
+        <p class="font-medium text-slate-800 leading-relaxed">${guide.intro}</p>
+
+        ${guide.sections.map((s: any) => `
+          <section class="space-y-3 pt-4 border-t border-slate-100">
+            <h2 class="text-lg font-black text-slate-900">${s.heading}</h2>
+            ${s.paragraphs.map((p: string) => `<p class="leading-relaxed">${p}</p>`).join('')}
+            ${s.bullets && s.bullets.length > 0 ? `
+              <ul class="list-disc pl-5 space-y-1.5 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs font-medium">
+                ${s.bullets.map((b: string) => `<li>${b}</li>`).join('')}
+              </ul>
+            ` : ''}
+          </section>
+        `).join('')}
+
+        ${guide.faqs && guide.faqs.length > 0 ? `
+          <section class="space-y-3 pt-4 border-t border-slate-200">
+            <h2 class="text-lg font-black text-slate-900">Perguntas Frequentes</h2>
+            <dl class="space-y-3 text-xs">
+              ${guide.faqs.map((faq: any) => `
+                <div class="p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+                  <dt class="font-bold text-slate-900">${faq.question}</dt>
+                  <dd class="mt-1 text-slate-600 leading-relaxed">${faq.answer}</dd>
+                </div>
+              `).join('')}
+            </dl>
+          </section>
+        ` : ''}
+      </div>
+
+      <section class="bg-emerald-50/70 p-6 rounded-2xl border border-emerald-200 space-y-3">
+        <h2 class="text-sm font-black text-emerald-900 uppercase tracking-wider">Ferramentas Gratuitas Relacionadas</h2>
+        <div class="flex flex-wrap gap-2 text-xs">
+          ${guide.relatedToolLinks.map((lnk: any) => `
+            <a href="${lnk.href}" class="px-3 py-1.5 bg-white text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">${lnk.label} →</a>
+          `).join('')}
+        </div>
+      </section>
+    </article>
+  `;
+
+  const crumbs = [
+    { name: 'Início', path: '/' },
+    { name: 'Guias Práticos', path: '/guias' },
+    { name: guide.title, path: `/guias/${guide.slug}` }
+  ];
+  const breadcrumb = getBreadcrumbSchema(crumbs);
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: guide.title,
+    description: guide.summary,
+    datePublished: guide.publishedAt,
+    dateModified: guide.updatedAt || guide.publishedAt,
+    author: {
+      '@type': 'Person',
+      name: guide.author
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Tool Brasil',
+      url: 'https://www.toolbrasil.com.br/'
+    },
+    mainEntityOfPage: canonical
+  };
+  const schemaTags = `<script type="application/ld+json">\n${JSON.stringify(breadcrumb, null, 2)}\n</script>\n<script type="application/ld+json">\n${JSON.stringify(articleSchema, null, 2)}\n</script>`;
   return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
 }
 
@@ -2674,7 +3448,10 @@ function generateInstitutionalHtml(template: string, id: string): string {
   return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
 }
 
-function generateDeveloperHtml(template: string): string {
+function generateDeveloperHtml(
+  template: string,
+  robotsMeta: string = 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1'
+): string {
   const title = 'API Pública & Central de Desenvolvedores | Tool Brasil';
   const desc = 'Acesse dados oficiais do Brasil, geradores sintéticos com Módulo 11 (CPF, CNPJ) e tabelas trabalhistas via API REST estática de custo zero e widgets incorporáveis.';
   const canonical = 'https://www.toolbrasil.com.br/desenvolvedores';
@@ -2693,7 +3470,7 @@ function generateDeveloperHtml(template: string): string {
         </span>
         <h1 class="text-3xl font-black tracking-tight">Central de Desenvolvedores & API Pública</h1>
         <p class="text-sm text-slate-300 leading-relaxed max-w-2xl">
-          Endpoints REST estáticos de alta performance servidos diretamente na CDN (Edge Cache) com custo zero de infraestrutura e suporte total a CORS. Integre geradores com validação oficial Módulo 11, tabelas trabalhistas e calendários oficiais ao seu sistema ou blog.
+          Endpoints REST estáticos de alta performance servidos diretamente na CDN (Edge Cache) com custo zero de infraestrutura, latência ultrabaixa e suporte completo a CORS (Cross-Origin Resource Sharing). Integre tabelas trabalhistas de 2026, calendários oficiais, catálogo de bancos COMPE/ISPB e lotes de massa de teste com validação oficial Módulo 11 ao seu backend, frontend ou pipeline de testes automatizados (QA).
         </p>
       </div>
 
@@ -2770,6 +3547,17 @@ function generateDeveloperHtml(template: string): string {
       </div>
 
       <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+        <h2 class="text-xl font-black text-slate-900">Exemplos Práticos de Integração (cURL, JavaScript & TypeScript)</h2>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Como os endpoints JSON da versão 1 são gerados estaticamente durante o build de produção e distribuídos via Vercel Edge Network com cabeçalho <code>Access-Control-Allow-Origin: *</code>, você não precisa de chaves de API nem tokens OAuth. Basta realizar uma requisição HTTP <code>GET</code> padrão direto do navegador ou do servidor:
+        </p>
+        <pre class="bg-slate-900 text-emerald-300 p-4 rounded-xl font-mono text-xs overflow-x-auto">curl -s https://www.toolbrasil.com.br/api/v1/tabelas/inss.json | jq .</pre>
+        <pre class="bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-xs overflow-x-auto">const res = await fetch('https://www.toolbrasil.com.br/api/v1/dados/bancos.json');
+const data = await res.json();
+console.log('Total bancos:', data.length);</pre>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-4">
         <h2 class="text-xl font-black text-slate-900">Widgets Embebíveis para Blogs e Portais</h2>
         <p class="text-xs text-slate-600 leading-relaxed">
           Incorpore utilitários da Tool Brasil diretamente em suas postagens ou páginas sem programar back-end. Cole o código HTML abaixo:
@@ -2777,6 +3565,41 @@ function generateDeveloperHtml(template: string): string {
         <div class="bg-slate-900 text-emerald-300 p-4 rounded-xl font-mono text-xs overflow-x-auto">
           &lt;div id="tool-brasil-widget" data-tool="validador-documentos" data-theme="light"&gt;&lt;/div&gt;<br />
           &lt;script src="https://www.toolbrasil.com.br/widget.js" async&gt;&lt;/script&gt;
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+        <h2 class="text-lg font-black text-slate-900">Política de Cache, Limites, Boas Práticas REST e Conformidade LGPD</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-600 leading-relaxed">
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+            <h3 class="font-bold text-slate-900">Disponibilidade CDN & Cache-Control</h3>
+            <p>As respostas carregam políticas de cache em borda (<code>public, max-age=86400, stale-while-revalidate=604800</code>), permitindo que ERPs, planilhas corporativas, scripts de CI/CD e testes de integração consumam as tabelas oficiais brasileiras sem throttling artificial nem chaves pagas.</p>
+          </div>
+          <div class="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1.5">
+            <h3 class="font-bold text-slate-900">Dados Sintéticos Exclusivos para QA</h3>
+            <p>Os lotes em <code>/api/v1/cpf/gerar.json</code> e <code>/api/v1/cnpj/gerar.json</code> são gerados matematicamente apenas com dígitos verificadores válidos em Módulo 11 oficial, sem acessar bases governamentais e sem expor dados pessoais reais sob a LGPD (Lei nº 13.709/2018).</p>
+          </div>
+        </div>
+        <div class="space-y-2.5 text-xs text-slate-600 leading-relaxed pt-2 border-t border-slate-100">
+          <h3 class="text-sm font-bold text-slate-900">Perguntas Frequentes de Integração</h3>
+          <dl class="space-y-2">
+            <div>
+              <dt class="font-bold text-slate-800">A API exige autenticação via Bearer Token ou chave de API?</dt>
+              <dd>Não. Todos os endpoints públicos <code>/api/v1/*.json</code> operam sem autenticação e respondem diretamente em JSON UTF-8 com suporte CORS liberado para aplicações web e backends.</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">Com que frequência as tabelas de INSS, IRRF e Salário Mínimo são revisadas?</dt>
+              <dd>Sempre que ocorrem atualizações anuais publicadas no Diário Oficial da União (DOU) pela Receita Federal, Ministério da Previdência Social ou Banco Central, os endpoints estáticos são regenerados no build de produção.</dd>
+            </div>
+            <div>
+              <dt class="font-bold text-slate-800">Posso incorporar os widgets da Tool Brasil em portais corporativos ou blogs em WordPress?</dt>
+              <dd>Sim. Basta colar as duas linhas do snippet JavaScript assíncrono em seu HTML para carregar componentes leves e responsivos sem impacto negativo na renderização principal.</dd>
+            </div>
+          </dl>
+        </div>
+        <div class="flex flex-wrap gap-2 text-xs pt-2">
+          <a href="/guias/seguranca-digital-senhas-fortes-hash-cpf-sintetico-lgpd" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 rounded-lg font-bold border border-emerald-200">Guia de Dados Sintéticos e LGPD →</a>
+          <a href="/guias/auditoria-tecnica-dns-ssl-headers-http-seguranca-sites" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded-lg font-bold border border-slate-200">Auditoria Técnica Web →</a>
         </div>
       </div>
     </div>
@@ -2806,7 +3629,7 @@ function generateDeveloperHtml(template: string): string {
   let schemaTags = `<script type="application/ld+json">\n${JSON.stringify(breadcrumb, null, 2)}\n</script>`;
   schemaTags += `\n<script type="application/ld+json">\n${JSON.stringify(webApiSchema, null, 2)}\n</script>`;
 
-  return buildHtmlPage(template, title, desc, canonical, content, schemaTags);
+  return buildHtmlPage(template, title, desc, canonical, content, schemaTags, robotsMeta);
 }
 
 run();

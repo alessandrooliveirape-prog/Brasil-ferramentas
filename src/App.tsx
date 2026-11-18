@@ -32,7 +32,8 @@ import {
 
 // Core data and sub-components
 import { CATEGORIES, TOOLS, PROGRAMMATIC_PAGES } from './toolsData';
-import { EXTRA_PROGRAMMATIC_PAGES } from './programmaticExtra';
+import { EXTRA_PROGRAMMATIC_PAGES, isNoIndexProgrammaticId } from './programmaticExtra';
+import { EDITORIAL_GUIDES } from './guidesData';
 
 // Merge base programmatic pages with extra long-tail SEO pages
 const ALL_PROGRAMMATIC_PAGES = { ...PROGRAMMATIC_PAGES, ...EXTRA_PROGRAMMATIC_PAGES };
@@ -44,6 +45,7 @@ const Utilitarios = lazy(() => import('./components/Utilitarios'));
 const ProgrammaticPage = lazy(() => import('./components/ProgrammaticPage'));
 const Institucional = lazy(() => import('./components/Institucional'));
 const DesenvolvedoresView = lazy(() => import('./components/DesenvolvedoresView'));
+const GuidesView = lazy(() => import('./components/GuidesView'));
 import AdSensePlaceholder from './components/AdSensePlaceholder';
 const SEOAnalyzer = lazy(() => import('./components/SEOAnalyzer'));
 const CommandPalette = lazy(() => import('./components/CommandPalette'));
@@ -249,6 +251,14 @@ export default function App() {
     if (parts[0] === 'desenvolvedores' || parts[0] === 'api' || parts[0] === 'api-publica') {
       return { view: 'desenvolvedores', categoryId: 'desenvolvedores', slug: null, id: null };
     }
+    if (parts[0] === 'guias') {
+      if (parts.length === 1) {
+        return { view: 'guias', categoryId: 'guias', slug: null, id: null };
+      }
+      if (parts.length === 2) {
+        return { view: 'guia', categoryId: 'guias', slug: parts[1], id: null };
+      }
+    }
 
     // Direct institutional root routes
     const institutionalMap: { [key: string]: string } = {
@@ -275,13 +285,13 @@ export default function App() {
       return { view: 'tool', categoryId: parts[0], slug: parts[1], id: null };
     }
     if (parts.length === 1) {
-      const catExists = CATEGORIES.some(c => c.id === parts[0]);
+      const catExists = CATEGORIES.some(c => c.id === parts[0] && c.id !== 'institucional' && c.id !== 'programatico');
       if (catExists) {
         return { view: 'category', categoryId: parts[0], slug: null, id: null };
       }
     }
 
-    return { view: 'home', categoryId: null, slug: null, id: null };
+    return { view: 'not-found', categoryId: null, slug: null, id: null };
   }
 
   // Set up listeners for pathname routing and internal click interception (SPA performance)
@@ -428,6 +438,25 @@ export default function App() {
       title = "API Pública & Central de Desenvolvedores | Tool Brasil";
       desc = "Endpoints estáticos de alta performance e custo zero para desenvolvedores, equipes de QA e contadores. Consuma dados oficiais do Brasil e incorpore widgets gratuitos.";
       pathSuffix = "desenvolvedores";
+    } else if (currentRoute.view === 'guias') {
+      title = "Guias Práticos, Manuais CLT, Finanças e Web | Tool Brasil";
+      desc = "Biblioteca editorial da Tool Brasil com guias completos de CLT 2026, INSS, IRRF, 13º salário, juros compostos, segurança LGPD e infraestrutura web.";
+      pathSuffix = "guias";
+    } else if (currentRoute.view === 'guia' && currentRoute.slug) {
+      const matchedGuide = EDITORIAL_GUIDES.find(g => g.slug === currentRoute.slug);
+      if (matchedGuide) {
+        title = `${matchedGuide.title} | Guias Tool Brasil`;
+        desc = matchedGuide.summary;
+        pathSuffix = `guias/${matchedGuide.slug}`;
+      } else {
+        title = "Guia não encontrado | Tool Brasil";
+        desc = "Confira nossa biblioteca completa de guias práticos e ferramentas online gratuitas.";
+        pathSuffix = `guias/${currentRoute.slug}`;
+      }
+    } else if (currentRoute.view === 'not-found') {
+      title = "Página não encontrada | Tool Brasil";
+      desc = "Explore mais de 138 calculadoras, conversores, geradores e guias gratuitos na Tool Brasil.";
+      pathSuffix = "";
     }
 
     document.title = title;
@@ -441,6 +470,47 @@ export default function App() {
       metaDesc.setAttribute('name', 'description');
       metaDesc.setAttribute('content', desc);
       document.head.appendChild(metaDesc);
+    }
+
+    // Dynamic robots tag (noindex, follow for filtered queries, /api aliases, replicated/countdown programmatic pages, and Soft-404s)
+    const shouldNoIndexRoute = (): boolean => {
+      const searchParams = new URLSearchParams(window.location.search);
+      const hasDisallowedParam =
+        searchParams.has('q') ||
+        searchParams.has('ref') ||
+        searchParams.has('admin') ||
+        Array.from(searchParams.keys()).some(k => k.toLowerCase().startsWith('utm_'));
+      if (hasDisallowedParam) return true;
+
+      const normalizedPath = window.location.pathname.replace(/\/+$/, '') || '/';
+      if (normalizedPath === '/api' || normalizedPath.startsWith('/api/') || normalizedPath === '/api-publica') {
+        return true;
+      }
+      if (currentRoute.view === 'not-found') return true;
+      if (currentRoute.view === 'programatico') {
+        if (!currentRoute.id || !ALL_PROGRAMMATIC_PAGES[currentRoute.id] || isNoIndexProgrammaticId(currentRoute.id)) {
+          return true;
+        }
+      }
+      if (currentRoute.view === 'tool' && !activeTool) return true;
+      if (currentRoute.view === 'guia' && (!currentRoute.slug || !EDITORIAL_GUIDES.some(g => g.slug === currentRoute.slug))) {
+        return true;
+      }
+      return false;
+    };
+
+    const robotsValue = shouldNoIndexRoute()
+      ? 'noindex, follow'
+      : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1';
+
+    let metaRobots = document.querySelector('meta[name="robots"]');
+    if (metaRobots) {
+      metaRobots.setAttribute('content', robotsValue);
+    } else {
+      metaRobots = document.createElement('meta');
+      metaRobots.setAttribute('name', 'robots');
+      metaRobots.setAttribute('content', robotsValue);
+      document.head.appendChild(metaRobots);
     }
 
     // Update Open Graph Title
@@ -575,6 +645,14 @@ export default function App() {
 
     if (activeTool) {
       crumbs.push({ name: activeTool.title, path: `/${activeTool.categoryId}/${activeTool.slug}` });
+    } else if (currentRoute.view === 'guias') {
+      crumbs.push({ name: 'Guias & Tutoriais', path: '/guias' });
+    } else if (currentRoute.view === 'guia' && currentRoute.slug) {
+      const matchedGuide = EDITORIAL_GUIDES.find(g => g.slug === currentRoute.slug);
+      crumbs.push({ name: 'Guias & Tutoriais', path: '/guias' });
+      if (matchedGuide) {
+        crumbs.push({ name: matchedGuide.title, path: `/guias/${matchedGuide.slug}` });
+      }
     } else if (currentRoute.view === 'programatico' && currentRoute.id) {
       const prog = ALL_PROGRAMMATIC_PAGES[currentRoute.id];
       if (prog) {
@@ -726,6 +804,12 @@ export default function App() {
                 </a>
               );
             })}
+            <a
+              href="/guias"
+              className={`hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 ${currentRoute.view === 'guias' || currentRoute.view === 'guia' ? 'text-emerald-700 dark:text-emerald-400 border-b-2 border-emerald-600 font-bold' : ''}`}
+            >
+              Guias
+            </a>
             <a
               href="/sobre"
               className={`hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors py-1 ${currentRoute.view === 'institucional' && currentRoute.id === 'sobre' ? 'text-emerald-700 dark:text-emerald-400 border-b-2 border-emerald-600 font-bold' : ''}`}
@@ -1302,6 +1386,58 @@ export default function App() {
                   <a href="/geradores/gerador-de-qr-code" className="p-2 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 rounded hover:border-emerald-600 font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-slate-900 dark:text-slate-100 transition">Gerar QR Code</a>
                 </div>
               </div>
+
+              {/* GUIAS PRÁTICOS & METODOLOGIA EDITORIAL (HOME ANTI-THIN CONTENT + INTERLINKING) */}
+              <div className="deferred-section bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl p-6 space-y-5 shadow-xs" id="home-editorial-methodology">
+                <div className="flex items-center justify-between flex-wrap gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+                  <div>
+                    <h2 className="text-base font-black text-slate-900 dark:text-white flex items-center gap-2">
+                      📚 Biblioteca de Guias Práticos & Manuais 2026
+                    </h2>
+                    <p className="text-xs text-slate-600 dark:text-slate-400 font-medium mt-0.5">
+                      Explicações passo a passo sobre legislação trabalhista (CLT), finanças pessoais, LGPD e diagnósticos web.
+                    </p>
+                  </div>
+                  <a
+                    href="/guias"
+                    className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-bold transition shadow-xs"
+                  >
+                    Ver todos os {EDITORIAL_GUIDES.length} guias →
+                  </a>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {EDITORIAL_GUIDES.slice(0, 4).map((g) => (
+                    <a
+                      key={g.slug}
+                      href={`/guias/${g.slug}`}
+                      className="p-4 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-xl hover:border-emerald-600 transition block group space-y-1.5"
+                    >
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 dark:text-emerald-400">
+                        {g.category}
+                      </span>
+                      <h3 className="text-xs font-extrabold text-slate-900 dark:text-slate-100 group-hover:text-emerald-700 dark:group-hover:text-emerald-400 line-clamp-2">
+                        {g.title}
+                      </h3>
+                      <p className="text-[11px] text-slate-600 dark:text-slate-400 line-clamp-2">
+                        {g.summary}
+                      </p>
+                    </a>
+                  ))}
+                </div>
+
+                <div className="space-y-3 pt-2 border-t border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  <h3 className="text-sm font-black text-slate-900 dark:text-white">
+                    Como a Tool Brasil Garante Precisão Técnica, Privacidade e Gratuidade Total
+                  </h3>
+                  <p>
+                    A <strong>Tool Brasil</strong> reúne mais de 138 utilitários online divididos em cinco suítes especializadas: <strong>Calculadoras</strong> trabalhistas, previdenciárias, financeiras e de engenharia civil atualizadas para as tabelas vigentes de 2026; <strong>Conversores</strong> de câmbio em tempo real, medidas métricas e armazenamentos binário e decimal; <strong>Geradores</strong> sintéticos de CPF e CNPJ via algoritmo oficial Módulo 11, senhas criptográficas via Web Crypto API e códigos QR PIX EMVCo; <strong>Ferramentas Web</strong> para verificação de DNS, SSL/TLS, cabeçalhos HTTP e latência; e <strong>Utilitários</strong> de edição e compressão local de imagens via Canvas API e PDF.
+                  </p>
+                  <p>
+                    Todo o processamento crítico é executado diretamente no navegador do visitante (client-side), sem coleta ou armazenamento de documentos, senhas ou simulações em servidores externos, em estrita conformidade com a Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018). Todos os simuladores trabalhistas e tributários acompanham as regras oficiais do INSS progressivo (teto vigente de R$ 8.157,41), tabela do IRRF com opção simplificada mensal, Lei nº 12.506/2011 do aviso prévio proporcional e normas do Banco Central do Brasil. Para consulta rápida de dúvidas conceituais, nossa central de <a href="/guias" className="font-bold text-emerald-700 dark:text-emerald-400 hover:underline">Guias Práticos</a> e nossos dados abertos na <a href="/desenvolvedores" className="font-bold text-emerald-700 dark:text-emerald-400 hover:underline">API Pública</a> oferecem referências abertas e verificáveis sem custos nem cadastros.
+                  </p>
+                </div>
+              </div>
             </div>
           )}
 
@@ -1577,6 +1713,36 @@ export default function App() {
                       </div>
                     )}
 
+                    {/* CONTEXTUAL GUIDES SECTION */}
+                    {(() => {
+                      const catGuides = EDITORIAL_GUIDES.filter(g => g.categoryId === activeTool.categoryId);
+                      const guidesToShow = (catGuides.length > 0 ? catGuides : EDITORIAL_GUIDES).slice(0, 3);
+                      return (
+                        <div className="pt-4 border-t border-slate-200 dark:border-slate-800 space-y-2.5">
+                          <div className="flex items-center justify-between gap-2 flex-wrap">
+                            <span className="text-[10px] font-extrabold text-emerald-700 dark:text-emerald-400 uppercase tracking-widest block">
+                              📚 Guias Práticos e Aprofundamento Recomendado:
+                            </span>
+                            <a href="/guias" className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 hover:underline">
+                              Ver todos os guias →
+                            </a>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                            {guidesToShow.map((g) => (
+                              <a
+                                key={g.slug}
+                                href={`/guias/${g.slug}`}
+                                className="p-3 bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/70 rounded-xl hover:border-emerald-600 transition block space-y-1"
+                              >
+                                <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-400 block">{g.category}</span>
+                                <span className="text-xs font-extrabold text-slate-900 dark:text-slate-100 line-clamp-2 block">{g.title}</span>
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })()}
+
                   </article>
                 </>
               )}
@@ -1718,6 +1884,29 @@ export default function App() {
             </div>
           )}
 
+          {/* 7. GUIAS PRÁTICOS & ARTIGOS EDITORIAIS */}
+          {(currentRoute.view === 'guias' || currentRoute.view === 'guia') && (
+            <div id="view-guides-module">
+              <Suspense fallback={<div className="p-8 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 text-sm text-slate-600 dark:text-slate-300">Carregando guia prático...</div>}>
+                <GuidesView slug={currentRoute.view === 'guia' ? currentRoute.slug : null} />
+              </Suspense>
+            </div>
+          )}
+
+          {/* 8. PÁGINA NÃO ENCONTRADA (NOINDEX SOFT-404 GUARD) */}
+          {(currentRoute.view === 'not-found' || (currentRoute.view === 'tool' && !activeTool)) && (
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 text-center space-y-4 shadow-xs" id="view-not-found">
+              <h1 className="text-2xl font-black text-slate-900 dark:text-white">Página não encontrada</h1>
+              <p className="text-sm text-slate-600 dark:text-slate-300 max-w-lg mx-auto">
+                O endereço acessado não corresponde a uma ferramenta ativa. Utilize o menu lateral, a busca global ou explore nossa central de guias e calculadoras gratuitas.
+              </p>
+              <div className="flex flex-wrap justify-center gap-3 pt-2">
+                <a href="/" className="px-4 py-2 bg-emerald-700 hover:bg-emerald-600 text-white rounded-xl text-xs font-bold transition">Ir para o Início</a>
+                <a href="/guias" className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-slate-100 rounded-xl text-xs font-bold border border-slate-300 dark:border-slate-700 transition">Ler Guias Práticos</a>
+              </div>
+            </div>
+          )}
+
           {/* ADSENSE BOTTOM ANCHOR */}
           <AdSensePlaceholder slotId="slot-4" position="final" />
 
@@ -1779,6 +1968,7 @@ export default function App() {
             <div>
               <h2 className="text-xs font-bold uppercase tracking-wider text-slate-200 mb-3">Institucional & API</h2>
               <ul className="space-y-2 text-xs">
+                <li><a href="/guias" className="inline-block py-0.5 hover:text-emerald-400 font-bold text-emerald-400">📚 Guias Práticos (2026)</a></li>
                 <li><a href="/desenvolvedores" className="inline-block py-0.5 hover:text-emerald-400 font-bold text-emerald-400">⚡ API Pública & Docs</a></li>
                 <li><a href="/desenvolvedores#widgets" className="inline-block py-0.5 hover:text-emerald-400">Widgets para Sites</a></li>
                 <li><a href="/sobre" className="inline-block py-0.5 hover:text-emerald-400 font-semibold text-slate-200">Sobre a Tool Brasil</a></li>

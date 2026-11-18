@@ -1780,13 +1780,20 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'utilitarios',
     title: 'Cronômetro Online',
     shortDescription: 'Cronômetro preciso com voltas e controle de tempo para treinos e atividades.',
-    longIntro: 'Um cronômetro completo e preciso diretamente no navegador. Perfeito para treinos físicos, cooking timing, medição de produtividade (Pomodoro) e qualquer atividade que precise de controle de tempo.',
-    howItWorks: 'Clique em iniciar para começar a contagem. Use o botão de volta para marcar intervalos. O cronômetro exibe horas, minutos, segundos e centésimos.',
+    longIntro: 'Um cronômetro digital de alta precisão diretamente no navegador, projetado para registrar tempos totais, parciais e voltas sucessivas (laps) sem instalação de aplicativos. Diferente de contadores simples que perdem sincronismo quando a aba perde foco, o motor de cronometragem utiliza o relógio monotônico do sistema operacional por meio de timestamps em milissegundos, mantendo rigor temporal para treinos intervalados (HIIT), simulações de provas e exames, cronometragem culinária, controle de produtividade pelo método Pomodoro e testes de desempenho operacional.',
+    howItWorks: 'Pressione Iniciar para acionar a contagem progressiva contínua em horas, minutos, segundos e centésimos de segundo. Sempre que concluir um ciclo, clique em Marcar Volta para registrar simultaneamente o tempo parcial daquela volta e o tempo acumulado desde a largada. Você pode pausar a qualquer momento para inspeção, retomar do ponto exato sem perder as marcações anteriores ou zerar completamente o painel para uma nova bateria de medições.',
     faqs: [
-      { question: 'O cronômetro funciona offline?', answer: 'Sim, o cronômetro funciona 100% offline pois roda diretamente no seu navegador sem necessidade de conexão com a internet.' },
-      { question: 'Quantas voltas posso marcar?', answer: 'Você pode marcar quantas voltas quiser. Cada volta registra o tempo parcial e o tempo total decorrido.' }
+      { question: 'O cronômetro funciona offline?', answer: 'Sim. Depois que a página é carregada no navegador, toda a lógica de medição roda localmente em JavaScript no seu dispositivo, sem depender de servidor ou tráfego de rede.' },
+      { question: 'Quantas voltas posso marcar?', answer: 'Não há limite rígido de voltas: cada marcação armazena na memória do navegador o índice sequencial da volta, o intervalo parcial entre voltas e o acumulado total.' },
+      { question: 'A precisão em centésimos se mantém se eu trocar de aba?', answer: 'Sim. Como o cálculo deriva da diferença entre o instante atual e o timestamp inicial salvo na memória, eventuais pausas visuais de renderização em segundo plano são compensadas automaticamente ao retornar à aba.' },
+      { question: 'Para quais rotinas práticas o cronômetro com voltas é mais útil?', answer: 'É amplamente usado em corridas de pista, circuitos de treino HIIT, ensaios de apresentações e palestras, controle de tempo em simulados de vestibulares e cronometragem de blocos de foco de 25 a 50 minutos.' }
     ],
-    tips: ['Use para treinos intervalados (HIIT) alternando 30 segundos de esforço e 15 de descanso.', 'A técnica Pomodoro usa ciclos de 25 minutos de foco e 5 minutos de pausa.'],
+    tips: [
+      'Em treinos intervalados HIIT, use o botão Volta ao final de cada tiro e descanso para comparar a regularidade do ritmo entre séries.',
+      'Na técnica Pomodoro, faça ciclos de 25 minutos de concentração contínua seguidos de 5 minutos de pausa longe das telas.',
+      'Em simulados de vestibular ou concurso, marque uma volta ao finalizar cada bloco de disciplina para diagnosticar onde o tempo está concentrado.',
+      'Use em conjunto com o Conversor de Horas para Minutos quando precisar consolidar tempos longos em planilhas de produtividade.'
+    ],
     relatedToolIds: ['horas-para-minutos', 'dias-entre-datas', 'contador-caracteres'],
     slug: 'cronometro-online'
   },
@@ -1795,13 +1802,20 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'utilitarios',
     title: 'Separador de Sílabas',
     shortDescription: 'Separe palavras em sílabas corretamente de acordo com as regras gramaticais.',
-    longIntro: 'Ferramenta educacional que separa palavras em sílabas seguindo as regras oficiais de divisão silábica da língua portuguesa. Essencial para estudantes, professores e profissionais de revisão textual.',
-    howItWorks: 'Digite ou cole uma palavra ou texto. A ferramenta analisa e separa cada palavra em sílabas destacadas visualmente com cores.',
+    longIntro: 'Ferramenta linguística e educacional dedicada à divisão silábica automática de palavras e frases da língua portuguesa conforme a ortografia vigente após o Novo Acordo Ortográfico. Muito útil para estudantes em alfabetização e preparação para vestibulares, professores na elaboração de materiais didáticos, revisores editoriais e profissionais de diagramação gráfica que precisam aplicar translineação correta em textos justificados sem quebrar ditongos, dígrafos inseparáveis ou grupos consonantais indivisíveis.',
+    howItWorks: 'Digite ou cole uma palavra isolada ou um parágrafo inteiro no campo de entrada. O algoritmo fonológico tokeniza o texto mantendo pontuação, identifica núcleos vocálicos, separa hiatos autênticos, preserva ditongos e tritongos na mesma sílaba, separa consoantes dobradas (rr, ss) e dígrafos separáveis (sc, sç, xc), e devolve imediatamente a divisão silábica clara com contagem de sílabas e classificação visual.',
     faqs: [
-      { question: 'Como funciona a separação silábica?', answer: 'A separação silábica segue regras como: não separar ditongos (oi, ei, ou), separar hiatos (sa-ú-de), consoantes dobradas (car-ro), e encontros consonantais (prato: pra-to).' },
-      { question: 'Todas as palavras seguem as mesmas regras?', answer: 'A maioria segue, mas existem exceções e palavras com dupla grafia. A ferramenta cobre as regras mais comuns da gramática brasileira.' }
+      { question: 'Como funciona a separação silábica na língua portuguesa?', answer: 'A divisão respeita princípios fonológicos da gramática normativa: toda sílaba exige ao menos uma vogal; ditongos e tritongos não se separam (cai-xa, U-ru-guai); hiatos são sempre separados (sa-ú-de, co-e-lho); e consoantes idênticas ou dígrafos como rr e ss ficam em sílabas adjacentes (car-ro, pás-sa-ro).' },
+      { question: 'Dígrafos como ch, lh, nh, gu e qu são separados?', answer: 'Não. Dígrafos que representam um único fonema consonantal ou silábico (ch, lh, nh, qu e gu seguidos de vogal pronunciada em conjunto) permanecem inseparáveis na divisão silábica.' },
+      { question: 'Por que a separação silábica importa na translineação?', answer: 'Na formatação de documentos acadêmicos, livros e jornais, saber o ponto exato de hífen ao fim de uma linha evita erros ortográficos e facilita a leitura em colunas estreitas.' },
+      { question: 'Todas as palavras compostas seguem a mesma regra?', answer: 'Palavras com hífen e derivados prefixais podem exigir atenção especial quando o prefixo termina em consoante seguida de vogal da palavra-base, como em sub-emprego versus su-bem-pre-go na ortografia formal.' }
     ],
-    tips: ['A separação correta de sílabas é essencial para a translineação (divisão de palavras no final da linha) em textos formatados.', 'Use esta ferramenta como apoio pedagógico para ensino de gramática e ortografia.'],
+    tips: [
+      'Lembre que toda sílaba em português é estruturada em torno de uma vogal obrigatória; nunca isole uma consoante sozinha ao quebrar linhas.',
+      'Distinga com cuidado ditongos de hiatos comparando palavras como história (ditongo crescente final) e saúde (hiato entre vogais fortes).',
+      'Use o resultado para classificar termos em monossílabos, dissílabos, trissílabos e polissílabos ao revisar acentuação gráfica.',
+      'Combine com o Contador de Caracteres para ajustar legendas e títulos impressos dentro de limites rígidos de coluna.'
+    ],
     relatedToolIds: ['contador-caracteres', 'contador-palavras', 'removedor-espacos'],
     slug: 'separador-de-silabas'
   },
@@ -1810,13 +1824,20 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'utilitarios',
     title: 'Conversor de Maiúsculas/Minúsculas',
     shortDescription: 'Converta textos entre maiúsculas, minúsculas, capitalizado e alternado rapidamente.',
-    longIntro: 'Converta seus textos entre diferentes formatos de capitalização: maiúsculas, minúsculas, primeira letra maiúscula (capitalizado), alternado e título. Ideal para formatação de títulos e correções de digitação.',
-    howItWorks: 'Cole ou digite o texto e selecione o formato desejado. A conversão é instantânea e você pode copiar o resultado com um clique.',
+    longIntro: 'Utilitário editorial de conversão instantânea de caixa tipográfica (case converter) criado para resolver em um clique problemas corriqueiros de digitação com Caps Lock ligado, importação despadronizada de planilhas, padronização de títulos jornalísticos e preparação de textos acadêmicos ou cadastros corporativos. Além das opções clássicas de CAIXA ALTA e caixa baixa, o conversor aplica capitalização por início de frase (Sentence Case), estilo Título em português respeitando artigos e preposições curtas, e formato alternado ou invertido para revisão rápida.',
+    howItWorks: 'Cole ou digite qualquer extensão de texto — de um título curto a dezenas de linhas de um artigo ou base textual — e escolha o botão de transformação desejado: Tudo em Maiúsculas, Tudo em Minúsculas, Capitalizado por Frase, Formato de Título ou Texto Alternado. A transformação ocorre localmente em memória em tempo real mantendo quebras de linha e acentuação gráfica intactas, pronta para cópia imediata.',
     faqs: [
-      { question: 'Qual a diferença entre capitalizado e título?', answer: 'Capitalizado coloca a primeira letra de cada frase em maiúscula. Título coloca a primeira letra de cada palavra em maiúscula (exceto artigos e preposições).' },
-      { question: 'Texto em maiúsculas é considerado grito na internet?', answer: 'Sim, escrever totalmente em maiúsculas é considerado como gritar na comunicação digital. Use maiúsculas apenas para ênfase moderada.' }
+      { question: 'Qual a diferença entre formato Capitalizado por frase e formato Título?', answer: 'No modo Capitalizado (Sentence Case), apenas a primeira letra após início de texto ou pontuação final recebe caixa alta; no modo Título (Title Case), cada palavra principal tem inicial maiúscula enquanto conectivos curtos permanecem em minúscula.' },
+      { question: 'Texto todo em maiúsculas prejudica a legibilidade e o SEO?', answer: 'Sim. Parágrafos inteiros em caixa alta dificultam a leitura rápida em telas, soam como grito na comunicação digital e podem reduzir a qualidade percebida de descrições e anúncios.' },
+      { question: 'Os acentos gráficos e cedilhas são preservados corretamente?', answer: 'Sim. A conversão utiliza suporte completo ao alfabeto português Unicode, convertendo á/Á, é/É, ç/Ç e ã/Ã sem distorcer caracteres acentuados.' },
+      { question: 'Posso padronizar listas de nomes ou endereços antes de colocar no Excel?', answer: 'Sim. Colando listas completas com nomes digitados em caixa alta e aplicando o ajuste de título ou minúsculas, você evita edição manual linha por linha na planilha.' }
     ],
-    tips: ['Evite escrever textos longos em maiúsculas na internet - além de cansativo, é considerado má educação.', 'Use o formato Título para headlines e o formato Capitalizado para parágrafos normais.'],
+    tips: [
+      'Evite escrever frases ou e-mails inteiros em CAIXA ALTA: além de cansativo para quem lê, filtros automáticos podem interpretar o texto como spam.',
+      'Use o modo Formato de Título em cabeçalhos de artigos, apresentações e nomes próprios importados em caixa alta de sistemas legados.',
+      'Após padronizar a caixa do texto, passe pelo Removedor de Espaços para eliminar espaços duplos invisíveis entre palavras.',
+      'Confira o tamanho final de títulos SEO no Contador de Caracteres para mantê-los entre 50 e 60 caracteres na busca do Google.'
+    ],
     relatedToolIds: ['contador-caracteres', 'removedor-espacos', 'contador-palavras'],
     slug: 'conversor-maiusculas-minusculas'
   },
@@ -1825,13 +1846,20 @@ export const TOOLS: ToolMetadata[] = [
     categoryId: 'utilitarios',
     title: 'Filtro e Localizador de E-mails',
     shortDescription: 'Filtre, limpe e organize endereços de e-mail a partir de blocos de textos ou relatórios.',
-    longIntro: 'Organize, limpe e filtre endereços de e-mail a partir de blocos de textos, listas ou relatórios próprios fornecidos voluntariamente pelo usuário para fins de organização interna.',
-    howItWorks: 'Cole o seu bloco de texto ou relatório no campo de entrada. A ferramenta identifica e organiza todos os endereços de e-mail válidos locais.',
+    longIntro: 'Ferramenta administrativa de higienização, extração e deduplicação de endereços de correio eletrônico contidos em relatórios próprios, logs de erro, planilhas exportadas em texto bruto, respostas de formulários internos e arquivos CSV desorganizados. Todo o tratamento ocorre exclusivamente na memória do navegador (client-side), sem transmissão para servidores externos, auxiliando equipes de suporte, financeiro e TI na organização ética de listas próprias em conformidade com a LGPD (Lei nº 13.709/2018).',
+    howItWorks: 'Cole um bloco de texto bruto, registro de log ou relatório estruturado na área de entrada e clique em processar. Uma expressão regular compatível com endereços de e-mail padrão RFC varre o conteúdo, extrai todos os contatos válidos encontrados, normaliza espaços e caixa, elimina duplicatas exatas e permite copiar a lista limpa separada por vírgula, ponto e vírgula ou quebra de linha.',
     faqs: [
-      { question: 'Quais formatos de e-mail são reconhecidos?', answer: 'Qualquer formato válido de e-mail como nome@dominio.com, nome.sobrenome@empresa.com.br, nome+tag@dominio.org, entre outros.' },
-      { question: 'Como a ferramenta auxilia na privacidade?', answer: 'Toda a filtragem e localização de contatos é realizada localmente no próprio navegador do usuário, sem qualquer upload ou armazenamento dos dados fornecidos voluntariamente.' }
+      { question: 'Quais formatos de endereço de e-mail são reconhecidos pelo filtro?', answer: 'O analisador reconhece formatos padrão com subdomínios, pontos, hífens, underlines e aliases com sinal de mais (como equipe+suporte@empresa.com.br e domínios internacionais).' },
+      { question: 'Os dados colados ficam armazenados em algum banco de dados?', answer: 'Não. Toda a varredura, deduplicação e formatação é executada localmente no JavaScript do seu navegador; nenhuma lista ou endereço é enviado pela internet ou salvo em servidor.' },
+      { question: 'O filtro remove endereços repetidos automaticamente?', answer: 'Sim. Quando um mesmo e-mail aparece múltiplas vezes ao longo de um log ou relatório extenso, a saída consolidada mantém apenas ocorrências únicas para facilitar importações limpas.' },
+      { question: 'Esse utilitário serve para enviar spam ou captar dados sem consentimento?', answer: 'Não. A ferramenta destina-se exclusivamente ao tratamento e saneamento de bases internas legítimas e relatórios próprios, devendo ser usada sempre sob base legal válida da LGPD.' }
     ],
-    tips: ['Sempre respeite a LGPD ao organizar e processar endereços de e-mail.', 'Use a ferramenta para estruturar e validar listas de contatos de relatórios próprios internos.'],
+    tips: [
+      'Aplique higienização periódica em logs de formulários e relatórios internos de atendimento antes de atualizar seu CRM próprio.',
+      'Mantenha registros claros do consentimento (opt-in) e finalidade legítima antes de qualquer envio de comunicação comercial segundo a LGPD.',
+      'Use o separador por vírgula ou quebra de linha de acordo com o formato aceito pela planilha ou ferramenta de auditoria interna.',
+      'Após limpar uma base textual complexa, utilize o Comparador de Textos para conferir quais entradas mudaram entre versões de exportação.'
+    ],
     relatedToolIds: ['removedor-espacos', 'contador-caracteres', 'encode-url'],
     slug: 'filtro-de-emails'
   },
