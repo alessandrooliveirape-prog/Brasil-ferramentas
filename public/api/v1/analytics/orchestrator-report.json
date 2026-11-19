@@ -1,6 +1,6 @@
 {
   "site": "https://www.toolbrasil.com.br",
-  "timestamp": "2026-11-18T19:34:39.855Z",
+  "timestamp": "2026-11-19T19:37:18.769Z",
   "overallScore": 96,
   "overallStatus": "WARNING",
   "subagents": [
@@ -11,13 +11,13 @@
       "status": "HEALTHY",
       "score": 15,
       "maxScore": 15,
-      "summary": "Sitemap (241 URLs no ar), SSG Googlebot (7 rotas) e JSON-LD 100% nominais.",
+      "summary": "Sitemap (176 URLs no ar), SSG Googlebot (7 rotas) e JSON-LD 100% nominais.",
       "details": {
         "sitemap": {
           "status": 200,
           "ok": true,
-          "count": 241,
-          "latencyMs": 802
+          "count": 176,
+          "latencyMs": 582
         },
         "robots": {
           "status": 200,
@@ -28,49 +28,49 @@
         "ssgGooglebotProbe": {
           "/": {
             "status": 200,
-            "words": 263,
+            "words": 843,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
           },
           "/calculadoras": {
             "status": 200,
-            "words": 1749,
+            "words": 1756,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
           },
           "/conversores": {
             "status": 200,
-            "words": 585,
+            "words": 839,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
           },
           "/geradores": {
             "status": 200,
-            "words": 839,
+            "words": 846,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
           },
           "/ferramentas-web": {
             "status": 200,
-            "words": 478,
+            "words": 696,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
           },
           "/utilitarios": {
             "status": 200,
-            "words": 815,
+            "words": 822,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
           },
           "/desenvolvedores": {
             "status": 200,
-            "words": 348,
+            "words": 673,
             "hasCanonical": true,
             "hasJsonLd": true,
             "hasNoindex": false
@@ -98,31 +98,31 @@
         "compliancePages": {
           "Política de Privacidade": {
             "status": 200,
-            "words": 819
+            "words": 826
           },
           "Termos de Uso": {
             "status": 200,
-            "words": 499
+            "words": 506
           },
           "Política de Cookies": {
             "status": 200,
-            "words": 267
+            "words": 274
           },
           "Quem Somos / Sobre": {
             "status": 200,
-            "words": 562
+            "words": 569
           },
           "Contato e Suporte": {
             "status": 200,
-            "words": 290
+            "words": 297
           },
           "Transparência AdSense": {
             "status": 200,
-            "words": 236
+            "words": 243
           },
           "Anunciantes / Mídia Kit": {
             "status": 200,
-            "words": 202
+            "words": 209
           }
         },
         "adSensePurity": {
@@ -180,25 +180,25 @@
         "sampleToolsProbe": {
           "/calculadoras/calculadora-de-juros-compostos": {
             "status": 200,
-            "words": 981,
+            "words": 1131,
             "hasWebAppSchema": true,
             "hasFaqSchema": true
           },
           "/geradores/gerador-de-cpf": {
             "status": 200,
-            "words": 1011,
+            "words": 1069,
             "hasWebAppSchema": true,
             "hasFaqSchema": true
           },
           "/conversores/converter-real-para-dolar": {
             "status": 200,
-            "words": 956,
+            "words": 1118,
             "hasWebAppSchema": true,
             "hasFaqSchema": true
           },
           "/calculadoras/calculadora-de-churrasco": {
             "status": 200,
-            "words": 1005,
+            "words": 1152,
             "hasWebAppSchema": true,
             "hasFaqSchema": true
           }
@@ -221,32 +221,32 @@
         "programmaticProbe": {
           "/programatico/ddd-brasil": {
             "status": 200,
-            "words": 541,
+            "words": 641,
             "hasCanonical": true
           },
           "/programatico/cep-brasil": {
             "status": 200,
-            "words": 264,
+            "words": 693,
             "hasCanonical": true
           },
           "/programatico/bancos-brasil": {
             "status": 200,
-            "words": 423,
+            "words": 692,
             "hasCanonical": true
           },
           "/programatico/salario-minimo-historico": {
             "status": 200,
-            "words": 576,
+            "words": 695,
             "hasCanonical": true
           },
           "/programatico/feriados-nacionais": {
             "status": 200,
-            "words": 413,
+            "words": 686,
             "hasCanonical": true
           },
           "/programatico/selic-historica": {
             "status": 200,
-            "words": 320,
+            "words": 683,
             "hasCanonical": true
           }
         }
@@ -328,7 +328,7 @@
       "summary": "Expansão Long-Tail ativa com 1 alerta(s).",
       "details": {
         "totalProgrammaticPages": 89,
-        "totalSitemapUrls": 241,
+        "totalSitemapUrls": 176,
         "clusters": {
           "ddd": 27,
           "ipva-2026": 8,
@@ -340,7 +340,7 @@
           "core": 14
         },
         "thinSsgPagesCount": 0,
-        "indexNowSubmittedCount": 75
+        "indexNowSubmittedCount": 24
       },
       "issues": [
         "89 página(s) Long-Tail ausentes no build estático"
@@ -350,5 +350,5 @@
     }
   ],
   "healingSummary": [],
-  "executionTimeMs": 6670
+  "executionTimeMs": 5431
 }
